@@ -1,0 +1,173 @@
+openapi: 3.0.3
+info:
+  title: AgentProvision API
+  version: 0.1.0
+servers:
+  - url: http://localhost:3001
+paths:
+  /healthz:
+    get:
+      summary: Liveness check
+      responses:
+        '200': { description: OK }
+  /auth/login:
+    post:
+      summary: Login and obtain JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, minLength: 6 }
+      responses:
+        '200':
+          description: Token issued
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token: { type: string }
+                  expiresIn: { type: integer }
+  /v1/tenants:
+    get:
+      summary: List tenants
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create tenant
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantCreate'
+      responses:
+        '201': { description: Created }
+  /v1/tenants/{id}:
+    get:
+      summary: Get tenant
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+    patch:
+      summary: Update tenant
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantUpdate'
+      responses:
+        '200': { description: OK }
+    delete:
+      summary: Delete tenant
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '204': { description: Deleted }
+  /v1/agents:
+    get:
+      summary: List agents
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: query
+          name: tenantId
+          required: false
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create agent
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentCreate'
+      responses:
+        '201': { description: Created }
+  /v1/agents/{id}/deploy:
+    post:
+      summary: Deploy agent
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /v1/agents/{id}/pause:
+    post:
+      summary: Pause agent
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /v1/agents/{id}/retire:
+    post:
+      summary: Retire agent
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    TenantCreate:
+      type: object
+      required: [id, name]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        plan: { type: string, enum: [free, pro, enterprise] }
+        region: { type: string }
+    TenantUpdate:
+      allOf:
+        - $ref: '#/components/schemas/TenantCreate'
+    AgentCreate:
+      type: object
+      required: [id, tenantId, name, type]
+      properties:
+        id: { type: string }
+        tenantId: { type: string }
+        name: { type: string }
+        type: { type: string, enum: [dev, devops, qa, data, bi, security, docs] }
+        version: { type: string }
+
