@@ -1,0 +1,41 @@
+# Node
+node_modules/
+.pnpm-store/
+.next/
+.turbo/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.env
+
+# Testing and coverage
+.coverage
+.pytest_cache/
+
+# IDEs and editors
+.idea/
+.vscode/
+.DS_Store
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Logs
+logs/
+*.log
+
+# Misc
+coverage/
+dist/
+build/
+
+# Local development env files
+.env
+.env.local
+apps/**/.env

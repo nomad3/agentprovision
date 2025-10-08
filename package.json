@@ -1,0 +1,21 @@
+{
+  "name": "agentprovision",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "format": "turbo run format",
+    "test": "turbo run test"
+  },
+  "devDependencies": {
+    "turbo": "^1.11.3",
+    "typescript": "^5.4.0"
+  },
+  "packageManager": "pnpm@8.15.4"
+}

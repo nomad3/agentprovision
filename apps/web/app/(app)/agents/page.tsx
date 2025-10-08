@@ -1,0 +1,72 @@
+"use client"
+
+import { useEffect, useState } from "react"
+
+import { AgentsTable } from "@/components/cards/agents-table"
+import { useAuth } from "@/components/providers/auth-provider"
+import { apiRequest } from "@/lib/api-client"
+import type { AgentRecord } from "@/lib/mock-data"
+
+const STATUS_MAP: Record<string, AgentRecord["status"]> = {
+  active: "Running",
+  paused: "Paused",
+  error: "Error",
+  draft: "Paused",
+}
+
+type AgentResponse = {
+  id: string
+  name: string
+  owner?: string | null
+  environment: string
+  status: "draft" | "active" | "paused" | "error"
+  cost_per_hour: number
+  updated_at: string
+}
+
+export default function AgentsPage() {
+  const { token } = useAuth()
+  const [agents, setAgents] = useState<AgentRecord[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!token) return
+    const loadAgents = async () => {
+      try {
+        const response = await apiRequest<AgentResponse[]>("/api/v1/agents", { token })
+        setAgents(
+          response.map((agent) => ({
+            id: agent.id,
+            name: agent.name,
+            owner: agent.owner ?? "",
+            environment: agent.environment,
+            status: STATUS_MAP[agent.status] ?? "Running",
+            costPerHour: `$${Number(agent.cost_per_hour ?? 0).toFixed(2)}`,
+            updatedAt: new Date(agent.updated_at).toLocaleString(),
+          })),
+        )
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadAgents()
+  }, [token])
+
+  if (loading) {
+    return <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 p-10 text-center">Loading agents…</div>
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold text-white">Agents workspace</h1>
+          <p className="mt-2 text-sm text-slate-400">
+            Review orchestrated agents, ownership, and runtime health across environments.
+          </p>
+        </div>
+      </div>
+      <AgentsTable agents={agents} />
+    </div>
+  )
+}
