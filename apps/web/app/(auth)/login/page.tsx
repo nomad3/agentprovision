@@ -38,12 +38,12 @@ export default function LoginPage() {
   return (
     <div className="space-y-6">
       <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-semibold text-white">Welcome back</h1>
-        <p className="text-sm text-slate-400">Sign in to orchestrate your agents across every environment.</p>
+        <h1 className="text-2xl font-semibold text-slate-900">Welcome back</h1>
+        <p className="text-sm text-slate-500">Sign in to orchestrate your agents across every environment.</p>
       </div>
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="space-y-2">
-          <label htmlFor="email" className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+          <label htmlFor="email" className="text-xs font-semibold uppercase tracking-wide text-slate-500">
             Email
           </label>
           <input
@@ -51,7 +51,7 @@ export default function LoginPage() {
             name="email"
             type="email"
             autoComplete="email"
-            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-brand focus:outline-none"
+            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/10"
             placeholder="you@company.com"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
@@ -59,7 +59,7 @@ export default function LoginPage() {
           />
         </div>
         <div className="space-y-2">
-          <label htmlFor="password" className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+          <label htmlFor="password" className="text-xs font-semibold uppercase tracking-wide text-slate-500">
             Password
           </label>
           <input
@@ -67,33 +67,33 @@ export default function LoginPage() {
             name="password"
             type="password"
             autoComplete="current-password"
-            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-brand focus:outline-none"
+            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/10"
             placeholder="••••••••"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             required
           />
         </div>
-        {error ? <p className="text-sm text-rose-300">{error}</p> : null}
-        <div className="flex items-center justify-between text-xs text-slate-400">
+        {error ? <p className="text-sm text-rose-600">{error}</p> : null}
+        <div className="flex items-center justify-between text-xs text-slate-500">
           <label className="flex items-center gap-2">
-            <input type="checkbox" className="h-4 w-4 rounded border-slate-700 bg-slate-900 text-brand focus:ring-brand" />
+            <input type="checkbox" className="h-4 w-4 rounded border-slate-300 text-brand focus:ring-brand/40" />
             Remember me
           </label>
-          <Link href="/forgot-password" className="text-brand-light hover:text-brand">
+          <Link href="/forgot-password" className="font-medium text-brand hover:text-brand-dark">
             Forgot password?
           </Link>
         </div>
         <button
           type="submit"
-          className="w-full rounded-xl bg-brand px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-brand/30 transition hover:bg-brand-dark disabled:opacity-60"
+          className="w-full rounded-xl bg-brand px-4 py-3 text-sm font-semibold text-white shadow-brand/30 transition hover:bg-brand-dark disabled:opacity-60"
           disabled={submitting}
         >
           {submitting ? "Signing in…" : "Sign in with credentials"}
         </button>
       </form>
-      <div className="space-y-3 rounded-2xl border border-white/5 bg-slate-900/60 p-4 text-xs text-slate-300">
-        <p className="font-semibold text-slate-200">Need demo access?</p>
+      <div className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-600">
+        <p className="font-semibold text-slate-900">Need demo access?</p>
         <p>Use one of the sandbox tenants highlighted on the landing page.</p>
         <div className="grid gap-2">
           {demoTenants.map((tenant) => (
@@ -101,20 +101,20 @@ export default function LoginPage() {
               type="button"
               key={tenant.email}
               onClick={() => applyDemo(tenant.email, tenant.password)}
-              className="flex items-center justify-between rounded-xl border border-white/5 bg-slate-950/80 px-3 py-2 text-left transition hover:border-brand/40"
+              className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-2 text-left transition hover:border-brand"
             >
               <div>
-                <p className="text-sm font-semibold text-white">{tenant.label}</p>
-                <p className="text-[11px] text-slate-400">{tenant.email}</p>
+                <p className="text-sm font-semibold text-slate-900">{tenant.label}</p>
+                <p className="text-[11px] text-slate-500">{tenant.email}</p>
               </div>
               <span className="text-[11px] text-slate-500">{tenant.password}</span>
             </button>
           ))}
         </div>
       </div>
-      <p className="text-center text-sm text-slate-400">
+      <p className="text-center text-sm text-slate-500">
         New to AgentProvision?{" "}
-        <Link href="/register" className="text-brand-light hover:text-brand">
+        <Link href="/register" className="font-medium text-brand hover:text-brand-dark">
           Create an enterprise workspace
         </Link>
       </p>

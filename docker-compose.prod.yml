@@ -1,21 +1,20 @@
+version: "3.9"
+
 services:
   api:
     build:
       context: .
       dockerfile: infra/docker/api.Dockerfile
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-    working_dir: /app/apps/api
-    volumes:
-      - ./apps/api:/app/apps/api
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     environment:
-      APP_ENV: ${APP_ENV:-development}
-      PROJECT_NAME: ${PROJECT_NAME:-AgentProvision API}
-      API_V1_PREFIX: ${API_V1_PREFIX:-/api/v1}
-      SECRET_KEY: ${SECRET_KEY:-local_dev_secret_key}
+      APP_ENV: production
+      PROJECT_NAME: AgentProvision API
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      SECRET_KEY: ${SECRET_KEY}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-30}
-      DATABASE_URL: ${DATABASE_URL:-postgresql+asyncpg://postgres:postgres@db:5432/agentprovision}
-      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      SEED_DEMO_DATA: ${SEED_DEMO_DATA:-false}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://agentprovision.com,https://www.agentprovision.com}
     depends_on:
       - db
       - redis
@@ -25,16 +24,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: infra/docker/web.Dockerfile
-    working_dir: /app/apps/web
-    command: sh -c "pnpm install --ignore-scripts && pnpm --filter web dev"
-    volumes:
-      - ./apps/web:/app/apps/web
-      - ./packages:/app/packages
-      - ./package.json:/app/package.json
-      - ./pnpm-workspace.yaml:/app/pnpm-workspace.yaml
-      - ./turbo.json:/app/turbo.json
-      - ./tsconfig.json:/app/tsconfig.json
+      dockerfile: infra/docker/web.production.Dockerfile
     environment:
       NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://api:8000}
     depends_on:
@@ -51,8 +41,12 @@ services:
       N8N_BASIC_AUTH_ACTIVE: ${N8N_BASIC_AUTH_ACTIVE:-true}
       N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER:-admin}
       N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD:-changeme}
-      WEBHOOK_URL: ${N8N_WEBHOOK_URL:-http://localhost:5678/}
+      WEBHOOK_URL: ${N8N_WEBHOOK_URL:-https://n8n.agentprovision.com/}
       GENERIC_TIMEZONE: ${N8N_GENERIC_TIMEZONE:-Etc/UTC}
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
     volumes:
       - n8n-data:/home/node/.n8n
     ports:
@@ -69,6 +63,7 @@ services:
 
   redis:
     image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
 
 volumes:
   postgres-data:

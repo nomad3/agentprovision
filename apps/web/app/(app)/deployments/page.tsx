@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { DeploymentsList } from "@/components/cards/deployments-list"
 import { useAuth } from "@/components/providers/auth-provider"
 import { apiRequest } from "@/lib/api-client"
-import type { DeploymentRecord } from "@/lib/mock-data"
+import type { DeploymentRecord } from "@/lib/types"
 
 type DeploymentResponse = {
   id: string
@@ -26,6 +26,7 @@ export default function DeploymentsPage() {
   const { token } = useAuth()
   const [deployments, setDeployments] = useState<DeploymentRecord[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!token) return
@@ -39,9 +40,12 @@ export default function DeploymentsPage() {
             environment: deployment.environment,
             provider: deployment.provider,
             status: STATUS_MAP[deployment.status],
-            updatedAt: deployment.last_synced_at,
+            updatedAt: new Date(deployment.last_synced_at).toLocaleString(),
           })),
         )
+        setError(null)
+      } catch (err) {
+        setError((err as Error).message ?? "Unable to load deployments")
       } finally {
         setLoading(false)
       }
@@ -50,17 +54,22 @@ export default function DeploymentsPage() {
   }, [token])
 
   if (loading) {
-    return <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 p-10 text-center">Loading deployments…</div>
+    return <div className="rounded-3xl border border-slate-200 bg-white p-10 text-center text-slate-500 shadow-sm">Loading deployments…</div>
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-white">Deployments workspace</h1>
-        <p className="mt-2 text-sm text-slate-400">
+        <h1 className="text-2xl font-semibold text-slate-900">Deployments</h1>
+        <p className="mt-2 text-sm text-slate-500">
           Kubernetes clusters, serverless targets, and rollout pipelines managed in one place.
         </p>
       </div>
+      {error ? (
+        <div className="rounded-3xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+          {error}
+        </div>
+      ) : null}
       <DeploymentsList deployments={deployments} />
     </div>
   )

@@ -1,7 +1,7 @@
 from functools import lru_cache
-from typing import List, Optional
+from typing import List
 
-from pydantic import AnyHttpUrl
+from pydantic import AnyHttpUrl, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -15,8 +15,23 @@ class Settings(BaseSettings):
     redis_url: str = "redis://localhost:6379/0"
     secret_key: str = "changeme"
     access_token_expire_minutes: int = 30
-    cors_origins: List[AnyHttpUrl | str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
-    openai_api_key: Optional[str] = None
+    cors_origins: List[AnyHttpUrl | str] = Field(
+        default_factory=lambda: ["http://localhost:3000", "http://127.0.0.1:3000"]
+    )
+    seed_demo_data: bool = True
+    integration_catalog: List[str] = Field(
+        default_factory=lambda: [
+            "OpenAI",
+            "Anthropic",
+            "Vertex AI",
+            "Azure OpenAI",
+            "Snowflake",
+            "Databricks",
+            "Salesforce",
+            "ServiceNow",
+            "Workday",
+        ]
+    )
 
     model_config = SettingsConfigDict(
         env_file=(".env",),
@@ -24,6 +39,13 @@ class Settings(BaseSettings):
         case_sensitive=False,
         extra="ignore",
     )
+
+    @field_validator("cors_origins", mode="before")
+    @classmethod
+    def split_cors_origins(cls, value: str | List[AnyHttpUrl | str]) -> List[AnyHttpUrl | str]:
+        if isinstance(value, str):
+            return [origin.strip() for origin in value.split(",") if origin.strip()]
+        return value
 
 
 @lru_cache

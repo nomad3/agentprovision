@@ -8,14 +8,14 @@ import { AuthProvider } from "@/components/providers/auth-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "AgentProvision | Enterprise AI Agent Platform",
-  description: "Deploy, orchestrate, and govern AI agents across global environments with AgentProvision.",
+  title: "AgentProvision | Operate AI Agents with Confidence",
+  description: "Deploy, orchestrate, and monitor AI agents with enterprise-grade controls designed for business leaders and platform teams.",
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} min-h-screen bg-slate-950 text-slate-100 antialiased`}>
+      <body className={`${inter.className} min-h-screen bg-slate-50 text-slate-900 antialiased`}>
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

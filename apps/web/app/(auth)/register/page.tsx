@@ -46,75 +46,29 @@ export default function RegisterPage() {
   return (
     <div className="space-y-6">
       <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-semibold text-white">Create your enterprise workspace</h1>
-        <p className="text-sm text-slate-400">
+        <h1 className="text-2xl font-semibold text-slate-900">Create your enterprise workspace</h1>
+        <p className="text-sm text-slate-500">
           Set up a secure sandbox with pre-populated demo data, connectors, and guardrails.
         </p>
       </div>
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="space-y-2">
-            <label htmlFor="firstName" className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-              First name
-            </label>
-            <input
-              id="firstName"
-              name="firstName"
-              value={form.firstName}
-              onChange={handleChange}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-brand focus:outline-none"
-              placeholder="Jordan"
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="lastName" className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-              Last name
-            </label>
-            <input
-              id="lastName"
-              name="lastName"
-              value={form.lastName}
-              onChange={handleChange}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-brand focus:outline-none"
-              placeholder="Rivera"
-              required
-            />
-          </div>
+          <InputField label="First name" name="firstName" value={form.firstName} onChange={handleChange} placeholder="Jordan" required />
+          <InputField label="Last name" name="lastName" value={form.lastName} onChange={handleChange} placeholder="Rivera" required />
         </div>
-        <div className="space-y-2">
-          <label htmlFor="email" className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-            Work email
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            value={form.email}
-            onChange={handleChange}
-            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-brand focus:outline-none"
-            placeholder="you@company.com"
-            required
-          />
-        </div>
+        <InputField
+          label="Work email"
+          name="email"
+          type="email"
+          value={form.email}
+          onChange={handleChange}
+          placeholder="you@company.com"
+          required
+        />
         <div className="grid gap-4 md:grid-cols-2">
+          <InputField label="Company" name="company" value={form.company} onChange={handleChange} placeholder="Acme Corp" required />
           <div className="space-y-2">
-            <label htmlFor="company" className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-              Company
-            </label>
-            <input
-              id="company"
-              name="company"
-              value={form.company}
-              onChange={handleChange}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-brand focus:outline-none"
-              placeholder="Acme Corp"
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="region" className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+            <label htmlFor="region" className="text-xs font-semibold uppercase tracking-wide text-slate-500">
               Preferred region
             </label>
             <select
@@ -122,35 +76,28 @@ export default function RegisterPage() {
               name="region"
               value={form.region}
               onChange={handleChange}
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white focus:border-brand focus:outline-none"
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/10"
             >
               {cloudRegions.map((region) => (
-                <option key={region} value={region} className="bg-slate-950">
+                <option key={region} value={region}>
                   {region}
                 </option>
               ))}
             </select>
           </div>
         </div>
-        <div className="space-y-2">
-          <label htmlFor="password" className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-            Password
-          </label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autoComplete="new-password"
-            value={form.password}
-            onChange={handleChange}
-            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-brand focus:outline-none"
-            placeholder="At least 12 characters"
-            required
-          />
-        </div>
-        {error ? <p className="text-sm text-rose-300">{error}</p> : null}
-        <div className="rounded-2xl border border-white/5 bg-slate-900/70 p-4 text-xs text-slate-300">
-          <p className="font-semibold text-slate-200">Included in your trial:</p>
+        <InputField
+          label="Password"
+          name="password"
+          type="password"
+          value={form.password}
+          onChange={handleChange}
+          placeholder="At least 12 characters"
+          required
+        />
+        {error ? <p className="text-sm text-rose-600">{error}</p> : null}
+        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-600">
+          <p className="font-semibold text-slate-900">Included in your trial:</p>
           <ul className="mt-2 list-disc space-y-1 pl-5">
             <li>Pre-configured demo tenants for retail, healthcare, and finance use cases</li>
             <li>Starter LangChain and LangGraph blueprints with evaluation suites</li>
@@ -160,18 +107,46 @@ export default function RegisterPage() {
         </div>
         <button
           type="submit"
-          className="w-full rounded-xl bg-brand px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-brand/30 transition hover:bg-brand-dark disabled:opacity-60"
+          className="w-full rounded-xl bg-brand px-4 py-3 text-sm font-semibold text-white shadow-brand/30 transition hover:bg-brand-dark disabled:opacity-60"
           disabled={submitting}
         >
           {submitting ? "Provisioning…" : "Provision sandbox workspace"}
         </button>
       </form>
-      <p className="text-center text-sm text-slate-400">
+      <p className="text-center text-sm text-slate-500">
         Already have access?{" "}
-        <Link href="/login" className="text-brand-light hover:text-brand">
+        <Link href="/login" className="font-medium text-brand hover:text-brand-dark">
           Sign in
         </Link>
       </p>
+    </div>
+  )
+}
+
+function InputField({ label, name, type = "text", value, onChange, placeholder, required }: {
+  label: string
+  name: string
+  type?: string
+  value: string
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  placeholder?: string
+  required?: boolean
+}) {
+  return (
+    <div className="space-y-2">
+      <label htmlFor={name} className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        {label}
+      </label>
+      <input
+        id={name}
+        name={name}
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        required={required}
+        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/10"
+      />
     </div>
   )
 }

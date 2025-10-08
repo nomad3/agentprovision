@@ -73,6 +73,17 @@ Tokens follow the standard `Authorization: Bearer <token>` header pattern.
 
 The CI workflow in `.github/workflows/ci.yml` runs these checks automatically on pushes/PRs.
 
+## Integration Tests
+
+Run integration tests that validate the Integrations Hub and n8n connector. These tests spin up the docker-compose stack (API, Postgres, Redis, n8n) and exercise live endpoints.
+
+```
+docker compose -f docker-compose.yml -p agentprovision-integration-tests up -d db redis api n8n
+pnpm --filter api test -- --maxfail=1 -k integration
+```
+
+Tests expect n8n to expose `http://localhost:5678/rest/health` and the API at `http://localhost:8000`.
+
 ## Development tips
 
 - Auth tokens persist in `localStorage`; use the sign-out button in the console header to clear the session.
@@ -88,3 +99,16 @@ The CI workflow in `.github/workflows/ci.yml` runs these checks automatically on
 - Automate deployments with GitHub Actions to a managed environment (EKS/GKE) using the Terraform modules.
 
 > 🚀 AgentProvision is the foundation for building agent lifecycle management, multi-tenant security, and infrastructure automation across enterprise environments.
+
+## Production deployment
+
+- Build hardened images with `docker compose -f docker-compose.prod.yml build` (uses multi-stage Next.js container).
+- Provide production secrets via environment variables: `DATABASE_URL`, `REDIS_URL`, `SECRET_KEY`, `CORS_ORIGINS`, and `NEXT_PUBLIC_API_BASE_URL`.
+- Set `SEED_DEMO_DATA=false` in production to skip loading demo tenants during startup.
+- Run `docker compose -f docker-compose.prod.yml up -d` to launch API, web, Postgres, and Redis.
+
+## Observability & public metrics
+
+- Health checks: `/health/live` and `/health/ready`.
+- Tenant analytics: `/api/v1/analytics/summary` (JWT protected).
+- Public landing metrics: `/api/v1/analytics/public/metrics` (used by the marketing site).

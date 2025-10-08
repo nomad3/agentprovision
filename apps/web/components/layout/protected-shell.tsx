@@ -17,7 +17,7 @@ export function ProtectedShell({ children }: { children: React.ReactNode }) {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-950 text-slate-400">
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 text-slate-500">
         <p>Checking credentials…</p>
       </div>
     )
