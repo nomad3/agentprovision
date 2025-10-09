@@ -1,16 +1,18 @@
+import os
 import asyncio
 from http import HTTPStatus
 
 import httpx
 import pytest
 
-API_BASE_URL = "http://localhost:8000"
-N8N_HEALTH_URL = "http://localhost:5678/rest/health"
+host = os.getenv("INTEGRATION_HOST", "127.0.0.1")
+API_BASE_URL = os.getenv("INTEGRATION_API_URL", f"http://{host}:8000")
+N8N_HEALTH_URL = os.getenv("INTEGRATION_N8N_URL", f"http://{host}:5678/rest/health")
 
 
 @pytest.mark.asyncio
 async def test_public_metrics_includes_marketplace_catalog():
-    async with httpx.AsyncClient(base_url=API_BASE_URL) as client:
+    async with httpx.AsyncClient(base_url=API_BASE_URL, timeout=60.0) as client:
         response = await client.get("/api/v1/analytics/public/metrics")
 
     assert response.status_code == HTTPStatus.OK
@@ -23,8 +25,8 @@ async def test_public_metrics_includes_marketplace_catalog():
 
 @pytest.mark.asyncio
 async def test_n8n_instance_healthcheck():
-    async with httpx.AsyncClient(timeout=10.0) as client:
-        for _ in range(10):
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        for _ in range(40):
             try:
                 response = await client.get(N8N_HEALTH_URL)
             except httpx.HTTPError:

@@ -1,81 +1,81 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
-import { AgentsTable } from "@/components/cards/agents-table"
-import { useAuth } from "@/components/providers/auth-provider"
-import { apiRequest } from "@/lib/api-client"
-import type { AgentRecord } from "@/lib/types"
-
-const STATUS_MAP: Record<string, AgentRecord["status"]> = {
-  active: "Running",
-  paused: "Paused",
-  error: "Error",
-  draft: "Paused",
-}
-
-type AgentResponse = {
-  id: string
-  name: string
-  owner?: string | null
-  environment: string
-  status: "draft" | "active" | "paused" | "error"
-  cost_per_hour: number
-  updated_at: string
-}
+import { AgentBuilderCanvas } from "@/components/builder/agent-builder-canvas"
+import { AgentLibrary } from "@/components/builder/agent-library"
+import { AgentSimulationPanel } from "@/components/builder/agent-simulation-panel"
+import { AgentTrainDialog } from "@/components/builder/agent-train-dialog"
+import type { AgentNode, AgentTrainingConfig } from "@/lib/agent-designer-types"
 
 export default function AgentsPage() {
-  const { token } = useAuth()
-  const [agents, setAgents] = useState<AgentRecord[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [nodes, setNodes] = useState<AgentNode[]>([])
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
+  const [trainDialogOpen, setTrainDialogOpen] = useState(false)
+  const [trainingConfig, setTrainingConfig] = useState<AgentTrainingConfig | null>(null)
 
-  useEffect(() => {
-    if (!token) return
-    const loadAgents = async () => {
-      try {
-        const response = await apiRequest<AgentResponse[]>("/api/v1/agents", { token })
-        setAgents(
-          response.map((agent) => ({
-            id: agent.id,
-            name: agent.name,
-            owner: agent.owner ?? "",
-            environment: agent.environment,
-            status: STATUS_MAP[agent.status] ?? "Running",
-            costPerHour: `$${Number(agent.cost_per_hour ?? 0).toFixed(2)}`,
-            updatedAt: new Date(agent.updated_at).toLocaleString(),
-          })),
-        )
-        setError(null)
-      } catch (err) {
-        setError((err as Error).message ?? "Unable to load agents")
-      } finally {
-        setLoading(false)
-      }
+  const handleNodeCreate = (node: AgentNode) => {
+    setNodes((existing) => [...existing, node])
+    setSelectedNodeId(node.id)
+  }
+
+  const handleNodeUpdate = (nodeId: string, updates: Partial<AgentNode>) => {
+    setNodes((existing) => existing.map((node) => (node.id === nodeId ? { ...node, ...updates } : node)))
+  }
+
+  const handleNodeDelete = (nodeId: string) => {
+    setNodes((existing) => existing.filter((node) => node.id !== nodeId))
+    if (selectedNodeId === nodeId) {
+      setSelectedNodeId(null)
     }
-    loadAgents()
-  }, [token])
+  }
 
-  if (loading) {
-    return <div className="rounded-3xl border border-slate-200 bg-white p-10 text-center text-slate-500 shadow-sm">Loading agents…</div>
+  const handleTrainingPlan = (config: AgentTrainingConfig) => {
+    setTrainingConfig(config)
+    setTrainDialogOpen(true)
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-8">
+      <header className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">Agents</h1>
-          <p className="mt-2 text-sm text-slate-500">
-            Review orchestrated agents, ownership, and runtime health across environments.
+          <div className="inline-flex items-center gap-2 rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+            Agent Designer
+          </div>
+          <h1 className="mt-2 text-3xl font-semibold text-slate-900">Design, train, and deploy intelligent agents</h1>
+          <p className="mt-2 max-w-2xl text-sm text-slate-600">
+            Assemble retrieval, policy, and orchestration capabilities with a drag-and-drop canvas. Connect to enterprise data sources,
+            configure evaluation pipelines, and simulate agent runbooks before promoting to production.
           </p>
         </div>
+      </header>
+
+      <div className="grid gap-6 xl:grid-cols-[260px_minmax(0,1fr)_360px]">
+        <AgentLibrary onCreateNode={handleNodeCreate} onPlanTraining={handleTrainingPlan} />
+        <AgentBuilderCanvas
+          nodes={nodes}
+          onSelectNode={setSelectedNodeId}
+          onUpdateNode={handleNodeUpdate}
+          onDeleteNode={handleNodeDelete}
+          selectedNodeId={selectedNodeId}
+        />
+        <AgentSimulationPanel
+          nodes={nodes}
+          selectedNodeId={selectedNodeId}
+          onUpdateNode={handleNodeUpdate}
+          onPlanTraining={handleTrainingPlan}
+        />
       </div>
-      {error ? (
-        <div className="rounded-3xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
-          {error}
-        </div>
-      ) : null}
-      <AgentsTable agents={agents} />
+
+      <AgentTrainDialog
+        open={trainDialogOpen}
+        onOpenChange={setTrainDialogOpen}
+        trainingConfig={trainingConfig}
+        onSubmit={(config) => {
+          setTrainingConfig(config)
+          setTrainDialogOpen(false)
+        }}
+      />
     </div>
   )
 }

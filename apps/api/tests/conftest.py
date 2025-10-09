@@ -8,11 +8,14 @@ from collections.abc import AsyncGenerator, Generator
 
 import pytest
 import pytest_asyncio
+import httpx
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-os.environ.setdefault("DATABASE_URL", "postgresql+asyncpg://postgres:postgres@localhost:5432/agentprovision")
-os.environ.setdefault("REDIS_URL", "redis://localhost:6379/0")
-os.environ.setdefault("NEXT_PUBLIC_API_BASE_URL", "http://localhost:8000")
+HOST = os.getenv("INTEGRATION_HOST", "127.0.0.1")
+
+os.environ.setdefault("DATABASE_URL", f"postgresql+asyncpg://postgres:postgres@{HOST}:55432/agentprovision")
+os.environ.setdefault("REDIS_URL", f"redis://{HOST}:6379/0")
+os.environ.setdefault("NEXT_PUBLIC_API_BASE_URL", f"http://{HOST}:8000")
 
 COMPOSE_PROJECT = "agentprovision-integration-tests"
 COMPOSE_FILE = os.getenv("INTEGRATION_COMPOSE_FILE", "docker-compose.yml")
@@ -30,6 +33,19 @@ def _wait_for_service(host: str, port: int, *, timeout: float = 60.0, interval: 
                 pass
         time.sleep(interval)
     raise TimeoutError(f"Service {host}:{port} did not become ready within {timeout}s")
+
+
+def _wait_for_http(url: str, *, timeout: float = 90.0, interval: float = 2.0, auth: tuple[str, str] | None = None) -> None:
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        try:
+            response = httpx.get(url, timeout=interval, auth=auth)
+            if response.status_code < 500:
+                return
+        except (httpx.HTTPError, OSError):
+            pass
+        time.sleep(interval)
+    raise TimeoutError(f"Endpoint {url} did not become ready within {timeout}s")
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -51,10 +67,16 @@ def integration_stack() -> Generator[None, None, None]:
     subprocess.run(up_cmd, check=True)
 
     try:
-        _wait_for_service("localhost", 5432)
-        _wait_for_service("localhost", 6379)
-        _wait_for_service("localhost", 8000)
-        _wait_for_service("localhost", 5678)
+        _wait_for_service(HOST, 55432)
+        _wait_for_service(HOST, 6379)
+        _wait_for_service(HOST, 8000)
+        _wait_for_service(HOST, 5678)
+        _wait_for_http(f"http://{HOST}:8000/health/ready")
+        n8n_auth = (
+            os.getenv("N8N_BASIC_AUTH_USER", "admin"),
+            os.getenv("N8N_BASIC_AUTH_PASSWORD", "changeme"),
+        )
+        _wait_for_http(f"http://{HOST}:5678/rest/health", auth=n8n_auth)
         yield
     finally:
         down_cmd = ["docker", "compose", "-f", COMPOSE_FILE, "-p", COMPOSE_PROJECT, "down", "-v"]
