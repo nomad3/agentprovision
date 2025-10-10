@@ -14,6 +14,7 @@ async def read_current_user(current_user: User = Depends(get_current_user)) -> U
         id=current_user.id,
         email=current_user.email,
         full_name=current_user.full_name,
+        title=current_user.title,
         is_active=current_user.is_active,
         created_at=current_user.created_at,
         tenant_id=current_user.tenant_id,
