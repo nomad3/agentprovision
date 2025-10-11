@@ -15,8 +15,9 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@/lib/*": ["apps/web/lib/*"],
-      "@/components/*": ["apps/web/components/*"]
+      "@/*": ["./apps/web/*"],
+      "@/lib/*": ["./apps/web/lib/*"],
+      "@/components/*": ["./apps/web/components/*"]
     }
   },
   "include": ["packages", "apps"]
