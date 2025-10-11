@@ -1,6 +1,6 @@
 import { ArrowDownRight, ArrowUpRight } from "lucide-react"
 
-import type { AgentMetric } from "../../lib/types"
+import type { AgentMetric } from "@/lib/types"
 
 export function MetricCard({ metric }: { metric: AgentMetric }) {
   const isPositive = metric.trend === "up"

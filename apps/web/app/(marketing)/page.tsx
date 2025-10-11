@@ -11,8 +11,8 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 
-import { platformFeatures, testimonials, workflowStages } from "../../lib/marketing-content"
-import type { Feature, FeatureIcon, PublicMetrics } from "../../lib/types"
+import { platformFeatures, testimonials, workflowStages } from "@/lib/marketing-content"
+import type { Feature, FeatureIcon, PublicMetrics } from "@/lib/types"
 
 const featureIcons: Record<Feature["icon"], typeof Activity> = {
   ShieldCheck,

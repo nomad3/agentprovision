@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useState } from "react"
 
-import { useAuth } from "../../../components/providers/auth-provider"
+import { useAuth } from "@/components/providers/auth-provider"
 
 const cloudRegions = ["us-east-1", "us-west-2", "eu-west-1", "ap-southeast-1"]
 

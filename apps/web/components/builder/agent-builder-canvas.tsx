@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react"
 
-import type { AgentNode } from "../../lib/agent-designer-types"
+import type { AgentNode } from "@/lib/agent-designer-types"
 
 import { AgentNodeCard } from "./agent-node-card"
 

@@ -1,7 +1,7 @@
 import { ArrowUpRight, BookOpen, PlugZap } from "lucide-react"
 import Link from "next/link"
 
-import { integrationConnectors, integrationGuides } from "../../../lib/marketing-content"
+import { integrationConnectors, integrationGuides } from "@/lib/marketing-content"
 
 export default function IntegrationsPage() {
   return (

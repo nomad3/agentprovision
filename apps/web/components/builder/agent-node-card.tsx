@@ -2,7 +2,7 @@
 
 import { useMemo } from "react"
 
-import type { AgentNode } from "../../lib/agent-designer-types"
+import type { AgentNode } from "@/lib/agent-designer-types"
 
 type AgentNodeCardProps = {
   node: AgentNode

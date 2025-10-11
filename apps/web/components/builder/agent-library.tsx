@@ -2,7 +2,7 @@
 
 import { useMemo } from "react"
 
-import type { AgentNode, AgentNodeCategory, AgentTrainingConfig } from "../../lib/agent-designer-types"
+import type { AgentNode, AgentNodeCategory, AgentTrainingConfig } from "@/lib/agent-designer-types"
 
 const MODULE_LIBRARY: Array<{
   id: string
