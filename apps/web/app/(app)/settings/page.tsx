@@ -1,6 +1,6 @@
 "use client"
 
-import { useAuth } from "../../components/providers/auth-provider"
+import { useAuth } from "../../../components/providers/auth-provider"
 
 const rows = [
   { label: "Data residency", value: "US, EU" },
