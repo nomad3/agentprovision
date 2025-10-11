@@ -9,6 +9,12 @@ const nextConfig = {
       },
     ],
   },
+  webpack: (config) => {
+    config.snapshot = config.snapshot || {}
+    config.snapshot.managedPaths = []
+    config.snapshot.immutablePaths = []
+    return config
+  },
 }
 
 export default nextConfig
