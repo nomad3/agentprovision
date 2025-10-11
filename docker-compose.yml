@@ -20,7 +20,7 @@ services:
       - db
       - redis
     ports:
-      - "18000:18000"
+      - "18000:8000"
 
   web:
     build:
@@ -40,7 +40,7 @@ services:
     depends_on:
       - api
     ports:
-      - "13000:13000"
+      - "13000:3000"
 
   n8n:
     image: n8nio/n8n:1.73.0
