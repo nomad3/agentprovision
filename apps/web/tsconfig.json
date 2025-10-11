@@ -5,12 +5,8 @@
     "allowJs": false,
     "incremental": true,
     "paths": {
-      "@/components/*": [
-        "./components/*"
-      ],
-      "@/lib/*": [
-        "./lib/*"
-      ]
+      "@/components/*": ["./components/*"],
+      "@/lib/*": ["./lib/*"]
     },
     "baseUrl": ".",
     "plugins": [

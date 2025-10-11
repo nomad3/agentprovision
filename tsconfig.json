@@ -13,7 +13,11 @@
     "allowJs": false,
     "strict": true,
     "noEmit": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@/lib/*": ["apps/web/lib/*"],
+      "@/components/*": ["apps/web/components/*"]
+    }
   },
   "include": ["packages", "apps"]
 }
