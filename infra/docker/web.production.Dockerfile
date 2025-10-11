@@ -17,7 +17,7 @@ COPY --from=deps /app/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY . .
 # Re-install to link local workspaces like `lib`
 RUN pnpm install --frozen-lockfile
-RUN pnpm build --filter web...
+RUN pnpm build --filter web
 
 # Stage 3: production runner
 FROM node:20-alpine AS runner
