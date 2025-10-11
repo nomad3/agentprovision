@@ -1,9 +1,5 @@
 version: 2.1
 
-orbs:
-  docker: circleci/docker@2.4.1
-  node: circleci/node@5.2.0
-
 commands:
   setup_pnpm:
     description: "Install pnpm via corepack"
