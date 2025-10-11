@@ -15,6 +15,7 @@ RUN corepack enable
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY . .
+# Re-install to link local workspaces like `lib`
 RUN pnpm install --frozen-lockfile
 RUN pnpm build --filter web...
 
@@ -24,6 +25,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 RUN corepack enable
 COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/lib ./lib
+COPY --from=builder /app/tsconfig.json ./tsconfig.json
 COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /app/apps/web/package.json ./apps/web/package.json
