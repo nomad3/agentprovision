@@ -4,15 +4,17 @@ WORKDIR /app
 RUN corepack enable
 COPY package.json pnpm-workspace.yaml turbo.json tsconfig.json ./
 COPY apps/web/package.json apps/web/package.json
-RUN pnpm install --no-frozen-lockfile
+RUN pnpm install --recursive --no-frozen-lockfile
 
 # Stage 2: build application
 FROM node:20-alpine AS builder
 WORKDIR /app
 RUN corepack enable
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY . .
-RUN pnpm build --filter web...
+RUN pnpm install --filter web... --no-frozen-lockfile --prod=false \
+    && pnpm build --filter web...
 
 # Stage 3: production runner
 FROM node:20-alpine AS runner
@@ -26,6 +28,6 @@ COPY --from=builder /app/apps/web/next.config.mjs ./apps/web/next.config.mjs
 COPY --from=builder /app/apps/web/public ./apps/web/public
 COPY --from=builder /app/apps/web/.next ./apps/web/.next
 COPY --from=builder /app/apps/web/tsconfig.json ./apps/web/tsconfig.json
-RUN pnpm install --prod --no-frozen-lockfile --filter web
+RUN pnpm install --prod --no-frozen-lockfile --filter web --ignore-scripts
 EXPOSE 3000
 CMD ["pnpm", "--filter", "web", "start"]
