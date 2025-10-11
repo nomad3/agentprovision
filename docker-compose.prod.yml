@@ -19,7 +19,7 @@ services:
       - db
       - redis
     ports:
-      - "8000:8000"
+      - "18000:8000"
 
   web:
     build:
@@ -30,7 +30,7 @@ services:
     depends_on:
       - api
     ports:
-      - "3000:3000"
+      - "13000:3000"
 
   n8n:
     image: n8nio/n8n:1.73.0
@@ -50,7 +50,7 @@ services:
     volumes:
       - n8n-data:/home/node/.n8n
     ports:
-      - "5678:5678"
+      - "15678:5678"
 
   db:
     image: postgres:15-alpine
@@ -61,7 +61,7 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
-      - "${POSTGRES_HOST_PORT:-55432}:5432"
+      - "${POSTGRES_HOST_PORT:-15432}:5432"
 
   redis:
     image: redis:7-alpine
