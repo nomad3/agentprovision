@@ -24,6 +24,7 @@ const nextConfig = {
     config.resolve = config.resolve || {}
     config.resolve.alias = {
       ...(config.resolve?.alias || {}),
+      "@": rootDir,
       "@/lib": path.join(rootDir, "lib"),
       "@/components": path.join(rootDir, "components"),
     }
