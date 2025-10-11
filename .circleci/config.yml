@@ -54,7 +54,7 @@ jobs:
       - run:
           name: Run API tests
           working_directory: apps/api
-          command: pytest
+          command: poetry run pytest
 
   build_images:
     docker:
