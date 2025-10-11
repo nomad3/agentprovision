@@ -4,6 +4,12 @@
     "allowJs": false,
     "incremental": true,
     "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@/components/*": ["./components/*"],
+      "@/lib/*": ["./lib/*"],
+      "@/builder/*": ["./components/builder/*"]
+    },
     "plugins": [
       {
         "name": "next"
