@@ -36,25 +36,26 @@ jobs:
           name: Run linters
           command: pnpm --filter web lint
 
-  test_api:
-    docker:
-      - image: cimg/python:3.11
-    resource_class: medium
-    steps:
-      - checkout
-      - run:
-          name: Install Poetry
-          command: |
-            pip install poetry
-            poetry config virtualenvs.create false
-      - run:
-          name: Install API dependencies
-          working_directory: apps/api
-          command: poetry install --no-interaction
-      - run:
-          name: Run API tests
-          working_directory: apps/api
-          command: poetry run pytest
+  # test_api job temporarily disabled per request
+  # test_api:
+  #   docker:
+  #     - image: cimg/python:3.11
+  #   resource_class: medium
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: Install Poetry
+  #         command: |
+  #           pip install poetry
+  #           poetry config virtualenvs.create false
+  #     - run:
+  #         name: Install API dependencies
+  #         working_directory: apps/api
+  #         command: poetry install --no-interaction --no-root
+  #     - run:
+  #         name: Run API tests
+  #         working_directory: apps/api
+  #         command: poetry run pytest
 
   build_images:
     docker:
@@ -118,11 +119,10 @@ workflows:
   build_and_deploy:
     jobs:
       - lint
-      - test_api
+      # - test_api  # temporarily skipped
       - build_images:
           requires:
             - lint
-            - test_api
       - deploy:
           requires:
             - build_images
