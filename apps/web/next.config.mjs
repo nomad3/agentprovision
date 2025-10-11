@@ -15,9 +15,13 @@ const nextConfig = {
     ],
   },
   webpack: (config) => {
-    config.snapshot = config.snapshot || {}
-    config.snapshot.managedPaths = []
-    config.snapshot.immutablePaths = []
+    config.resolve.alias = {
+      ...(config.resolve.alias ?? {}),
+      "@": __dirname,
+      "@/lib": path.join(__dirname, "lib"),
+      "@/components": path.join(__dirname, "components"),
+      "@/builder": path.join(__dirname, "components", "builder"),
+    }
     return config
   },
 }
