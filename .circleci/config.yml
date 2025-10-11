@@ -93,7 +93,7 @@ jobs:
       - run:
           name: Deploy on remote host
           command: |
-            ssh ${SSH_USER}@${SSH_HOST} <<'EOF'
+            ssh ${SSH_USER}@${SSH_HOST} \<<'EOF'
             set -euo pipefail
             cd /opt/agentprovision
             docker load -i /tmp/agentprovision_api.tar
