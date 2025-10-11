@@ -1,7 +1,10 @@
 import path from "path"
 import { fileURLToPath } from "url"
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+const rootDir = path.resolve(__dirname)
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -21,8 +24,8 @@ const nextConfig = {
     config.resolve = config.resolve || {}
     config.resolve.alias = {
       ...(config.resolve?.alias || {}),
-      "@/lib": path.join(__dirname, "lib"),
-      "@/components": path.join(__dirname, "components"),
+      "@/lib": path.join(rootDir, "lib"),
+      "@/components": path.join(rootDir, "components"),
     }
     return config
   },
