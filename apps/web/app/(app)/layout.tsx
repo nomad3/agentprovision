@@ -1,8 +1,8 @@
 import type { ReactNode } from "react"
 
-import { ProtectedShell } from "@/components/layout/protected-shell"
-import { Sidebar } from "@/components/layout/sidebar"
-import { TopNav } from "@/components/layout/top-nav"
+import { ProtectedShell } from "../../components/layout/protected-shell"
+import { Sidebar } from "../../components/layout/sidebar"
+import { TopNav } from "../../components/layout/top-nav"
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (

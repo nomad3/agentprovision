@@ -1,9 +1,9 @@
 "use client"
 
-import { useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
-import { useAuth } from "@/components/providers/auth-provider"
+import { useAuth } from "../providers/auth-provider"
 
 export function ProtectedShell({ children }: { children: React.ReactNode }) {
   const { token, loading } = useAuth()

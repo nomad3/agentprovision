@@ -4,7 +4,7 @@ import { Bot, Database, LayoutDashboard, LifeBuoy, PlugZap, Settings, ShoppingBa
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-import { useAuth } from "@/components/providers/auth-provider"
+import { useAuth } from "../providers/auth-provider"
 
 const navItems = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },

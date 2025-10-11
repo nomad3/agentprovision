@@ -1,9 +1,9 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
+import { useState } from "react"
 
-import { useAuth } from "@/components/providers/auth-provider"
+import { useAuth } from "../../components/providers/auth-provider"
 
 const demoTenants = [
   { label: "Global Retail", email: "retail-demo@agentprovision.com", password: "SecurePass!23" },

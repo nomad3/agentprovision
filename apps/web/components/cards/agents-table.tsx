@@ -1,5 +1,5 @@
+import type { AgentRecord } from "../../lib/types"
 import { Badge } from "./badge"
-import type { AgentRecord } from "@/lib/types"
 
 const statusStyles: Record<AgentRecord["status"], string> = {
   Running: "bg-emerald-100 text-emerald-700",

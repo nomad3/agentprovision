@@ -2,11 +2,11 @@
 
 import { useState } from "react"
 
-import { AgentBuilderCanvas } from "@/components/builder/agent-builder-canvas"
-import { AgentLibrary } from "@/components/builder/agent-library"
-import { AgentSimulationPanel } from "@/components/builder/agent-simulation-panel"
-import { AgentTrainDialog } from "@/components/builder/agent-train-dialog"
-import type { AgentNode, AgentTrainingConfig } from "@/lib/agent-designer-types"
+import { AgentBuilderCanvas } from "../../components/builder/agent-builder-canvas"
+import { AgentLibrary } from "../../components/builder/agent-library"
+import { AgentSimulationPanel } from "../../components/builder/agent-simulation-panel"
+import { AgentTrainDialog } from "../../components/builder/agent-train-dialog"
+import type { AgentNode, AgentTrainingConfig } from "../../lib/agent-designer-types"
 
 export default function AgentsPage() {
   const [nodes, setNodes] = useState<AgentNode[]>([])

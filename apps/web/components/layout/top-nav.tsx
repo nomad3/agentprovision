@@ -2,7 +2,7 @@
 
 import { Bell, LogOut, Search } from "lucide-react"
 
-import { useAuth } from "@/components/providers/auth-provider"
+import { useAuth } from "../providers/auth-provider"
 
 export function TopNav() {
   const { user, logout } = useAuth()
