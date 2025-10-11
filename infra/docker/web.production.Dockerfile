@@ -4,6 +4,8 @@ WORKDIR /app
 RUN corepack enable
 COPY package.json pnpm-workspace.yaml turbo.json tsconfig.json pnpm-lock.yaml ./
 COPY apps/web/package.json apps/web/package.json
+# Copy over the package.json files for all packages
+COPY packages/ packages/
 RUN pnpm install --frozen-lockfile
 
 # Stage 2: build application
