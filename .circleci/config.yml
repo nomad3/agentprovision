@@ -1,0 +1,134 @@
+version: 2.1
+
+orbs:
+  docker: circleci/docker@2.4.1
+  node: circleci/node@5.2.0
+
+commands:
+  setup_pnpm:
+    description: "Install pnpm via corepack"
+    steps:
+      - run:
+          name: Enable corepack and install pnpm
+          command: |
+            corepack enable
+            corepack prepare pnpm@8.15.4 --activate
+
+jobs:
+  lint:
+    docker:
+      - image: cimg/node:20.10
+    resource_class: medium
+    steps:
+      - checkout
+      - setup_pnpm
+      - run:
+          name: Install dependencies
+          command: pnpm install --frozen-lockfile
+      - run:
+          name: Run linters
+          command: pnpm --filter web lint
+
+  test_api:
+    docker:
+      - image: cimg/python:3.11
+    resource_class: medium
+    steps:
+      - checkout
+      - run:
+          name: Install Poetry
+          command: |
+            pip install poetry
+            poetry config virtualenvs.create false
+      - run:
+          name: Install API dependencies
+          working_directory: apps/api
+          command: poetry install --no-interaction
+      - run:
+          name: Run API tests
+          working_directory: apps/api
+          command: pytest
+
+  build_images:
+    docker:
+      - image: docker:24.0.6
+    resource_class: medium
+    environment:
+      DOCKER_BUILDKIT: "1"
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 24.0.6
+      - run:
+          name: Build production images
+          command: |
+            docker build -f infra/docker/api.Dockerfile -t agentprovision_api:ci .
+            docker build -f infra/docker/web.production.Dockerfile -t agentprovision_web:ci .
+      - run:
+          name: Save images as artifacts
+          command: |
+            docker save agentprovision_api:ci -o /tmp/agentprovision_api.tar
+            docker save agentprovision_web:ci -o /tmp/agentprovision_web.tar
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - agentprovision_api.tar
+            - agentprovision_web.tar
+
+  deploy:
+    docker:
+      - image: cimg/base:stable
+    resource_class: medium
+    environment:
+      SSH_USER: << pipeline.parameters.deploy_user >>
+      SSH_HOST: << pipeline.parameters.deploy_host >>
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - << pipeline.parameters.deploy_ssh_fingerprint >>
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Transfer Docker images to remote host
+          command: |
+            scp /tmp/agentprovision_api.tar ${SSH_USER}@${SSH_HOST}:/tmp/agentprovision_api.tar
+            scp /tmp/agentprovision_web.tar ${SSH_USER}@${SSH_HOST}:/tmp/agentprovision_web.tar
+      - run:
+          name: Deploy on remote host
+          command: |
+            ssh ${SSH_USER}@${SSH_HOST} <<'EOF'
+            set -euo pipefail
+            cd /opt/agentprovision
+            docker load -i /tmp/agentprovision_api.tar
+            docker load -i /tmp/agentprovision_web.tar
+            docker-compose -f docker-compose.prod.yml --env-file .env.production up -d api web
+            EOF
+            docker-compose -f docker-compose.prod.yml --env-file ${SSH_ENV_FILE:-/opt/agentprovision/.env.production} ps
+
+workflows:
+  version: 2
+  build_and_deploy:
+    parameters:
+      deploy_user:
+        type: string
+        default: ""
+      deploy_host:
+        type: string
+        default: ""
+      deploy_ssh_fingerprint:
+        type: string
+        default: ""
+    jobs:
+      - lint
+      - test_api
+      - build_images:
+          requires:
+            - lint
+            - test_api
+      - deploy:
+          requires:
+            - build_images
+          filters:
+            branches:
+              only: main
