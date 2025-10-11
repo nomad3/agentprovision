@@ -39,3 +39,6 @@ line-length = 100
 [tool.pytest.ini_options]
 addopts = "-q"
 pythonpath = ["app"]
+
+[tool.poetry]
+package-mode = false
