@@ -6,6 +6,7 @@ const __dirname = path.dirname(__filename)
 
 const nextConfig = {
   reactStrictMode: true,
+  output: "standalone",
   images: {
     remotePatterns: [
       {
@@ -13,6 +14,10 @@ const nextConfig = {
         hostname: "avatars.dicebear.com",
       },
     ],
+  },
+  experimental: {
+    // Ensure trace generation walks the monorepo root during standalone builds
+    outputFileTracingRoot: path.join(__dirname, "..", ".."),
   },
   webpack: (config) => {
     config.resolve.alias = {
