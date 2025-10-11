@@ -4,15 +4,18 @@ WORKDIR /app
 
 RUN corepack enable
 
-COPY package.json pnpm-workspace.yaml turbo.json tsconfig.json ./
+COPY package.json pnpm-workspace.yaml turbo.json tsconfig.json pnpm-lock.yaml ./
 COPY apps/web/package.json apps/web/
+COPY packages ./packages
 
-RUN pnpm install --ignore-scripts
+RUN pnpm install --filter web --frozen-lockfile
 
 COPY . .
 
-RUN pnpm build --filter web...
+RUN pnpm --filter web build
+
+RUN pnpm --filter web install --prod --frozen-lockfile --no-optional
 
 EXPOSE 3000
 
-CMD ["pnpm", "dev", "--filter", "web"]
+CMD ["pnpm", "--filter", "web", "start"]
