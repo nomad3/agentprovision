@@ -5,6 +5,10 @@ WORKDIR /app
 COPY apps/web/package*.json ./
 RUN npm install
 
+# Force cache invalidation for source copy
+ARG BUILD_DATE=unknown
+RUN echo "Building at: $BUILD_DATE"
+
 COPY apps/web ./
 RUN npm run build
 

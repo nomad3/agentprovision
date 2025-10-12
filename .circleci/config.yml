@@ -59,7 +59,7 @@ jobs:
           name: Build production images
           command: |
             docker build -f infra/docker/api.Dockerfile -t agentprovision_api:ci .
-            docker build -f infra/docker/web.production.Dockerfile -t agentprovision_web:ci .
+            docker build --build-arg BUILD_DATE=$(date +%s) -f infra/docker/web.production.Dockerfile -t agentprovision_web:ci .
       - run:
           name: Save images as artifacts
           command: |
