@@ -2,16 +2,11 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Cache bust for npm migration
-ARG CACHEBUST=npm-v3
-RUN echo "Build with npm: $CACHEBUST"
+COPY apps/web/package*.json ./
+RUN npm install
 
-COPY package*.json ./
-COPY apps/web/package.json ./apps/web/package.json
-RUN npm install --workspace=apps/web
-
-COPY apps/web ./apps/web
-RUN npm run build --workspace=apps/web
+COPY apps/web ./
+RUN npm run build
 
 # Stage 2: production runner
 FROM node:20-alpine AS runner
@@ -19,9 +14,9 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-COPY --from=builder /app/apps/web/.next/standalone ./
-COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
-COPY --from=builder /app/apps/web/public ./apps/web/public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
 
 EXPOSE 3000
-CMD ["node", "apps/web/server.js"]
+CMD ["node", "server.js"]
