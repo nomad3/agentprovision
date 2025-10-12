@@ -2,6 +2,10 @@
 FROM node:20-alpine AS builder
 WORKDIR /app/apps/web
 
+# Cache bust for npm migration
+ARG CACHEBUST=npm-v2
+RUN echo "Build with npm: $CACHEBUST"
+
 COPY apps/web/package*.json ./
 RUN npm install --production=false
 
