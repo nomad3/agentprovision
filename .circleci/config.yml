@@ -86,6 +86,10 @@ jobs:
       - attach_workspace:
           at: /tmp
       - run:
+          name: Add remote host to known_hosts
+          command: |
+            ssh-keyscan -H << pipeline.parameters.deploy_host >> >> ~/.ssh/known_hosts
+      - run:
           name: Transfer Docker images to remote host
           command: |
             scp /tmp/agentprovision_api.tar ${SSH_USER}@${SSH_HOST}:/tmp/agentprovision_api.tar
