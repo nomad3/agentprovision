@@ -97,14 +97,14 @@ jobs:
       - run:
           name: Deploy on remote host
           command: |
-            ssh ${SSH_USER}@${SSH_HOST} \<<'EOF'
+            ssh -v ${SSH_USER}@${SSH_HOST} \<<'EOF'
             set -euo pipefail
             cd /opt/agentprovision
             docker load -i /tmp/agentprovision_api.tar
             docker load -i /tmp/agentprovision_web.tar
             docker-compose -f docker-compose.prod.yml --env-file .env.production up -d api web
-            EOF
             docker-compose -f docker-compose.prod.yml --env-file ${SSH_ENV_FILE:-/opt/agentprovision/.env.production} ps
+            EOF
 
 workflows:
   version: 2
