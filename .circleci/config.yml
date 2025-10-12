@@ -90,10 +90,11 @@ jobs:
           command: |
             ssh-keyscan -H << pipeline.parameters.deploy_host >> >> ~/.ssh/known_hosts
       - run:
-          name: Transfer Docker images to remote host
+          name: Transfer assets to remote host
           command: |
             scp /tmp/agentprovision_api.tar ${SSH_USER}@${SSH_HOST}:/tmp/agentprovision_api.tar
             scp /tmp/agentprovision_web.tar ${SSH_USER}@${SSH_HOST}:/tmp/agentprovision_web.tar
+            scp docker-compose.prod.yml ${SSH_USER}@${SSH_HOST}:/opt/agentprovision/docker-compose.prod.yml
       - run:
           name: Deploy on remote host
           command: |
