@@ -8,10 +8,6 @@ RUN echo "Cache bust: $CACHEBUST"
 RUN corepack enable
 COPY . .
 
-RUN ls -la apps/web/lib || echo "lib directory not found"
-RUN cat apps/web/next.config.mjs | head -20 || echo "next.config not found"
-RUN cat apps/web/tsconfig.json | head -20 || echo "tsconfig not found"
-
 RUN pnpm install --filter web --frozen-lockfile
 RUN pnpm --filter web build
 
