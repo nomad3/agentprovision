@@ -3,14 +3,9 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 RUN corepack enable
-COPY package.json pnpm-workspace.yaml turbo.json tsconfig.json pnpm-lock.yaml ./
-COPY apps/web/package.json apps/web/package.json
-COPY packages ./packages
+COPY . .
 
 RUN pnpm install --filter web --frozen-lockfile
-
-COPY apps/web ./apps/web
-
 RUN pnpm --filter web build
 
 # Stage 2: production runner
