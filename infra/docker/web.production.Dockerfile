@@ -1,16 +1,17 @@
 # Stage 1: build Next.js app with standalone output
 FROM node:20-alpine AS builder
-WORKDIR /app/apps/web
+WORKDIR /app
 
 # Cache bust for npm migration
-ARG CACHEBUST=npm-v2
+ARG CACHEBUST=npm-v3
 RUN echo "Build with npm: $CACHEBUST"
 
-COPY apps/web/package*.json ./
-RUN npm install --production=false
+COPY package*.json ./
+COPY apps/web/package.json ./apps/web/package.json
+RUN npm install --workspace=apps/web
 
-COPY apps/web ./
-RUN npm run build
+COPY apps/web ./apps/web
+RUN npm run build --workspace=apps/web
 
 # Stage 2: production runner
 FROM node:20-alpine AS runner
