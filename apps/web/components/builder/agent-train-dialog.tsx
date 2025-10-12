@@ -1,6 +1,6 @@
 "use client"
 
-import type { AgentTrainingConfig } from "@/lib/agent-designer-types"
+import type { AgentTrainingConfig } from "../../lib/agent-designer-types"
 
 type AgentTrainDialogProps = {
   open: boolean

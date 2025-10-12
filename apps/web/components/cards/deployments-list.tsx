@@ -2,7 +2,7 @@ import type { ReactNode } from "react"
 
 import { Cloud, ServerCog } from "lucide-react"
 
-import type { DeploymentRecord } from "@/lib/types"
+import type { DeploymentRecord } from "../../lib/types"
 
 const providerIcons: Record<string, ReactNode> = {
   AWS: <Cloud className="h-4 w-4 text-amber-500" />,

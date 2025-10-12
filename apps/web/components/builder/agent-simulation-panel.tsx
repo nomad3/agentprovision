@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react"
 
-import type { AgentNode, AgentTrainingConfig } from "@/lib/agent-designer-types"
+import type { AgentNode, AgentTrainingConfig } from "../../lib/agent-designer-types"
 
 type AgentSimulationPanelProps = {
   nodes: AgentNode[]

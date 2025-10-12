@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react"
 
-import { DeploymentsList } from "@/components/cards/deployments-list"
-import { useAuth } from "@/components/providers/auth-provider"
-import { apiRequest } from "@/lib/api-client"
-import type { DeploymentRecord } from "@/lib/types"
+import { DeploymentsList } from "../../../components/cards/deployments-list"
+import { useAuth } from "../../../components/providers/auth-provider"
+import { apiRequest } from "../../../lib/api-client"
+import type { DeploymentRecord } from "../../../lib/types"
 
 type DeploymentResponse = {
   id: string

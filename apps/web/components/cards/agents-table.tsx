@@ -1,4 +1,4 @@
-import type { AgentRecord } from "@/lib/types"
+import type { AgentRecord } from "../../lib/types"
 import { Badge } from "./badge"
 
 const statusStyles: Record<AgentRecord["status"], string> = {

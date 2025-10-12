@@ -4,12 +4,12 @@ import { ArrowUpRight, PlayCircle } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useMemo, useState } from "react"
 
-import { AgentsTable } from "@/components/cards/agents-table"
-import { DeploymentsList } from "@/components/cards/deployments-list"
-import { MetricCard } from "@/components/cards/metric-card"
-import { useAuth } from "@/components/providers/auth-provider"
-import { apiRequest } from "@/lib/api-client"
-import type { AgentMetric, AgentRecord, DeploymentRecord } from "@/lib/types"
+import { AgentsTable } from "../../../components/cards/agents-table"
+import { DeploymentsList } from "../../../components/cards/deployments-list"
+import { MetricCard } from "../../../components/cards/metric-card"
+import { useAuth } from "../../../components/providers/auth-provider"
+import { apiRequest } from "../../../lib/api-client"
+import type { AgentMetric, AgentRecord, DeploymentRecord } from "../../../lib/types"
 
 const DEFAULT_METRICS: AgentMetric[] = [
   { label: "Active Agents", value: "--", change: 0, trend: "up" },
