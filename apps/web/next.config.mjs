@@ -19,16 +19,6 @@ const nextConfig = {
     // Ensure trace generation walks the monorepo root during standalone builds
     outputFileTracingRoot: path.join(__dirname, "..", ".."),
   },
-  webpack: (config) => {
-    config.resolve.alias = {
-      ...(config.resolve.alias ?? {}),
-      "@": __dirname,
-      "@/lib": path.join(__dirname, "lib"),
-      "@/components": path.join(__dirname, "components"),
-      "@/builder": path.join(__dirname, "components", "builder"),
-    }
-    return config
-  },
 }
 
 export default nextConfig
