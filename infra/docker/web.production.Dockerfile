@@ -2,6 +2,9 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
+ARG CACHEBUST=1
+RUN echo "Cache bust: $CACHEBUST"
+
 RUN corepack enable
 COPY . .
 
