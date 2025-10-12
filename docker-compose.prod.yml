@@ -24,8 +24,10 @@ services:
   web:
     build:
       context: .
-      dockerfile: infra/docker/web.production.Dockerfile
+      dockerfile: infra/docker/web.Dockerfile
+    command: sh -c "npm run build && npm run start"
     environment:
+      NODE_ENV: production
       NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://api:8000}
     depends_on:
       - api
