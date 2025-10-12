@@ -11,16 +11,6 @@ parameters:
     type: string
     default: ""
 
-commands:
-  setup_pnpm:
-    description: "Install pnpm via corepack"
-    steps:
-      - run:
-          name: Enable corepack and install pnpm
-          command: |
-            corepack enable
-            corepack prepare pnpm@8.15.4 --activate
-
 jobs:
   lint:
     docker:
@@ -28,13 +18,12 @@ jobs:
     resource_class: medium
     steps:
       - checkout
-      - setup_pnpm
       - run:
           name: Install dependencies
-          command: pnpm install --frozen-lockfile
+          command: npm install --workspace=apps/web
       - run:
           name: Run linters
-          command: pnpm --filter web lint
+          command: npm run lint --workspace=apps/web
 
   # test_api job temporarily disabled per request
   # test_api:
