@@ -43,14 +43,16 @@ done
 echo "Generated API Port: $API_PORT"
 echo "Generated Web Port: $WEB_PORT"
 
-# --- 3. Stop Existing Docker Compose Services ---
-echo "Stopping any existing Docker Compose services..."
-docker-compose -f "$PROJECT_ROOT/docker-compose.yml" down || true # Use || true to prevent script from exiting if no services are running
-
-# --- 4. Export Ports and Build/Start Docker Compose ---
-echo "Building and starting Docker Compose services..."
+# Export ports so docker-compose can use them
 export API_PORT=$API_PORT
 export WEB_PORT=$WEB_PORT
+
+# --- 3. Stop Existing Docker Compose Services ---
+echo "Stopping any existing Docker Compose services..."
+docker-compose -f "$PROJECT_ROOT/docker-compose.yml" down --remove-orphans || true # Use || true to prevent script from exiting if no services are running
+
+# --- 4. Build and Start Docker Compose ---
+echo "Building and starting Docker Compose services..."
 docker-compose -f "$PROJECT_ROOT/docker-compose.yml" up --build -d
 
 echo "Docker Compose services started."
