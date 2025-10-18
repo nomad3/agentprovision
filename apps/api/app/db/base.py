@@ -1,10 +1,3 @@
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.ext.declarative import declarative_base
 
-
-class Base(DeclarativeBase):
-    """Base class for SQLAlchemy models."""
-
-    pass
-
-
-__all__ = ["Base"]
+Base = declarative_base()

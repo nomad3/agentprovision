@@ -1,35 +1,21 @@
-from datetime import datetime
-from typing import Optional
-from uuid import UUID
-
-from pydantic import BaseModel, EmailStr, Field, ConfigDict
-
+from pydantic import BaseModel, EmailStr
+import uuid
 
 class UserBase(BaseModel):
     email: EmailStr
-    full_name: Optional[str] = None
-    title: Optional[str] = None
-
+    full_name: str | None = None
+    is_active: bool = True
+    is_superuser: bool = False
 
 class UserCreate(UserBase):
-    password: str = Field(min_length=8)
-    tenant_name: str = Field(..., max_length=255)
-
-
-class UserRead(UserBase):
-    id: UUID
-    tenant_id: UUID
-    is_active: bool
-    created_at: datetime
-
-    model_config = ConfigDict(from_attributes=True)
-
-
-class UserLogin(BaseModel):
-    email: EmailStr
     password: str
 
+class UserUpdate(UserBase):
+    password: str | None = None
 
-class UserMe(UserRead):
-    tenant_slug: str
-    tenant_name: str
+class User(UserBase):
+    id: uuid.UUID
+    tenant_id: uuid.UUID
+
+    class Config:
+        orm_mode = True

@@ -1,13 +1,14 @@
-from datetime import datetime
-from uuid import UUID
+from pydantic import BaseModel
+import uuid
 
-from pydantic import BaseModel, ConfigDict
-
-
-class TenantRead(BaseModel):
-    id: UUID
+class TenantBase(BaseModel):
     name: str
-    slug: str
-    created_at: datetime
 
-    model_config = ConfigDict(from_attributes=True)
+class TenantCreate(TenantBase):
+    pass
+
+class Tenant(TenantBase):
+    id: uuid.UUID
+
+    class Config:
+        orm_mode = True
