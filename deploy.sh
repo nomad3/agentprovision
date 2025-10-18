@@ -17,20 +17,8 @@ if ! command -v docker &> /dev/null; then
 fi
 
 # Check for Docker Compose
-if ! command -v docker compose &> /dev/null; then
-    echo "Docker Compose not found. Please install Docker Compose before proceeding."
-    exit 1
-fi
-
-# Check for Nginx
-if ! command -v nginx &> /dev/null; then
-    echo "Nginx not found. Please install Nginx before proceeding."
-    exit 1
-fi
-
-# Check for Certbot
-if ! command -v certbot &> /dev/null; then
-    echo "Certbot not found. Please install Certbot (e.g., 'sudo apt install certbot python3-certbot-nginx') before proceeding."
+if ! command -v docker-compose &> /dev/null; then
+    echo "Docker Compose not found. Please install Docker Compose (e.g., 'sudo apt install docker-compose') before proceeding."
     exit 1
 fi
 
@@ -57,13 +45,13 @@ echo "Generated Web Port: $WEB_PORT"
 
 # --- 3. Stop Existing Docker Compose Services ---
 echo "Stopping any existing Docker Compose services..."
-docker compose -f "$PROJECT_ROOT/docker-compose.yml" down || true # Use || true to prevent script from exiting if no services are running
+docker-compose -f "$PROJECT_ROOT/docker-compose.yml" down || true # Use || true to prevent script from exiting if no services are running
 
 # --- 4. Export Ports and Build/Start Docker Compose ---
 echo "Building and starting Docker Compose services..."
 export API_PORT=$API_PORT
 export WEB_PORT=$WEB_PORT
-docker compose -f "$PROJECT_ROOT/docker-compose.yml" up --build -d
+docker-compose -f "$PROJECT_ROOT/docker-compose.yml" up --build -d
 
 echo "Docker Compose services started."
 
