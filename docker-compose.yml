@@ -25,20 +25,11 @@ services:
       - WDS_SOCKET_HOST=0.0.0.0
       - WDS_SOCKET_PORT=3000
 
-    db:
-
-      image: postgres:13
-
-      environment:
-
-        - POSTGRES_USER=postgres
-
-        - POSTGRES_PASSWORD=postgres
-
-        - POSTGRES_DB=agentprovision
-
-      ports:
-
-        - "${DB_PORT}:5432"
-
-  
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=agentprovision
+    ports:
+      - "${DB_PORT}:5432"
