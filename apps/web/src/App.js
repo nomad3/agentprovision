@@ -4,6 +4,14 @@ import LandingPage from './LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
+import DataSourcesPage from './pages/DataSourcesPage';
+import DataPipelinesPage from './pages/DataPipelinesPage';
+import NotebooksPage from './pages/NotebooksPage';
+import AgentsPage from './pages/AgentsPage';
+import ToolsPage from './pages/ToolsPage';
+import ConnectorsPage from './pages/ConnectorsPage';
+import DeploymentsPage from './pages/DeploymentsPage';
+import Layout from './components/Layout';
 import authService from './services/auth';
 
 // Create an Auth Context
@@ -45,7 +53,13 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
-          {/* Add other dashboard routes here later */}
+          <Route path="/data-sources" element={<DataSourcesPage />} />
+          <Route path="/data-pipelines" element={<DataPipelinesPage />} />
+          <Route path="/notebooks" element={<NotebooksPage />} />
+          <Route path="/agents" element={<AgentsPage />} />
+          <Route path="/tools" element={<ToolsPage />} />
+          <Route path="/connectors" element={<ConnectorsPage />} />
+          <Route path="/deployments" element={<DeploymentsPage />} />
         </Routes>
       </AuthProvider>
     </Router>
