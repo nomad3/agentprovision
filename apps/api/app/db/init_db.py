@@ -1,4 +1,6 @@
+import time
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import OperationalError
 
 from app.db import base  # noqa: F401
 from app.db.session import engine
@@ -19,4 +21,22 @@ from app.models.deployment import Deployment  # noqa: F401
 def init_db(db: Session) -> None:
     # Tables should be created with Alembic migrations
     # But for this initial setup, we'll create them directly
-    base.Base.metadata.create_all(bind=engine)
+    
+    # Add retry logic for database connection
+    max_retries = 10
+    retry_delay = 5  # seconds
+
+    for i in range(max_retries):
+        try:
+            print(f"Attempting to connect to database (attempt {i+1}/{max_retries})...")
+            base.Base.metadata.create_all(bind=engine)
+            print("Database connection successful and tables created.")
+            break
+        except OperationalError as e:
+            print(f"Database connection failed: {e}")
+            if i < max_retries - 1:
+                print(f"Retrying in {retry_delay} seconds...")
+                time.sleep(retry_delay)
+            else:
+                print("Max retries reached. Could not connect to database.")
+                raise
