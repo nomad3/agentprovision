@@ -33,23 +33,19 @@ generate_random_port() {
 }
 
 API_PORT=$(generate_random_port)
-WEB_PORT=$(generate_random_port)
 DB_PORT=$(generate_random_port)
 
 # Basic check to ensure ports are not the same (unlikely but possible)
-while [ "$API_PORT" -eq "$WEB_PORT" ] || [ "$API_PORT" -eq "$DB_PORT" ] || [ "$WEB_PORT" -eq "$DB_PORT" ]; do
+while [ "$API_PORT" -eq "$DB_PORT" ]; do
     API_PORT=$(generate_random_port)
-    WEB_PORT=$(generate_random_port)
     DB_PORT=$(generate_random_port)
 done
 
 echo "Generated API Port: $API_PORT"
-echo "Generated Web Port: $WEB_PORT"
 echo "Generated DB Port: $DB_PORT"
 
 # Export ports so docker-compose can use them
 export API_PORT=$API_PORT
-export WEB_PORT=$WEB_PORT
 export DB_PORT=$DB_PORT
 
 echo "Docker Compose configuration with resolved ports:"
@@ -76,7 +72,7 @@ server {
     server_name $DOMAIN;
 
     location / {
-        proxy_pass http://localhost:$WEB_PORT;
+        proxy_pass http://web:80;
         proxy_http_version 1.1;
         proxy_set_header Upgrade \$http_upgrade;
         proxy_set_header Connection 'upgrade';
