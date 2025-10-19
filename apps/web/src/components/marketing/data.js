@@ -12,7 +12,27 @@ import {
   FaBrain,
   FaChartPie,
   FaEye,
+  FaLock,
+  FaCompass,
 } from 'react-icons/fa';
+
+export const heroHighlights = [
+  {
+    icon: FaShieldAlt,
+    title: 'Governed autonomy',
+    description: 'Adaptive guardrails, audit trails, and regional controls built-in.',
+  },
+  {
+    icon: FaCompass,
+    title: 'Operator visibility',
+    description: 'Live runbooks map every signal to agent actions across tenants.',
+  },
+  {
+    icon: FaLock,
+    title: 'Security by default',
+    description: 'Zero-trust posture with secrets vaulting, signed actions, and policy approvals.',
+  },
+];
 
 export const metrics = [
   {
