@@ -5,22 +5,17 @@ from sqlalchemy.orm import sessionmaker
 
 from app.main import app
 from app.db.base import Base
-from app.db.session import get_db
+from app.db.session import get_db, SessionLocal, engine # Import SessionLocal and engine
 from app.core.config import settings
 import os
 
 # Set TESTING environment variable for app.main to skip init_db
 os.environ["TESTING"] = "True"
 
-# Use a test database
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 # Override the get_db dependency for tests
 def override_get_db():
     try:
-        db = TestingSessionLocal()
+        db = SessionLocal()
         yield db
     finally:
         db.close()
@@ -32,7 +27,7 @@ client = TestClient(app)
 @pytest.fixture(name="db_session")
 def db_session_fixture():
     Base.metadata.create_all(bind=engine) # Create tables for tests
-    yield TestingSessionLocal()
+    yield SessionLocal()
     Base.metadata.drop_all(bind=engine) # Drop tables after tests
 
 @pytest.fixture(name="test_user_data")
