@@ -14,62 +14,64 @@ import {
   FaEye,
   FaLock,
   FaCompass,
+  FaRegCalendarCheck,
+  FaLayerGroup,
 } from 'react-icons/fa';
 
 export const heroHighlights = [
   {
+    icon: FaChartPie,
+    title: 'Executive-ready KPIs',
+    description: 'Auto-compose board dashboards with drill-through lineage to every telemetry stream.',
+  },
+  {
+    icon: FaChartLine,
+    title: 'Signal correlation',
+    description: 'Fuse product usage, revenue, and ops signals to unlock next-best business actions.',
+  },
+  {
     icon: FaShieldAlt,
-    title: 'Governed autonomy',
-    description: 'Adaptive guardrails, audit trails, and regional controls built-in.',
-  },
-  {
-    icon: FaCompass,
-    title: 'Operator visibility',
-    description: 'Live runbooks map every signal to agent actions across tenants.',
-  },
-  {
-    icon: FaLock,
-    title: 'Security by default',
-    description: 'Zero-trust posture with secrets vaulting, signed actions, and policy approvals.',
+    title: 'Governed insights',
+    description: 'Enforce data residency, approvals, and audit trails on every metric and decision.',
   },
 ];
 
 export const metrics = [
   {
-    label: 'Signals Unified',
-    value: '1.2B+',
-    description: 'Streaming events correlated daily across agents, telemetry, and customer data.',
+    label: 'Executive dashboards',
+    value: '350+',
+    description: 'Live C-suite scorecards delivered with drill-down and what-if analysis.',
   },
   {
-    label: 'Autonomous Pipelines',
-    value: '4,800',
-    description: 'Orchestrations coordinating retrieval, reasoning, and actuation in production.',
+    label: 'Data freshness SLA',
+    value: '<5 min',
+    description: 'Streaming-to-insight latency for revenue, risk, and operations teams.',
   },
   {
-    label: 'Median Response',
-    value: '<180ms',
-    description: 'End-to-end loop from anomaly detection to governed agent action.',
+    label: 'Analyst hours saved',
+    value: '42k/yr',
+    description: 'Automated insight distribution replaces manual spreadsheet stitching.',
   },
 ];
 
 export const features = [
   {
-    icon: FaLaptopCode,
-    title: 'Collaborative Workspaces',
+    icon: FaDatabase,
+    title: 'Unified Intelligence Fabric',
     description:
-      'Design, evaluate, and ship agent workflows with real-time notebooks, approvals, and version control.',
+      'Model every dataset—streaming, structured, and unstructured—inside a governed lakehouse with semantic business layers.',
   },
   {
     icon: FaChartLine,
-    title: 'Unified Intelligence Mesh',
+    title: 'Realtime BI Apps',
     description:
-      'Manage reusable reasoning skills, policy guardrails, and orchestration graphs for every tenant.',
+      'Launch interactive revenue, risk, and operations workspaces powered by sub-minute data refreshes and predictive scoring.',
   },
   {
-    icon: FaDatabase,
-    title: 'Lakehouse Fabric',
+    icon: FaLaptopCode,
+    title: 'Composable Notebooks',
     description:
-      'Ingest structured, unstructured, and streaming data with lineage, ACID guarantees, and retention policies.',
+      'Empower analytics engineers with collaborative notebooks that compile into governed dashboards and agent skills.',
   },
 ];
 
@@ -93,19 +95,19 @@ export const lakehouseHighlights = [
 
 export const aiHighlights = [
   {
-    icon: FaRobot,
-    title: 'Lifecycle Automation',
-    description: 'Provision, test, and promote agents with golden path pipelines, scoring, and rollback.',
+    icon: FaChartPie,
+    title: 'Adaptive scorecards',
+    description: 'Generate KPI narratives, anomaly callouts, and proactive recommendations for every persona.',
   },
   {
-    icon: FaCloud,
-    title: 'Multi-cloud Ready',
-    description: 'Deploy across AWS, Azure, or on-prem clusters with workload-aware scheduling.',
+    icon: FaLayerGroup,
+    title: 'Semantic metrics layer',
+    description: 'Centralize metric definitions, dimensions, and governance so every dashboard stays consistent.',
   },
   {
-    icon: FaGlobe,
-    title: 'Global Observability',
-    description: 'Monitor latency, cost, and compliance metrics in one pane of glass.',
+    icon: FaRegCalendarCheck,
+    title: 'Closed-loop planning',
+    description: 'Sync insights into OKRs, Jira, and CRM workflows with automated impact tracking.',
   },
 ];
 
