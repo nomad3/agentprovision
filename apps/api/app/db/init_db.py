@@ -68,15 +68,11 @@ def seed_demo_data(db: Session) -> None:
         DataSource(
             name="Snowflake Revenue Warehouse",
             type="warehouse",
-            status="healthy",
-            description="Primary ARR metrics replicated every 5 minutes",
             tenant_id=demo_tenant.id,
         ),
         DataSource(
             name="Product Telemetry Stream",
             type="stream",
-            status="degraded",
-            description="Real-time usage events powering engagement insights",
             tenant_id=demo_tenant.id,
         ),
     ]
@@ -86,16 +82,12 @@ def seed_demo_data(db: Session) -> None:
     data_pipelines = [
         DataPipeline(
             name="ARR Forecasting",
-            status="active",
             schedule="*/5 * * * *",
-            description="Aggregates bookings and generates ARR projections",
             tenant_id=demo_tenant.id,
         ),
         DataPipeline(
             name="Usage Churn Risk",
-            status="warning",
             schedule="*/15 * * * *",
-            description="Scores accounts based on telemetry anomalies",
             tenant_id=demo_tenant.id,
         ),
     ]
@@ -105,12 +97,10 @@ def seed_demo_data(db: Session) -> None:
     notebooks = [
         Notebook(
             name="Executive ARR Summary",
-            description="Notebook assembling ARR, pipeline, and forecast commentary",
             tenant_id=demo_tenant.id,
         ),
         Notebook(
             name="Churn Risk Deep Dive",
-            description="Analyst workbook investigating rising churn signals",
             tenant_id=demo_tenant.id,
         ),
     ]
@@ -119,14 +109,10 @@ def seed_demo_data(db: Session) -> None:
     agents = [
         Agent(
             name="Revenue Copilot",
-            status="active",
-            description="Synthesizes ARR drivers and recommends executive actions",
             tenant_id=demo_tenant.id,
         ),
         Agent(
             name="Telemetry Sentinel",
-            status="training",
-            description="Watches product usage streams for anomaly patterns",
             tenant_id=demo_tenant.id,
         ),
     ]
@@ -135,12 +121,10 @@ def seed_demo_data(db: Session) -> None:
     tools = [
         Tool(
             name="Scenario Planner",
-            description="Generates forecast scenarios across revenue, ops, and capacity",
             tenant_id=demo_tenant.id,
         ),
         Tool(
             name="Retention Playbook",
-            description="Automates customer success tasks for at-risk accounts",
             tenant_id=demo_tenant.id,
         ),
     ]
@@ -150,14 +134,12 @@ def seed_demo_data(db: Session) -> None:
         Connector(
             name="Salesforce",
             type="crm",
-            status="connected",
             config={"objects": ["Opportunity", "Account"]},
             tenant_id=demo_tenant.id,
         ),
         Connector(
             name="Snowflake",
             type="warehouse",
-            status="connected",
             config={"database": "ARR_ANALYTICS"},
             tenant_id=demo_tenant.id,
         ),
@@ -167,14 +149,12 @@ def seed_demo_data(db: Session) -> None:
     deployments = [
         Deployment(
             name="Revenue Copilot - Prod",
-            status="healthy",
             environment="production",
             agent_id=agents[0].id,
             tenant_id=demo_tenant.id,
         ),
         Deployment(
             name="Telemetry Sentinel - Staging",
-            status="deploying",
             environment="staging",
             agent_id=agents[1].id,
             tenant_id=demo_tenant.id,
