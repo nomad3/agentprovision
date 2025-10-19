@@ -42,7 +42,7 @@ Built with enterprise requirements in mind, AgentProvision provides:
 To further enhance the platform, future plans include:
 
 *   **OAuth/SAML SSO Integration:** Integrate with enterprise identity providers (Okta, Azure AD) for seamless single sign-on.
-*   **Agent Creation Wizards & Evaluation Dashboards:** Develop intuitive tools for agent creation, comprehensive evaluation dashboards, and visual editors for advanced AI workflows (e.g., LangGraph).
+*   **Agent Creation Wizards & Evaluation Dashboards:** Develop intuitive wizards for agent creation, comprehensive evaluation dashboards, and visual editors for advanced AI workflows (e.g., LangGraph).
 *   **Expanded Observability:** Connect OpenTelemetry traces to Grafana dashboards and expose FinOps insights via cost APIs for deeper monitoring and cost management.
 *   **Automated Deployments:** Implement GitHub Actions for automated deployments to managed environments (EKS/GKE) utilizing Terraform modules.
 
