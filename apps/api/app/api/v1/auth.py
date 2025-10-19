@@ -45,3 +45,12 @@ def register_user(
         )
     user = user_service.create_user_with_tenant(db, user_in=user_in, tenant_in=tenant_in)
     return user
+
+@router.get("/users/me", response_model=user_schema.User)
+def read_users_me(
+    current_user: user_schema.User = Depends(deps.get_current_active_user)
+):
+    """
+    Get current user.
+    """
+    return current_user
