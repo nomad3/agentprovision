@@ -131,13 +131,11 @@ def seed_demo_data(db: Session) -> None:
     connectors = [
         Connector(
             name="Salesforce",
-            type="crm",
             config={"objects": ["Opportunity", "Account"]},
             tenant_id=demo_tenant.id,
         ),
         Connector(
             name="Snowflake",
-            type="warehouse",
             config={"database": "ARR_ANALYTICS"},
             tenant_id=demo_tenant.id,
         ),
