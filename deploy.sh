@@ -52,6 +52,9 @@ export API_PORT=$API_PORT
 export WEB_PORT=$WEB_PORT
 export DB_PORT=$DB_PORT
 
+echo "Docker Compose configuration with resolved ports:"
+docker-compose -f "$PROJECT_ROOT/docker-compose.yml" config
+
 # --- 3. Stop Existing Docker Compose Services ---
 echo "Stopping any existing Docker Compose services..."
 docker-compose -f "$PROJECT_ROOT/docker-compose.yml" down --remove-orphans || true # Use || true to prevent script from exiting if no services are running
