@@ -11,6 +11,10 @@ from app.models.tenant import Tenant  # noqa: F401
 from app.models.data_source import DataSource  # noqa: F401
 from app.models.data_pipeline import DataPipeline  # noqa: F401
 from app.models.notebook import Notebook  # noqa: F401
+from app.models.agent import Agent  # noqa: F401
+from app.models.tool import Tool  # noqa: F401
+from app.models.connector import Connector  # noqa: F401
+from app.models.deployment import Deployment  # noqa: F401
 
 def init_db(db: Session) -> None:
     # Tables should be created with Alembic migrations

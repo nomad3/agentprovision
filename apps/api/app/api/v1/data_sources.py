@@ -1,11 +1,13 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app import schemas
 from app.api import deps
 from app.services import data_source as data_source_service
+from app.models.user import User
+import uuid
 
 router = APIRouter()
 
@@ -14,29 +16,73 @@ def read_data_sources(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
-    # current_user: models.User = Depends(deps.get_current_active_user),
+    current_user: User = Depends(deps.get_current_active_user),
 ):
     """
-    Retrieve data sources.
+    Retrieve data sources for the current tenant.
     """
-    # if crud.user.is_superuser(current_user):
-    #     data_sources = service.data_source.get_multi(db, skip=skip, limit=limit)
-    # else:
     data_sources = data_source_service.get_data_sources_by_tenant(
-        db, tenant_id=1, skip=skip, limit=limit #current_user.tenant_id
+        db, tenant_id=current_user.tenant_id, skip=skip, limit=limit
     )
     return data_sources
 
 
-@router.post("/", response_model=schemas.data_source.DataSource)
+@router.post("/", response_model=schemas.data_source.DataSource, status_code=status.HTTP_201_CREATED)
 def create_data_source(
     *,
     db: Session = Depends(deps.get_db),
     item_in: schemas.data_source.DataSourceCreate,
-    # current_user: models.User = Depends(deps.get_current_active_user),
+    current_user: User = Depends(deps.get_current_active_user),
 ):
     """
-    Create new data source.
+    Create new data source for the current tenant.
     """
-    item = data_source_service.create_tenant_data_source(db=db, item=item_in, tenant_id=1)
+    item = data_source_service.create_tenant_data_source(db=db, item_in=item_in, tenant_id=current_user.tenant_id)
     return item
+
+@router.get("/{data_source_id}", response_model=schemas.data_source.DataSource)
+def read_data_source_by_id(
+    data_source_id: uuid.UUID,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_active_user),
+):
+    """
+    Retrieve a specific data source by ID for the current tenant.
+    """
+    data_source = data_source_service.get_data_source(db, data_source_id=data_source_id)
+    if not data_source or str(data_source.tenant_id) != str(current_user.tenant_id):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Data source not found")
+    return data_source
+
+@router.put("/{data_source_id}", response_model=schemas.data_source.DataSource)
+def update_data_source(
+    *,
+    db: Session = Depends(deps.get_db),
+    data_source_id: uuid.UUID,
+    item_in: schemas.data_source.DataSourceCreate,
+    current_user: User = Depends(deps.get_current_active_user),
+):
+    """
+    Update an existing data source for the current tenant.
+    """
+    data_source = data_source_service.get_data_source(db, data_source_id=data_source_id)
+    if not data_source or str(data_source.tenant_id) != str(current_user.tenant_id):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Data source not found")
+    item = data_source_service.update_data_source(db=db, db_obj=data_source, obj_in=item_in)
+    return item
+
+@router.delete("/{data_source_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_data_source(
+    *,
+    db: Session = Depends(deps.get_db),
+    data_source_id: uuid.UUID,
+    current_user: User = Depends(deps.get_current_active_user),
+):
+    """
+    Delete a data source for the current tenant.
+    """
+    data_source = data_source_service.get_data_source(db, data_source_id=data_source_id)
+    if not data_source or str(data_source.tenant_id) != str(current_user.tenant_id):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Data source not found")
+    data_source_service.delete_data_source(db=db, data_source_id=data_source_id)
+    return {"message": "Data source deleted successfully"}
