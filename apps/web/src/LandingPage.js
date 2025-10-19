@@ -27,7 +27,7 @@ const LandingPage = () => {
       <div className="py-5 text-center bg-dark text-white position-relative overflow-hidden"
         style={{
           paddingTop: '120px',
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(/images/enterprise-ai.jpg)`,
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(https://picsum.photos/1080/700?random=1)`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           minHeight: '700px',
@@ -88,7 +88,7 @@ const LandingPage = () => {
           <h2 className="text-center display-4 fw-bold mb-5 text-white">The Data Lakehouse Advantage</h2>
           <Row className="g-4 align-items-center">
             <Col md={6}>
-              <img src="/images/data-pipelines.jpg" alt="Data Lakehouse" className="img-fluid rounded shadow-lg animate__animated animate__fadeInLeft" />
+              <img src="https://picsum.photos/1080/700?random=2" alt="Data Lakehouse" className="img-fluid rounded shadow-lg animate__animated animate__fadeInLeft" />
             </Col>
             <Col md={6}>
               <h3 className="display-6 fw-bold text-white animate__animated animate__fadeInRight">Unify Your Data Strategy</h3>
@@ -111,7 +111,7 @@ const LandingPage = () => {
           <h2 className="text-center display-4 fw-bold mb-5 text-white">Intelligent Agents, Seamlessly Orchestrated</h2>
           <Row className="g-4 align-items-center flex-row-reverse">
             <Col md={6}>
-              <img src="/images/ai-agents.jpg" alt="AI Agents" className="img-fluid rounded shadow-lg animate__animated animate__fadeInRight" />
+              <img src="https://picsum.photos/1080/700?random=3" alt="AI Agents" className="img-fluid rounded shadow-lg animate__animated animate__fadeInRight" />
             </Col>
             <Col md={6}>
               <h3 className="display-6 fw-bold text-white animate__animated animate__fadeInLeft">Orchestrate AI at Scale</h3>
