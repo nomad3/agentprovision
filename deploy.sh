@@ -32,50 +32,19 @@ generate_random_port() {
     shuf -i 10000-65535 -n 1
 }
 
-API_PORT=$(generate_random_port)
-WEB_PORT=$(generate_random_port)
-DB_PORT=$(generate_random_port)
+API_PORT=8001
+WEB_PORT=8002
+DB_PORT=8003
 
-# Basic check to ensure ports are not the same (unlikely but possible)
-while [ "$API_PORT" -eq "$WEB_PORT" ] || [ "$API_PORT" -eq "$DB_PORT" ] || [ "$WEB_PORT" -eq "$DB_PORT" ]; do
-    API_PORT=$(generate_random_port)
-    WEB_PORT=$(generate_random_port)
-    DB_PORT=$(generate_random_port)
-done
-
-echo "Generated API Port: $API_PORT"
-echo "Generated Web Port: $WEB_PORT"
-echo "Generated DB Port: $DB_PORT"
+echo "Using fixed ports:"
+echo "API Port: $API_PORT"
+echo "Web Port: $WEB_PORT"
+echo "DB Port: $DB_PORT"
 
 # Export ports so docker-compose can use them
 export API_PORT=$API_PORT
 export WEB_PORT=$WEB_PORT
 export DB_PORT=$DB_PORT
-
-# Create index.html for the web service build
-mkdir -p "$PROJECT_ROOT/apps/web/public"
-cat <<EOF > "$PROJECT_ROOT/apps/web/public/index.html"
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <title>AgentProvision App</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
-</html>
-EOF
 
 echo "Docker Compose configuration with resolved ports:"
 docker-compose -f "$PROJECT_ROOT/docker-compose.yml" config
