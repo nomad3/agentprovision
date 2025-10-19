@@ -82,12 +82,10 @@ def seed_demo_data(db: Session) -> None:
     data_pipelines = [
         DataPipeline(
             name="ARR Forecasting",
-            schedule="*/5 * * * *",
             tenant_id=demo_tenant.id,
         ),
         DataPipeline(
             name="Usage Churn Risk",
-            schedule="*/15 * * * *",
             tenant_id=demo_tenant.id,
         ),
     ]
@@ -149,13 +147,11 @@ def seed_demo_data(db: Session) -> None:
     deployments = [
         Deployment(
             name="Revenue Copilot - Prod",
-            environment="production",
             agent_id=agents[0].id,
             tenant_id=demo_tenant.id,
         ),
         Deployment(
             name="Telemetry Sentinel - Staging",
-            environment="staging",
             agent_id=agents[1].id,
             tenant_id=demo_tenant.id,
         ),
