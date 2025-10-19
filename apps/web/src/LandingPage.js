@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navbar, Nav, Container, Button, Row, Col, Card } from 'react-bootstrap';
-import { FaBrain, FaCloud, FaCogs, FaLock, FaGlobe, FaLaptopCode, FaChartLine, FaDatabase, FaRoad, FaUsers, FaShieldAlt } from 'react-icons/fa';
+import { FaBrain, FaCloud, FaCogs, FaLock, FaGlobe, FaLaptopCode, FaChartLine, FaDatabase, FaRoad, FaUsers, FaShieldAlt, FaCubes, FaRobot, FaCodeBranch } from 'react-icons/fa';
 
 const LandingPage = () => {
   return (
@@ -13,7 +13,8 @@ const LandingPage = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
               <Nav.Link href="#features" className="mx-2 text-light">Features</Nav.Link>
-              <Nav.Link href="#highlights" className="mx-2 text-light">Highlights</Nav.Link>
+              <Nav.Link href="#lakehouse" className="mx-2 text-light">Lakehouse</Nav.Link>
+              <Nav.Link href="#ai-capabilities" className="mx-2 text-light">AI Capabilities</Nav.Link>
               <Nav.Link href="#roadmap" className="mx-2 text-light">Roadmap</Nav.Link>
               <Nav.Link href="#contact" className="mx-2 text-light">Contact</Nav.Link>
             </Nav>
@@ -36,26 +37,26 @@ const LandingPage = () => {
         }}>
         <Container className="position-relative">
           <h1 className="display-2 fw-bold mb-4 animate__animated animate__fadeInDown">
-            The Unified Data & AI Platform for Enterprises
+            The Unified Data Intelligence Platform for AI
           </h1>
           <p className="fs-4 mb-5 mx-auto text-light animate__animated animate__fadeInUp" style={{ maxWidth: '800px' }}>
-            Orchestrate AI agents, build robust data pipelines, and unlock insights across multi-cloud environments with enterprise-grade security and scalability.
+            Unify your data, analytics, and AI workloads. Build, deploy, and manage intelligent agents across multi-cloud environments with enterprise-grade security and scalability.
           </p>
-          <Button variant="primary" size="lg" className="mt-3 px-5 py-3 rounded-pill animate__animated animate__zoomIn" href="/get-started">Get Started for Free</Button>
+          <Button variant="primary" size="lg" className="mt-3 px-5 py-3 rounded-pill animate__animated animate__zoomIn" href="/get-started">Start Your Free Trial</Button>
         </Container>
       </div>
 
       {/* Features Section */}
       <div id="features" className="py-5 bg-secondary">
         <Container>
-          <h2 className="text-center display-4 fw-bold mb-5 text-white">A Platform for the Entire AI Lifecycle</h2>
+          <h2 className="text-center display-4 fw-bold mb-5 text-white">Accelerate Your Data & AI Journey</h2>
           <Row className="g-4 justify-content-center">
             <Col md={4}>
               <Card className="h-100 bg-dark text-light border-0 shadow-lg animate__animated animate__fadeInLeft">
                 <Card.Body className="text-center p-4">
                   <div className="mb-3"><FaLaptopCode size={60} className="text-primary" /></div>
                   <Card.Title as="h3" className="fw-bold text-white">Collaborative Notebooks</Card.Title>
-                  <Card.Text className="text-light">Work together in real-time on notebooks for data exploration, analysis, and model building, fostering innovation and efficiency.</Card.Text>
+                  <Card.Text className="text-light">Empower data teams with real-time collaborative notebooks for data exploration, advanced analytics, and robust model building.</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -63,8 +64,8 @@ const LandingPage = () => {
               <Card className="h-100 bg-dark text-light border-0 shadow-lg animate__animated animate__fadeInUp">
                 <Card.Body className="text-center p-4">
                   <div className="mb-3"><FaChartLine size={60} className="text-success" /></div>
-                  <Card.Title as="h3" className="fw-bold text-white">Unified Data & AI</Card.Title>
-                  <Card.Text className="text-light">A single platform for data engineering, data science, machine learning, and business intelligence, streamlining your entire workflow.</Card.Text>
+                  <Card.Title as="h3" className="fw-bold text-white">Unified Platform</Card.Title>
+                  <Card.Text className="text-light">A single, cohesive platform integrating data engineering, data science, machine learning, and business intelligence workflows.</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -73,7 +74,7 @@ const LandingPage = () => {
                 <Card.Body className="text-center p-4">
                   <div className="mb-3"><FaDatabase size={60} className="text-info" /></div>
                   <Card.Title as="h3" className="fw-bold text-white">Reliable Data Pipelines</Card.Title>
-                  <Card.Text className="text-light">Build and manage reliable data pipelines to ingest, transform, and process data from any source, ensuring data quality and availability.</Card.Text>
+                  <Card.Text className="text-light">Build, manage, and monitor robust data pipelines for seamless ingestion, transformation, and processing of data from any source.</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -81,53 +82,54 @@ const LandingPage = () => {
         </Container>
       </div>
 
-      {/* Highlights Section */}
-      <div id="highlights" className="py-5 bg-dark">
+      {/* Data Lakehouse Advantage Section */}
+      <div id="lakehouse" className="py-5 bg-dark">
         <Container>
-          <h2 className="text-center display-4 fw-bold mb-5 text-white">Platform Highlights</h2>
-          <Row className="g-4 justify-content-center">
+          <h2 className="text-center display-4 fw-bold mb-5 text-white">The Data Lakehouse Advantage</h2>
+          <Row className="g-4 align-items-center">
             <Col md={6}>
-              <Card className="h-100 bg-secondary text-light border-0 shadow-lg animate__animated animate__fadeInLeft">
-                <Card.Body className="p-4">
-                  <div className="mb-3 text-center"><FaUsers size={60} className="text-primary" /></div>
-                  <Card.Title as="h3" className="fw-bold text-center text-white">Multi-tenant Control Plane</Card.Title>
-                  <Card.Text className="text-light text-center">Manage isolated tenants, agents, deployments, and users with JWT-secured APIs, providing robust separation and control for enterprise environments.</Card.Text>
-                </Card.Body>
-              </Card>
+              <img src="https://images.unsplash.com/photo-1550009158-9ebf69173e03?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NzQ5MzZ8MHwxfHNlYXJjaHwxfHxkYXRhJTIwcGlwZWxpbmV8ZW5mDB8fHx8MTcwMTY1NDY5Nnww&ixlib=rb-4.0.3&q=80&w=1080" alt="Data Lakehouse" className="img-fluid rounded shadow-lg animate__animated animate__fadeInLeft" />
             </Col>
             <Col md={6}>
-              <Card className="h-100 bg-secondary text-light border-0 shadow-lg animate__animated animate__fadeInRight">
-                <Card.Body className="p-4">
-                  <div className="mb-3 text-center"><FaShieldAlt size={60} className="text-success" /></div>
-                  <Card.Title as="h3" className="fw-bold text-center text-white">Enterprise-Ready Authentication</Card.Title>
-                  <Card.Text className="text-light text-center">Features like password hashing, token issuance, and demo seed data for instant evaluation ensure secure and seamless access management.</Card.Text>
-                </Card.Body>
-              </Card>
+              <h3 className="display-6 fw-bold text-white animate__animated animate__fadeInRight">Unify Your Data Strategy</h3>
+              <p className="fs-5 text-light mt-3 animate__animated animate__fadeInRight" style={{ animationDelay: '0.2s' }}>
+                AgentProvision combines the flexibility and scale of data lakes with the ACID transactions and governance of data warehouses. Store all your data – structured, semi-structured, and unstructured – in one place, ready for any workload.
+              </p>
+              <ul className="list-unstyled text-light mt-4 animate__animated animate__fadeInRight" style={{ animationDelay: '0.4s' }}>
+                <li><FaCubes className="text-primary me-2" /> Scalable storage for all data types</li>
+                <li><FaCodeBranch className="text-success me-2" /> ACID transactions for data reliability</li>
+                <li><FaShieldAlt className="text-warning me-2" /> Enhanced data governance and security</li>
+              </ul>
+            </Col>
+          </Row>
+        </Container>
+      </div>
+
+      {/* AI-Powered Capabilities Section */}
+      <div id="ai-capabilities" className="py-5 bg-secondary">
+        <Container>
+          <h2 className="text-center display-4 fw-bold mb-5 text-white">Intelligent Agents, Seamlessly Orchestrated</h2>
+          <Row className="g-4 align-items-center flex-row-reverse">
+            <Col md={6}>
+              <img src="https://images.unsplash.com/photo-1580234811497-9fd261f3725d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NzQ5MzZ8MHwxfHxkYXRhJTIwbGFrZSUyMGNvbmNlcHR8ZW5mDB8fHx8MTcwMTY1NDcyNnww&ixlib=rb-4.0.3&q=80&w=1080" alt="AI Agents" className="img-fluid rounded shadow-lg animate__animated animate__fadeInRight" />
             </Col>
             <Col md={6}>
-              <Card className="h-100 bg-secondary text-light border-0 shadow-lg animate__animated animate__fadeInLeft">
-                <Card.Body className="p-4">
-                  <div className="mb-3 text-center"><FaLaptopCode size={60} className="text-info" /></div>
-                  <Card.Title as="h3" className="fw-bold text-center text-white">Interactive Console</Card.Title>
-                  <Card.Text className="text-light text-center">A protected dashboard featuring live analytics, fleet overview, deployment status, and workspace settings for comprehensive operational control.</Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={6}>
-              <Card className="h-100 bg-secondary text-light border-0 shadow-lg animate__animated animate__fadeInRight">
-                <Card.Body className="p-4">
-                  <div className="mb-3 text-center"><FaGlobe size={60} className="text-warning" /></div>
-                  <Card.Title as="h3" className="fw-bold text-center text-white">Infrastructure Foundations</Card.Title>
-                  <Card.Text className="text-light text-center">Leverage Docker-compose for local development and Terraform scaffolding targeting AWS (EKS, Aurora, S3) for robust infrastructure provisioning.</Card.Text>
-                </Card.Body>
-              </Card>
+              <h3 className="display-6 fw-bold text-white animate__animated animate__fadeInLeft">Orchestrate AI at Scale</h3>
+              <p className="fs-5 text-light mt-3 animate__animated animate__fadeInLeft" style={{ animationDelay: '0.2s' }}>
+                Deploy, manage, and monitor your AI agents across diverse multi-cloud environments. AgentProvision provides the control plane for your intelligent automation, ensuring optimal performance and resource utilization.
+              </p>
+              <ul className="list-unstyled text-light mt-4 animate__animated animate__fadeInLeft" style={{ animationDelay: '0.4s' }}>
+                <li><FaRobot className="text-primary me-2" /> Centralized agent lifecycle management</li>
+                <li><FaCloud className="text-success me-2" /> Flexible multi-cloud deployment</li>
+                <li><FaChartLine className="text-warning me-2" /> Real-time performance monitoring</li>
+              </ul>
             </Col>
           </Row>
         </Container>
       </div>
 
       {/* Roadmap Section */}
-      <div id="roadmap" className="py-5 bg-secondary">
+      <div id="roadmap" className="py-5 bg-dark">
         <Container>
           <h2 className="text-center display-4 fw-bold mb-5 text-white">Roadmap Ideas</h2>
           <Row className="g-4 justify-content-center">
@@ -154,7 +156,7 @@ const LandingPage = () => {
                 <Card.Body className="text-center p-4">
                   <div className="mb-3"><FaChartLine size={60} className="text-info" /></div>
                   <Card.Title as="h3" className="fw-bold text-white">Expand Observability</Card.Title>
-                  <Card.Text className="text-light text-center">Connect OpenTelemetry traces to Grafana dashboards and expose FinOps insights via cost APIs for comprehensive monitoring.</Card.Text>
+                  <Card.Text className="text-light text-center">Connect OpenTelemetry traces to Grafana dashboards and expose FinOps insights via cost APIs for deeper monitoring and cost management.</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -163,14 +165,13 @@ const LandingPage = () => {
       </div>
 
       {/* Footer */}
-            <footer className="bg-dark py-4 border-top border-secondary">
-              <Container className="text-center text-light">
-                <p className="mb-0">&copy; 2025 AgentProvision. All rights reserved.</p>
-              </Container>
-            </footer>
-          </div>
-        );
-      };
-      
-      export default LandingPage;
-      
+      <footer className="bg-dark py-4 border-top border-secondary">
+        <Container className="text-center text-light">
+          <p className="mb-0">&copy; 2025 AgentProvision. All rights reserved.</p>
+        </Container>
+      </footer>
+    </div>
+  );
+};
+
+export default LandingPage;

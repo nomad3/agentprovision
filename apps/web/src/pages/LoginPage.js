@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
 import { Container, Form, Button, Card, Alert } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import authService from '../services/auth';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError('');
-    // Here you would typically make an API call to your backend for authentication
-    // For now, let's simulate a login
-    if (email === 'test@example.com' && password === 'password') {
-      alert('Login successful!');
-      // Redirect to dashboard or store token
-    } else {
+    try {
+      await authService.login(email, password);
+      navigate('/dashboard');
+    } catch (err) {
       setError('Invalid email or password');
+      console.error('Login error:', err);
     }
   };
 
