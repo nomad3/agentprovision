@@ -1,6 +1,6 @@
 import React from 'react';
 import { Row, Col, Card, Badge, Table, ProgressBar, ListGroup } from 'react-bootstrap';
-import { FaChartPie, FaBolt, FaShieldAlt, FaArrowTrendUp, FaClock, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
+import { FaChartPie, FaBolt, FaShieldAlt, FaChartBar, FaClock, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
 import Layout from '../components/Layout';
 import { useAuth } from '../App';
 
@@ -39,7 +39,7 @@ const summaryTiles = [
     deltaVariant: 'success',
     badge: 'Operations',
     badgeVariant: 'dark',
-    icon: FaArrowTrendUp,
+    icon: FaChartBar,
   },
 ];
 
