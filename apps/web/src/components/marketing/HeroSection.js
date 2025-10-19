@@ -10,15 +10,15 @@ const HeroSection = ({ onPrimaryCta = noop, onSecondaryCta = noop }) => {
       <Container className="hero-content py-5">
         <Row className="align-items-center gy-5">
           <Col lg={7} className="text-center text-lg-start pe-lg-5">
-            <span className="badge-glow">Enterprise Agent Operations</span>
+            <span className="badge-glow">Decision intelligence platform</span>
             <h1 className="display-2 fw-bold mt-4 mb-3 section-heading">
-              Operate mission-critical AI agents without compromising control
+              Turn unified telemetry into board-ready answers — in minutes, not months
             </h1>
             <p className="lead text-soft mt-3 mb-3">
-              AgentProvision is the agentic data lakehouse that blends telemetry, knowledge, and governance so your teams can orchestrate copilots with confidence.
+              AgentProvision models every KPI across revenue, operations, and product usage so executives, analysts, and operators see the same numbers in real time.
             </p>
             <p className="text-subtle mb-0">
-              Correlate billions of signals, enforce adaptive guardrails, and deliver realtime decisioning across every cloud and region from one command center.
+              Blend governed data, auto-generated narratives, and closed-loop automations to move from dashboards to measurable business outcomes.
             </p>
             <div className="d-flex flex-column flex-md-row gap-3 justify-content-center justify-content-lg-start mt-5">
               <Button size="lg" className="px-5 py-3" onClick={onPrimaryCta}>
