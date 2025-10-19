@@ -1,10 +1,9 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, createContext, useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import LandingPage from './LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
-import Layout from './components/Layout';
 import authService from './services/auth';
 
 // Create an Auth Context

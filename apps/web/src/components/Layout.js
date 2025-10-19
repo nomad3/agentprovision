@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Nav, Navbar, Button } from 'react-bootstrap';
+import { Container, Nav, Navbar, Button } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { HouseDoorFill, DatabaseFill, Diagram3Fill, JournalBookmarkFill, Robot, Tools, PuzzleFill, CloudArrowUpFill, BoxArrowRight } from 'react-bootstrap-icons';
 import { useAuth } from '../App';
