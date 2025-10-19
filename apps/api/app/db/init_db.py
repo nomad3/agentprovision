@@ -51,7 +51,7 @@ def seed_demo_data(db: Session) -> None:
     if existing_user:
         return
 
-    demo_tenant = Tenant(name="Demo Enterprise", description="Seed tenant for demo environment")
+    demo_tenant = Tenant(name="Demo Enterprise")
     db.add(demo_tenant)
     db.flush()
 
