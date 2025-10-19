@@ -27,7 +27,7 @@ const LandingPage = () => {
       <div className="py-5 text-center bg-dark text-white position-relative overflow-hidden"
         style={{
           paddingTop: '120px',
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(https://images.unsplash.com/photo-1596526131083-a8c551647953?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NzQ5MzZ8MHwxfHNlYXJjaHwxfHxlbnRlcnByaXNlJTIwYWklMjBjb25jZXB0fGVufDB8fHx8MTcwMTY1NDY1Nnww&ixlib=rb-4.0.3&q=80&w=1080)`,
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(/images/enterprise-ai.jpg)`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           minHeight: '700px',
@@ -88,7 +88,7 @@ const LandingPage = () => {
           <h2 className="text-center display-4 fw-bold mb-5 text-white">The Data Lakehouse Advantage</h2>
           <Row className="g-4 align-items-center">
             <Col md={6}>
-              <img src="https://images.unsplash.com/photo-1550009158-9ebf69173e03?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NzQ5MzZ8MHwxfHNlYXJjaHwxfHxkYXRhJTIwcGlwZWxpbmV8ZW5mDB8fHx8MTcwMTY1NDY5Nnww&ixlib=rb-4.0.3&q=80&w=1080" alt="Data Lakehouse" className="img-fluid rounded shadow-lg animate__animated animate__fadeInLeft" />
+              <img src="/images/data-pipelines.jpg" alt="Data Lakehouse" className="img-fluid rounded shadow-lg animate__animated animate__fadeInLeft" />
             </Col>
             <Col md={6}>
               <h3 className="display-6 fw-bold text-white animate__animated animate__fadeInRight">Unify Your Data Strategy</h3>
@@ -111,7 +111,7 @@ const LandingPage = () => {
           <h2 className="text-center display-4 fw-bold mb-5 text-white">Intelligent Agents, Seamlessly Orchestrated</h2>
           <Row className="g-4 align-items-center flex-row-reverse">
             <Col md={6}>
-              <img src="https://images.unsplash.com/photo-1580234811497-9fd261f3725d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NzQ5MzZ8MHwxfHxkYXRhJTIwbGFrZSUyMGNvbmNlcHR8ZW5mDB8fHx8MTcwMTY1NDcyNnww&ixlib=rb-4.0.3&q=80&w=1080" alt="AI Agents" className="img-fluid rounded shadow-lg animate__animated animate__fadeInRight" />
+              <img src="/images/ai-agents.jpg" alt="AI Agents" className="img-fluid rounded shadow-lg animate__animated animate__fadeInRight" />
             </Col>
             <Col md={6}>
               <h3 className="display-6 fw-bold text-white animate__animated animate__fadeInLeft">Orchestrate AI at Scale</h3>
