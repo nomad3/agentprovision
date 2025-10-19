@@ -3,7 +3,7 @@ set -e
 
 DOMAIN="agentprovision.com"
 EMAIL="saguilera1608@gmail.com"
-PROJECT_ROOT="/opt/agentprovision" # This should be the absolute path to your project root
+PROJECT_ROOT="$(dirname "$0")" # This should be the absolute path to your project root
 
 echo "Starting AgentProvision deployment script..."
 
