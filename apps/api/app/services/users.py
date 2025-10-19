@@ -43,6 +43,16 @@ def create_user_with_tenant(db: Session, *, user_in: UserCreate, tenant_in: Tena
     db.refresh(db_user)
     return db_user
 
+def authenticate_user(db: Session, *, email: str, password: str) -> User | None:
+    user = get_user_by_email(db, email=email)
+    if not user:
+        return None
+    if not verify_password(password, user.hashed_password):
+        return None
+    if hasattr(user, "is_active") and not user.is_active:
+        return None
+    return user
+
 def update_user(db: Session, *, db_user: User, user_in: UserUpdate) -> User:
     if user_in.full_name is not None:
         db_user.full_name = user_in.full_name
