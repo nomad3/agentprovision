@@ -55,7 +55,7 @@ const LandingPage = () => {
                 <Card.Body className="text-center p-4">
                   <div className="mb-3"><FaLaptopCode size={60} className="text-primary" /></div>
                   <Card.Title as="h3" className="fw-bold text-white">Collaborative Notebooks</Card.Title>
-                  <Card.Text className="text-muted">Work together in real-time on notebooks for data exploration, analysis, and model building, fostering innovation and efficiency.</Card.Text>
+                  <Card.Text className="text-light">Work together in real-time on notebooks for data exploration, analysis, and model building, fostering innovation and efficiency.</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -64,7 +64,7 @@ const LandingPage = () => {
                 <Card.Body className="text-center p-4">
                   <div className="mb-3"><FaChartLine size={60} className="text-success" /></div>
                   <Card.Title as="h3" className="fw-bold text-white">Unified Data & AI</Card.Title>
-                  <Card.Text className="text-muted">A single platform for data engineering, data science, machine learning, and business intelligence, streamlining your entire workflow.</Card.Text>
+                  <Card.Text className="text-light">A single platform for data engineering, data science, machine learning, and business intelligence, streamlining your entire workflow.</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -73,7 +73,7 @@ const LandingPage = () => {
                 <Card.Body className="text-center p-4">
                   <div className="mb-3"><FaDatabase size={60} className="text-info" /></div>
                   <Card.Title as="h3" className="fw-bold text-white">Reliable Data Pipelines</Card.Title>
-                  <Card.Text className="text-muted">Build and manage reliable data pipelines to ingest, transform, and process data from any source, ensuring data quality and availability.</Card.Text>
+                  <Card.Text className="text-light">Build and manage reliable data pipelines to ingest, transform, and process data from any source, ensuring data quality and availability.</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -91,7 +91,7 @@ const LandingPage = () => {
                 <Card.Body className="p-4">
                   <div className="mb-3 text-center"><FaUsers size={60} className="text-primary" /></div>
                   <Card.Title as="h3" className="fw-bold text-center text-white">Multi-tenant Control Plane</Card.Title>
-                  <Card.Text className="text-muted text-center">Manage isolated tenants, agents, deployments, and users with JWT-secured APIs, providing robust separation and control for enterprise environments.</Card.Text>
+                  <Card.Text className="text-light text-center">Manage isolated tenants, agents, deployments, and users with JWT-secured APIs, providing robust separation and control for enterprise environments.</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -100,7 +100,7 @@ const LandingPage = () => {
                 <Card.Body className="p-4">
                   <div className="mb-3 text-center"><FaShieldAlt size={60} className="text-success" /></div>
                   <Card.Title as="h3" className="fw-bold text-center text-white">Enterprise-Ready Authentication</Card.Title>
-                  <Card.Text className="text-muted text-center">Features like password hashing, token issuance, and demo seed data for instant evaluation ensure secure and seamless access management.</Card.Text>
+                  <Card.Text className="text-light text-center">Features like password hashing, token issuance, and demo seed data for instant evaluation ensure secure and seamless access management.</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -109,7 +109,7 @@ const LandingPage = () => {
                 <Card.Body className="p-4">
                   <div className="mb-3 text-center"><FaLaptopCode size={60} className="text-info" /></div>
                   <Card.Title as="h3" className="fw-bold text-center text-white">Interactive Console</Card.Title>
-                  <Card.Text className="text-muted text-center">A protected dashboard featuring live analytics, fleet overview, deployment status, and workspace settings for comprehensive operational control.</Card.Text>
+                  <Card.Text className="text-light text-center">A protected dashboard featuring live analytics, fleet overview, deployment status, and workspace settings for comprehensive operational control.</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -118,7 +118,7 @@ const LandingPage = () => {
                 <Card.Body className="p-4">
                   <div className="mb-3 text-center"><FaGlobe size={60} className="text-warning" /></div>
                   <Card.Title as="h3" className="fw-bold text-center text-white">Infrastructure Foundations</Card.Title>
-                  <Card.Text className="text-muted text-center">Leverage Docker-compose for local development and Terraform scaffolding targeting AWS (EKS, Aurora, S3) for robust infrastructure provisioning.</Card.Text>
+                  <Card.Text className="text-light text-center">Leverage Docker-compose for local development and Terraform scaffolding targeting AWS (EKS, Aurora, S3) for robust infrastructure provisioning.</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -136,7 +136,7 @@ const LandingPage = () => {
                 <Card.Body className="p-4">
                   <div className="mb-3 text-center"><FaRoad size={60} className="text-primary" /></div>
                   <Card.Title as="h3" className="fw-bold text-white">Integrate OAuth/SAML SSO</Card.Title>
-                  <Card.Text className="text-muted text-center">Seamlessly integrate with enterprise identity providers like Okta and Azure AD for single sign-on capabilities.</Card.Text>
+                  <Card.Text className="text-light text-center">Seamlessly integrate with enterprise identity providers like Okta and Azure AD for single sign-on capabilities.</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -145,7 +145,7 @@ const LandingPage = () => {
                 <Card.Body className="text-center p-4">
                   <div className="mb-3"><FaBrain size={60} className="text-success" /></div>
                   <Card.Title as="h3" className="fw-bold text-white">Agent Creation Wizards</Card.Title>
-                  <Card.Text className="text-muted text-center">Develop intuitive wizards for agent creation, evaluation dashboards, and a visual editor for LangGraph workflows.</Card.Text>
+                  <Card.Text className="text-light text-center">Develop intuitive wizards for agent creation, comprehensive evaluation dashboards, and a visual editor for LangGraph workflows.</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -154,7 +154,7 @@ const LandingPage = () => {
                 <Card.Body className="text-center p-4">
                   <div className="mb-3"><FaChartLine size={60} className="text-info" /></div>
                   <Card.Title as="h3" className="fw-bold text-white">Expand Observability</Card.Title>
-                  <Card.Text className="text-muted text-center">Connect OpenTelemetry traces to Grafana dashboards and expose FinOps insights via cost APIs for comprehensive monitoring.</Card.Text>
+                  <Card.Text className="text-light text-center">Connect OpenTelemetry traces to Grafana dashboards and expose FinOps insights via cost APIs for comprehensive monitoring.</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -163,13 +163,14 @@ const LandingPage = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-dark py-4 border-top border-secondary">
-        <Container className="text-center text-muted">
-          <p className="mb-0">&copy; 2025 AgentProvision. All rights reserved.</p>
-        </Container>
-      </footer>
-    </div>
-  );
-};
-
-export default LandingPage;
+            <footer className="bg-dark py-4 border-top border-secondary">
+              <Container className="text-center text-light">
+                <p className="mb-0">&copy; 2025 AgentProvision. All rights reserved.</p>
+              </Container>
+            </footer>
+          </div>
+        );
+      };
+      
+      export default LandingPage;
+      
