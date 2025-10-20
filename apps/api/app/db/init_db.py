@@ -17,8 +17,10 @@ from app.models.agent import Agent
 from app.models.tool import Tool
 from app.models.connector import Connector
 from app.models.deployment import Deployment  # noqa: F401
-from app.models.vector_store import VectorStore # noqa: F401
-from app.models.agent_kit import AgentKit # noqa: F401
+from app.models.vector_store import VectorStore  # noqa: F401
+from app.models.agent_kit import AgentKit  # noqa: F401
+from app.models.dataset import Dataset
+from app.models.chat import ChatSession, ChatMessage
 
 from app.core.security import get_password_hash
 
@@ -182,5 +184,113 @@ def seed_demo_data(db: Session) -> None:
         ),
     ]
     db.add_all(deployments)
+
+    revenue_dataset_rows = [
+        {
+            "order_id": "1001",
+            "customer_name": "Acme Corp",
+            "segment": "Enterprise",
+            "region": "North America",
+            "revenue": 125000,
+            "cost": 83000,
+            "profit": 42000,
+            "order_date": "2024-01-15",
+        },
+        {
+            "order_id": "1002",
+            "customer_name": "Globex Inc",
+            "segment": "Mid-Market",
+            "region": "Europe",
+            "revenue": 78000,
+            "cost": 52000,
+            "profit": 26000,
+            "order_date": "2024-02-10",
+        },
+        {
+            "order_id": "1003",
+            "customer_name": "Initech",
+            "segment": "SMB",
+            "region": "North America",
+            "revenue": 45000,
+            "cost": 29000,
+            "profit": 16000,
+            "order_date": "2024-02-28",
+        },
+        {
+            "order_id": "1004",
+            "customer_name": "Stark Industries",
+            "segment": "Enterprise",
+            "region": "Asia-Pacific",
+            "revenue": 152000,
+            "cost": 101000,
+            "profit": 51000,
+            "order_date": "2024-03-07",
+        },
+        {
+            "order_id": "1005",
+            "customer_name": "Wayne Enterprises",
+            "segment": "Enterprise",
+            "region": "Latin America",
+            "revenue": 98500,
+            "cost": 64000,
+            "profit": 34500,
+            "order_date": "2024-03-21",
+        },
+    ]
+
+    revenue_dataset_schema = [
+        {"name": "order_id", "dtype": "object"},
+        {"name": "customer_name", "dtype": "object"},
+        {"name": "segment", "dtype": "object"},
+        {"name": "region", "dtype": "object"},
+        {"name": "revenue", "dtype": "int64"},
+        {"name": "cost", "dtype": "int64"},
+        {"name": "profit", "dtype": "int64"},
+        {"name": "order_date", "dtype": "object"},
+    ]
+
+    seeded_dataset = Dataset(
+        name="Revenue Performance",
+        description="Sample revenue transactions for demo analysis",
+        source_type="seed",
+        file_name="sample_revenue_dataset.csv",
+        schema=revenue_dataset_schema,
+        row_count=len(revenue_dataset_rows),
+        sample_rows=revenue_dataset_rows,
+        tenant_id=demo_tenant.id,
+    )
+    db.add(seeded_dataset)
+    db.flush()
+
+    demo_chat_session = ChatSession(
+        title="Q1 Revenue Review",
+        dataset_id=seeded_dataset.id,
+        agent_kit_id=agent_kits[1].id,
+        tenant_id=demo_tenant.id,
+    )
+    db.add(demo_chat_session)
+    db.flush()
+
+    chat_messages = [
+        ChatMessage(
+            session_id=demo_chat_session.id,
+            role="user",
+            content="What were our top customer segments last quarter?",
+        ),
+        ChatMessage(
+            session_id=demo_chat_session.id,
+            role="assistant",
+            content="Enterprise accounts generated the highest share of revenue, led by Acme Corp and Wayne Enterprises.",
+            context={
+                "summary": {
+                    "numeric_columns": [
+                        {"column": "revenue", "avg": 99800.0, "min": 45000, "max": 152000},
+                        {"column": "profit", "avg": 33900.0, "min": 16000, "max": 51000},
+                    ]
+                }
+            },
+        ),
+    ]
+    db.add_all(chat_messages)
 
     db.commit()

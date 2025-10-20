@@ -12,3 +12,4 @@ requests
 pandas
 openpyxl
 duckdb
+pyarrow
