@@ -35,7 +35,7 @@ generate_random_port() {
 API_PORT=8001
 WEB_PORT=8002
 DB_PORT=8003
-REDIS_PORT=$(generate_random_port)
+REDIS_PORT=8004
 
 # Basic check to ensure ports are not the same (unlikely but possible)
 while [ "$API_PORT" -eq "$WEB_PORT" ] || [ "$API_PORT" -eq "$DB_PORT" ] || [ "$WEB_PORT" -eq "$DB_PORT" ] || [ "$API_PORT" -eq "$REDIS_PORT" ] || [ "$WEB_PORT" -eq "$REDIS_PORT" ] || [ "$DB_PORT" -eq "$REDIS_PORT" ]; do
