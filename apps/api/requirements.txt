@@ -9,3 +9,6 @@ SQLAlchemy
 psycopg2-binary
 python-multipart
 requests
+pandas
+openpyxl
+duckdb

@@ -6,6 +6,16 @@ AgentProvision is an enterprise-grade platform designed to bring together all yo
 
 Inspired by the principles of a data lakehouse, AgentProvision combines the best aspects of data lakes (cost-effective storage, schema flexibility) with the best aspects of data warehouses (ACID transactions, data governance, performance). This architecture is ideal for handling diverse data types and enabling advanced analytics and AI workloads.
 
+## Implementation Progress – Oct 20, 2025
+
+- **Backend groundwork**
+  - Added structured schema/service support for `AgentKit` simulations (`apps/api/app/schemas/agent_kit.py`, `apps/api/app/services/agent_kits.py`).
+  - Introduced dataset ingestion models and services (`apps/api/app/models/dataset.py`, `apps/api/app/services/datasets.py`) along with chat session models (`apps/api/app/models/chat.py`).
+  - Registered new routers and config (`apps/api/app/api/v1/routes.py`, `apps/api/app/core/config.py`) and pinned ingestion dependencies (`apps/api/requirements.txt`).
+- **Next steps**
+  - Add FastAPI endpoints for dataset upload/preview and chat sessions.
+  - Extend seed data/migrations, then wire frontend upload workflow and chat UI.
+
 ## Key Capabilities & Features
 
 ### 1. Unified Data & AI Workloads

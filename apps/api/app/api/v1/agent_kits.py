@@ -59,7 +59,7 @@ def update_agent_kit(
     *,
     db: Session = Depends(deps.get_db),
     agent_kit_id: uuid.UUID,
-    item_in: schemas.agent_kit.AgentKitCreate,
+    item_in: schemas.agent_kit.AgentKitUpdate,
     current_user: User = Depends(deps.get_current_active_user),
 ):
     """
@@ -86,3 +86,19 @@ def delete_agent_kit(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Agent kit not found")
     agent_kit_service.delete_agent_kit(db=db, agent_kit_id=agent_kit_id)
     return {"message": "Agent kit deleted successfully"}
+
+
+@router.post("/{agent_kit_id}/simulate", response_model=schemas.agent_kit.AgentKitSimulation)
+def simulate_agent_kit(
+    *,
+    db: Session = Depends(deps.get_db),
+    agent_kit_id: uuid.UUID,
+    current_user: User = Depends(deps.get_current_active_user),
+):
+    agent_kit = agent_kit_service.get_agent_kit(db, agent_kit_id=agent_kit_id)
+    if not agent_kit or str(agent_kit.tenant_id) != str(current_user.tenant_id):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Agent kit not found")
+    try:
+        return agent_kit_service.simulate_agent_kit(db=db, agent_kit=agent_kit)
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc

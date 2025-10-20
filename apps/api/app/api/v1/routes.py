@@ -1,5 +1,19 @@
 from fastapi import APIRouter
-from app.api.v1 import auth, data_sources, data_pipelines, notebooks, agents, tools, connectors, deployments, analytics, vector_stores, agent_kits
+from app.api.v1 import (
+    auth,
+    data_sources,
+    data_pipelines,
+    notebooks,
+    agents,
+    tools,
+    connectors,
+    deployments,
+    analytics,
+    vector_stores,
+    agent_kits,
+    datasets,
+    chat,
+)
 
 router = APIRouter()
 
@@ -18,3 +32,5 @@ router.include_router(deployments.router, prefix="/deployments", tags=["deployme
 router.include_router(analytics.router, prefix="/analytics", tags=["analytics"])
 router.include_router(vector_stores.router, prefix="/vector_stores", tags=["vector_stores"])
 router.include_router(agent_kits.router, prefix="/agent_kits", tags=["agent_kits"])
+router.include_router(datasets.router, prefix="/datasets", tags=["datasets"])
+router.include_router(chat.router, prefix="/chat", tags=["chat"])
