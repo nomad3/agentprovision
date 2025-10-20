@@ -17,6 +17,7 @@ const IntegrationsHubPage = () => {
         // This endpoint needs to be created in the backend
         const response = await api.get('/integrations/available'); 
         setConnectors(response.data);
+        console.log("Fetched connectors:", response.data); // Debugging line
       } catch (err) {
         setError('Failed to fetch available connectors.');
         console.error(err);
