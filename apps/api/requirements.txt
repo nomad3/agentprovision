@@ -3,10 +3,8 @@ uvicorn[standard]
 pydantic-settings
 pydantic[email]
 passlib[bcrypt]
-bcrypt<4
 python-jose
 SQLAlchemy
 psycopg2-binary
 python-multipart
-pytest
-pytest-asyncio
+requests
