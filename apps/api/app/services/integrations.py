@@ -62,7 +62,7 @@ def delete_integration(db: Session, *, integration_id: uuid.UUID) -> Integration
     if integration:
         # Deactivate/delete n8n workflow if applicable
         if integration.config and "n8n_workflow_id" in integration.config:
-            print(f"Simulating n8n workflow deletion for {integration.config["n8n_workflow_id"]}")
+            print(f"Simulating n8n workflow deletion for {integration.config.get("n8n_workflow_id")}")
             # n8n_service.delete_workflow(integration.config["n8n_workflow_id"]) # Actual call
 
         db.delete(integration)
