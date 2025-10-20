@@ -46,7 +46,7 @@ def init_db(db: Session) -> None:
 
 
 def seed_demo_data(db: Session) -> None:
-    demo_email = "demo@agentprovision.ai"
+    demo_email = "test@example.com"
     existing_user = db.query(User).filter(User.email == demo_email).first()
     if existing_user:
         return
@@ -58,7 +58,7 @@ def seed_demo_data(db: Session) -> None:
     demo_user = User(
         email=demo_email,
         full_name="Demo Operator",
-        hashed_password=get_password_hash("demo-password"),
+        hashed_password=get_password_hash("password"),
         tenant_id=demo_tenant.id,
         is_active=True,
     )
