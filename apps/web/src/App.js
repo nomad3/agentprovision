@@ -1,5 +1,3 @@
-import React, { useState, createContext, useContext } from 'react';
-import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import LandingPage from './LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -11,9 +9,6 @@ import AgentsPage from './pages/AgentsPage';
 import ToolsPage from './pages/ToolsPage';
 import ConnectorsPage from './pages/ConnectorsPage';
 import DeploymentsPage from './pages/DeploymentsPage';
-import IntegrationsHubPage from './pages/IntegrationsHubPage';
-import IntegrationPage from './pages/IntegrationPage';
-import IntegrationForm from './components/IntegrationForm';
 import Layout from './components/Layout';
 import authService from './services/auth';
 
@@ -63,9 +58,6 @@ function App() {
           <Route path="/tools" element={<ToolsPage />} />
           <Route path="/connectors" element={<ConnectorsPage />} />
           <Route path="/deployments" element={<DeploymentsPage />} />
-          <Route path="/integrations" element={<IntegrationsHubPage />} />
-          <Route path="/integrations/new/:connectorId" element={<IntegrationForm />} />
-          <Route path="/integrations/:id" element={<IntegrationPage />} />
         </Routes>
       </AuthProvider>
     </Router>

@@ -132,30 +132,14 @@ def seed_demo_data(db: Session) -> None:
     ]
     db.add_all(tools)
 
-    connectors = [
-        Connector(
-            name="Salesforce",
-            config={"objects": ["Opportunity", "Account"]},
-            tenant_id=demo_tenant.id,
-        ),
-        Connector(
-            name="Snowflake",
-            config={"database": "ARR_ANALYTICS"},
-            tenant_id=demo_tenant.id,
-        ),
-    ]
-    db.add_all(connectors)
-
     deployments = [
         Deployment(
             name="Revenue Copilot - Prod",
-            config={},
             agent_id=agents[0].id,
             tenant_id=demo_tenant.id,
         ),
         Deployment(
             name="Telemetry Sentinel - Staging",
-            config={},
             agent_id=agents[1].id,
             tenant_id=demo_tenant.id,
         ),

@@ -11,9 +11,6 @@ class Connector(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String, index=True)
     description = Column(String, nullable=True)
-    type = Column(String, default="n8n") # e.g., n8n, spark
-    n8n_workflow_id = Column(String, nullable=True)
-    schema = Column(JSON, nullable=True) # Defines the required configuration fields
     config = Column(JSON)
     tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"))
     tenant = relationship("Tenant")

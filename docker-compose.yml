@@ -1,6 +1,6 @@
 version: '3.8'
 
-services:
+srvices:
   api:
     build:
       context: ./apps/api
@@ -31,30 +31,3 @@ services:
       - POSTGRES_DB=agentprovision
     ports:
       - "${DB_PORT}:5432"
-
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "${REDIS_PORT}:6379"
-
-  n8n:
-    image: n8nio/n8n
-    ports:
-      - "5678:5678"
-    environment:
-      - N8N_HOST=agentprovision.com
-      - N8N_PROTOCOL=https
-      - WEBHOOK_URL=https://agentprovision.com/
-
-  spark-master:
-    image: apache/spark:3.5.1-scala2.12-java11-python3-r-ubuntu
-    command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.master.Master"]
-    ports:
-      - "8080:8080"
-      - "7077:7077"
-
-  spark-worker:
-    image: apache/spark:3.5.1-scala2.12-java11-python3-r-ubuntu
-    command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.worker.Worker", "spark://spark-master:7077"]
-    depends_on:
-      - spark-master
