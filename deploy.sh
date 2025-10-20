@@ -35,16 +35,24 @@ generate_random_port() {
 API_PORT=8001
 WEB_PORT=8002
 DB_PORT=8003
+REDIS_PORT=$(generate_random_port)
+
+# Basic check to ensure ports are not the same (unlikely but possible)
+while [ "$API_PORT" -eq "$WEB_PORT" ] || [ "$API_PORT" -eq "$DB_PORT" ] || [ "$WEB_PORT" -eq "$DB_PORT" ] || [ "$API_PORT" -eq "$REDIS_PORT" ] || [ "$WEB_PORT" -eq "$REDIS_PORT" ] || [ "$DB_PORT" -eq "$REDIS_PORT" ]; do
+    REDIS_PORT=$(generate_random_port)
+done
 
 echo "Using fixed ports:"
 echo "API Port: $API_PORT"
 echo "Web Port: $WEB_PORT"
 echo "DB Port: $DB_PORT"
+echo "Redis Port: $REDIS_PORT"
 
 # Export ports so docker-compose can use them
 export API_PORT=$API_PORT
 export WEB_PORT=$WEB_PORT
 export DB_PORT=$DB_PORT
+export REDIS_PORT=$REDIS_PORT
 
 echo "Docker Compose configuration with resolved ports:"
 docker-compose -f "$PROJECT_ROOT/docker-compose.yml" config
