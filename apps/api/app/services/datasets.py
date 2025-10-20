@@ -28,7 +28,30 @@ def _tenant_storage_path(tenant_id: uuid.UUID) -> Path:
     return tenant_path
 
 
-def ingest_excel(
+def _load_dataframe(file: UploadFile) -> pd.DataFrame:
+    suffix = (Path(file.filename).suffix or "").lower() if file.filename else ""
+    content_type = (file.content_type or "").lower()
+
+    try:
+        if (
+            suffix in {".csv"}
+            or content_type in {"text/csv", "application/csv", "text/plain"}
+        ):
+            df = pd.read_csv(file.file)
+        else:
+            df = pd.read_excel(file.file)
+    except Exception as exc:  # noqa: BLE001
+        raise ValueError("Failed to parse uploaded file. Ensure it is a valid Excel or CSV document.") from exc
+    finally:
+        file.file.seek(0)
+
+    if df.empty:
+        raise ValueError("Uploaded file contains no rows.")
+
+    return df
+
+
+def ingest_tabular(
     db: Session,
     *,
     tenant_id: uuid.UUID,
@@ -36,8 +59,7 @@ def ingest_excel(
     name: str,
     description: str | None = None,
 ) -> Dataset:
-    df = pd.read_excel(file.file)
-    file.file.seek(0)
+    df = _load_dataframe(file)
 
     dataset_id = uuid.uuid4()
     tenant_path = _tenant_storage_path(tenant_id)

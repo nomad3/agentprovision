@@ -32,10 +32,8 @@ def upload_dataset(
     description: str | None = Form(None),
     current_user: User = Depends(deps.get_current_active_user),
 ):
-    if file.content_type not in {"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel"}:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Only Excel uploads are supported")
     try:
-        dataset = dataset_service.ingest_excel(
+        dataset = dataset_service.ingest_tabular(
             db,
             tenant_id=current_user.tenant_id,
             file=file,
