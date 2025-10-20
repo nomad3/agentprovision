@@ -13,6 +13,8 @@ import ConnectorsPage from './pages/ConnectorsPage';
 import DeploymentsPage from './pages/DeploymentsPage';
 import VectorStoresPage from './pages/VectorStoresPage';
 import AgentKitsPage from './pages/AgentKitsPage';
+import DatasetsPage from './pages/DatasetsPage';
+import ChatPage from './pages/ChatPage';
 import Layout from './components/Layout';
 import authService from './services/auth';
 
@@ -59,6 +61,8 @@ function App() {
           <Route path="/data-pipelines" element={<DataPipelinesPage />} />
           <Route path="/notebooks" element={<NotebooksPage />} />
           <Route path="/agents" element={<AgentsPage />} />
+          <Route path="/datasets" element={<DatasetsPage />} />
+          <Route path="/chat" element={<ChatPage />} />
           <Route path="/tools" element={<ToolsPage />} />
           <Route path="/connectors" element={<ConnectorsPage />} />
           <Route path="/deployments" element={<DeploymentsPage />} />

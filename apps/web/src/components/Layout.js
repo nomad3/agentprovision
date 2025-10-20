@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Nav, Navbar, Button } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { HouseDoorFill, DatabaseFill, Diagram3Fill, JournalBookmarkFill, Robot, Tools, PuzzleFill, CloudArrowUpFill, BoxArrowRight } from 'react-bootstrap-icons';
+import { HouseDoorFill, DatabaseFill, Diagram3Fill, JournalBookmarkFill, Robot, Tools, PuzzleFill, CloudArrowUpFill, BoxArrowRight, ChatDotsFill } from 'react-bootstrap-icons';
 import { useAuth } from '../App';
 
 const Layout = ({ children }) => {
@@ -24,12 +24,13 @@ const Layout = ({ children }) => {
           <Nav.Link as={Link} to="/data-pipelines" className="text-light d-flex align-items-center py-2"><Diagram3Fill className="me-2" /> Data Pipelines</Nav.Link>
           <Nav.Link as={Link} to="/notebooks" className="text-light d-flex align-items-center py-2"><JournalBookmarkFill className="me-2" /> Notebooks</Nav.Link>
           <Nav.Link as={Link} to="/agents" className="text-light d-flex align-items-center py-2"><Robot className="me-2" /> Agents</Nav.Link>
+          <Nav.Link as={Link} to="/datasets" className="text-light d-flex align-items-center py-2"><DatabaseFill className="me-2" /> Datasets</Nav.Link>
+          <Nav.Link as={Link} to="/chat" className="text-light d-flex align-items-center py-2"><ChatDotsFill className="me-2" /> Chat</Nav.Link>
           <Nav.Link as={Link} to="/tools" className="text-light d-flex align-items-center py-2"><Tools className="me-2" /> Tools</Nav.Link>
           <Nav.Link as={Link} to="/connectors" className="text-light d-flex align-items-center py-2"><PuzzleFill className="me-2" /> Connectors</Nav.Link>
           <Nav.Link as={Link} to="/deployments" className="text-light d-flex align-items-center py-2"><CloudArrowUpFill className="me-2" /> Deployments</Nav.Link>
           <Nav.Link as={Link} to="/vector-stores" className="text-light d-flex align-items-center py-2"><Diagram3Fill className="me-2" /> Vector Stores</Nav.Link>
           <Nav.Link as={Link} to="/agent-kits" className="text-light d-flex align-items-center py-2"><Robot className="me-2" /> Agent Kits</Nav.Link>
-          <Nav.Link as={Link} to="/integrations" className="text-light d-flex align-items-center py-2"><PuzzleFill className="me-2" /> Integrations</Nav.Link>
         </Nav>
       </Navbar>
 
