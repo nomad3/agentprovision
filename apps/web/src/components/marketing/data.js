@@ -21,111 +21,111 @@ import {
 export const heroHighlights = [
   {
     icon: FaChartPie,
-    title: 'Executive-ready KPIs',
-    description: 'Auto-compose board dashboards with drill-through lineage to every telemetry stream.',
+    title: 'One-click data products',
+    description: 'Provision curated data products with lineage, quality scores, and self-serve exploration.',
   },
   {
     icon: FaChartLine,
-    title: 'Signal correlation',
-    description: 'Fuse product usage, revenue, and ops signals to unlock next-best business actions.',
+    title: 'Lakehouse fabric',
+    description: 'Blend lake and warehouse tables with streaming telemetry into governed, query-ready layers.',
   },
   {
     icon: FaShieldAlt,
-    title: 'Governed insights',
-    description: 'Enforce data residency, approvals, and audit trails on every metric and decision.',
+    title: 'Agentic execution',
+    description: 'Deploy AI agents that read, reason, and act using policy-aware playbooks across business apps.',
   },
 ];
 
 export const metrics = [
   {
-    label: 'Executive dashboards',
-    value: '350+',
-    description: 'Live C-suite scorecards delivered with drill-down and what-if analysis.',
+    label: 'Datasets connected',
+    value: '1.2k+',
+    description: 'Warehouses, lakes, and SaaS APIs standardized into reusable data products.',
   },
   {
-    label: 'Data freshness SLA',
-    value: '<5 min',
-    description: 'Streaming-to-insight latency for revenue, risk, and operations teams.',
+    label: 'Query-to-action time',
+    value: '<4 min',
+    description: 'From ad-hoc question to orchestrated agent workflow across your stack.',
   },
   {
-    label: 'Analyst hours saved',
-    value: '42k/yr',
-    description: 'Automated insight distribution replaces manual spreadsheet stitching.',
+    label: 'Manual processes automated',
+    value: '68%',
+    description: 'Agentic runbooks replace ticket queues for finance, GTM, and operations teams.',
   },
 ];
 
 export const features = [
   {
     icon: FaDatabase,
-    title: 'Unified Intelligence Fabric',
+    title: 'Click-to-connect ingestion',
     description:
-      'Model every dataset—streaming, structured, and unstructured—inside a governed lakehouse with semantic business layers.',
+      'Sync Snowflake, Databricks, BigQuery, Postgres, and SaaS APIs with auto-generated schemas and freshness SLAs.',
   },
   {
     icon: FaChartLine,
-    title: 'Realtime BI Apps',
+    title: 'Lakehouse semantic layer',
     description:
-      'Launch interactive revenue, risk, and operations workspaces powered by sub-minute data refreshes and predictive scoring.',
+      'Publish governed metrics, dimensions, and policies so every downstream dashboard and agent speaks the same language.',
   },
   {
     icon: FaLaptopCode,
-    title: 'Composable Notebooks',
+    title: 'Agentic automation studio',
     description:
-      'Empower analytics engineers with collaborative notebooks that compile into governed dashboards and agent skills.',
+      'Design AI agents that query datasets, reason over context, and trigger actions in Slack, Salesforce, or custom APIs.',
   },
 ];
 
 export const lakehouseHighlights = [
   {
     icon: FaCubes,
-    title: 'Universal Storage',
-    description: 'Bring embeddings, telemetry, and knowledge bases into a single governed fabric.',
+    title: 'Unified governance',
+    description: 'Store tables, streams, and vector indexes in one catalog with row-level security and approvals.',
   },
   {
     icon: FaCodeBranch,
-    title: 'Programmable Lineage',
-    description: 'Trace every model decision with time-travel queries and declarative governance controls.',
+    title: 'Programmable pipelines',
+    description: 'Version data products, trigger dbt jobs, and hydrate embeddings with GitOps-style workflows.',
   },
   {
     icon: FaShieldAlt,
-    title: 'Enterprise Safety',
-    description: 'Enforce regional data residency, tenant isolation, and granular access policies.',
+    title: 'Compliant collaboration',
+    description: 'Enforce regional residency, tenant isolation, masking, and auditable agent actions.',
   },
 ];
 
 export const aiHighlights = [
   {
     icon: FaChartPie,
-    title: 'Adaptive scorecards',
-    description: 'Generate KPI narratives, anomaly callouts, and proactive recommendations for every persona.',
+    title: 'Insight copilots',
+    description: 'Generate narrative briefings, anomaly callouts, and recommended plays on any dataset.',
   },
   {
     icon: FaLayerGroup,
-    title: 'Semantic metrics layer',
-    description: 'Centralize metric definitions, dimensions, and governance so every dashboard stays consistent.',
+    title: 'Composable skills',
+    description: 'Chain SQL, RAG, code interpreters, and workflow triggers into reusable agent skills.',
   },
   {
     icon: FaRegCalendarCheck,
-    title: 'Closed-loop planning',
-    description: 'Sync insights into OKRs, Jira, and CRM workflows with automated impact tracking.',
+    title: 'Closed-loop actuators',
+    description: 'Sync decisions into Jira, HubSpot, ServiceNow, and ticket queues with impact tracking.',
   },
 ];
 
 export const roadmap = [
   {
     icon: FaRoad,
-    title: 'SSO & Identity Federation',
-    description: 'Connect Okta, Azure AD, and custom providers with SCIM provisioning and audit trails.',
+    title: 'Marketplace connectors',
+    description: 'Instantly add industry data sources and agents maintained by certified partners.',
   },
   {
     icon: FaBrain,
-    title: 'Agent Creation Studio',
-    description: 'Visual builder with LangGraph support, evaluation dashboards, and prompt analytics.',
+    title: 'Adaptive governance AI',
+    description: 'Dynamic policy tuning that scores agent behavior and recommends guardrail updates.',
   },
   {
     icon: FaChartPie,
-    title: 'FinOps Insights',
-    description: 'Blend cost metrics, performance baselines, and anomaly detection for proactive governance.',
+    title: 'Autonomous FinOps suites',
+    description: 'AI orchestrators that reconcile spend, forecast usage, and trigger budget guardrails.',
   },
 ];
 
@@ -134,13 +134,13 @@ export const logoBadges = ['Neptune Cloud', 'OmniRetail', 'Helios Labs', 'Nova F
 export const testimonials = [
   {
     quote:
-      'AgentProvision accelerated our autonomous remediation roadmap by 9 months. The data lakehouse foundation let us plug in compliance workflows without disrupting delivery teams.',
+      'AgentProvision put every trusted dataset behind a single access plane. Our agents now surface answers and launch remediation in the same workflow.',
     author: 'Lina Cho',
     role: 'VP of Platform Engineering, Pulse Health',
   },
   {
     quote:
-      'We federated 700+ agent skills with centralized guardrails. Observability and policy automation were game changers for our regulated workloads.',
+      'We federated 700+ agent skills with centralized guardrails. Observability and policy automation keep every action compliant across regions.',
     author: 'Elias Grant',
     role: 'Head of Intelligent Automation, Nova Finance',
   },
@@ -149,17 +149,17 @@ export const testimonials = [
 export const highlights = [
   {
     title: 'Adaptive Guardrails',
-    description: 'Runtime policy enforcement, redaction, and human-in-the-loop checkpoints for every action.',
+    description: 'Runtime policy enforcement, masking, and human approval flows govern every agent step.',
     icon: FaShieldAlt,
   },
   {
     title: 'Explainable Decisions',
-    description: 'Traceability reporting bundles insights, lineage, and replayable evidence for audits.',
+    description: 'Traceability bundles queries, lineage, and replayable context for auditors and owners.',
     icon: FaEye,
   },
   {
-    title: 'Golden Signals',
-    description: 'Out-of-the-box dashboards spotlight reliability, accuracy, and business impact metrics.',
+    title: 'Lakehouse Signals',
+    description: 'Out-of-the-box dashboards track freshness, usage, and business impact across every data asset.',
     icon: FaChartPie,
   },
 ];

@@ -10,15 +10,15 @@ const HeroSection = ({ onPrimaryCta = noop, onSecondaryCta = noop }) => {
       <Container className="hero-content py-5">
         <Row className="align-items-center gy-5">
           <Col lg={7} className="text-center text-lg-start pe-lg-5">
-            <span className="badge-glow">Decision intelligence platform</span>
+            <span className="badge-glow">Unified data access</span>
             <h1 className="display-2 fw-bold mt-4 mb-3 section-heading">
-              Turn unified telemetry into board-ready answers — in minutes, not months
+              Turn your lakehouse into actions with agentic AI
             </h1>
             <p className="lead text-soft mt-3 mb-3">
-              AgentProvision models every KPI across revenue, operations, and product usage so executives, analysts, and operators see the same numbers in real time.
+              AgentProvision connects warehouses, lakes, and SaaS apps so every team can explore trusted data products without waiting on ETL tickets.
             </p>
             <p className="text-subtle mb-0">
-              Blend governed data, auto-generated narratives, and closed-loop automations to move from dashboards to measurable business outcomes.
+              Auto-map schemas, publish semantic metrics, and let AI agents orchestrate workflows across finance, revenue, and operations tools.
             </p>
             <div className="d-flex flex-column flex-md-row gap-3 justify-content-center justify-content-lg-start mt-5">
               <Button size="lg" className="px-5 py-3" onClick={onPrimaryCta}>
@@ -34,7 +34,7 @@ const HeroSection = ({ onPrimaryCta = noop, onSecondaryCta = noop }) => {
               </Button>
             </div>
             <div className="text-subtle mt-3">
-              No credit card • SOC2-ready environments • Dedicated onboarding squad
+              Connect Snowflake, BigQuery, Salesforce, and more in under 30 minutes
             </div>
           </Col>
           <Col lg={5}>
