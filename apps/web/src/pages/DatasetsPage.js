@@ -240,9 +240,9 @@ const DatasetsPage = () => {
                 />
               </Form.Group>
               <Form.Group controlId="datasetFile" className="mb-3">
-                <Form.Label>Excel file (.xlsx)</Form.Label>
-                <Form.Control type="file" name="file" accept=".xlsx,.xls" onChange={handleUploadChange} required />
-                <Form.Text className="text-muted">We currently support Excel uploads up to 10MB.</Form.Text>
+                <Form.Label>Dataset file (.xlsx or .csv)</Form.Label>
+                <Form.Control type="file" name="file" accept=".xlsx,.xls,.csv" onChange={handleUploadChange} required />
+                <Form.Text className="text-muted">Excel and CSV uploads up to 10MB are supported.</Form.Text>
               </Form.Group>
             </Modal.Body>
             <Modal.Footer>
