@@ -9,6 +9,8 @@ import AgentsPage from './pages/AgentsPage';
 import ToolsPage from './pages/ToolsPage';
 import ConnectorsPage from './pages/ConnectorsPage';
 import DeploymentsPage from './pages/DeploymentsPage';
+import VectorStoresPage from './pages/VectorStoresPage';
+import AgentKitsPage from './pages/AgentKitsPage';
 import Layout from './components/Layout';
 import authService from './services/auth';
 
@@ -58,6 +60,8 @@ function App() {
           <Route path="/tools" element={<ToolsPage />} />
           <Route path="/connectors" element={<ConnectorsPage />} />
           <Route path="/deployments" element={<DeploymentsPage />} />
+          <Route path="/vector-stores" element={<VectorStoresPage />} />
+          <Route path="/agent-kits" element={<AgentKitsPage />} />
         </Routes>
       </AuthProvider>
     </Router>
