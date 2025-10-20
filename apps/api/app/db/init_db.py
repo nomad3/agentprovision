@@ -68,11 +68,13 @@ def seed_demo_data(db: Session) -> None:
         DataSource(
             name="Snowflake Revenue Warehouse",
             type="warehouse",
+            config={},
             tenant_id=demo_tenant.id,
         ),
         DataSource(
             name="Product Telemetry Stream",
             type="stream",
+            config={},
             tenant_id=demo_tenant.id,
         ),
     ]
