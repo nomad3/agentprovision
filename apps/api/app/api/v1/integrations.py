@@ -100,6 +100,6 @@ def get_available_connectors(
     # In a real scenario, this would fetch from a predefined catalog or dynamically from n8n
     # For now, we'll return a hardcoded list of connectors
     return [
-        Connector(id=uuid.uuid4(), name="Salesforce CRM", description="Connects to Salesforce CRM", type="n8n", n8n_workflow_id="salesforce-workflow-id", schema={}, config={}, tenant_id=current_user.tenant_id),
-        Connector(id=uuid.uuid4(), name="Snowflake Data Warehouse", description="Connects to Snowflake Data Warehouse", type="n8n", n8n_workflow_id="snowflake-workflow-id", schema={}, config={}, tenant_id=current_user.tenant_id),
+        schemas.connector.Connector(id=str(uuid.uuid4()), name="Salesforce CRM", description="Connects to Salesforce CRM", type="n8n", n8n_workflow_id="salesforce-workflow-id", schema={}, config={}, tenant_id=current_user.tenant_id),
+        schemas.connector.Connector(id=str(uuid.uuid4()), name="Snowflake Data Warehouse", description="Connects to Snowflake Data Warehouse", type="n8n", n8n_workflow_id="snowflake-workflow-id", schema={}, config={}, tenant_id=current_user.tenant_id),
     ]
