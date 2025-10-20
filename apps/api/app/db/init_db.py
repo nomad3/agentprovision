@@ -14,9 +14,11 @@ from app.models.data_source import DataSource
 from app.models.data_pipeline import DataPipeline
 from app.models.notebook import Notebook
 from app.models.agent import Agent
-from app.models.tool import Tool
-from app.models.connector import Connector
-from app.models.deployment import Deployment
+from app.models.tool import Tool  # noqa: F401
+from app.models.connector import Connector  # noqa: F401
+from app.models.deployment import Deployment  # noqa: F401
+from app.models.integration import Integration # noqa: F401
+from app.models.credential import Credential # noqa: F401
 from app.core.security import get_password_hash
 
 def init_db(db: Session) -> None:
