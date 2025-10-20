@@ -4,6 +4,7 @@ import Layout from '../components/Layout';
 import datasetService from '../services/dataset';
 import agentKitService from '../services/agentKit';
 import chatService from '../services/chat';
+import { useAuth } from '../App';
 
 const initialSessionState = {
   datasetId: '',
@@ -12,6 +13,7 @@ const initialSessionState = {
 };
 
 const ChatPage = () => {
+  const auth = useAuth();
   const [sessions, setSessions] = useState([]);
   const [datasets, setDatasets] = useState([]);
   const [agentKits, setAgentKits] = useState([]);
@@ -27,9 +29,12 @@ const ChatPage = () => {
   const [globalError, setGlobalError] = useState('');
 
   useEffect(() => {
+    if (!auth.user) {
+      return;
+    }
     loadReferenceData();
     loadSessions();
-  }, []);
+  }, [auth.user]);
 
   const loadReferenceData = async () => {
     try {
@@ -107,6 +112,9 @@ const ChatPage = () => {
     setShowCreateModal(true);
     setSessionForm(initialSessionState);
     setFormErrors('');
+    if (auth.user) {
+      loadReferenceData();
+    }
   };
 
   const handleCreateSessionChange = (event) => {
