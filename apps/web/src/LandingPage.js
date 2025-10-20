@@ -57,7 +57,7 @@ const LandingPage = () => {
           </Container>
         </section>
 
-        <section id="features" className="py-5">
+        <section id="features" className="py-5 bg-dark">
           <Container>
             <div className="text-center mb-5">
               <h2 className="display-4 fw-bold section-heading">Accelerate your agentic data strategy</h2>
