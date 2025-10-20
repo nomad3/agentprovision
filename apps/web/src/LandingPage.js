@@ -25,11 +25,11 @@ const LandingPage = () => {
           <Navbar.Toggle aria-controls="primary-nav" className="border-0" />
           <Navbar.Collapse id="primary-nav">
             <Nav className="ms-auto align-items-lg-center gap-lg-4">
-              <Nav.Link href="#features" className="text-white-50">Platform</Nav.Link>
-              <Nav.Link href="#lakehouse" className="text-white-50">Lakehouse</Nav.Link>
-              <Nav.Link href="#ai" className="text-white-50">Intelligence</Nav.Link>
-              <Nav.Link href="#roadmap" className="text-white-50">Roadmap</Nav.Link>
-              <Nav.Link href="#stories" className="text-white-50">Stories</Nav.Link>
+              <Nav.Link href="#features" className="mx-2 text-light">Platform</Nav.Link>
+              <Nav.Link href="#lakehouse" className="mx-2 text-light">Lakehouse</Nav.Link>
+              <Nav.Link href="#ai" className="mx-2 text-light">Intelligence</Nav.Link>
+              <Nav.Link href="#roadmap" className="mx-2 text-light">Roadmap</Nav.Link>
+              <Nav.Link href="#stories" className="mx-2 text-light">Stories</Nav.Link>
               <Button href="/register" className="ms-lg-4 px-4 py-2">Book a Demo</Button>
             </Nav>
           </Navbar.Collapse>
@@ -46,9 +46,9 @@ const LandingPage = () => {
                 {group.map((metric) => (
                   <Col md={4} key={metric.label}>
                     <div className="metric-tile h-100">
-                      <div className="text-uppercase text-sm text-white-50 fw-semibold">{metric.label}</div>
+                      <div className="text-uppercase text-sm text-light fw-semibold">{metric.label}</div>
                       <h3 className="display-5 fw-bold mt-2 mb-3">{metric.value}</h3>
-                      <p className="text-white-50 mb-0">{metric.description}</p>
+                      <p className="text-light mb-0">{metric.description}</p>
                     </div>
                   </Col>
                 ))}
@@ -73,7 +73,7 @@ const LandingPage = () => {
                       <Icon size={28} />
                     </div>
                     <Card.Title className="text-white fw-semibold fs-4">{title}</Card.Title>
-                    <Card.Text className="text-white-50 mt-3">{description}</Card.Text>
+                    <Card.Text className="text-light mt-3">{description}</Card.Text>
                   </Card>
                 </Col>
               ))}
@@ -99,7 +99,7 @@ const LandingPage = () => {
               <Col lg={6}>
                 <div className="panel-glass p-5">
                   <h2 className="display-5 fw-bold text-white">Agentic lakehouse fabric</h2>
-                  <p className="text-white-50 mt-3">
+                  <p className="text-light mt-3">
                     Blend operational data, telemetry, and embeddings into a unified governance plane. AgentProvision delivers ACID compliance, programmable lineage, and governed feature stores for every team.
                   </p>
                   <div className="gradient-divider my-4" />
@@ -110,7 +110,7 @@ const LandingPage = () => {
                       </div>
                       <div>
                         <h5 className="text-white fw-semibold mb-1">{title}</h5>
-                        <p className="mb-0 text-white-50">{description}</p>
+                        <p className="mb-0 text-light">{description}</p>
                       </div>
                     </div>
                   ))}
@@ -119,7 +119,7 @@ const LandingPage = () => {
               <Col lg={6}>
                 <div className="glass-card">
                   <h3 className="fs-3 fw-semibold text-white">Data-to-decision pipelines</h3>
-                  <p className="text-white-50">
+                  <p className="text-light">
                     Deploy certified pipelines that capture telemetry, execute retrieval-augmented reasoning, and trigger policy-controlled actuations.
                   </p>
                   <Row className="g-3 mt-4">
@@ -128,7 +128,7 @@ const LandingPage = () => {
                         <div className="feature-card p-4 h-100">
                           <Icon size={26} className="text-primary" />
                           <h5 className="text-white fw-semibold mt-3">{title}</h5>
-                          <p className="text-white-50 mb-0">{description}</p>
+                          <p className="text-light mb-0">{description}</p>
                         </div>
                       </Col>
                     ))}
@@ -144,7 +144,7 @@ const LandingPage = () => {
             <Row className="g-5">
               <Col lg={5}>
                 <h2 className="display-5 fw-bold text-white">Operate agents with confidence</h2>
-                <p className="text-white-50 mt-3">
+                <p className="text-light mt-3">
                   Coordinate cross-tenant agent fleets with automated scoring, human-in-the-loop guardrails, and multi-cloud orchestration.
                 </p>
               </Col>
@@ -157,7 +157,7 @@ const LandingPage = () => {
                           <Icon size={26} />
                         </div>
                         <h5 className="text-white fw-semibold">{title}</h5>
-                        <p className="text-white-50">{description}</p>
+                        <p className="text-light">{description}</p>
                       </div>
                     </Col>
                   ))}
@@ -171,7 +171,7 @@ const LandingPage = () => {
           <Container>
             <div className="text-center mb-5">
               <h2 className="display-4 fw-bold text-white">Roadmap</h2>
-              <p className="section-subtitle">
+              <p className="section-subtitle text-light">
                 Strategic investments that expand enterprise controls, developer velocity, and observability.
               </p>
             </div>
@@ -183,7 +183,7 @@ const LandingPage = () => {
                       <Icon size={26} />
                     </div>
                     <h5 className="text-white fw-semibold">{title}</h5>
-                    <p className="text-white-50">{description}</p>
+                    <p className="text-light">{description}</p>
                   </div>
                 </Col>
               ))}
@@ -197,10 +197,10 @@ const LandingPage = () => {
               {testimonials.map(({ quote, author, role }) => (
                 <Col md={6} key={author}>
                   <div className="feature-card p-4 h-100">
-                    <p className="fs-5 text-white-75">“{quote}”</p>
+                    <p className="fs-5 text-light">“{quote}”</p>
                     <div className="mt-4">
                       <div className="fw-semibold text-white">{author}</div>
-                      <div className="text-white-50">{role}</div>
+                      <div className="text-light">{role}</div>
                     </div>
                   </div>
                 </Col>
@@ -231,7 +231,7 @@ const LandingPage = () => {
       </main>
 
       <footer className="footer py-4 mt-5">
-        <Container className="text-center text-white-50">
+        <Container className="text-center text-light">
           © {new Date().getFullYear()} AgentProvision. All rights reserved.
         </Container>
       </footer>
