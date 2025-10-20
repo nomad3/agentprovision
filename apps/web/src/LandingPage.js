@@ -25,12 +25,14 @@ const LandingPage = () => {
           <Navbar.Toggle aria-controls="primary-nav" className="border-0" />
           <Navbar.Collapse id="primary-nav">
             <Nav className="ms-auto align-items-lg-center gap-lg-4">
-              <Nav.Link href="#features" className="mx-2 text-light">Platform</Nav.Link>
-              <Nav.Link href="#lakehouse" className="mx-2 text-light">Lakehouse</Nav.Link>
-              <Nav.Link href="#ai" className="mx-2 text-light">Intelligence</Nav.Link>
-              <Nav.Link href="#roadmap" className="mx-2 text-light">Roadmap</Nav.Link>
-              <Nav.Link href="#stories" className="mx-2 text-light">Stories</Nav.Link>
-              <Button href="/register" className="ms-lg-4 px-4 py-2">Book a Demo</Button>
+              <Nav.Link href="#features" className="mx-2">Platform</Nav.Link>
+              <Nav.Link href="#lakehouse" className="mx-2">Lakehouse</Nav.Link>
+              <Nav.Link href="#ai" className="mx-2">Intelligence</Nav.Link>
+              <Nav.Link href="#roadmap" className="mx-2">Roadmap</Nav.Link>
+              <Nav.Link href="#stories" className="mx-2">Stories</Nav.Link>
+              <Button href="/register" className="ms-lg-4 px-4 py-2">
+                Book a Demo
+              </Button>
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -39,16 +41,18 @@ const LandingPage = () => {
       <main>
         <HeroSection />
 
-        <section className="py-5" id="metrics" style={{ marginTop: '3rem' }}>
+        <section className="section-wrapper section-ink metrics-section" id="metrics">
           <Container>
             {metricsChunks.map((group, index) => (
               <Row className="g-4 justify-content-center" key={`metrics-${index}`}>
                 {group.map((metric) => (
                   <Col md={4} key={metric.label}>
                     <div className="metric-tile h-100">
-                      <div className="text-uppercase text-sm text-light fw-semibold">{metric.label}</div>
+                      <div className="text-uppercase text-sm text-soft fw-semibold tracking-wide">
+                        {metric.label}
+                      </div>
                       <h3 className="display-5 fw-bold mt-2 mb-3">{metric.value}</h3>
-                      <p className="text-light mb-0">{metric.description}</p>
+                      <p className="text-contrast mb-0">{metric.description}</p>
                     </div>
                   </Col>
                 ))}
@@ -57,7 +61,7 @@ const LandingPage = () => {
           </Container>
         </section>
 
-        <section id="features" className="py-5 bg-dark">
+        <section id="features" className="section-wrapper section-dark">
           <Container>
             <div className="text-center mb-5">
               <h2 className="display-4 fw-bold section-heading">Accelerate your agentic data strategy</h2>
@@ -73,7 +77,7 @@ const LandingPage = () => {
                       <Icon size={28} />
                     </div>
                     <Card.Title className="text-white fw-semibold fs-4">{title}</Card.Title>
-                    <Card.Text className="text-light mt-3">{description}</Card.Text>
+                    <Card.Text className="text-soft mt-3">{description}</Card.Text>
                   </Card>
                 </Col>
               ))}
@@ -81,7 +85,7 @@ const LandingPage = () => {
           </Container>
         </section>
 
-        <section id="logos" className="py-4">
+        <section id="logos" className="section-thin">
           <Container>
             <div className="d-flex flex-wrap justify-content-center gap-3">
               {logoBadges.map((name) => (
@@ -93,7 +97,7 @@ const LandingPage = () => {
           </Container>
         </section>
 
-        <section id="lakehouse" className="py-5">
+        <section id="lakehouse" className="section-wrapper">
           <Container>
             <Row className="g-5 align-items-center">
               <Col lg={6}>
@@ -110,7 +114,7 @@ const LandingPage = () => {
                       </div>
                       <div>
                         <h5 className="text-white fw-semibold mb-1">{title}</h5>
-                        <p className="mb-0 text-light">{description}</p>
+                        <p className="mb-0 text-soft">{description}</p>
                       </div>
                     </div>
                   ))}
@@ -119,7 +123,7 @@ const LandingPage = () => {
               <Col lg={6}>
                 <div className="glass-card">
                   <h3 className="fs-3 fw-semibold text-white">Data-to-decision pipelines</h3>
-                  <p className="text-light">
+                  <p className="text-soft">
                     Deploy certified pipelines that capture telemetry, execute retrieval-augmented reasoning, and trigger policy-controlled actuations.
                   </p>
                   <Row className="g-3 mt-4">
@@ -128,7 +132,7 @@ const LandingPage = () => {
                         <div className="feature-card p-4 h-100">
                           <Icon size={26} className="text-primary" />
                           <h5 className="text-white fw-semibold mt-3">{title}</h5>
-                          <p className="text-light mb-0">{description}</p>
+                          <p className="text-soft mb-0">{description}</p>
                         </div>
                       </Col>
                     ))}
@@ -139,12 +143,12 @@ const LandingPage = () => {
           </Container>
         </section>
 
-        <section id="ai" className="py-5">
+        <section id="ai" className="section-wrapper section-contrast">
           <Container>
             <Row className="g-5">
               <Col lg={5}>
                 <h2 className="display-5 fw-bold text-white">Operate agents with confidence</h2>
-                <p className="text-light mt-3">
+                <p className="text-soft mt-3">
                   Coordinate cross-tenant agent fleets with automated scoring, human-in-the-loop guardrails, and multi-cloud orchestration.
                 </p>
               </Col>
@@ -157,7 +161,7 @@ const LandingPage = () => {
                           <Icon size={26} />
                         </div>
                         <h5 className="text-white fw-semibold">{title}</h5>
-                        <p className="text-light">{description}</p>
+                        <p className="text-soft">{description}</p>
                       </div>
                     </Col>
                   ))}
@@ -167,11 +171,11 @@ const LandingPage = () => {
           </Container>
         </section>
 
-        <section id="roadmap" className="py-5">
+        <section id="roadmap" className="section-wrapper section-dark">
           <Container>
             <div className="text-center mb-5">
               <h2 className="display-4 fw-bold text-white">Roadmap</h2>
-              <p className="section-subtitle text-light">
+              <p className="section-subtitle">
                 Strategic investments that expand enterprise controls, developer velocity, and observability.
               </p>
             </div>
@@ -183,7 +187,7 @@ const LandingPage = () => {
                       <Icon size={26} />
                     </div>
                     <h5 className="text-white fw-semibold">{title}</h5>
-                    <p className="text-light">{description}</p>
+                    <p className="text-contrast">{description}</p>
                   </div>
                 </Col>
               ))}
@@ -191,16 +195,16 @@ const LandingPage = () => {
           </Container>
         </section>
 
-        <section id="stories" className="py-5">
+        <section id="stories" className="section-wrapper">
           <Container>
             <Row className="g-4">
               {testimonials.map(({ quote, author, role }) => (
                 <Col md={6} key={author}>
                   <div className="feature-card p-4 h-100">
-                    <p className="fs-5 text-light">“{quote}”</p>
+                    <p className="fs-5 text-contrast">“{quote}”</p>
                     <div className="mt-4">
                       <div className="fw-semibold text-white">{author}</div>
-                      <div className="text-light">{role}</div>
+                      <div className="text-soft">{role}</div>
                     </div>
                   </div>
                 </Col>
@@ -209,13 +213,13 @@ const LandingPage = () => {
           </Container>
         </section>
 
-        <section id="cta" className="py-5">
+        <section id="cta" className="section-wrapper section-highlight">
           <Container>
-            <div className="cta-banner p-5 text-white text-center text-md-start">
+            <div className="cta-banner p-5 text-white text-center text-md-start shadow-lg">
               <Row className="align-items-center">
                 <Col md={8}>
                   <h2 className="display-5 fw-bold">Build your agentic program on a trusted lakehouse</h2>
-                  <p className="mt-3 mb-0 fs-5">
+                  <p className="mt-3 mb-0 fs-5 text-contrast">
                     Partner with our architects to launch your first governed copilot in weeks, not quarters.
                   </p>
                 </Col>
@@ -231,7 +235,7 @@ const LandingPage = () => {
       </main>
 
       <footer className="footer py-4 mt-5">
-        <Container className="text-center text-light">
+        <Container className="text-center text-soft">
           © {new Date().getFullYear()} AgentProvision. All rights reserved.
         </Container>
       </footer>
