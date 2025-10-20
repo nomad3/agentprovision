@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Button, Spinner, Alert } from 'react-bootstr
 import Layout from '../components/Layout';
 import { Link } from 'react-router-dom';
 import api from '../utils/api';
+import ConnectorCard from '../components/ConnectorCard';
 
 const IntegrationsHubPage = () => {
   const [connectors, setConnectors] = useState([]);
@@ -38,15 +39,7 @@ const IntegrationsHubPage = () => {
       <Row className="g-4">
         {connectors.map((connector) => (
           <Col md={4} key={connector.id}>
-            <Card className="h-100 shadow-sm">
-              <Card.Body>
-                <Card.Title>{connector.name}</Card.Title>
-                <Card.Text>{connector.description}</Card.Text>
-                <Link to={`/integrations/new/${connector.id}`}>
-                  <Button variant="primary">Configure</Button>
-                </Link>
-              </Card.Body>
-            </Card>
+            <ConnectorCard connector={connector} />
           </Col>
         ))}
       </Row>
