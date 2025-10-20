@@ -9,7 +9,7 @@ from app.schemas import tenant as tenant_schema
 from app.api import deps
 from app.core import security
 from app.core.config import settings
-from app.services import users as user_service
+from app.services import base as base_service
 
 router = APIRouter()
 
@@ -17,7 +17,7 @@ router = APIRouter()
 def login_for_access_token(
     db: Session = Depends(deps.get_db), form_data: OAuth2PasswordRequestForm = Depends()
 ):
-    user = user_service.authenticate_user(db, email=form_data.username, password=form_data.password)
+    user = base_service.authenticate_user(db, email=form_data.username, password=form_data.password)
     if not user:
         raise HTTPException(
             status_code=401,
