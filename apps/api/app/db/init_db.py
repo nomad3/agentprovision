@@ -16,7 +16,10 @@ from app.models.notebook import Notebook
 from app.models.agent import Agent
 from app.models.tool import Tool
 from app.models.connector import Connector
-from app.models.deployment import Deployment
+from app.models.deployment import Deployment  # noqa: F401
+from app.models.vector_store import VectorStore # noqa: F401
+from app.models.agent_kit import AgentKit # noqa: F401
+
 from app.core.security import get_password_hash
 
 def init_db(db: Session) -> None:
@@ -131,6 +134,40 @@ def seed_demo_data(db: Session) -> None:
         ),
     ]
     db.add_all(tools)
+
+    vector_stores = [
+        VectorStore(
+            name="Customer Feedback Embeddings",
+            description="Vector store for customer feedback analysis",
+            config={"provider": "pinecone", "index": "customer-feedback"},
+            tenant_id=demo_tenant.id,
+        ),
+        VectorStore(
+            name="Product Documentation Embeddings",
+            description="Vector store for product documentation RAG",
+            config={"provider": "weaviate", "index": "product-docs"},
+            tenant_id=demo_tenant.id,
+        ),
+    ]
+    db.add_all(vector_stores)
+
+    agent_kits = [
+        AgentKit(
+            name="Customer Support Agent Kit",
+            description="Kit for deploying customer support agents",
+            version="1.0.0",
+            config={"base_model": "gpt-4", "tools": ["faq_retrieval", "order_status"]},
+            tenant_id=demo_tenant.id,
+        ),
+        AgentKit(
+            name="Data Analysis Agent Kit",
+            description="Kit for deploying data analysis agents",
+            version="1.1.0",
+            config={"base_model": "claude-3", "tools": ["sql_query", "chart_generation"]},
+            tenant_id=demo_tenant.id,
+        ),
+    ]
+    db.add_all(agent_kits)
 
     deployments = [
         Deployment(
