@@ -5,25 +5,25 @@ from typing import List, Dict
 from sqlalchemy.orm import Session
 import uuid
 
-from app.models.agent_kit import AgentKit
+from app.models.agent_kit import AgentKit as AgentKitModel
 from app.models.tool import Tool
 from app.models.vector_store import VectorStore
 from app.schemas.agent_kit import (
     AgentKitCreate,
     AgentKitUpdate,
     AgentKitConfig,
-    AgentKit,
+    AgentKit as AgentKitSchema,
     AgentKitSimulation,
     ResolvedToolBinding,
     ResolvedVectorBinding,
     AgentKitSimulationStep,
 )
 
-def get_agent_kit(db: Session, agent_kit_id: uuid.UUID) -> AgentKit | None:
-    return db.query(AgentKit).filter(AgentKit.id == agent_kit_id).first()
+def get_agent_kit(db: Session, agent_kit_id: uuid.UUID) -> AgentKitModel | None:
+    return db.query(AgentKitModel).filter(AgentKitModel.id == agent_kit_id).first()
 
-def get_agent_kits_by_tenant(db: Session, tenant_id: uuid.UUID, skip: int = 0, limit: int = 100) -> List[AgentKit]:
-    return db.query(AgentKit).filter(AgentKit.tenant_id == tenant_id).offset(skip).limit(limit).all()
+def get_agent_kits_by_tenant(db: Session, tenant_id: uuid.UUID, skip: int = 0, limit: int = 100) -> List[AgentKitModel]:
+    return db.query(AgentKitModel).filter(AgentKitModel.tenant_id == tenant_id).offset(skip).limit(limit).all()
 
 def _normalize_config(config: AgentKitConfig | Dict) -> Dict:
     if config is None:
@@ -36,16 +36,16 @@ def _normalize_config(config: AgentKitConfig | Dict) -> Dict:
     return AgentKitConfig.parse_obj(config).dict()
 
 
-def create_tenant_agent_kit(db: Session, *, item_in: AgentKitCreate, tenant_id: uuid.UUID) -> AgentKit:
+def create_tenant_agent_kit(db: Session, *, item_in: AgentKitCreate, tenant_id: uuid.UUID) -> AgentKitModel:
     payload = item_in.dict()
     payload["config"] = _normalize_config(payload.get("config"))
-    db_item = AgentKit(**payload, tenant_id=tenant_id)
+    db_item = AgentKitModel(**payload, tenant_id=tenant_id)
     db.add(db_item)
     db.commit()
     db.refresh(db_item)
     return db_item
 
-def update_agent_kit(db: Session, *, db_obj: AgentKit, obj_in: AgentKitUpdate) -> AgentKit:
+def update_agent_kit(db: Session, *, db_obj: AgentKitModel, obj_in: AgentKitUpdate) -> AgentKitModel:
     if isinstance(obj_in, dict):
         update_data = obj_in
     else:
@@ -63,15 +63,15 @@ def update_agent_kit(db: Session, *, db_obj: AgentKit, obj_in: AgentKitUpdate) -
     db.refresh(db_obj)
     return db_obj
 
-def delete_agent_kit(db: Session, *, agent_kit_id: uuid.UUID) -> AgentKit | None:
-    agent_kit = db.query(AgentKit).filter(AgentKit.id == agent_kit_id).first()
+def delete_agent_kit(db: Session, *, agent_kit_id: uuid.UUID) -> AgentKitModel | None:
+    agent_kit = db.query(AgentKitModel).filter(AgentKitModel.id == agent_kit_id).first()
     if agent_kit:
         db.delete(agent_kit)
         db.commit()
     return agent_kit
 
 
-def simulate_agent_kit(db: Session, *, agent_kit: AgentKit) -> AgentKitSimulation:
+def simulate_agent_kit(db: Session, *, agent_kit: AgentKitModel) -> AgentKitSimulation:
     if not agent_kit.config:
         raise ValueError("Agent kit configuration is empty.")
 
