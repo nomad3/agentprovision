@@ -1,0 +1,70 @@
+{
+  "pageTitle": "Datasets",
+  "pageTitleDescription": "Gestiona datasets cargados, revisa vistas previas y accede a resúmenes generados automáticamente.",
+  "loading": "Cargando datasets...",
+  "error": {
+    "loading": "No pudimos cargar tus datasets. Intenta nuevamente.",
+    "preview": "No pudimos cargar la vista previa del dataset. Intenta más tarde.",
+    "upload": {
+      "generic": "La carga falló. Revisa el archivo e inténtalo de nuevo.",
+      "file": "Selecciona un archivo antes de cargar."
+    }
+  },
+  "uploadModal": {
+    "title": "Subir dataset",
+    "launchButton": "Subir nuevo dataset",
+    "form": {
+      "name": {
+        "label": "Nombre del dataset",
+        "placeholder": "Atribución de marketing"
+      },
+      "description": {
+        "label": "Descripción",
+        "placeholder": "Contexto opcional para colaboradores"
+      },
+      "file": {
+        "label": "Subir archivo",
+        "description": "Formatos soportados: .csv, .xls, .xlsx"
+      }
+    },
+    "actions": {
+      "cancel": "Cancelar",
+      "upload": "Subir dataset",
+      "uploading": "Cargando..."
+    }
+  },
+  "table": {
+    "heading": "Datasets",
+    "columns": {
+      "name": "Nombre",
+      "description": "Descripción",
+      "rows": "Filas",
+      "created": "Creado",
+      "actions": "Acciones"
+    },
+    "actions": {
+      "preview": "Vista previa"
+    },
+    "empty": "Aún no hay datasets disponibles. Sube uno para comenzar."
+  },
+  "previewModal": {
+    "title": "Vista previa del dataset",
+    "tabs": {
+      "summary": "Resumen"
+    },
+    "loading": "Cargando vista previa...",
+    "loadingSummary": "Cargando resumen...",
+    "empty": "No hay vista previa disponible.",
+    "summary": {
+      "empty": "No hay datos de resumen disponibles.",
+      "metrics": {
+        "average": "Promedio",
+        "min": "Mínimo",
+        "max": "Máximo"
+      }
+    },
+    "actions": {
+      "close": "Cerrar"
+    }
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "hero": {
+    "badge": "Diseñado para equipos de datos, operaciones y finanzas",
+    "title": "De los datos a las decisiones con IA agentica",
+    "lead": "AgentProvision conecta tu lakehouse y datos SaaS para que cada líder obtenga respuestas en tiempo real y ejecución automatizada.",
+    "subtext": "Mapea esquemas automáticamente, publica métricas gobernadas y orquesta agentes de IA que actúan en Snowflake, Salesforce, Netsuite y más.",
+    "subHighlight": "Conecta Snowflake, BigQuery, Salesforce y más en menos de 30 minutos.",
+    "spotlight": {
+      "heading": "Por qué los equipos eligen AgentProvision",
+      "badge": "Gobernado por diseño"
+    },
+    "highlights": {
+      "governedDataProducts": {
+        "title": "Productos de datos gobernados",
+        "description": "Publica datasets curados con linaje, scoring de calidad y políticas de acceso incorporadas."
+      },
+      "unifiedLakehouseFabric": {
+        "title": "Tejido lakehouse unificado",
+        "description": "Combina almacenes, lagos y telemetría en una capa semántica confiable para todos los equipos."
+      },
+      "agenticAutomation": {
+        "title": "Automatización agentica",
+        "description": "Lanza agentes de IA que leen, razonan y actúan con guardrails en todo tu stack SaaS."
+      }
+    }
+  },
+  "logos": {
+    "heading": "Equipos que confían en nosotros",
+    "items": ["Neptune Cloud", "OmniRetail", "Helios Labs", "Nova Finance", "Pulse Health"]
+  },
+  "metrics": {
+    "items": [
+      {
+        "label": "Datasets conectados",
+        "value": "1.2k+",
+        "description": "Almacenes, lagos y APIs SaaS estandarizados en productos de datos reutilizables."
+      },
+      {
+        "label": "Tiempo de consulta a acción",
+        "value": "<4 min",
+        "description": "De una pregunta ad-hoc a un flujo de trabajo orquestado con agentes en tu stack."
+      },
+      {
+        "label": "Procesos manuales automatizados",
+        "value": "68%",
+        "description": "Runbooks agenticos reemplazan filas de tickets para finanzas, GTM y operaciones."
+      }
+    ]
+  },
+  "features": {
+    "heading": "Acelera analítica confiable y automatizaciones",
+    "subtitle": "Entrega copilotos gobernados más rápido con inteligencia reutilizable, métricas semánticas y un espacio colaborativo para líderes de datos y operaciones.",
+    "items": {
+      "connectEverySource": {
+        "title": "Conecta cada fuente rápidamente",
+        "description": "Incorpora Snowflake, Databricks, BigQuery, Postgres y APIs SaaS con esquemas mapeados automáticamente y SLAs de frescura."
+      },
+      "semanticControlPlane": {
+        "title": "Plano de control semántico",
+        "description": "Publica métricas, políticas y linaje gobernados para que dashboards y agentes hablen el mismo lenguaje de negocio."
+      },
+      "agentAutomationStudio": {
+        "title": "Estudio de automatización de agentes",
+        "description": "Diseña agentes de IA que consultan datos, razonan sobre contexto y disparan acciones en Slack, Salesforce o APIs personalizadas."
+      }
+    }
+  },
+  "lakehouse": {
+    "heading": "Tejido lakehouse agentico",
+    "description": "Combina datos operativos, telemetría y embeddings en un plano de gobernanza unificado. AgentProvision entrega cumplimiento ACID, linaje programable y feature stores gobernados para cada equipo.",
+    "highlights": {
+      "unifiedGovernance": {
+        "title": "Gobernanza unificada",
+        "description": "Almacena tablas, streams e índices vectoriales en un solo catálogo con seguridad a nivel de fila y aprobaciones."
+      },
+      "programmablePipelines": {
+        "title": "Pipelines programables",
+        "description": "Versiona productos de datos, dispara jobs de dbt y nutre embeddings con flujos estilo GitOps."
+      },
+      "compliantCollaboration": {
+        "title": "Colaboración conforme",
+        "description": "Impone residencia regional, aislamiento de tenants, enmascaramiento y acciones auditables de agentes."
+      }
+    },
+    "secondary": {
+      "heading": "Pipelines de datos a decisiones",
+      "description": "Implementa pipelines certificados que capturan telemetría, ejecutan razonamiento con RAG y activan decisiones controladas por políticas.",
+      "items": {
+        "adaptiveGuardrails": {
+          "title": "Guardrails adaptativos",
+          "description": "La ejecución de políticas en tiempo real, el enmascaramiento y los flujos de aprobación humana gobiernan cada paso del agente."
+        },
+        "explainableDecisions": {
+          "title": "Decisiones explicables",
+          "description": "La trazabilidad agrupa consultas, linaje y contexto reproducible para auditores y responsables."
+        },
+        "lakehouseSignals": {
+          "title": "Señales del lakehouse",
+          "description": "Tableros listos para usar rastrean frescura, uso e impacto de negocio de cada activo de datos."
+        }
+      }
+    }
+  },
+  "architecture": {
+    "heading": "Cómo se ensambla la plataforma",
+    "description": "Un tejido de tres capas brinda confianza a los equipos empresariales desde la ingestión hasta la acción. Cada nivel es modular para iniciar con tus integraciones actuales y escalar hacia agentes autónomos.",
+    "layers": {
+      "dataIntegrationLayer": {
+        "title": "Capa de integración de datos",
+        "description": "Conectores seguros sincronizan tablas de lakehouse, datos SaaS y streams de telemetría en un solo catálogo."
+      },
+      "semanticGovernanceLayer": {
+        "title": "Capa de gobernanza semántica",
+        "description": "El motor de políticas impone acceso, linaje y calidad mientras estandariza métricas y definiciones."
+      },
+      "agenticExecutionLayer": {
+        "title": "Capa de ejecución agentica",
+        "description": "Agentes componibles orquestan RAG, SQL y habilidades de actuación para automatizar finanzas, ingresos y operaciones."
+      }
+    }
+  },
+  "ai": {
+    "heading": "Opera agentes con confianza",
+    "description": "Coordina flotas de agentes multi-tenant con scoring automatizado, guardrails con humanos en el loop y orquestación multi-nube.",
+    "items": {
+      "insightCopilots": {
+        "title": "Copilotos de insights",
+        "description": "Generan briefings narrativos, alertas de anomalías y jugadas recomendadas en cualquier dataset."
+      },
+      "composableSkills": {
+        "title": "Habilidades componibles",
+        "description": "Encadena SQL, RAG, intérpretes de código y disparadores de workflows en habilidades reutilizables."
+      },
+      "closedLoopActuators": {
+        "title": "Actuadores de ciclo cerrado",
+        "description": "Sincroniza decisiones en Jira, HubSpot, ServiceNow y colas de tickets con seguimiento de impacto."
+      }
+    }
+  },
+  "roadmap": {
+    "heading": "Hoja de ruta",
+    "subtitle": "Inversiones estratégicas que amplían controles empresariales, velocidad de desarrollo y observabilidad.",
+    "items": {
+      "marketplaceConnectors": {
+        "title": "Conectores de marketplace",
+        "description": "Agrega instantáneamente fuentes de datos y agentes industriales mantenidos por socios certificados."
+      },
+      "adaptiveGovernanceAi": {
+        "title": "IA de gobernanza adaptativa",
+        "description": "Ajuste dinámico de políticas que puntúa el comportamiento de los agentes y recomienda nuevas barreras."
+      },
+      "autonomousFinopsSuites": {
+        "title": "Suites de FinOps autónomas",
+        "description": "Orquestadores de IA que concilian gasto, pronostican uso y activan guardrails de presupuesto."
+      }
+    }
+  },
+  "testimonials": {
+    "heading": "Equipos que operan con AgentProvision",
+    "subtitle": "Descubre cómo líderes de operaciones y datos automatizan decisiones y cierran el ciclo más rápido.",
+    "items": [
+      {
+        "quote": "AgentProvision colocó cada dataset confiable detrás de un único plano de acceso. Nuestros agentes ahora entregan respuestas y lanzan remediación en el mismo flujo.",
+        "author": "Lina Cho",
+        "role": "VP de Ingeniería de Plataforma, Pulse Health"
+      },
+      {
+        "quote": "Federamos más de 700 habilidades de agentes con guardrails centralizados. La observabilidad y la automatización de políticas mantienen cada acción en cumplimiento en todas las regiones.",
+        "author": "Elias Grant",
+        "role": "Head de Automatización Inteligente, Nova Finance"
+      }
+    ]
+  },
+  "cta": {
+    "heading": "¿Listo para lanzar un flujo agentico en semanas?",
+    "description": "Precios empresariales flexibles, onboarding especializado y modelado de ROI según tus casos de uso."
+  }
+}

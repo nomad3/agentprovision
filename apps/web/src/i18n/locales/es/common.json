@@ -1,0 +1,44 @@
+{
+  "brand": "AgentProvision",
+  "nav": {
+    "platform": "Plataforma",
+    "architecture": "Arquitectura",
+    "customers": "Clientes",
+    "pricing": "Precios y ROI"
+  },
+  "cta": {
+    "bookDemo": "Reservar una demo",
+    "watchTour": "Ver tour de 2 minutos",
+    "scheduleCall": "Agendar una llamada estratégica"
+  },
+  "language": {
+    "label": "Idioma",
+    "english": "Inglés",
+    "spanish": "Español"
+  },
+  "layout": {
+    "welcome": "Bienvenido, {{name}}",
+    "guest": "Invitado",
+    "logout": "Cerrar sesión"
+  },
+  "sidebar": {
+    "dashboard": "Panel",
+    "dataSources": "Fuentes de datos",
+    "dataPipelines": "Pipelines de datos",
+    "notebooks": "Notebooks",
+    "agents": "Agentes",
+    "datasets": "Datasets",
+    "chat": "Chat",
+    "tools": "Herramientas",
+    "connectors": "Conectores",
+    "deployments": "Implementaciones",
+    "vectorStores": "Vectores",
+    "agentKits": "Kits de agentes"
+  },
+  "landing": {
+    "trustedBy": "Equipos que confían en nosotros"
+  },
+  "footer": {
+    "copyright": "© {{year}} AgentProvision. Todos los derechos reservados."
+  }
+}

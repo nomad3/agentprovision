@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Container, Row, Col, Button, Table, Modal, Form, Alert, Spinner, Card } from 'react-bootstrap';
+import { Table, Button, Modal, Form, Alert, Spinner, Row, Col, Card } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import Layout from '../components/Layout';
 import datasetService from '../services/dataset';
 
@@ -10,8 +11,8 @@ const emptyUploadState = {
 };
 
 const DatasetsPage = () => {
+  const { t } = useTranslation('datasets');
   const [datasets, setDatasets] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showUpload, setShowUpload] = useState(false);
   const [uploadState, setUploadState] = useState(emptyUploadState);
@@ -20,6 +21,7 @@ const DatasetsPage = () => {
   const [summaryData, setSummaryData] = useState(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [summaryLoading, setSummaryLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     refreshDatasets();
@@ -33,7 +35,7 @@ const DatasetsPage = () => {
       setDatasets(response.data);
     } catch (err) {
       console.error(err);
-      setError('Failed to load datasets.');
+      setError(t('error.loading'));
     } finally {
       setLoading(false);
     }
@@ -55,7 +57,7 @@ const DatasetsPage = () => {
       setSummaryData(summaryResp.data);
     } catch (err) {
       console.error(err);
-      setError('Failed to load dataset preview.');
+      setError(t('error.preview'));
     } finally {
       setPreviewLoading(false);
       setSummaryLoading(false);
@@ -86,7 +88,7 @@ const DatasetsPage = () => {
   const handleUploadSubmit = async (event) => {
     event.preventDefault();
     if (!uploadState.file) {
-      setError('Select an Excel file to upload.');
+      setError(t('error.upload.file'));
       return;
     }
 
@@ -105,7 +107,7 @@ const DatasetsPage = () => {
       await refreshDatasets();
     } catch (err) {
       console.error(err);
-      setError('Dataset upload failed. Ensure the file is a valid Excel document.');
+      setError(t('error.upload.generic'));
     } finally {
       setLoading(false);
     }
@@ -113,7 +115,7 @@ const DatasetsPage = () => {
 
   const renderPreviewTable = useMemo(() => {
     if (!previewData || !previewData.sample_rows || previewData.sample_rows.length === 0) {
-      return <p className="text-muted">No sample rows available.</p>;
+      return <p className="text-muted">{t('previewModal.empty')}</p>;
     }
 
     const columns = Object.keys(previewData.sample_rows[0]);
@@ -141,7 +143,7 @@ const DatasetsPage = () => {
 
   const renderSummaryCards = useMemo(() => {
     if (!summaryData || !summaryData.numeric_columns || summaryData.numeric_columns.length === 0) {
-      return <p className="text-muted">No numeric summary available.</p>;
+      return <p className="text-muted">{t('previewModal.summary.empty')}</p>;
     }
 
     return (
@@ -151,9 +153,15 @@ const DatasetsPage = () => {
             <Card className="h-100 shadow-sm">
               <Card.Body>
                 <Card.Title>{metric.column}</Card.Title>
-                <Card.Text className="mb-1"><strong>Average:</strong> {metric.avg ?? '—'}</Card.Text>
-                <Card.Text className="mb-1"><strong>Min:</strong> {metric.min ?? '—'}</Card.Text>
-                <Card.Text className="mb-0"><strong>Max:</strong> {metric.max ?? '—'}</Card.Text>
+                <Card.Text className="mb-1">
+                  <strong>{t('previewModal.summary.metrics.average')}:</strong> {metric.avg ?? '—'}
+                </Card.Text>
+                <Card.Text className="mb-1">
+                  <strong>{t('previewModal.summary.metrics.min')}:</strong> {metric.min ?? '—'}
+                </Card.Text>
+                <Card.Text className="mb-0">
+                  <strong>{t('previewModal.summary.metrics.max')}:</strong> {metric.max ?? '—'}
+                </Card.Text>
               </Card.Body>
             </Card>
           </Col>
@@ -167,10 +175,10 @@ const DatasetsPage = () => {
       <Container fluid>
         <div className="d-flex justify-content-between align-items-center mb-4">
           <div>
-            <h2>Datasets</h2>
-            <p className="text-muted mb-0">Upload Excel files or inspect existing data products before powering Agent Kits.</p>
+            <h2>{t('pageTitle')}</h2>
+            <p className="text-muted mb-0">{t('pageTitleDescription')}</p>
           </div>
-          <Button variant="primary" onClick={() => setShowUpload(true)}>Upload Dataset</Button>
+          <Button variant="primary" onClick={() => setShowUpload(true)}>{t('uploadModal.launchButton')}</Button>
         </div>
 
         {error && <Alert variant="danger">{error}</Alert>}
@@ -178,11 +186,11 @@ const DatasetsPage = () => {
         <Table striped bordered hover responsive>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Rows</th>
-              <th>Created</th>
-              <th>Actions</th>
+              <th>{t('table.columns.name')}</th>
+              <th>{t('table.columns.description')}</th>
+              <th>{t('table.columns.rows')}</th>
+              <th>{t('table.columns.created')}</th>
+              <th>{t('table.columns.actions')}</th>
             </tr>
           </thead>
           <tbody>
@@ -193,13 +201,13 @@ const DatasetsPage = () => {
                 <td>{dataset.row_count}</td>
                 <td>{dataset.created_at ? new Date(dataset.created_at).toLocaleString() : '—'}</td>
                 <td>
-                  <Button variant="info" size="sm" onClick={() => openPreview(dataset)}>Preview</Button>
+                  <Button variant="info" size="sm" onClick={() => openPreview(dataset)}>{t('table.actions.preview')}</Button>
                 </td>
               </tr>
             ))}
             {datasets.length === 0 && (
               <tr>
-                <td colSpan={5} className="text-center text-muted">No datasets yet. Upload your first dataset to get started.</td>
+                <td colSpan={5} className="text-center text-muted">{t('table.empty')}</td>
               </tr>
             )}
           </tbody>
@@ -208,76 +216,76 @@ const DatasetsPage = () => {
         {loading && (
           <div className="d-flex align-items-center gap-2 text-muted">
             <Spinner animation="border" size="sm" />
-            <span>Processing...</span>
+            <span>{t('loading')}</span>
           </div>
         )}
 
         <Modal show={showUpload} onHide={handleUploadClose} centered>
           <Form onSubmit={handleUploadSubmit}>
             <Modal.Header closeButton>
-              <Modal.Title>Upload dataset</Modal.Title>
+              <Modal.Title>{t('uploadModal.title')}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form.Group className="mb-3">
-                <Form.Label>Name</Form.Label>
+                <Form.Label>{t('uploadModal.form.name.label')}</Form.Label>
                 <Form.Control
                   type="text"
                   name="name"
-                  placeholder="Marketing attribution"
+                  placeholder={t('uploadModal.form.name.placeholder')}
                   value={uploadState.name}
                   onChange={handleUploadChange}
                 />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label>Description</Form.Label>
+                <Form.Label>{t('uploadModal.form.description.label')}</Form.Label>
                 <Form.Control
                   as="textarea"
                   rows={3}
                   name="description"
-                  placeholder="Optional context for collaborators"
+                  placeholder={t('uploadModal.form.description.placeholder')}
                   value={uploadState.description}
                   onChange={handleUploadChange}
                 />
               </Form.Group>
               <Form.Group controlId="datasetFile" className="mb-3">
-                <Form.Label>Dataset file (.xlsx or .csv)</Form.Label>
+                <Form.Label>{t('uploadModal.form.file.label')}</Form.Label>
                 <Form.Control type="file" name="file" accept=".xlsx,.xls,.csv" onChange={handleUploadChange} required />
-                <Form.Text className="text-muted">Excel and CSV uploads up to 10MB are supported.</Form.Text>
+                <Form.Text className="text-muted">{t('uploadModal.form.file.description')}</Form.Text>
               </Form.Group>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="outline-secondary" onClick={handleUploadClose}>Cancel</Button>
-              <Button variant="primary" type="submit" disabled={loading}>{loading ? 'Uploading…' : 'Upload'}</Button>
+              <Button variant="outline-secondary" onClick={handleUploadClose}>{t('uploadModal.actions.cancel')}</Button>
+              <Button variant="primary" type="submit" disabled={loading}>{loading ? t('uploadModal.actions.uploading') : t('uploadModal.actions.upload')}</Button>
             </Modal.Footer>
           </Form>
         </Modal>
 
         <Modal show={Boolean(previewDataset)} onHide={closePreview} size="lg" centered>
           <Modal.Header closeButton>
-            <Modal.Title>Dataset preview — {previewDataset?.name}</Modal.Title>
+            <Modal.Title>{t('previewModal.title')} — {previewDataset?.name}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {previewLoading ? (
               <div className="d-flex align-items-center gap-2 text-muted">
                 <Spinner animation="border" size="sm" />
-                <span>Loading sample rows…</span>
+                <span>{t('previewModal.loading')}</span>
               </div>
             ) : (
               renderPreviewTable
             )}
             <hr />
-            <h6 className="text-uppercase text-muted">Numeric summary</h6>
+            <h6 className="text-uppercase text-muted">{t('previewModal.tabs.summary')}</h6>
             {summaryLoading ? (
               <div className="d-flex align-items-center gap-2 text-muted">
                 <Spinner animation="border" size="sm" />
-                <span>Summarizing columns…</span>
+                <span>{t('previewModal.loadingSummary')}</span>
               </div>
             ) : (
               renderSummaryCards
             )}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="primary" onClick={closePreview}>Close</Button>
+            <Button variant="primary" onClick={closePreview}>{t('previewModal.actions.close')}</Button>
           </Modal.Footer>
         </Modal>
       </Container>

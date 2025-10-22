@@ -1,37 +1,142 @@
 import React, { useMemo } from 'react';
-import { Container, Row, Col, Card, Navbar, Nav, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Navbar, Nav, Button, Dropdown } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import HeroSection from './components/marketing/HeroSection';
 import {
-  metrics,
-  features,
   lakehouseHighlights,
   aiHighlights,
-  roadmap,
-  testimonials,
-  highlights,
-  logoBadges,
+  roadmapItems,
+  featureBlocks,
+  pipelineHighlights,
   architectureLayers,
 } from './components/marketing/data';
 
 const LandingPage = () => {
-  const metricsChunks = useMemo(() => [metrics.slice(0, 3)], []);
+  const { t, i18n } = useTranslation(['common', 'landing']);
+
+  const currentLanguage = (i18n.language || 'en').split('-')[0];
+  const languageOptions = useMemo(
+    () => [
+      { code: 'en', label: t('common:language.english') },
+      { code: 'es', label: t('common:language.spanish') },
+    ],
+    [t, i18n.language]
+  );
+
+  const logos = useMemo(() => t('landing:logos.items', { returnObjects: true }) || [], [t, i18n.language]);
+  const metricsItems = useMemo(() => t('landing:metrics.items', { returnObjects: true }) || [], [t, i18n.language]);
+  const metricsChunks = useMemo(() => {
+    if (!Array.isArray(metricsItems)) {
+      return [];
+    }
+    const chunkSize = 3;
+    const chunks = [];
+    for (let i = 0; i < metricsItems.length; i += chunkSize) {
+      chunks.push(metricsItems.slice(i, i + chunkSize));
+    }
+    return chunks;
+  }, [metricsItems]);
+
+  const featureItems = useMemo(
+    () =>
+      featureBlocks.map(({ key, icon: Icon }) => {
+        const definition = t(`landing:features.items.${key}`, { returnObjects: true }) || {};
+        return { key, Icon, title: definition.title || '', description: definition.description || '' };
+      }),
+    [t, i18n.language]
+  );
+
+  const lakehousePrimary = useMemo(
+    () =>
+      lakehouseHighlights.map(({ key, icon: Icon }) => {
+        const definition = t(`landing:lakehouse.highlights.${key}`, { returnObjects: true }) || {};
+        return { key, Icon, title: definition.title || '', description: definition.description || '' };
+      }),
+    [t, i18n.language]
+  );
+
+  const pipelineItems = useMemo(
+    () =>
+      pipelineHighlights.map(({ key, icon: Icon }) => {
+        const definition = t(`landing:lakehouse.secondary.items.${key}`, { returnObjects: true }) || {};
+        return { key, Icon, title: definition.title || '', description: definition.description || '' };
+      }),
+    [t, i18n.language]
+  );
+
+  const aiItems = useMemo(
+    () =>
+      aiHighlights.map(({ key, icon: Icon }) => {
+        const definition = t(`landing:ai.items.${key}`, { returnObjects: true }) || {};
+        return { key, Icon, title: definition.title || '', description: definition.description || '' };
+      }),
+    [t, i18n.language]
+  );
+
+  const roadmap = useMemo(
+    () =>
+      roadmapItems.map(({ key, icon: Icon }) => {
+        const definition = t(`landing:roadmap.items.${key}`, { returnObjects: true }) || {};
+        return { key, Icon, title: definition.title || '', description: definition.description || '' };
+      }),
+    [t, i18n.language]
+  );
+
+  const architecture = useMemo(
+    () =>
+      architectureLayers.map(({ key, icon: Icon }) => {
+        const definition = t(`landing:architecture.layers.${key}`, { returnObjects: true }) || {};
+        return { key, Icon, title: definition.title || '', description: definition.description || '' };
+      }),
+    [t, i18n.language]
+  );
+
+  const testimonials = useMemo(
+    () => t('landing:testimonials.items', { returnObjects: true }) || [],
+    [t, i18n.language]
+  );
+
+  const handleLanguageChange = (code) => {
+    i18n.changeLanguage(code);
+  };
 
   return (
     <div>
       <Navbar expand="lg" fixed="top" className="nav-dark py-3">
         <Container>
           <Navbar.Brand href="#hero" className="fw-semibold text-white">
-            AgentProvision
+            {t('common:brand')}
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="primary-nav" className="border-0" />
           <Navbar.Collapse id="primary-nav">
             <Nav className="ms-auto align-items-lg-center gap-lg-4">
-              <Nav.Link href="#features" className="mx-2">Platform</Nav.Link>
-              <Nav.Link href="#architecture" className="mx-2">Architecture</Nav.Link>
-              <Nav.Link href="#stories" className="mx-2">Customers</Nav.Link>
-              <Nav.Link href="#cta" className="mx-2">Pricing &amp; ROI</Nav.Link>
+              <Nav.Link href="#features" className="mx-2">{t('common:nav.platform')}</Nav.Link>
+              <Nav.Link href="#architecture" className="mx-2">{t('common:nav.architecture')}</Nav.Link>
+              <Nav.Link href="#stories" className="mx-2">{t('common:nav.customers')}</Nav.Link>
+              <Nav.Link href="#cta" className="mx-2">{t('common:nav.pricing')}</Nav.Link>
+              <Dropdown align="end">
+                <Dropdown.Toggle
+                  variant="outline-light"
+                  size="sm"
+                  className="ms-lg-2 text-uppercase"
+                  id="landing-language-switch"
+                >
+                  {currentLanguage.toUpperCase()}
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  {languageOptions.map(({ code, label }) => (
+                    <Dropdown.Item
+                      key={code}
+                      active={currentLanguage === code}
+                      onClick={() => handleLanguageChange(code)}
+                    >
+                      {label}
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
               <Button href="/register" className="ms-lg-4 px-4 py-2">
-                Book a demo
+                {t('common:cta.bookDemo')}
               </Button>
             </Nav>
           </Navbar.Collapse>
@@ -44,8 +149,8 @@ const LandingPage = () => {
         <section id="logos" className="section-thin">
           <Container>
             <div className="d-flex flex-wrap justify-content-center align-items-center gap-3 text-uppercase text-soft">
-              <span className="fw-semibold me-2">Trusted by teams at</span>
-              {logoBadges.map((name) => (
+              <span className="fw-semibold me-2">{t('landing:logos.heading')}</span>
+              {logos.map((name) => (
                 <span key={name} className="logo-badge">
                   {name}
                 </span>
@@ -77,14 +182,12 @@ const LandingPage = () => {
         <section id="features" className="section-wrapper section-dark">
           <Container>
             <div className="text-center mb-5">
-              <h2 className="display-4 fw-bold section-heading">Accelerate trusted analytics and automations</h2>
-              <p className="lead section-subtitle mt-3">
-                Ship governed copilots faster with reusable intelligence, semantic metrics, and a collaborative workspace for data and operations leaders.
-              </p>
+              <h2 className="display-4 fw-bold section-heading">{t('landing:features.heading')}</h2>
+              <p className="lead section-subtitle mt-3">{t('landing:features.subtitle')}</p>
             </div>
             <Row className="g-4">
-              {features.map(({ icon: Icon, title, description }) => (
-                <Col md={4} key={title}>
+              {featureItems.map(({ key, Icon, title, description }) => (
+                <Col md={4} key={key}>
                   <Card className="feature-card h-100 p-4 border-0">
                     <div className="icon-pill">
                       <Icon size={28} />
@@ -103,13 +206,11 @@ const LandingPage = () => {
             <Row className="g-5 align-items-center">
               <Col lg={6}>
                 <div className="panel-glass p-5">
-                  <h2 className="display-5 fw-bold text-white">Agentic lakehouse fabric</h2>
-                  <p className="text-light mt-3">
-                    Blend operational data, telemetry, and embeddings into a unified governance plane. AgentProvision delivers ACID compliance, programmable lineage, and governed feature stores for every team.
-                  </p>
+                  <h2 className="display-5 fw-bold text-white">{t('landing:lakehouse.heading')}</h2>
+                  <p className="text-light mt-3">{t('landing:lakehouse.description')}</p>
                   <div className="gradient-divider my-4" />
-                  {lakehouseHighlights.map(({ icon: Icon, title, description }) => (
-                    <div className="d-flex align-items-start gap-3 mb-3" key={title}>
+                  {lakehousePrimary.map(({ key, Icon, title, description }) => (
+                    <div className="d-flex align-items-start gap-3 mb-3" key={key}>
                       <div className="icon-pill">
                         <Icon size={22} />
                       </div>
@@ -123,13 +224,11 @@ const LandingPage = () => {
               </Col>
               <Col lg={6}>
                 <div className="glass-card">
-                  <h3 className="fs-3 fw-semibold text-white">Data-to-decision pipelines</h3>
-                  <p className="text-soft">
-                    Deploy certified pipelines that capture telemetry, execute retrieval-augmented reasoning, and trigger policy-controlled actuations.
-                  </p>
+                  <h3 className="fs-3 fw-semibold text-white">{t('landing:lakehouse.secondary.heading')}</h3>
+                  <p className="text-soft">{t('landing:lakehouse.secondary.description')}</p>
                   <Row className="g-3 mt-4">
-                    {highlights.map(({ title, description, icon: Icon }) => (
-                      <Col md={6} key={title}>
+                    {pipelineItems.map(({ key, title, description, Icon }) => (
+                      <Col md={6} key={key}>
                         <div className="feature-card p-4 h-100">
                           <Icon size={26} className="text-primary" />
                           <h5 className="text-white fw-semibold mt-3">{title}</h5>
@@ -148,15 +247,13 @@ const LandingPage = () => {
           <Container>
             <Row className="g-5 align-items-center">
               <Col lg={5}>
-                <h2 className="display-5 fw-bold text-white">How the platform is assembled</h2>
-                <p className="text-soft mt-3">
-                  A three-layer fabric gives enterprise teams confidence from ingestion to action. Each tier is modular so you can start with the integrations you have today and scale into autonomous agents.
-                </p>
+                <h2 className="display-5 fw-bold text-white">{t('landing:architecture.heading')}</h2>
+                <p className="text-soft mt-3">{t('landing:architecture.description')}</p>
               </Col>
               <Col lg={7}>
                 <Row className="g-4">
-                  {architectureLayers.map(({ icon: Icon, title, description }) => (
-                    <Col md={4} key={title}>
+                  {architecture.map(({ key, Icon, title, description }) => (
+                    <Col md={4} key={key}>
                       <div className="feature-card h-100 p-4">
                         <div className="icon-pill">
                           <Icon size={26} />
@@ -176,15 +273,13 @@ const LandingPage = () => {
           <Container>
             <Row className="g-5">
               <Col lg={5}>
-                <h2 className="display-5 fw-bold text-white">Operate agents with confidence</h2>
-                <p className="text-soft mt-3">
-                  Coordinate cross-tenant agent fleets with automated scoring, human-in-the-loop guardrails, and multi-cloud orchestration.
-                </p>
+                <h2 className="display-5 fw-bold text-white">{t('landing:ai.heading')}</h2>
+                <p className="text-soft mt-3">{t('landing:ai.description')}</p>
               </Col>
               <Col lg={7}>
                 <Row className="g-4">
-                  {aiHighlights.map(({ icon: Icon, title, description }) => (
-                    <Col md={4} key={title}>
+                  {aiItems.map(({ key, Icon, title, description }) => (
+                    <Col md={4} key={key}>
                       <div className="feature-card h-100 p-4">
                         <div className="icon-pill">
                           <Icon size={26} />
@@ -203,14 +298,12 @@ const LandingPage = () => {
         <section id="roadmap" className="section-wrapper section-dark">
           <Container>
             <div className="text-center mb-5">
-              <h2 className="display-4 fw-bold text-white">Roadmap</h2>
-              <p className="section-subtitle">
-                Strategic investments that expand enterprise controls, developer velocity, and observability.
-              </p>
+              <h2 className="display-4 fw-bold text-white">{t('landing:roadmap.heading')}</h2>
+              <p className="section-subtitle">{t('landing:roadmap.subtitle')}</p>
             </div>
             <Row className="g-4">
-              {roadmap.map(({ icon: Icon, title, description }) => (
-                <Col md={4} key={title}>
+              {roadmap.map(({ key, Icon, title, description }) => (
+                <Col md={4} key={key}>
                   <div className="feature-card h-100 p-4">
                     <div className="icon-pill">
                       <Icon size={26} />
@@ -227,8 +320,8 @@ const LandingPage = () => {
         <section id="stories" className="section-wrapper">
           <Container>
             <div className="text-center mb-4">
-              <h2 className="display-5 fw-bold">Teams running on AgentProvision</h2>
-              <p className="text-muted fs-5">See how operators and data leaders automate decisions and close the loop faster.</p>
+              <h2 className="display-5 fw-bold">{t('landing:testimonials.heading')}</h2>
+              <p className="text-muted fs-5">{t('landing:testimonials.subtitle')}</p>
             </div>
             <Row className="g-4">
               {testimonials.map(({ quote, author, role }) => (
@@ -251,14 +344,12 @@ const LandingPage = () => {
             <div className="cta-banner p-5 text-white text-center text-md-start shadow-lg">
               <Row className="align-items-center">
                 <Col md={8}>
-                  <h2 className="display-5 fw-bold">Ready to launch an agentic workflow in weeks?</h2>
-                  <p className="mt-3 mb-0 fs-5 text-contrast">
-                    Flexible enterprise pricing, white-glove onboarding, and ROI modeling tailored to your use cases.
-                  </p>
+                  <h2 className="display-5 fw-bold">{t('landing:cta.heading')}</h2>
+                  <p className="mt-3 mb-0 fs-5 text-contrast">{t('landing:cta.description')}</p>
                 </Col>
                 <Col md={4} className="mt-4 mt-md-0 text-md-end">
                   <Button size="lg" className="px-5 py-3">
-                    Schedule a strategy call
+                    {t('common:cta.scheduleCall')}
                   </Button>
                 </Col>
               </Row>
@@ -269,7 +360,9 @@ const LandingPage = () => {
 
       <footer className="footer py-4 mt-5">
         <Container className="text-center text-soft">
-          © {new Date().getFullYear()} AgentProvision. All rights reserved.
+          {t('common:footer.copyright', {
+            year: new Date().getFullYear(),
+          })}
         </Container>
       </footer>
     </div>

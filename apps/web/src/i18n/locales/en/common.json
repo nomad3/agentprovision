@@ -1,0 +1,44 @@
+{
+  "brand": "AgentProvision",
+  "nav": {
+    "platform": "Platform",
+    "architecture": "Architecture",
+    "customers": "Customers",
+    "pricing": "Pricing & ROI"
+  },
+  "cta": {
+    "bookDemo": "Book a demo",
+    "watchTour": "Watch 2-min product tour",
+    "scheduleCall": "Schedule a strategy call"
+  },
+  "language": {
+    "label": "Language",
+    "english": "English",
+    "spanish": "Spanish"
+  },
+  "layout": {
+    "welcome": "Welcome, {{name}}",
+    "guest": "Guest",
+    "logout": "Logout"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "dataSources": "Data Sources",
+    "dataPipelines": "Data Pipelines",
+    "notebooks": "Notebooks",
+    "agents": "Agents",
+    "datasets": "Datasets",
+    "chat": "Chat",
+    "tools": "Tools",
+    "connectors": "Connectors",
+    "deployments": "Deployments",
+    "vectorStores": "Vector Stores",
+    "agentKits": "Agent Kits"
+  },
+  "landing": {
+    "trustedBy": "Trusted by teams at"
+  },
+  "footer": {
+    "copyright": "© {{year}} AgentProvision. All rights reserved."
+  }
+}

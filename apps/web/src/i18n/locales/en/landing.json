@@ -1,0 +1,178 @@
+{
+  "hero": {
+    "badge": "Built for data, ops, and finance teams",
+    "title": "From data to decisions with agentic AI",
+    "lead": "AgentProvision connects your lakehouse and SaaS data so every leader gets real-time answers and automated follow-through.",
+    "subtext": "Auto-map schemas, publish governed metrics, and orchestrate AI agents that act across Snowflake, Salesforce, Netsuite, and more.",
+    "subHighlight": "Connect Snowflake, BigQuery, Salesforce, and more in under 30 minutes.",
+    "spotlight": {
+      "heading": "Why teams choose AgentProvision",
+      "badge": "Governed by design"
+    },
+    "highlights": {
+      "governedDataProducts": {
+        "title": "Governed data products",
+        "description": "Publish curated datasets with lineage, quality scoring, and access policies baked in."
+      },
+      "unifiedLakehouseFabric": {
+        "title": "Unified lakehouse fabric",
+        "description": "Blend warehouses, lakes, and streaming telemetry into one semantic layer teams can trust."
+      },
+      "agenticAutomation": {
+        "title": "Agentic automation",
+        "description": "Launch AI agents that read, reason, and act with guardrails across your SaaS stack."
+      }
+    }
+  },
+  "logos": {
+    "heading": "Trusted by teams at",
+    "items": ["Neptune Cloud", "OmniRetail", "Helios Labs", "Nova Finance", "Pulse Health"]
+  },
+  "metrics": {
+    "items": [
+      {
+        "label": "Datasets connected",
+        "value": "1.2k+",
+        "description": "Warehouses, lakes, and SaaS APIs standardized into reusable data products."
+      },
+      {
+        "label": "Query-to-action time",
+        "value": "<4 min",
+        "description": "From ad-hoc question to orchestrated agent workflow across your stack."
+      },
+      {
+        "label": "Manual processes automated",
+        "value": "68%",
+        "description": "Agentic runbooks replace ticket queues for finance, GTM, and operations teams."
+      }
+    ]
+  },
+  "features": {
+    "heading": "Accelerate trusted analytics and automations",
+    "subtitle": "Ship governed copilots faster with reusable intelligence, semantic metrics, and a collaborative workspace for data and operations leaders.",
+    "items": {
+      "connectEverySource": {
+        "title": "Connect every source fast",
+        "description": "Onboard Snowflake, Databricks, BigQuery, Postgres, and SaaS APIs with auto-mapped schemas and freshness SLAs."
+      },
+      "semanticControlPlane": {
+        "title": "Semantic control plane",
+        "description": "Publish governed metrics, policies, and lineage so dashboards and agents speak the same business language."
+      },
+      "agentAutomationStudio": {
+        "title": "Agent automation studio",
+        "description": "Design AI agents that query data, reason over context, and trigger actions in Slack, Salesforce, or custom APIs."
+      }
+    }
+  },
+  "lakehouse": {
+    "heading": "Agentic lakehouse fabric",
+    "description": "Blend operational data, telemetry, and embeddings into a unified governance plane. AgentProvision delivers ACID compliance, programmable lineage, and governed feature stores for every team.",
+    "highlights": {
+      "unifiedGovernance": {
+        "title": "Unified governance",
+        "description": "Store tables, streams, and vector indexes in one catalog with row-level security and approvals."
+      },
+      "programmablePipelines": {
+        "title": "Programmable pipelines",
+        "description": "Version data products, trigger dbt jobs, and hydrate embeddings with GitOps-style workflows."
+      },
+      "compliantCollaboration": {
+        "title": "Compliant collaboration",
+        "description": "Enforce regional residency, tenant isolation, masking, and auditable agent actions."
+      }
+    },
+    "secondary": {
+      "heading": "Data-to-decision pipelines",
+      "description": "Deploy certified pipelines that capture telemetry, execute retrieval-augmented reasoning, and trigger policy-controlled actuations.",
+      "items": {
+        "adaptiveGuardrails": {
+          "title": "Adaptive Guardrails",
+          "description": "Runtime policy enforcement, masking, and human approval flows govern every agent step."
+        },
+        "explainableDecisions": {
+          "title": "Explainable Decisions",
+          "description": "Traceability bundles queries, lineage, and replayable context for auditors and owners."
+        },
+        "lakehouseSignals": {
+          "title": "Lakehouse Signals",
+          "description": "Out-of-the-box dashboards track freshness, usage, and business impact across every data asset."
+        }
+      }
+    }
+  },
+  "architecture": {
+    "heading": "How the platform is assembled",
+    "description": "A three-layer fabric gives enterprise teams confidence from ingestion to action. Each tier is modular so you can start with the integrations you have today and scale into autonomous agents.",
+    "layers": {
+      "dataIntegrationLayer": {
+        "title": "Data integration layer",
+        "description": "Secure connectors sync lakehouse tables, SaaS data, and telemetry streams into one catalog."
+      },
+      "semanticGovernanceLayer": {
+        "title": "Semantic governance layer",
+        "description": "Policy engine enforces access, lineage, and quality while standardizing metrics and definitions."
+      },
+      "agenticExecutionLayer": {
+        "title": "Agentic execution layer",
+        "description": "Composable agents orchestrate RAG, SQL, and actuator skills to automate revenue, finance, and ops workflows."
+      }
+    }
+  },
+  "ai": {
+    "heading": "Operate agents with confidence",
+    "description": "Coordinate cross-tenant agent fleets with automated scoring, human-in-the-loop guardrails, and multi-cloud orchestration.",
+    "items": {
+      "insightCopilots": {
+        "title": "Insight copilots",
+        "description": "Generate narrative briefings, anomaly callouts, and recommended plays on any dataset."
+      },
+      "composableSkills": {
+        "title": "Composable skills",
+        "description": "Chain SQL, RAG, code interpreters, and workflow triggers into reusable agent skills."
+      },
+      "closedLoopActuators": {
+        "title": "Closed-loop actuators",
+        "description": "Sync decisions into Jira, HubSpot, ServiceNow, and ticket queues with impact tracking."
+      }
+    }
+  },
+  "roadmap": {
+    "heading": "Roadmap",
+    "subtitle": "Strategic investments that expand enterprise controls, developer velocity, and observability.",
+    "items": {
+      "marketplaceConnectors": {
+        "title": "Marketplace connectors",
+        "description": "Instantly add industry data sources and agents maintained by certified partners."
+      },
+      "adaptiveGovernanceAi": {
+        "title": "Adaptive governance AI",
+        "description": "Dynamic policy tuning that scores agent behavior and recommends guardrail updates."
+      },
+      "autonomousFinopsSuites": {
+        "title": "Autonomous FinOps suites",
+        "description": "AI orchestrators that reconcile spend, forecast usage, and trigger budget guardrails."
+      }
+    }
+  },
+  "testimonials": {
+    "heading": "Teams running on AgentProvision",
+    "subtitle": "See how operators and data leaders automate decisions and close the loop faster.",
+    "items": [
+      {
+        "quote": "AgentProvision put every trusted dataset behind a single access plane. Our agents now surface answers and launch remediation in the same workflow.",
+        "author": "Lina Cho",
+        "role": "VP of Platform Engineering, Pulse Health"
+      },
+      {
+        "quote": "We federated 700+ agent skills with centralized guardrails. Observability and policy automation keep every action compliant across regions.",
+        "author": "Elias Grant",
+        "role": "Head of Intelligent Automation, Nova Finance"
+      }
+    ]
+  },
+  "cta": {
+    "heading": "Ready to launch an agentic workflow in weeks?",
+    "description": "Flexible enterprise pricing, white-glove onboarding, and ROI modeling tailored to your use cases."
+  }
+}
