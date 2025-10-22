@@ -21,18 +21,18 @@ import {
 export const heroHighlights = [
   {
     icon: FaChartPie,
-    title: 'One-click data products',
-    description: 'Provision curated data products with lineage, quality scores, and self-serve exploration.',
+    title: 'Governed data products',
+    description: 'Publish curated datasets with lineage, quality scoring, and access policies baked in.',
   },
   {
     icon: FaChartLine,
-    title: 'Lakehouse fabric',
-    description: 'Blend lake and warehouse tables with streaming telemetry into governed, query-ready layers.',
+    title: 'Unified lakehouse fabric',
+    description: 'Blend warehouses, lakes, and streaming telemetry into one semantic layer teams can trust.',
   },
   {
     icon: FaShieldAlt,
-    title: 'Agentic execution',
-    description: 'Deploy AI agents that read, reason, and act using policy-aware playbooks across business apps.',
+    title: 'Agentic automation',
+    description: 'Launch AI agents that read, reason, and act with guardrails across your SaaS stack.',
   },
 ];
 
@@ -57,21 +57,21 @@ export const metrics = [
 export const features = [
   {
     icon: FaDatabase,
-    title: 'Click-to-connect ingestion',
+    title: 'Connect every source fast',
     description:
-      'Sync Snowflake, Databricks, BigQuery, Postgres, and SaaS APIs with auto-generated schemas and freshness SLAs.',
+      'Onboard Snowflake, Databricks, BigQuery, Postgres, and SaaS APIs with auto-mapped schemas and freshness SLAs.',
   },
   {
     icon: FaChartLine,
-    title: 'Lakehouse semantic layer',
+    title: 'Semantic control plane',
     description:
-      'Publish governed metrics, dimensions, and policies so every downstream dashboard and agent speaks the same language.',
+      'Publish governed metrics, policies, and lineage so dashboards and agents speak the same business language.',
   },
   {
     icon: FaLaptopCode,
-    title: 'Agentic automation studio',
+    title: 'Agent automation studio',
     description:
-      'Design AI agents that query datasets, reason over context, and trigger actions in Slack, Salesforce, or custom APIs.',
+      'Design AI agents that query data, reason over context, and trigger actions in Slack, Salesforce, or custom APIs.',
   },
 ];
 
@@ -130,6 +130,24 @@ export const roadmap = [
 ];
 
 export const logoBadges = ['Neptune Cloud', 'OmniRetail', 'Helios Labs', 'Nova Finance', 'Pulse Health'];
+
+export const architectureLayers = [
+  {
+    icon: FaGlobe,
+    title: 'Data integration layer',
+    description: 'Secure connectors sync lakehouse tables, SaaS data, and telemetry streams into one catalog.',
+  },
+  {
+    icon: FaShieldAlt,
+    title: 'Semantic governance layer',
+    description: 'Policy engine enforces access, lineage, and quality while standardizing metrics and definitions.',
+  },
+  {
+    icon: FaRobot,
+    title: 'Agentic execution layer',
+    description: 'Composable agents orchestrate RAG, SQL, and actuator skills to automate revenue, finance, and ops workflows.',
+  },
+];
 
 export const testimonials = [
   {

@@ -2,6 +2,7 @@
 set -e
 
 DOMAIN="agentprovision.com"
+WWW_DOMAIN="www.$DOMAIN"
 EMAIL="saguilera1608@gmail.com"
 PROJECT_ROOT="$(dirname "$0")" # This should be the absolute path to your project root
 
@@ -68,20 +69,20 @@ docker-compose -f "$PROJECT_ROOT/docker-compose.yml" up --build -d
 echo "Docker Compose services started."
 
 # --- 5. Configure Nginx ---
-echo "Configuring Nginx for $DOMAIN..."
+echo "Configuring Nginx for $DOMAIN and $WWW_DOMAIN..."
 
 NGINX_CONF_PATH="/etc/nginx/sites-available/$DOMAIN"
 
 sudo bash -c "cat > $NGINX_CONF_PATH" <<EOF
 server {
     listen 80;
-    server_name $DOMAIN;
+    server_name $DOMAIN $WWW_DOMAIN;
     return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 ssl;
-    server_name $DOMAIN;
+    server_name $DOMAIN $WWW_DOMAIN;
 
     ssl_certificate /etc/letsencrypt/live/$DOMAIN/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/$DOMAIN/privkey.pem;
@@ -131,7 +132,7 @@ echo "Nginx configured and reloaded."
 
 # --- 6. Run Certbot for SSL Certificate ---
 echo "Running Certbot to obtain SSL certificate for $DOMAIN..."
-sudo certbot --nginx -d "$DOMAIN" --email "$EMAIL" --agree-tos --non-interactive
+sudo certbot --nginx -d "$DOMAIN" -d "$WWW_DOMAIN" --email "$EMAIL" --agree-tos --non-interactive
 
 # Certbot automatically modifies Nginx config and reloads Nginx.
 # If it fails, Nginx might not be reloaded, so we'll do it again for good measure.

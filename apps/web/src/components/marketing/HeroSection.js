@@ -10,19 +10,19 @@ const HeroSection = ({ onPrimaryCta = noop, onSecondaryCta = noop }) => {
       <Container className="hero-content py-5">
         <Row className="align-items-center gy-5">
           <Col lg={7} className="text-center text-lg-start pe-lg-5">
-            <span className="badge-glow">Unified data access</span>
+            <span className="badge-glow">Built for data, ops, and finance teams</span>
             <h1 className="display-2 fw-bold mt-4 mb-3 section-heading">
-              Turn your lakehouse into actions with agentic AI
+              From data to decisions with agentic AI
             </h1>
             <p className="lead text-soft mt-3 mb-3">
-              AgentProvision connects warehouses, lakes, and SaaS apps so every team can explore trusted data products without waiting on ETL tickets.
+              AgentProvision connects your lakehouse and SaaS data so every leader gets real-time answers and automated follow-through.
             </p>
             <p className="text-subtle mb-0">
-              Auto-map schemas, publish semantic metrics, and let AI agents orchestrate workflows across finance, revenue, and operations tools.
+              Auto-map schemas, publish governed metrics, and orchestrate AI agents that act across Snowflake, Salesforce, Netsuite, and more.
             </p>
             <div className="d-flex flex-column flex-md-row gap-3 justify-content-center justify-content-lg-start mt-5">
               <Button size="lg" className="px-5 py-3" onClick={onPrimaryCta}>
-                Launch interactive demo
+                Book a demo
               </Button>
               <Button
                 size="lg"
@@ -30,11 +30,11 @@ const HeroSection = ({ onPrimaryCta = noop, onSecondaryCta = noop }) => {
                 className="px-5 py-3"
                 onClick={onSecondaryCta}
               >
-                Review architecture brief
+                Watch 2-min product tour
               </Button>
             </div>
             <div className="text-subtle mt-3">
-              Connect Snowflake, BigQuery, Salesforce, and more in under 30 minutes
+              Connect Snowflake, BigQuery, Salesforce, and more in under 30 minutes.
             </div>
           </Col>
           <Col lg={5}>

@@ -10,6 +10,7 @@ import {
   testimonials,
   highlights,
   logoBadges,
+  architectureLayers,
 } from './components/marketing/data';
 
 const LandingPage = () => {
@@ -26,12 +27,11 @@ const LandingPage = () => {
           <Navbar.Collapse id="primary-nav">
             <Nav className="ms-auto align-items-lg-center gap-lg-4">
               <Nav.Link href="#features" className="mx-2">Platform</Nav.Link>
-              <Nav.Link href="#lakehouse" className="mx-2">Lakehouse</Nav.Link>
-              <Nav.Link href="#ai" className="mx-2">Intelligence</Nav.Link>
-              <Nav.Link href="#roadmap" className="mx-2">Roadmap</Nav.Link>
-              <Nav.Link href="#stories" className="mx-2">Stories</Nav.Link>
+              <Nav.Link href="#architecture" className="mx-2">Architecture</Nav.Link>
+              <Nav.Link href="#stories" className="mx-2">Customers</Nav.Link>
+              <Nav.Link href="#cta" className="mx-2">Pricing &amp; ROI</Nav.Link>
               <Button href="/register" className="ms-lg-4 px-4 py-2">
-                Book a Demo
+                Book a demo
               </Button>
             </Nav>
           </Navbar.Collapse>
@@ -40,6 +40,19 @@ const LandingPage = () => {
 
       <main>
         <HeroSection />
+
+        <section id="logos" className="section-thin">
+          <Container>
+            <div className="d-flex flex-wrap justify-content-center align-items-center gap-3 text-uppercase text-soft">
+              <span className="fw-semibold me-2">Trusted by teams at</span>
+              {logoBadges.map((name) => (
+                <span key={name} className="logo-badge">
+                  {name}
+                </span>
+              ))}
+            </div>
+          </Container>
+        </section>
 
         <section className="section-wrapper section-ink metrics-section" id="metrics">
           <Container>
@@ -64,9 +77,9 @@ const LandingPage = () => {
         <section id="features" className="section-wrapper section-dark">
           <Container>
             <div className="text-center mb-5">
-              <h2 className="display-4 fw-bold section-heading">Accelerate your agentic data strategy</h2>
+              <h2 className="display-4 fw-bold section-heading">Accelerate trusted analytics and automations</h2>
               <p className="lead section-subtitle mt-3">
-                Ship trusted copilots faster with collaborative workspaces, reusable intelligence mesh, and a governed data fabric.
+                Ship governed copilots faster with reusable intelligence, semantic metrics, and a collaborative workspace for data and operations leaders.
               </p>
             </div>
             <Row className="g-4">
@@ -82,18 +95,6 @@ const LandingPage = () => {
                 </Col>
               ))}
             </Row>
-          </Container>
-        </section>
-
-        <section id="logos" className="section-thin">
-          <Container>
-            <div className="d-flex flex-wrap justify-content-center gap-3">
-              {logoBadges.map((name) => (
-                <span key={name} className="logo-badge">
-                  {name}
-                </span>
-              ))}
-            </div>
           </Container>
         </section>
 
@@ -138,6 +139,34 @@ const LandingPage = () => {
                     ))}
                   </Row>
                 </div>
+              </Col>
+            </Row>
+          </Container>
+        </section>
+
+        <section id="architecture" className="section-wrapper section-contrast">
+          <Container>
+            <Row className="g-5 align-items-center">
+              <Col lg={5}>
+                <h2 className="display-5 fw-bold text-white">How the platform is assembled</h2>
+                <p className="text-soft mt-3">
+                  A three-layer fabric gives enterprise teams confidence from ingestion to action. Each tier is modular so you can start with the integrations you have today and scale into autonomous agents.
+                </p>
+              </Col>
+              <Col lg={7}>
+                <Row className="g-4">
+                  {architectureLayers.map(({ icon: Icon, title, description }) => (
+                    <Col md={4} key={title}>
+                      <div className="feature-card h-100 p-4">
+                        <div className="icon-pill">
+                          <Icon size={26} />
+                        </div>
+                        <h5 className="text-white fw-semibold mt-2">{title}</h5>
+                        <p className="text-soft mb-0">{description}</p>
+                      </div>
+                    </Col>
+                  ))}
+                </Row>
               </Col>
             </Row>
           </Container>
@@ -197,6 +226,10 @@ const LandingPage = () => {
 
         <section id="stories" className="section-wrapper">
           <Container>
+            <div className="text-center mb-4">
+              <h2 className="display-5 fw-bold">Teams running on AgentProvision</h2>
+              <p className="text-muted fs-5">See how operators and data leaders automate decisions and close the loop faster.</p>
+            </div>
             <Row className="g-4">
               {testimonials.map(({ quote, author, role }) => (
                 <Col md={6} key={author}>
@@ -218,14 +251,14 @@ const LandingPage = () => {
             <div className="cta-banner p-5 text-white text-center text-md-start shadow-lg">
               <Row className="align-items-center">
                 <Col md={8}>
-                  <h2 className="display-5 fw-bold">Build your agentic program on a trusted lakehouse</h2>
+                  <h2 className="display-5 fw-bold">Ready to launch an agentic workflow in weeks?</h2>
                   <p className="mt-3 mb-0 fs-5 text-contrast">
-                    Partner with our architects to launch your first governed copilot in weeks, not quarters.
+                    Flexible enterprise pricing, white-glove onboarding, and ROI modeling tailored to your use cases.
                   </p>
                 </Col>
                 <Col md={4} className="mt-4 mt-md-0 text-md-end">
                   <Button size="lg" className="px-5 py-3">
-                    Talk with an architect
+                    Schedule a strategy call
                   </Button>
                 </Col>
               </Row>
