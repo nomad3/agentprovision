@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Table, Button, Modal, Form, Alert, Spinner, Row, Col, Card } from 'react-bootstrap';
+import { Container, Table, Button, Modal, Form, Alert, Spinner, Row, Col, Card } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import Layout from '../components/Layout';
 import datasetService from '../services/dataset';
