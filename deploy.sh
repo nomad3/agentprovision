@@ -93,6 +93,12 @@ services:
   temporal:
     image: temporalio/auto-setup:1.22.2
     restart: unless-stopped
+    environment:
+      - DB=sqlite
+      - SQL_PLUGIN=sqlite
+      - SQLITE_PATH=/temporal/tmp/temporal.db
+      - TEMPORAL_ADDRESS=${TEMPORAL_ADDRESS}
+      - TEMPORAL_NAMESPACE=${TEMPORAL_NAMESPACE}
     ports:
       - "${TEMPORAL_GRPC_PORT}:7233"
       - "${TEMPORAL_WEB_PORT}:8233"
