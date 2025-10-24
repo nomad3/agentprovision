@@ -6,6 +6,10 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     DATABASE_URL: str = "postgresql://postgres:postgres@db:5432/agentprovision"
     DATA_STORAGE_PATH: str = "/app/storage"
+    TEMPORAL_ADDRESS: str | None = "localhost:7233"
+    TEMPORAL_NAMESPACE: str = "default"
+
+    DEFAULT_WORKFLOW_TIMEOUT_SECONDS: int = 600
 
     class Config:
         env_file = ".env"

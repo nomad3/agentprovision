@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { Container, Row, Col, Card, Navbar, Nav, Button, Dropdown } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import HeroSection from './components/marketing/HeroSection';
 import {
@@ -13,6 +14,10 @@ import {
 
 const LandingPage = () => {
   const { t, i18n } = useTranslation(['common', 'landing']);
+  const navigate = useNavigate();
+  const goToLogin = React.useCallback(() => {
+    navigate('/login');
+  }, [navigate]);
 
   const currentLanguage = (i18n.language || 'en').split('-')[0];
   const languageOptions = useMemo(
@@ -135,7 +140,7 @@ const LandingPage = () => {
                   ))}
                 </Dropdown.Menu>
               </Dropdown>
-              <Button href="/register" className="ms-lg-4 px-4 py-2">
+              <Button onClick={goToLogin} className="ms-lg-4 px-4 py-2">
                 {t('common:cta.bookDemo')}
               </Button>
             </Nav>
@@ -144,7 +149,7 @@ const LandingPage = () => {
       </Navbar>
 
       <main>
-        <HeroSection />
+        <HeroSection onPrimaryCta={goToLogin} onSecondaryCta={goToLogin} />
 
         <section id="logos" className="section-thin">
           <Container>
@@ -348,7 +353,7 @@ const LandingPage = () => {
                   <p className="mt-3 mb-0 fs-5 text-contrast">{t('landing:cta.description')}</p>
                 </Col>
                 <Col md={4} className="mt-4 mt-md-0 text-md-end">
-                  <Button size="lg" className="px-5 py-3">
+                  <Button size="lg" className="px-5 py-3" onClick={goToLogin}>
                     {t('common:cta.scheduleCall')}
                   </Button>
                 </Col>

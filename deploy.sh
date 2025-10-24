@@ -5,8 +5,33 @@ DOMAIN="agentprovision.com"
 WWW_DOMAIN="www.$DOMAIN"
 EMAIL="saguilera1608@gmail.com"
 PROJECT_ROOT="$(dirname "$0")" # This should be the absolute path to your project root
+ENV_FILE="$PROJECT_ROOT/.env"
 
 echo "Starting AgentProvision deployment script..."
+
+echo "Loading environment configuration..."
+if [ -f "$ENV_FILE" ]; then
+    set -a
+    . "$ENV_FILE"
+    set +a
+    echo "Loaded variables from $ENV_FILE"
+else
+    echo "No .env file found at $ENV_FILE; proceeding with defaults."
+fi
+
+TEMPORAL_NAMESPACE=${TEMPORAL_NAMESPACE:-default}
+TEMPORAL_GRPC_PORT=${TEMPORAL_GRPC_PORT:-7233}
+TEMPORAL_WEB_PORT=${TEMPORAL_WEB_PORT:-8233}
+
+if [ -z "${TEMPORAL_ADDRESS:-}" ] || [ "$TEMPORAL_ADDRESS" = "localhost:7233" ]; then
+    TEMPORAL_ADDRESS="temporal:7233"
+    echo "Setting TEMPORAL_ADDRESS to $TEMPORAL_ADDRESS for container networking."
+fi
+
+export TEMPORAL_ADDRESS
+export TEMPORAL_NAMESPACE
+export TEMPORAL_GRPC_PORT
+export TEMPORAL_WEB_PORT
 
 # --- 1. Install Prerequisites (if not already installed) ---
 echo "Checking for prerequisites: Docker, Docker Compose, Nginx, Certbot..."
@@ -48,25 +73,59 @@ echo "API Port: $API_PORT"
 echo "Web Port: $WEB_PORT"
 echo "DB Port: $DB_PORT"
 echo "Redis Port: $REDIS_PORT"
+echo "Temporal gRPC Port: $TEMPORAL_GRPC_PORT"
+echo "Temporal Web UI Port: $TEMPORAL_WEB_PORT"
 
 # Export ports so docker-compose can use them
 export API_PORT=$API_PORT
 export WEB_PORT=$WEB_PORT
 export DB_PORT=$DB_PORT
 export REDIS_PORT=$REDIS_PORT
+export TEMPORAL_GRPC_PORT=$TEMPORAL_GRPC_PORT
+export TEMPORAL_WEB_PORT=$TEMPORAL_WEB_PORT
 
-echo "Docker Compose configuration with resolved ports:"
-docker-compose -f "$PROJECT_ROOT/docker-compose.yml" config
+TEMPORAL_COMPOSE_FILE="$PROJECT_ROOT/docker-compose.temporal.yml"
+
+cat > "$TEMPORAL_COMPOSE_FILE" <<EOF
+version: '3.8'
+
+services:
+  temporal:
+    image: temporalio/auto-setup:1.22.2
+    restart: unless-stopped
+    ports:
+      - "${TEMPORAL_GRPC_PORT}:7233"
+      - "${TEMPORAL_WEB_PORT}:8233"
+
+  api:
+    environment:
+      - TEMPORAL_ADDRESS=$TEMPORAL_ADDRESS
+      - TEMPORAL_NAMESPACE=$TEMPORAL_NAMESPACE
+    depends_on:
+      - db
+      - temporal
+EOF
+
+COMPOSE_FILES=("-f" "$PROJECT_ROOT/docker-compose.yml" "-f" "$TEMPORAL_COMPOSE_FILE")
+
+docker_compose() {
+    docker-compose "${COMPOSE_FILES[@]}" "$@"
+}
+
+echo "Docker Compose configuration with resolved ports (including Temporal):"
+docker_compose config
 
 # --- 3. Stop Existing Docker Compose Services ---
 echo "Stopping any existing Docker Compose services..."
-docker-compose -f "$PROJECT_ROOT/docker-compose.yml" down --remove-orphans || true # Use || true to prevent script from exiting if no services are running
+docker_compose down --remove-orphans || true # Use || true to prevent script from exiting if no services are running
 
 # --- 4. Build and Start Docker Compose ---
 echo "Building and starting Docker Compose services..."
-docker-compose -f "$PROJECT_ROOT/docker-compose.yml" up --build -d
+docker_compose up --build -d
 
 echo "Docker Compose services started."
+echo "Temporal server available on gRPC $TEMPORAL_ADDRESS (host port $TEMPORAL_GRPC_PORT)."
+echo "Temporal Web UI exposed on http://$DOMAIN:$TEMPORAL_WEB_PORT (or host localhost:$TEMPORAL_WEB_PORT during provisioning)."
 
 # --- 5. Configure Nginx ---
 echo "Configuring Nginx for $DOMAIN and $WWW_DOMAIN..."

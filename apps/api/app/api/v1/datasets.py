@@ -4,6 +4,7 @@ from typing import List
 import uuid
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from app.api import deps
@@ -12,6 +13,13 @@ from app.schemas import dataset as dataset_schema
 from app.services import datasets as dataset_service
 
 router = APIRouter()
+
+
+class RecordIngestionRequest(BaseModel):
+    name: str
+    records: List[dict]
+    description: str | None = None
+    source_type: str | None = None
 
 
 @router.get("/", response_model=List[dataset_schema.Dataset])
@@ -39,6 +47,27 @@ def upload_dataset(
             file=file,
             name=name,
             description=description,
+        )
+        return dataset
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+
+
+@router.post("/ingest", response_model=dataset_schema.Dataset, status_code=status.HTTP_201_CREATED)
+def create_dataset_from_records(
+    *,
+    db: Session = Depends(deps.get_db),
+    payload: RecordIngestionRequest,
+    current_user: User = Depends(deps.get_current_active_user),
+):
+    try:
+        dataset = dataset_service.ingest_records(
+            db,
+            tenant_id=current_user.tenant_id,
+            records=payload.records,
+            name=payload.name,
+            description=payload.description,
+            source_type=payload.source_type or "data_agent",
         )
         return dataset
     except ValueError as exc:

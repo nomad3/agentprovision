@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import uuid
 from pathlib import Path
-from typing import List
+from typing import List, Sequence
 
 import pandas as pd
 from fastapi import UploadFile
@@ -51,16 +51,16 @@ def _load_dataframe(file: UploadFile) -> pd.DataFrame:
     return df
 
 
-def ingest_tabular(
+def _persist_dataframe(
     db: Session,
     *,
     tenant_id: uuid.UUID,
-    file: UploadFile,
+    df: pd.DataFrame,
     name: str,
-    description: str | None = None,
+    description: str | None,
+    source_type: str,
+    file_name: str | None = None,
 ) -> Dataset:
-    df = _load_dataframe(file)
-
     dataset_id = uuid.uuid4()
     tenant_path = _tenant_storage_path(tenant_id)
     parquet_path = tenant_path / f"{dataset_id}.parquet"
@@ -78,8 +78,8 @@ def ingest_tabular(
         id=dataset_id,
         name=name,
         description=description,
-        source_type="excel_upload",
-        file_name=file.filename,
+        source_type=source_type,
+        file_name=file_name,
         storage_uri=str(parquet_path),
         schema=schema,
         row_count=len(df.index),
@@ -90,6 +90,53 @@ def ingest_tabular(
     db.commit()
     db.refresh(dataset)
     return dataset
+
+
+def ingest_tabular(
+    db: Session,
+    *,
+    tenant_id: uuid.UUID,
+    file: UploadFile,
+    name: str,
+    description: str | None = None,
+) -> Dataset:
+    df = _load_dataframe(file)
+    return _persist_dataframe(
+        db,
+        tenant_id=tenant_id,
+        df=df,
+        name=name,
+        description=description,
+        source_type="excel_upload",
+        file_name=file.filename,
+    )
+
+
+def ingest_records(
+    db: Session,
+    *,
+    tenant_id: uuid.UUID,
+    records: Sequence[dict],
+    name: str,
+    description: str | None = None,
+    source_type: str = "data_agent",
+) -> Dataset:
+    if not records:
+        raise ValueError("No records provided for ingestion.")
+
+    df = pd.DataFrame(records)
+    if df.empty:
+        raise ValueError("Generated ingestion dataframe is empty.")
+
+    return _persist_dataframe(
+        db,
+        tenant_id=tenant_id,
+        df=df,
+        name=name,
+        description=description,
+        source_type=source_type,
+        file_name=None,
+    )
 
 
 def list_datasets(db: Session, *, tenant_id: uuid.UUID) -> List[Dataset]:
