@@ -1,13 +1,28 @@
 import React, { useMemo } from 'react';
-import { Container, Nav, Navbar, Button, Dropdown } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
-import { HouseDoorFill, DatabaseFill, Diagram3Fill, JournalBookmarkFill, Robot, Tools, PuzzleFill, CloudArrowUpFill, BoxArrowRight, ChatDotsFill } from 'react-bootstrap-icons';
+import { Container, Nav, Navbar, Button, Dropdown, Badge } from 'react-bootstrap';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import {
+  HouseDoorFill,
+  DatabaseFill,
+  Diagram3Fill,
+  JournalBookmarkFill,
+  Robot,
+  Tools,
+  PuzzleFill,
+  CloudArrowUpFill,
+  BoxArrowRight,
+  ChatDotsFill,
+  Grid3x3GapFill,
+  PersonCircle
+} from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../App';
+import './Layout.css';
 
 const Layout = ({ children }) => {
   const auth = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { t, i18n } = useTranslation('common');
 
   const currentLanguage = (i18n.language || 'en').split('-')[0];
@@ -28,64 +43,102 @@ const Layout = ({ children }) => {
     i18n.changeLanguage(code);
   };
 
+  const navItems = [
+    { path: '/dashboard', icon: HouseDoorFill, label: t('sidebar.dashboard') },
+    { path: '/agents', icon: Robot, label: t('sidebar.agents'), badge: 'AI' },
+    { path: '/agent-kits', icon: Grid3x3GapFill, label: t('sidebar.agentKits'), badge: 'AI' },
+    { path: '/chat', icon: ChatDotsFill, label: t('sidebar.chat'), badge: 'AI' },
+    { divider: true, label: 'Data' },
+    { path: '/datasets', icon: DatabaseFill, label: t('sidebar.datasets') },
+    { path: '/data-sources', icon: DatabaseFill, label: t('sidebar.dataSources') },
+    { path: '/data-pipelines', icon: Diagram3Fill, label: t('sidebar.dataPipelines') },
+    { path: '/vector-stores', icon: Diagram3Fill, label: t('sidebar.vectorStores') },
+    { divider: true, label: 'Tools' },
+    { path: '/notebooks', icon: JournalBookmarkFill, label: t('sidebar.notebooks') },
+    { path: '/tools', icon: Tools, label: t('sidebar.tools') },
+    { path: '/connectors', icon: PuzzleFill, label: t('sidebar.connectors') },
+    { path: '/deployments', icon: CloudArrowUpFill, label: t('sidebar.deployments') },
+  ];
+
+  const isActive = (path) => location.pathname === path;
+
   return (
-    <div className="d-flex bg-light" style={{ minHeight: '100vh' }}>
-      {/* Sidebar */}
-      <Navbar bg="dark" variant="dark" expand="lg" className="flex-column p-3 shadow-lg" style={{ width: '250px' }}>
-        <Navbar.Brand as={Link} to="/dashboard" className="mb-4 fw-bold fs-4 text-white">{t('brand')}</Navbar.Brand>
-        <Nav className="flex-column w-100">
-          <Nav.Link as={Link} to="/dashboard" className="text-light d-flex align-items-center py-2"><HouseDoorFill className="me-2" /> {t('sidebar.dashboard')}</Nav.Link>
-          <Nav.Link as={Link} to="/data-sources" className="text-light d-flex align-items-center py-2"><DatabaseFill className="me-2" /> {t('sidebar.dataSources')}</Nav.Link>
-          <Nav.Link as={Link} to="/data-pipelines" className="text-light d-flex align-items-center py-2"><Diagram3Fill className="me-2" /> {t('sidebar.dataPipelines')}</Nav.Link>
-          <Nav.Link as={Link} to="/notebooks" className="text-light d-flex align-items-center py-2"><JournalBookmarkFill className="me-2" /> {t('sidebar.notebooks')}</Nav.Link>
-          <Nav.Link as={Link} to="/agents" className="text-light d-flex align-items-center py-2"><Robot className="me-2" /> {t('sidebar.agents')}</Nav.Link>
-          <Nav.Link as={Link} to="/datasets" className="text-light d-flex align-items-center py-2"><DatabaseFill className="me-2" /> {t('sidebar.datasets')}</Nav.Link>
-          <Nav.Link as={Link} to="/chat" className="text-light d-flex align-items-center py-2"><ChatDotsFill className="me-2" /> {t('sidebar.chat')}</Nav.Link>
-          <Nav.Link as={Link} to="/tools" className="text-light d-flex align-items-center py-2"><Tools className="me-2" /> {t('sidebar.tools')}</Nav.Link>
-          <Nav.Link as={Link} to="/connectors" className="text-light d-flex align-items-center py-2"><PuzzleFill className="me-2" /> {t('sidebar.connectors')}</Nav.Link>
-          <Nav.Link as={Link} to="/deployments" className="text-light d-flex align-items-center py-2"><CloudArrowUpFill className="me-2" /> {t('sidebar.deployments')}</Nav.Link>
-          <Nav.Link as={Link} to="/vector-stores" className="text-light d-flex align-items-center py-2"><Diagram3Fill className="me-2" /> {t('sidebar.vectorStores')}</Nav.Link>
-          <Nav.Link as={Link} to="/agent-kits" className="text-light d-flex align-items-center py-2"><Robot className="me-2" /> {t('sidebar.agentKits')}</Nav.Link>
+    <div className="layout-container">
+      {/* Glassmorphic Sidebar */}
+      <div className="sidebar-glass">
+        <div className="sidebar-header">
+          <Link to="/dashboard" className="brand-link">
+            <div className="brand-icon">
+              <Robot size={28} />
+            </div>
+            <span className="brand-text">{t('brand')}</span>
+          </Link>
+        </div>
+
+        <Nav className="flex-column sidebar-nav">
+          {navItems.map((item, index) => {
+            if (item.divider) {
+              return (
+                <div key={`divider-${index}`} className="nav-divider">
+                  <span className="nav-divider-text">{item.label}</span>
+                </div>
+              );
+            }
+
+            const Icon = item.icon;
+            return (
+              <Nav.Link
+                key={item.path}
+                as={Link}
+                to={item.path}
+                className={`sidebar-nav-link ${isActive(item.path) ? 'active' : ''}`}
+              >
+                <Icon className="nav-icon" size={20} />
+                <span className="nav-label">{item.label}</span>
+                {item.badge && (
+                  <Badge bg="primary" className="nav-badge">{item.badge}</Badge>
+                )}
+              </Nav.Link>
+            );
+          })}
         </Nav>
-      </Navbar>
 
-      {/* Main Content */}
-      <div className="flex-grow-1">
-        {/* Top Navbar for User Info and Logout */}
-        <Navbar bg="white" variant="light" className="shadow-sm py-3">
-          <Container fluid>
-            <Navbar.Brand>
-              {t('layout.welcome', {
-                name: auth.user ? auth.user.email : t('layout.guest'),
-              })}
-            </Navbar.Brand>
-            <Nav className="ms-auto">
-              <Dropdown align="end" className="me-3">
-                <Dropdown.Toggle variant="outline-secondary" size="sm" className="text-uppercase">
-                  {currentLanguage.toUpperCase()}
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  {languageOptions.map(({ code, label }) => (
-                    <Dropdown.Item
-                      key={code}
-                      active={currentLanguage === code}
-                      onClick={() => handleLanguageChange(code)}
-                    >
-                      {label}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
-              <Button variant="outline-secondary" onClick={handleLogout} className="d-flex align-items-center">
+        <div className="sidebar-footer">
+          <Dropdown drop="up" className="w-100">
+            <Dropdown.Toggle variant="link" className="user-dropdown-toggle w-100">
+              <div className="d-flex align-items-center gap-2">
+                <PersonCircle size={32} className="text-primary" />
+                <div className="flex-grow-1 text-start">
+                  <div className="user-email">{auth.user?.email || 'Guest'}</div>
+                  <div className="user-role">Administrator</div>
+                </div>
+              </div>
+            </Dropdown.Toggle>
+            <Dropdown.Menu className="w-100">
+              <Dropdown.Header>Language</Dropdown.Header>
+              {languageOptions.map(({ code, label }) => (
+                <Dropdown.Item
+                  key={code}
+                  active={currentLanguage === code}
+                  onClick={() => handleLanguageChange(code)}
+                >
+                  {label}
+                </Dropdown.Item>
+              ))}
+              <Dropdown.Divider />
+              <Dropdown.Item onClick={handleLogout}>
                 <BoxArrowRight className="me-2" /> {t('layout.logout')}
-              </Button>
-            </Nav>
-          </Container>
-        </Navbar>
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+      </div>
 
-        <Container fluid className="p-4">
+      {/* Main Content Area */}
+      <div className="main-content">
+        <div className="content-wrapper">
           {children}
-        </Container>
+        </div>
       </div>
     </div>
   );
