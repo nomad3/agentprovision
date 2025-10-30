@@ -100,4 +100,7 @@ def post_message(
         session=session,
         content=payload.content,
     )
-    return chat_schema.ChatTurn(user_message=user_message, assistant_message=assistant_message)
+    return chat_schema.ChatTurn(
+        user_message=chat_schema.ChatMessage.model_validate(user_message),
+        assistant_message=chat_schema.ChatMessage.model_validate(assistant_message)
+    )

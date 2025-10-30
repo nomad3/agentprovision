@@ -20,4 +20,4 @@ class Connector(ConnectorBase):
     tenant_id: uuid.UUID
 
     class Config:
-        orm_mode = True
+        from_attributes = True

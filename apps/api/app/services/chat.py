@@ -11,6 +11,14 @@ from app.models.agent_kit import AgentKit
 from app.schemas.agent_kit import AgentKitConfig
 from app.services import datasets as dataset_service
 from app.services import agent_kits as agent_kit_service
+from app.services.llm import get_llm_service
+from app.services.tool_executor import (
+    get_tool_registry,
+    SQLQueryTool,
+    CalculatorTool,
+    DataSummaryTool
+)
+from app.services.context_manager import get_context_manager
 
 
 def list_sessions(db: Session, *, tenant_id: uuid.UUID) -> List[ChatSessionModel]:
@@ -113,6 +121,11 @@ def _generate_agentic_response(
             context={"error": str(exc)},
         )
 
+    # Get dataset context
+    summary_payload = dataset_service.run_summary_query(dataset)
+    sample_rows = dataset.sample_rows or []
+
+    # Get agent kit simulation
     try:
         simulation = agent_kit_service.simulate_agent_kit(db=db, agent_kit=agent_kit)
     except ValueError as exc:
@@ -121,58 +134,193 @@ def _generate_agentic_response(
     else:
         simulation_error = None
 
-    summary_payload = dataset_service.run_summary_query(dataset)
-    sample_rows = dataset.sample_rows or []
+    # Build tools list from agent kit config
+    tools = []
+    if config.tool_bindings:
+        tools = [f"{tb.alias} ({tb.tool_name})" for tb in config.tool_bindings]
 
-    response_lines: List[str] = []
-    response_lines.append(
-        f"Using agent kit '{agent_kit.name}' to pursue: {config.primary_objective}."
+    # Get conversation history from session
+    previous_messages = (
+        db.query(ChatMessage)
+        .filter(ChatMessage.session_id == session.id)
+        .order_by(ChatMessage.created_at)
+        .all()
     )
 
-    if config.metrics:
-        response_lines.append("Key metrics monitored: " + ", ".join(config.metrics) + ".")
+    conversation_history = []
+    for msg in previous_messages:
+        conversation_history.append({
+            "role": msg.role,
+            "content": msg.content
+        })
 
-    if summary_payload["numeric_columns"]:
-        top_columns = summary_payload["numeric_columns"][:3]
-        formatted = "; ".join(
-            f"{col['column']}: avg {col['avg']:.2f} (min {col['min']}, max {col['max']})"
-            for col in top_columns
-            if col["avg"] is not None
+    # Try to use LLM service
+    try:
+        llm_service = get_llm_service()
+
+        # Create tool registry and register available tools
+        tool_registry = get_tool_registry()
+        tool_registry.register(SQLQueryTool(dataset_service, dataset))
+        tool_registry.register(CalculatorTool())
+        tool_registry.register(DataSummaryTool(dataset_service, dataset))
+
+        # Build initial system prompt with all context
+        base_system_prompt = llm_service.build_data_analysis_system_prompt(
+            agent_kit_name=agent_kit.name,
+            primary_objective=config.primary_objective,
+            dataset_name=dataset.name,
+            dataset_schema=dataset.schema,
+            dataset_summary=summary_payload,
+            sample_rows=sample_rows,
+            tools=tools if tools else None,
+            metrics=config.metrics if config.metrics else None,
+            constraints=config.constraints if config.constraints else None,
         )
-        if formatted:
-            response_lines.append("Top numeric signals: " + formatted + ".")
 
-    if sample_rows:
-        exemplar = sample_rows[0]
-        row_preview = ", ".join(f"{key}={value}" for key, value in exemplar.items())
-        response_lines.append("Sample record: " + row_preview + ".")
+        # Manage context window - summarize old messages if needed
+        context_manager = get_context_manager()
+        context_result = context_manager.manage_context_window(
+            messages=conversation_history,
+            system_prompt=base_system_prompt,
+            keep_recent_count=10,  # Keep last 10 messages (5 turns)
+        )
 
-    if simulation and simulation.steps:
+        # Use managed conversation history
+        managed_history = context_result["messages"]
+        conversation_summary = context_result.get("summary")
+
+        # Inject summary into system prompt if we summarized
+        system_prompt = base_system_prompt
+        if conversation_summary:
+            system_prompt = context_manager.inject_summary_into_system_prompt(
+                base_system_prompt,
+                conversation_summary
+            )
+
+        # Get all tool schemas from registry
+        llm_tools = tool_registry.get_all_schemas()
+
+        # Generate response using Claude with tools and managed history
+        response = llm_service.generate_chat_response(
+            user_message=user_message,
+            conversation_history=managed_history,
+            system_prompt=system_prompt,
+            tools=llm_tools,
+        )
+
+        response_text = response["text"]
+        query_results = []
+
+        # Handle tool calls using the tool registry
+        if response["tool_calls"]:
+            for tool_call in response["tool_calls"]:
+                tool_name = tool_call["name"]
+                tool_input = tool_call["input"]
+
+                try:
+                    # Execute tool through registry
+                    tool_result = tool_registry.execute_tool(tool_name, **tool_input)
+
+                    if tool_result.success:
+                        query_results.append({
+                            "tool": tool_name,
+                            "input": tool_input,
+                            "result": tool_result.data,
+                            "metadata": tool_result.metadata
+                        })
+
+                        # Format tool results in response
+                        if response_text:
+                            response_text += "\n\n"
+
+                        explanation = tool_result.metadata.get("explanation", "")
+                        if explanation:
+                            response_text += f"**{tool_name}:** {explanation}\n"
+
+                        # Format based on tool type
+                        if tool_name == "sql_query":
+                            sql = tool_result.metadata.get("query", "")
+                            response_text += f"```sql\n{sql}\n```\n"
+                            response_text += f"**Results:** {tool_result.metadata.get('row_count', 0)} rows\n"
+
+                            if tool_result.data and tool_result.data.get("rows"):
+                                response_text += "\nSample results:\n"
+                                for i, row in enumerate(tool_result.data["rows"][:3], 1):
+                                    response_text += f"{i}. {row}\n"
+
+                        elif tool_name == "calculator":
+                            result_val = tool_result.data.get("result")
+                            expression = tool_result.data.get("expression")
+                            response_text += f"**Calculation:** `{expression}` = **{result_val}**\n"
+
+                        elif tool_name == "data_summary":
+                            if "column" in tool_result.metadata:
+                                col = tool_result.metadata["column"]
+                                response_text += f"**Summary for {col}:**\n"
+                                response_text += f"- Average: {tool_result.data.get('avg')}\n"
+                                response_text += f"- Min: {tool_result.data.get('min')}\n"
+                                response_text += f"- Max: {tool_result.data.get('max')}\n"
+                            else:
+                                response_text += "**Dataset Summary:**\n"
+                                for col_stat in tool_result.data.get("numeric_columns", [])[:3]:
+                                    response_text += f"- {col_stat['column']}: avg={col_stat.get('avg')}, min={col_stat.get('min')}, max={col_stat.get('max')}\n"
+
+                    else:
+                        error_msg = tool_result.error
+                        if response_text:
+                            response_text += "\n\n"
+                        response_text += f"⚠️ Tool '{tool_name}' failed: {error_msg}"
+
+                except Exception as tool_exc:
+                    error_msg = f"Tool execution failed: {str(tool_exc)}"
+                    if response_text:
+                        response_text += "\n\n"
+                    response_text += f"⚠️ {error_msg}"
+
+    except Exception as exc:  # Fallback to static response if LLM fails
+        response_lines: List[str] = []
+        response_lines.append(f"[LLM unavailable: {str(exc)}]")
         response_lines.append(
-            "Next recommended action: " + simulation.steps[0].recommended_prompt
-            if simulation.steps[0].recommended_prompt
-            else "Following the first playbook step." 
-        )
-    elif simulation_error:
-        response_lines.append("Note: " + simulation_error)
-
-    if config.handoff_channels:
-        response_lines.append(
-            "Escalation paths: " + ", ".join(config.handoff_channels) + "."
+            f"Using agent kit '{agent_kit.name}' to pursue: {config.primary_objective}."
         )
 
-    response_lines.append(
-        "User question acknowledged. Provide additional directives for deeper analysis or filtering."
-    )
+        if summary_payload["numeric_columns"]:
+            top_columns = summary_payload["numeric_columns"][:3]
+            formatted = "; ".join(
+                f"{col['column']}: avg {col['avg']:.2f} (min {col['min']}, max {col['max']})"
+                for col in top_columns
+                if col["avg"] is not None
+            )
+            if formatted:
+                response_lines.append("Top numeric signals: " + formatted + ".")
 
-    response_text = "\n".join(response_lines)
+        response_text = "\n".join(response_lines)
 
-    context_payload = {
+    # Save context (convert UUIDs to strings for JSON serialization)
+    import json
+    def make_json_serializable(obj):
+        """Convert UUIDs and other non-serializable objects to strings"""
+        return json.loads(json.dumps(obj, default=str))
+
+    # Include context management metadata
+    context_management_info = {}
+    if 'context_result' in locals():
+        context_management_info = {
+            "was_summarized": context_result.get("was_summarized", False),
+            "total_tokens": context_result.get("total_tokens", 0),
+            "summarized_count": context_result.get("summarized_count", 0),
+            "retained_count": context_result.get("retained_count", 0),
+        }
+
+    context_payload = make_json_serializable({
         "summary": summary_payload,
         "sample_rows": sample_rows[:3],
         "simulation": simulation.dict() if simulation else None,
+        "simulation_error": simulation_error if simulation_error else None,
         "user_message": user_message,
-    }
+        "query_results": query_results if 'query_results' in locals() else [],
+        "context_management": context_management_info,
+    })
 
     return _append_message(
         db,

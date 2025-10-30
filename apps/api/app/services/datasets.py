@@ -3,9 +3,10 @@ from __future__ import annotations
 import os
 import uuid
 from pathlib import Path
-from typing import List, Sequence
+from typing import List, Sequence, Dict, Any
 
 import pandas as pd
+import duckdb
 from fastapi import UploadFile
 from sqlalchemy.orm import Session
 
@@ -183,3 +184,113 @@ def run_summary_query(dataset: Dataset) -> dict:
         )
 
     return {"numeric_columns": numeric_columns}
+
+
+def execute_query(dataset: Dataset, sql: str, limit: int = 100) -> Dict[str, Any]:
+    """
+    Execute a SQL query on a dataset using DuckDB.
+
+    Args:
+        dataset: The dataset to query
+        sql: SQL query string (table name should be 'dataset')
+        limit: Maximum number of rows to return (default: 100, max: 1000)
+
+    Returns:
+        Dictionary containing:
+        - columns: List of column names
+        - rows: List of row dictionaries
+        - row_count: Number of rows returned
+        - query: The executed query
+
+    Raises:
+        FileNotFoundError: If dataset storage not found
+        ValueError: If query is invalid or unsafe
+    """
+    if not dataset.storage_uri or not os.path.exists(dataset.storage_uri):
+        raise FileNotFoundError("Dataset storage not found")
+
+    # Validate and sanitize limit
+    limit = min(max(1, limit), 1000)
+
+    # Basic SQL injection prevention
+    sql_lower = sql.lower().strip()
+
+    # Block dangerous keywords
+    dangerous_keywords = [
+        'drop', 'delete', 'insert', 'update', 'alter',
+        'create', 'truncate', 'grant', 'revoke'
+    ]
+
+    for keyword in dangerous_keywords:
+        if keyword in sql_lower:
+            raise ValueError(f"Query contains forbidden keyword: {keyword}")
+
+    try:
+        # Create DuckDB connection
+        conn = duckdb.connect(':memory:')
+
+        # Register the parquet file as a table named 'dataset'
+        conn.execute(f"CREATE TABLE dataset AS SELECT * FROM read_parquet('{dataset.storage_uri}')")
+
+        # Add LIMIT clause if not present
+        if 'limit' not in sql_lower:
+            sql = f"{sql.rstrip(';')} LIMIT {limit}"
+
+        # Execute the query
+        result = conn.execute(sql).fetchdf()
+
+        # Convert to dictionary format
+        columns = result.columns.tolist()
+        rows = result.to_dict(orient='records')
+
+        conn.close()
+
+        return {
+            "columns": columns,
+            "rows": rows,
+            "row_count": len(rows),
+            "query": sql,
+        }
+
+    except Exception as exc:
+        raise ValueError(f"Query execution failed: {str(exc)}") from exc
+
+
+def get_schema_info(dataset: Dataset) -> Dict[str, Any]:
+    """
+    Get detailed schema information about a dataset.
+
+    Returns:
+        Dictionary with schema details including column names, types, and sample values
+    """
+    if not dataset.storage_uri or not os.path.exists(dataset.storage_uri):
+        raise FileNotFoundError("Dataset storage not found")
+
+    try:
+        conn = duckdb.connect(':memory:')
+        conn.execute(f"CREATE TABLE dataset AS SELECT * FROM read_parquet('{dataset.storage_uri}')")
+
+        # Get column names and types
+        schema_result = conn.execute("DESCRIBE dataset").fetchdf()
+
+        # Get sample distinct values for each column (useful for understanding data)
+        sample_values = {}
+        for col in schema_result['column_name']:
+            try:
+                values = conn.execute(
+                    f"SELECT DISTINCT {col} FROM dataset LIMIT 5"
+                ).fetchdf()[col].tolist()
+                sample_values[col] = values
+            except:
+                sample_values[col] = []
+
+        conn.close()
+
+        return {
+            "columns": schema_result.to_dict(orient='records'),
+            "sample_values": sample_values,
+            "row_count": dataset.row_count,
+        }
+
+    except Exception as exc:
+        raise ValueError(f"Failed to get schema info: {str(exc)}") from exc

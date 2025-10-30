@@ -11,4 +11,4 @@ class Tenant(TenantBase):
     id: uuid.UUID
 
     class Config:
-        orm_mode = True
+        from_attributes = True

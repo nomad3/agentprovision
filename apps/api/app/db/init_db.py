@@ -23,6 +23,7 @@ from app.models.dataset import Dataset
 from app.models.chat import ChatSession, ChatMessage
 
 from app.core.security import get_password_hash
+from app.services import datasets as dataset_service
 
 def init_db(db: Session) -> None:
     # Tables should be created with Alembic migrations
@@ -158,14 +159,22 @@ def seed_demo_data(db: Session) -> None:
             name="Customer Support Agent Kit",
             description="Kit for deploying customer support agents",
             version="1.0.0",
-            config={"base_model": "gpt-4", "tools": ["faq_retrieval", "order_status"]},
+            config={
+                "primary_objective": "Provide excellent customer support by answering questions and resolving issues",
+                "base_model": "gpt-4",
+                "tools": ["faq_retrieval", "order_status"]
+            },
             tenant_id=demo_tenant.id,
         ),
         AgentKit(
             name="Data Analysis Agent Kit",
             description="Kit for deploying data analysis agents",
             version="1.1.0",
-            config={"base_model": "claude-3", "tools": ["sql_query", "chart_generation"]},
+            config={
+                "primary_objective": "Analyze data and provide actionable insights to drive business decisions",
+                "base_model": "claude-3",
+                "tools": ["sql_query", "chart_generation"]
+            },
             tenant_id=demo_tenant.id,
         ),
     ]
@@ -238,29 +247,15 @@ def seed_demo_data(db: Session) -> None:
         },
     ]
 
-    revenue_dataset_schema = [
-        {"name": "order_id", "dtype": "object"},
-        {"name": "customer_name", "dtype": "object"},
-        {"name": "segment", "dtype": "object"},
-        {"name": "region", "dtype": "object"},
-        {"name": "revenue", "dtype": "int64"},
-        {"name": "cost", "dtype": "int64"},
-        {"name": "profit", "dtype": "int64"},
-        {"name": "order_date", "dtype": "object"},
-    ]
-
-    seeded_dataset = Dataset(
+    # Use the proper ingestion service to create dataset with parquet file
+    seeded_dataset = dataset_service.ingest_records(
+        db,
+        tenant_id=demo_tenant.id,
+        records=revenue_dataset_rows,
         name="Revenue Performance",
         description="Sample revenue transactions for demo analysis",
         source_type="seed",
-        file_name="sample_revenue_dataset.csv",
-        schema=revenue_dataset_schema,
-        row_count=len(revenue_dataset_rows),
-        sample_rows=revenue_dataset_rows,
-        tenant_id=demo_tenant.id,
     )
-    db.add(seeded_dataset)
-    db.flush()
 
     demo_chat_session = ChatSession(
         title="Q1 Revenue Review",

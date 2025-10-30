@@ -22,6 +22,11 @@ class RecordIngestionRequest(BaseModel):
     source_type: str | None = None
 
 
+class QueryRequest(BaseModel):
+    sql: str
+    limit: int = 100
+
+
 @router.get("/", response_model=List[dataset_schema.Dataset])
 def list_datasets(
     *,
@@ -114,3 +119,48 @@ def dataset_summary(
         return dataset_service.run_summary_query(dataset)
     except FileNotFoundError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+
+
+@router.get("/{dataset_id}/schema")
+def get_dataset_schema(
+    dataset_id: uuid.UUID,
+    *,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_active_user),
+):
+    """Get detailed schema information for a dataset including column types and sample values."""
+    dataset = dataset_service.get_dataset(db, dataset_id=dataset_id, tenant_id=current_user.tenant_id)
+    if not dataset:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Dataset not found")
+    try:
+        return dataset_service.get_schema_info(dataset)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+
+
+@router.post("/{dataset_id}/query")
+def query_dataset(
+    dataset_id: uuid.UUID,
+    *,
+    db: Session = Depends(deps.get_db),
+    payload: QueryRequest,
+    current_user: User = Depends(deps.get_current_active_user),
+):
+    """
+    Execute a SQL query on a dataset using DuckDB.
+
+    The table is accessible as 'dataset' in the SQL query.
+    Only SELECT queries are allowed (no DROP, DELETE, INSERT, UPDATE, etc.).
+    Maximum 1000 rows can be returned per query.
+    """
+    dataset = dataset_service.get_dataset(db, dataset_id=dataset_id, tenant_id=current_user.tenant_id)
+    if not dataset:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Dataset not found")
+    try:
+        return dataset_service.execute_query(dataset, payload.sql, payload.limit)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc

@@ -23,7 +23,7 @@ class ChatSession(ChatSessionBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ChatMessageBase(BaseModel):
@@ -42,7 +42,7 @@ class ChatMessage(ChatMessageBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ChatTurn(BaseModel):

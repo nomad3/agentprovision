@@ -16,6 +16,12 @@ class Settings(BaseSettings):
     MCP_API_KEY: str = "dev_mcp_key"  # Change in production
     MCP_ENABLED: bool = True  # Feature flag for MCP/Databricks integration
 
+    # LLM Configuration
+    ANTHROPIC_API_KEY: str | None = None
+    LLM_MODEL: str = "claude-3-5-sonnet-20241022"
+    LLM_MAX_TOKENS: int = 4096
+    LLM_TEMPERATURE: float = 0.7
+
     class Config:
         env_file = ".env"
 

@@ -6,6 +6,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 AgentProvision is an enterprise-grade unified data & AI lakehouse platform built as a monorepo. It provides multi-tenant control plane capabilities for managing AI agents, data pipelines, notebooks, and deployments across multi-cloud environments. The platform consists of a FastAPI backend and a React frontend.
 
+**Recent Features**:
+- ✅ **Real-time Analytics Dashboard**: Live platform metrics pulling real data from database (agents, deployments, chat activity, datasets)
+- ✅ **Conversation Context & Memory Management**: Automatic token tracking, conversation summarization, and smart context window management (see `CONTEXT_MANAGEMENT_README.md`)
+- ✅ **Tool Execution Framework**: Extensible system for agents with SQL Query, Calculator, and Data Summary tools (see `TOOL_FRAMEWORK_README.md`)
+- ✅ **Claude AI Integration**: Intelligent chat responses for data analysis (see `LLM_INTEGRATION_README.md`)
+- ✅ **UX Redesign**: Business-friendly interface with simplified navigation (INSIGHTS, AI ASSISTANT, WORKSPACE)
+- ✅ **Dataset Management**: CSV/Excel upload with Parquet storage and DuckDB querying
+- ✅ **Multi-tenant Architecture**: Full isolation with JWT authentication
+
 ## Architecture
 
 ### Monorepo Structure
@@ -42,7 +51,14 @@ This is a **Turborepo monorepo** managed with `pnpm` workspaces:
 **Database initialization**: On API startup, `apps/api/app/main.py` calls `init_db()` which:
 - Creates all SQLAlchemy tables via metadata.create_all
 - Seeds demo tenants and users (see `apps/api/app/db/init_db.py`)
-- Demo credentials: `retail-demo@agentprovision.com` / `SecurePass!23`
+- Demo credentials: `test@example.com` / `password`
+
+**LLM Integration**: The chat functionality (`/api/v1/chat`) now uses Claude AI for intelligent responses:
+- Analyzes datasets with statistical insights
+- Context-aware conversations with full history
+- Agent kit-driven analysis based on objectives and metrics
+- Falls back to static templates if `ANTHROPIC_API_KEY` is not configured
+- See `LLM_INTEGRATION_README.md` for setup and usage
 
 **Temporal workflows**: The platform integrates Temporal for durable workflow execution. Workflow service located at `apps/api/app/services/workflows.py`. Configuration via `TEMPORAL_ADDRESS` and `TEMPORAL_NAMESPACE` environment variables.
 
@@ -179,6 +195,23 @@ Business logic layer (one service per model):
 - `base.py`: Generic CRUD base service
 - `analytics.py`: Aggregated tenant metrics
 - `workflows.py`: Temporal workflow client integration
+- `llm.py`: **NEW** - Claude AI integration for intelligent chat responses
+  - Anthropic SDK wrapper
+  - Conversation history management
+  - Dynamic system prompt builder for data analysis
+  - Fallback handling for unavailable LLM
+- `context_manager.py`: **NEW** - Conversation context & memory management
+  - Token counting and tracking
+  - Automatic conversation summarization
+  - Smart context window management
+  - Prevents exceeding Claude's token limits
+- `tool_executor.py`: **NEW** - Tool execution framework for agents
+  - Base Tool class and ToolRegistry
+  - Built-in tools: SQL Query, Calculator, Data Summary
+  - Extensible system for adding custom tools
+- `chat.py`: Chat service now uses real LLM responses (previously static templates)
+  - Integrated with tool framework for SQL queries, calculations, and summaries
+  - Context-aware with automatic memory management
 - Other services follow pattern: `{resource}s.py` (e.g., `agents.py`, `datasets.py`)
 
 ### Routes (`apps/api/app/api/v1/`)
@@ -201,19 +234,33 @@ All routes use dependency injection via `deps.py` for database sessions and curr
 
 ### Pages (`apps/web/src/pages/`)
 
-One page per resource type:
-- `DashboardPage.js`: Analytics overview
-- `AgentsPage.js`, `AgentKitsPage.js`: Agent management
-- `DeploymentsPage.js`: Deployment tracking
-- `DataSourcesPage.js`, `DataPipelinesPage.js`, `DatasetsPage.js`: Data management
-- `NotebooksPage.js`: Notebook interface
-- `ToolsPage.js`, `ConnectorsPage.js`, `VectorStoresPage.js`: Configuration
-- `ChatPage.js`: Chat interface
-- `LoginPage.js`, `RegisterPage.js`: Authentication
+One page per resource type (organized in 3-section navigation):
+
+**INSIGHTS Section**:
+- `DashboardPage.js`: Analytics overview (home)
+- `DatasetsPage.js`: Reports & Data management (with AI analysis)
+
+**AI ASSISTANT Section**:
+- `ChatPage.js`: Ask AI - Intelligent chat interface with Claude
+- `AgentsPage.js`: AI Assistants management
+- `AgentKitsPage.js`: AI Templates (playbook orchestration)
+
+**WORKSPACE Section**:
+- `DataSourcesPage.js`: Data Connections
+- `DataPipelinesPage.js`: Automations (ETL workflows)
+- `SettingsPage.js`: Settings (currently NotebooksPage)
+
+**Authentication**:
+- `LoginPage.js`, `RegisterPage.js`: Login and registration
+- `LandingPage.js`: Marketing landing page
 
 ### Components (`apps/web/src/components/`)
 
-- `Layout.js`: Authenticated layout wrapper with navigation
+- `Layout.js`: Authenticated layout with 3-section sidebar navigation
+  - Glassmorphic design with dark theme
+  - Sections: INSIGHTS, AI ASSISTANT, WORKSPACE
+  - User dropdown in footer
+- `Layout.css`: Updated with scrollable sidebar, visible scrollbar
 - `marketing/`: Landing page components
 
 ### Services (`apps/web/src/services/`)
@@ -244,6 +291,22 @@ Loaded via pydantic-settings. See `apps/api/app/core/config.py` for available se
 - `DATA_STORAGE_PATH`: Local data file storage
 - `TEMPORAL_ADDRESS`, `TEMPORAL_NAMESPACE`: Temporal connection
 - `DEFAULT_WORKFLOW_TIMEOUT_SECONDS`: Workflow timeout
+- **LLM Configuration** (NEW):
+  - `ANTHROPIC_API_KEY`: Your Anthropic API key (required for AI chat)
+  - `LLM_MODEL`: Claude model to use (default: `claude-3-5-sonnet-20241022`)
+  - `LLM_MAX_TOKENS`: Maximum response length (default: `4096`)
+  - `LLM_TEMPERATURE`: Response creativity (default: `0.7`)
+
+**Example `.env` file**:
+```
+# Required for LLM features
+ANTHROPIC_API_KEY=sk-ant-api03-xxxxxxxxxxxxxxxxxxxxx
+
+# Optional LLM customization
+LLM_MODEL=claude-3-5-sonnet-20241022
+LLM_MAX_TOKENS=4096
+LLM_TEMPERATURE=0.7
+```
 
 ### `apps/web/.env.local` (Web app)
 
@@ -258,6 +321,10 @@ Note: Despite the naming, this is a **React app** (Create React App), not Next.j
 ### Docker Compose (Development)
 
 ```bash
+# Use specific ports to avoid conflicts
+DB_PORT=8003 API_PORT=8001 WEB_PORT=8002 docker-compose up -d --build
+
+# Or simply (uses default .env ports):
 docker-compose up --build
 ```
 
@@ -265,6 +332,8 @@ Services exposed:
 - API: `http://localhost:8001`
 - Web: `http://localhost:8002`
 - DB: `localhost:8003`
+
+**Important**: Ensure `ANTHROPIC_API_KEY` is set in `apps/api/.env` for AI chat functionality.
 
 ### Production Deployment (GCP VM)
 

@@ -15,3 +15,4 @@ openpyxl
 duckdb
 pyarrow
 temporalio
+anthropic

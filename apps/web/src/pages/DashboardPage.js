@@ -1,167 +1,66 @@
-import React from 'react';
-import { Row, Col, Card, Badge, Table, ProgressBar, ListGroup } from 'react-bootstrap';
-import { FaChartPie, FaBolt, FaShieldAlt, FaChartBar, FaClock, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { Row, Col, Card, Badge, Table, ListGroup, Spinner, Alert } from 'react-bootstrap';
+import { FaChartBar, FaDatabase, FaRobot, FaComments } from 'react-icons/fa';
 import Layout from '../components/Layout';
 import { useAuth } from '../App';
-
-const summaryTiles = [
-  {
-    title: 'Executive dashboards live',
-    value: '128',
-    delta: '+12 vs last week',
-    deltaVariant: 'success',
-    badge: 'Revenue intelligence',
-    badgeVariant: 'primary',
-    icon: FaChartPie,
-  },
-  {
-    title: 'Signals processed per minute',
-    value: '2.4M',
-    delta: '-3% vs target',
-    deltaVariant: 'danger',
-    badge: 'Data mesh',
-    badgeVariant: 'info',
-    icon: FaBolt,
-  },
-  {
-    title: 'Governed data products',
-    value: '86',
-    delta: '+8 this quarter',
-    deltaVariant: 'success',
-    badge: 'Compliance',
-    badgeVariant: 'warning',
-    icon: FaShieldAlt,
-  },
-  {
-    title: 'Closed-loop automations',
-    value: '54',
-    delta: '+6 new runbooks',
-    deltaVariant: 'success',
-    badge: 'Operations',
-    badgeVariant: 'dark',
-    icon: FaChartBar,
-  },
-];
-
-const trendingInsights = [
-  {
-    title: 'Pipeline conversion up 18%',
-    detail: 'Propensity models surfaced expansion-ready cohorts across enterprise SaaS accounts.',
-    stat: '+18% QoQ',
-    statVariant: 'success',
-  },
-  {
-    title: 'APAC churn risk rising',
-    detail: 'Customer health index dipped below 0.74 for 18 mid-market logos in the region.',
-    stat: '+6% risk',
-    statVariant: 'warning',
-  },
-  {
-    title: 'Forecast variance tightened',
-    detail: 'Scenario planning reduced revenue forecast gap to $1.2M for Q4 close.',
-    stat: '-$3.1M gap',
-    statVariant: 'info',
-  },
-];
-
-const pipelineHealth = [
-  {
-    name: 'Usage telemetry → Snowflake',
-    description: 'Event spine powering product engagement dashboards and retention scores.',
-    completeness: 92,
-    variant: 'success',
-  },
-  {
-    name: 'Revenue to CRM sync',
-    description: 'Streaming ARR updates refreshing GTM opportunity models every 5 minutes.',
-    completeness: 81,
-    variant: 'info',
-  },
-  {
-    name: 'Financial close automation',
-    description: 'GL reconciliations publishing variance KPIs to finance workspace nightly.',
-    completeness: 64,
-    variant: 'warning',
-  },
-];
-
-const segmentPerformance = [
-  {
-    segment: 'Enterprise SaaS',
-    arrGrowth: '+14%',
-    arpu: '$24.8K',
-    velocity: '12.4 days',
-    conversion: '19%',
-    trendVariant: 'success',
-  },
-  {
-    segment: 'Mid-market APAC',
-    arrGrowth: '-6%',
-    arpu: '$8.9K',
-    velocity: '18.6 days',
-    conversion: '11%',
-    trendVariant: 'danger',
-  },
-  {
-    segment: 'Healthcare',
-    arrGrowth: '+9%',
-    arpu: '$17.2K',
-    velocity: '10.2 days',
-    conversion: '15%',
-    trendVariant: 'success',
-  },
-  {
-    segment: 'FinServ strategic',
-    arrGrowth: '+4%',
-    arpu: '$32.4K',
-    velocity: '9.7 days',
-    conversion: '21%',
-    trendVariant: 'info',
-  },
-];
-
-const alerts = [
-  {
-    title: 'Churn spike flagged in APAC mid-market',
-    detail: 'Cancellation probability climbed to 0.68 for five key accounts — activate retention playbook.',
-    variant: 'warning',
-    icon: FaExclamationTriangle,
-  },
-  {
-    title: 'Compliance checks cleared for EU residency',
-    detail: 'All 24 governed datasets renewed residency attestations for the Q4 audit cycle.',
-    variant: 'success',
-    icon: FaCheckCircle,
-  },
-  {
-    title: 'Scenario C requires executive review',
-    detail: 'Forecast projects $2.1M shortfall if capacity hiring slips by four weeks.',
-    variant: 'danger',
-    icon: FaExclamationTriangle,
-  },
-];
-
-const nextActions = [
-  {
-    title: 'Publish Q4 revenue forecast deck',
-    owner: 'Finance Ops · Owner: Priya K.',
-    due: 'Due today',
-  },
-  {
-    title: 'Run churn mitigation workshop for APAC',
-    owner: 'Customer Success · Owner: Diego R.',
-    due: 'Due in 2 days',
-  },
-  {
-    title: 'Approve governance rules for new data product',
-    owner: 'Data Governance · Owner: Mei L.',
-    due: 'Due Friday',
-  },
-];
+import { getDashboardStats } from '../services/analytics';
 
 const DashboardPage = () => {
   const { user } = useAuth();
   const viewerEmail = user?.email ?? 'demo@agentprovision.ai';
+
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        const response = await getDashboardStats();
+        setDashboardData(response.data);
+        setError(null);
+      } catch (err) {
+        setError('Failed to load dashboard data. Please try again.');
+        console.error('Error fetching dashboard stats:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="text-center py-5">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+          <p className="mt-3 text-muted">Loading dashboard...</p>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <Alert variant="danger">{error}</Alert>
+      </Layout>
+    );
+  }
+
+  if (!dashboardData) {
+    return (
+      <Layout>
+        <Alert variant="warning">No dashboard data available</Alert>
+      </Layout>
+    );
+  }
+
+  const { overview, activity, agents, datasets, recent_sessions } = dashboardData;
 
   return (
     <Layout>
@@ -169,57 +68,119 @@ const DashboardPage = () => {
         <div>
           <h2 className="mb-1">Analytics Command Center</h2>
           <p className="text-muted mb-0">
-            Simulated intelligence blend compiled from product usage, revenue, and operations telemetry.
+            Real-time platform metrics and intelligence from your data & AI operations.
           </p>
         </div>
         <div className="d-flex align-items-center gap-2">
           <Badge bg="dark">{viewerEmail}</Badge>
-          <Badge bg="info" text="dark">
-            Demo data set
+          <Badge bg="success" text="white">
+            Live data
           </Badge>
         </div>
       </div>
 
       <Row className="g-4">
-        {summaryTiles.map(({ title, value, delta, deltaVariant, badge, badgeVariant, icon: Icon }) => (
-          <Col md={3} key={title}>
-            <Card className="h-100 shadow-sm border-0">
-              <Card.Body>
-                <div className="d-flex align-items-center justify-content-between mb-3">
-                  <div className="icon-pill-sm">
-                    <Icon size={20} />
-                  </div>
-                  <Badge bg={badgeVariant}>{badge}</Badge>
+        <Col md={3}>
+          <Card className="h-100 shadow-sm border-0">
+            <Card.Body>
+              <div className="d-flex align-items-center justify-content-between mb-3">
+                <div className="icon-pill-sm">
+                  <FaRobot size={20} />
                 </div>
-                <h6 className="text-muted mb-1">{title}</h6>
-                <div className="display-6 fw-bold">{value}</div>
-                <div className={`mt-2 small text-${deltaVariant}`}>{delta}</div>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
+                <Badge bg="primary">AI Agents</Badge>
+              </div>
+              <h6 className="text-muted mb-1">Active AI Agents</h6>
+              <div className="display-6 fw-bold">{overview.total_agents}</div>
+              <div className="mt-2 small text-info">{overview.total_deployments} deployments</div>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        <Col md={3}>
+          <Card className="h-100 shadow-sm border-0">
+            <Card.Body>
+              <div className="d-flex align-items-center justify-content-between mb-3">
+                <div className="icon-pill-sm">
+                  <FaComments size={20} />
+                </div>
+                <Badge bg="success">Chat Activity</Badge>
+              </div>
+              <h6 className="text-muted mb-1">Total Chat Messages</h6>
+              <div className="display-6 fw-bold">{activity.total_messages}</div>
+              <div className="mt-2 small text-success">{activity.recent_messages_7d} last 7 days</div>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        <Col md={3}>
+          <Card className="h-100 shadow-sm border-0">
+            <Card.Body>
+              <div className="d-flex align-items-center justify-content-between mb-3">
+                <div className="icon-pill-sm">
+                  <FaDatabase size={20} />
+                </div>
+                <Badge bg="info">Data Platform</Badge>
+              </div>
+              <h6 className="text-muted mb-1">Active Datasets</h6>
+              <div className="display-6 fw-bold">{overview.total_datasets}</div>
+              <div className="mt-2 small text-info">{activity.dataset_rows_total.toLocaleString()} total rows</div>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        <Col md={3}>
+          <Card className="h-100 shadow-sm border-0">
+            <Card.Body>
+              <div className="d-flex align-items-center justify-content-between mb-3">
+                <div className="icon-pill-sm">
+                  <FaChartBar size={20} />
+                </div>
+                <Badge bg="warning" text="dark">Integrations</Badge>
+              </div>
+              <h6 className="text-muted mb-1">Data Sources & Pipelines</h6>
+              <div className="display-6 fw-bold">{overview.total_data_sources}</div>
+              <div className="mt-2 small text-warning">{overview.total_pipelines} active pipelines</div>
+            </Card.Body>
+          </Card>
+        </Col>
       </Row>
 
       <Row className="g-4 mt-1">
         <Col lg={6}>
           <Card className="h-100 shadow-sm border-0">
             <Card.Header className="bg-transparent border-0 d-flex align-items-center justify-content-between">
-              <span className="fw-semibold">Trending intelligence narratives</span>
-              <Badge bg="secondary">Narratives</Badge>
+              <span className="fw-semibold">Platform Overview</span>
+              <Badge bg="secondary">Metrics</Badge>
             </Card.Header>
             <Card.Body className="pt-0">
               <ListGroup variant="flush">
-                {trendingInsights.map(({ title, detail, stat, statVariant }) => (
-                  <ListGroup.Item key={title} className="bg-transparent px-0 py-3">
-                    <div className="d-flex justify-content-between align-items-start">
-                      <div>
-                        <h6 className="mb-1">{title}</h6>
-                        <p className="text-muted mb-0 small">{detail}</p>
-                      </div>
-                      <Badge bg={statVariant}>{stat}</Badge>
+                <ListGroup.Item className="bg-transparent px-0 py-3">
+                  <div className="d-flex justify-content-between align-items-start">
+                    <div>
+                      <h6 className="mb-1">Agent Kits Available</h6>
+                      <p className="text-muted mb-0 small">Pre-configured AI agent templates ready for deployment</p>
                     </div>
-                  </ListGroup.Item>
-                ))}
+                    <Badge bg="primary">{overview.total_agent_kits}</Badge>
+                  </div>
+                </ListGroup.Item>
+                <ListGroup.Item className="bg-transparent px-0 py-3">
+                  <div className="d-flex justify-content-between align-items-start">
+                    <div>
+                      <h6 className="mb-1">Vector Stores</h6>
+                      <p className="text-muted mb-0 small">RAG-enabled knowledge bases for semantic search</p>
+                    </div>
+                    <Badge bg="info">{overview.total_vector_stores}</Badge>
+                  </div>
+                </ListGroup.Item>
+                <ListGroup.Item className="bg-transparent px-0 py-3">
+                  <div className="d-flex justify-content-between align-items-start">
+                    <div>
+                      <h6 className="mb-1">Tools & Integrations</h6>
+                      <p className="text-muted mb-0 small">Connected tools available for agent workflows</p>
+                    </div>
+                    <Badge bg="success">{overview.total_tools}</Badge>
+                  </div>
+                </ListGroup.Item>
               </ListGroup>
             </Card.Body>
           </Card>
@@ -228,20 +189,29 @@ const DashboardPage = () => {
         <Col lg={6}>
           <Card className="h-100 shadow-sm border-0">
             <Card.Header className="bg-transparent border-0 d-flex align-items-center justify-content-between">
-              <span className="fw-semibold">Pipeline health & freshness</span>
-              <Badge bg="secondary">Data mesh</Badge>
+              <span className="fw-semibold">Recent Chat Activity</span>
+              <Badge bg="secondary">Sessions</Badge>
             </Card.Header>
             <Card.Body className="pt-0">
-              {pipelineHealth.map(({ name, description, completeness, variant }) => (
-                <div key={name} className="mb-4">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <span className="fw-semibold">{name}</span>
-                    <span className="text-muted small">{completeness}% quality</span>
-                  </div>
-                  <p className="text-muted small mb-2">{description}</p>
-                  <ProgressBar now={completeness} variant={variant} />
-                </div>
-              ))}
+              {recent_sessions && recent_sessions.length > 0 ? (
+                <ListGroup variant="flush">
+                  {recent_sessions.map((session) => (
+                    <ListGroup.Item key={session.id} className="bg-transparent px-0 py-3">
+                      <div className="d-flex justify-content-between align-items-start">
+                        <div style={{ flex: 1 }}>
+                          <h6 className="mb-1">{session.title}</h6>
+                          <p className="text-muted mb-0 small">
+                            {session.message_count} messages • {new Date(session.created_at).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <Badge bg="info">{session.message_count}</Badge>
+                      </div>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              ) : (
+                <p className="text-muted text-center py-4">No recent chat sessions</p>
+              )}
             </Card.Body>
           </Card>
         </Col>
@@ -251,84 +221,68 @@ const DashboardPage = () => {
         <Col lg={7}>
           <Card className="shadow-sm border-0">
             <Card.Header className="bg-transparent border-0 d-flex align-items-center justify-content-between">
-              <span className="fw-semibold">Segment performance snapshot</span>
-              <Badge bg="secondary">Business intelligence</Badge>
+              <span className="fw-semibold">AI Agents & Deployments</span>
+              <Badge bg="secondary">Agents</Badge>
             </Card.Header>
             <Card.Body className="pt-0">
-              <Table hover responsive borderless className="mb-0 align-middle">
-                <thead className="text-muted">
-                  <tr>
-                    <th>Segment</th>
-                    <th>ARR growth</th>
-                    <th>ARPU</th>
-                    <th>Pipeline velocity</th>
-                    <th>Conversion</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {segmentPerformance.map(({ segment, arrGrowth, arpu, velocity, conversion, trendVariant }) => (
-                    <tr key={segment}>
-                      <td className="fw-semibold">{segment}</td>
-                      <td>
-                        <Badge bg={trendVariant}>{arrGrowth}</Badge>
-                      </td>
-                      <td>{arpu}</td>
-                      <td>{velocity}</td>
-                      <td>{conversion}</td>
+              {agents && agents.length > 0 ? (
+                <Table hover responsive borderless className="mb-0 align-middle">
+                  <thead className="text-muted">
+                    <tr>
+                      <th>Agent Name</th>
+                      <th>Deployment Count</th>
+                      <th>Status</th>
                     </tr>
-                  ))}
-                </tbody>
-              </Table>
+                  </thead>
+                  <tbody>
+                    {agents.map((agent) => (
+                      <tr key={agent.name}>
+                        <td className="fw-semibold">{agent.name}</td>
+                        <td>
+                          <Badge bg="primary">{agent.deployment_count}</Badge>
+                        </td>
+                        <td>
+                          <Badge bg={agent.deployment_count > 0 ? "success" : "secondary"}>
+                            {agent.deployment_count > 0 ? "Deployed" : "Ready"}
+                          </Badge>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              ) : (
+                <p className="text-muted text-center py-4">No agents configured</p>
+              )}
             </Card.Body>
           </Card>
         </Col>
 
         <Col lg={5}>
-          <Card className="shadow-sm border-0 mb-4">
-            <Card.Header className="bg-transparent border-0 d-flex align-items-center justify-content-between">
-              <span className="fw-semibold">Alerts & watchlist</span>
-              <Badge bg="secondary">Risk</Badge>
-            </Card.Header>
-            <Card.Body className="pt-0">
-              <ListGroup variant="flush">
-                {alerts.map(({ title, detail, variant, icon: Icon }) => (
-                  <ListGroup.Item key={title} className="bg-transparent px-0 py-3">
-                    <div className="d-flex align-items-start">
-                      <span className={`me-3 mt-1 text-${variant}`}>
-                        <Icon size={16} />
-                      </span>
-                      <div>
-                        <h6 className="mb-1">{title}</h6>
-                        <p className="text-muted small mb-0">{detail}</p>
-                      </div>
-                    </div>
-                  </ListGroup.Item>
-                ))}
-              </ListGroup>
-            </Card.Body>
-          </Card>
-
           <Card className="shadow-sm border-0">
             <Card.Header className="bg-transparent border-0 d-flex align-items-center justify-content-between">
-              <span className="fw-semibold">Next best actions</span>
-              <Badge bg="secondary">Execution</Badge>
+              <span className="fw-semibold">Datasets</span>
+              <Badge bg="secondary">Data</Badge>
             </Card.Header>
             <Card.Body className="pt-0">
-              <ListGroup variant="flush">
-                {nextActions.map(({ title, owner, due }) => (
-                  <ListGroup.Item key={title} className="bg-transparent px-0 py-3">
-                    <div className="d-flex align-items-center justify-content-between">
-                      <div>
-                        <h6 className="mb-1">{title}</h6>
-                        <p className="text-muted small mb-0">{owner}</p>
+              {datasets && datasets.length > 0 ? (
+                <ListGroup variant="flush">
+                  {datasets.map((dataset) => (
+                    <ListGroup.Item key={dataset.id} className="bg-transparent px-0 py-3">
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div style={{ flex: 1 }}>
+                          <h6 className="mb-1">{dataset.name}</h6>
+                          <p className="text-muted small mb-0">
+                            {dataset.rows.toLocaleString()} rows • {new Date(dataset.created_at).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <Badge bg="info">{dataset.rows}</Badge>
                       </div>
-                      <span className="text-muted small d-flex align-items-center gap-1">
-                        <FaClock /> {due}
-                      </span>
-                    </div>
-                  </ListGroup.Item>
-                ))}
-              </ListGroup>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              ) : (
+                <p className="text-muted text-center py-4">No datasets available</p>
+              )}
             </Card.Body>
           </Card>
         </Col>

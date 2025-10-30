@@ -57,7 +57,7 @@ class AgentKit(AgentKitBase):
     tenant_id: uuid.UUID
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ResolvedToolBinding(BaseModel):

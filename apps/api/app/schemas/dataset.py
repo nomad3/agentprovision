@@ -21,7 +21,7 @@ class Dataset(DatasetBase):
     created_at: datetime | None = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class DatasetPreview(BaseModel):
@@ -31,4 +31,4 @@ class DatasetPreview(BaseModel):
     sample_rows: List[Dict[str, Any]]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
