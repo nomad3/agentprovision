@@ -13,6 +13,8 @@ origins = [
     "https://agentprovision.com",
     "http://localhost:3000", # For local development
     "http://127.0.0.1:3000", # For local development
+    "http://localhost:8002", # Docker web service
+    "http://127.0.0.1:8002", # Docker web service
 ]
 
 app.add_middleware(

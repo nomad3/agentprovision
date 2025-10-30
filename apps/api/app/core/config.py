@@ -11,6 +11,11 @@ class Settings(BaseSettings):
 
     DEFAULT_WORKFLOW_TIMEOUT_SECONDS: int = 600
 
+    # MCP Server Configuration
+    MCP_SERVER_URL: str = "http://localhost:8085"
+    MCP_API_KEY: str = "dev_mcp_key"  # Change in production
+    MCP_ENABLED: bool = True  # Feature flag for MCP/Databricks integration
+
     class Config:
         env_file = ".env"
 

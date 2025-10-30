@@ -4,16 +4,16 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   HouseDoorFill,
   DatabaseFill,
-  Diagram3Fill,
-  JournalBookmarkFill,
+  BarChartFill,
+  FileTextFill,
   Robot,
-  Tools,
-  PuzzleFill,
-  CloudArrowUpFill,
-  BoxArrowRight,
   ChatDotsFill,
   Grid3x3GapFill,
-  PersonCircle
+  PlugFill,
+  GearFill,
+  BoxArrowRight,
+  PersonCircle,
+  LightbulbFill
 } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../App';
@@ -43,21 +43,32 @@ const Layout = ({ children }) => {
     i18n.changeLanguage(code);
   };
 
-  const navItems = [
-    { path: '/dashboard', icon: HouseDoorFill, label: t('sidebar.dashboard') },
-    { path: '/agents', icon: Robot, label: t('sidebar.agents'), badge: 'AI' },
-    { path: '/agent-kits', icon: Grid3x3GapFill, label: t('sidebar.agentKits'), badge: 'AI' },
-    { path: '/chat', icon: ChatDotsFill, label: t('sidebar.chat'), badge: 'AI' },
-    { divider: true, label: 'Data' },
-    { path: '/datasets', icon: DatabaseFill, label: t('sidebar.datasets') },
-    { path: '/data-sources', icon: DatabaseFill, label: t('sidebar.dataSources') },
-    { path: '/data-pipelines', icon: Diagram3Fill, label: t('sidebar.dataPipelines') },
-    { path: '/vector-stores', icon: Diagram3Fill, label: t('sidebar.vectorStores') },
-    { divider: true, label: 'Tools' },
-    { path: '/notebooks', icon: JournalBookmarkFill, label: t('sidebar.notebooks') },
-    { path: '/tools', icon: Tools, label: t('sidebar.tools') },
-    { path: '/connectors', icon: PuzzleFill, label: t('sidebar.connectors') },
-    { path: '/deployments', icon: CloudArrowUpFill, label: t('sidebar.deployments') },
+  // Simplified 3-section navigation for business users
+  const navSections = [
+    {
+      title: 'INSIGHTS',
+      items: [
+        { path: '/home', icon: HouseDoorFill, label: 'Home' },
+        { path: '/dashboard', icon: BarChartFill, label: 'Dashboard' },
+        { path: '/datasets', icon: FileTextFill, label: 'Reports & Data' },
+      ]
+    },
+    {
+      title: 'AI ASSISTANT',
+      items: [
+        { path: '/chat', icon: ChatDotsFill, label: 'Ask AI' },
+        { path: '/agents', icon: Robot, label: 'AI Assistants' },
+        { path: '/agent-kits', icon: Grid3x3GapFill, label: 'AI Templates' },
+      ]
+    },
+    {
+      title: 'WORKSPACE',
+      items: [
+        { path: '/data-sources', icon: PlugFill, label: 'Data Connections' },
+        { path: '/data-pipelines', icon: DatabaseFill, label: 'Automations' },
+        { path: '/settings', icon: GearFill, label: 'Settings' },
+      ]
+    }
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -76,31 +87,30 @@ const Layout = ({ children }) => {
         </div>
 
         <Nav className="flex-column sidebar-nav">
-          {navItems.map((item, index) => {
-            if (item.divider) {
-              return (
-                <div key={`divider-${index}`} className="nav-divider">
-                  <span className="nav-divider-text">{item.label}</span>
-                </div>
-              );
-            }
-
-            const Icon = item.icon;
-            return (
-              <Nav.Link
-                key={item.path}
-                as={Link}
-                to={item.path}
-                className={`sidebar-nav-link ${isActive(item.path) ? 'active' : ''}`}
-              >
-                <Icon className="nav-icon" size={20} />
-                <span className="nav-label">{item.label}</span>
-                {item.badge && (
-                  <Badge bg="primary" className="nav-badge">{item.badge}</Badge>
-                )}
-              </Nav.Link>
-            );
-          })}
+          {navSections.map((section, sectionIndex) => (
+            <div key={`section-${sectionIndex}`} className="nav-section">
+              <div className="nav-section-header">
+                <span className="nav-section-title">{section.title}</span>
+              </div>
+              {section.items.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Nav.Link
+                    key={item.path}
+                    as={Link}
+                    to={item.path}
+                    className={`sidebar-nav-link ${isActive(item.path) ? 'active' : ''}`}
+                  >
+                    <Icon className="nav-icon" size={20} />
+                    <span className="nav-label">{item.label}</span>
+                    {item.badge && (
+                      <Badge bg="primary" className="nav-badge">{item.badge}</Badge>
+                    )}
+                  </Nav.Link>
+                );
+              })}
+            </div>
+          ))}
         </Nav>
 
         <div className="sidebar-footer">

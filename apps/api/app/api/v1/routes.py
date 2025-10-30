@@ -13,6 +13,7 @@ from app.api.v1 import (
     agent_kits,
     datasets,
     chat,
+    databricks,
 )
 
 router = APIRouter()
@@ -34,3 +35,4 @@ router.include_router(vector_stores.router, prefix="/vector_stores", tags=["vect
 router.include_router(agent_kits.router, prefix="/agent_kits", tags=["agent_kits"])
 router.include_router(datasets.router, prefix="/datasets", tags=["datasets"])
 router.include_router(chat.router, prefix="/chat", tags=["chat"])
+router.include_router(databricks.router, prefix="/databricks", tags=["databricks"])

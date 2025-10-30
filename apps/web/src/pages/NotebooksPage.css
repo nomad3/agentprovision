@@ -1,0 +1,129 @@
+.notebooks-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.empty-state-card {
+  background: linear-gradient(135deg, rgba(11, 19, 36, 0.9), rgba(9, 14, 26, 0.95));
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 16px;
+  margin-top: 2rem;
+  padding: 3rem 2rem;
+}
+
+.empty-icon-wrapper {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 1.5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(14, 165, 233, 0.15));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(99, 102, 241, 0.3);
+}
+
+.empty-icon {
+  color: #c7d2fe;
+}
+
+.empty-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 1rem;
+}
+
+.empty-description {
+  font-size: 1.1rem;
+  color: rgba(226, 232, 240, 0.7);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.create-button {
+  font-size: 1.1rem;
+  padding: 0.875rem 2.5rem;
+  font-weight: 600;
+  border-radius: 12px;
+  margin-bottom: 3rem;
+  transition: all 0.3s ease;
+}
+
+.create-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+}
+
+.empty-help {
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  padding: 1.5rem;
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 12px;
+  text-align: left;
+  display: flex;
+  gap: 1rem;
+}
+
+.help-icon {
+  color: #fbbf24;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.help-content {
+  flex: 1;
+}
+
+.help-content strong {
+  color: #f8fafc;
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.help-content p {
+  color: rgba(226, 232, 240, 0.8);
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.features-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.feature-item {
+  padding: 0.75rem 1rem;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 8px;
+  color: rgba(226, 232, 240, 0.9);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  .empty-state-card {
+    padding: 2rem 1rem;
+  }
+
+  .empty-title {
+    font-size: 1.5rem;
+  }
+
+  .empty-description {
+    font-size: 1rem;
+  }
+
+  .features-list {
+    grid-template-columns: 1fr;
+  }
+}
