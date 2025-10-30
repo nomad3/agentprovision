@@ -13,7 +13,8 @@ import {
   GearFill,
   BoxArrowRight,
   PersonCircle,
-  LightbulbFill
+  LightbulbFill,
+  BuildingFill
 } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../App';
@@ -66,6 +67,7 @@ const Layout = ({ children }) => {
       items: [
         { path: '/data-sources', icon: PlugFill, label: 'Data Connections' },
         { path: '/data-pipelines', icon: DatabaseFill, label: 'Automations' },
+        { path: '/tenants', icon: BuildingFill, label: 'Organization' },
         { path: '/settings', icon: GearFill, label: 'Settings' },
       ]
     }

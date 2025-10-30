@@ -17,6 +17,7 @@ import AgentKitsPage from './pages/AgentKitsPage';
 import DatasetsPage from './pages/DatasetsPage';
 import ChatPage from './pages/ChatPage';
 import SettingsPage from './pages/SettingsPage';
+import TenantsPage from './pages/TenantsPage';
 import authService from './services/auth';
 import { ToastProvider } from './components/common';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -73,6 +74,7 @@ function App() {
             <Route path="/deployments" element={<ProtectedRoute><DeploymentsPage /></ProtectedRoute>} />
             <Route path="/vector-stores" element={<ProtectedRoute><VectorStoresPage /></ProtectedRoute>} />
             <Route path="/agent-kits" element={<ProtectedRoute><AgentKitsPage /></ProtectedRoute>} />
+            <Route path="/tenants" element={<ProtectedRoute><TenantsPage /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
           </Routes>
         </ToastProvider>
