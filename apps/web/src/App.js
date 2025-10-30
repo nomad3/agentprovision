@@ -15,8 +15,9 @@ import VectorStoresPage from './pages/VectorStoresPage';
 import AgentKitsPage from './pages/AgentKitsPage';
 import DatasetsPage from './pages/DatasetsPage';
 import ChatPage from './pages/ChatPage';
-import Layout from './components/Layout';
 import authService from './services/auth';
+import { ToastProvider } from './components/common';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Create an Auth Context
 const AuthContext = createContext(null);
@@ -52,23 +53,25 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/data-sources" element={<DataSourcesPage />} />
-          <Route path="/data-pipelines" element={<DataPipelinesPage />} />
-          <Route path="/notebooks" element={<NotebooksPage />} />
-          <Route path="/agents" element={<AgentsPage />} />
-          <Route path="/datasets" element={<DatasetsPage />} />
-          <Route path="/chat" element={<ChatPage />} />
-          <Route path="/tools" element={<ToolsPage />} />
-          <Route path="/connectors" element={<ConnectorsPage />} />
-          <Route path="/deployments" element={<DeploymentsPage />} />
-          <Route path="/vector-stores" element={<VectorStoresPage />} />
-          <Route path="/agent-kits" element={<AgentKitsPage />} />
-        </Routes>
+        <ToastProvider>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+            <Route path="/data-sources" element={<ProtectedRoute><DataSourcesPage /></ProtectedRoute>} />
+            <Route path="/data-pipelines" element={<ProtectedRoute><DataPipelinesPage /></ProtectedRoute>} />
+            <Route path="/notebooks" element={<ProtectedRoute><NotebooksPage /></ProtectedRoute>} />
+            <Route path="/agents" element={<ProtectedRoute><AgentsPage /></ProtectedRoute>} />
+            <Route path="/datasets" element={<ProtectedRoute><DatasetsPage /></ProtectedRoute>} />
+            <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+            <Route path="/tools" element={<ProtectedRoute><ToolsPage /></ProtectedRoute>} />
+            <Route path="/connectors" element={<ProtectedRoute><ConnectorsPage /></ProtectedRoute>} />
+            <Route path="/deployments" element={<ProtectedRoute><DeploymentsPage /></ProtectedRoute>} />
+            <Route path="/vector-stores" element={<ProtectedRoute><VectorStoresPage /></ProtectedRoute>} />
+            <Route path="/agent-kits" element={<ProtectedRoute><AgentKitsPage /></ProtectedRoute>} />
+          </Routes>
+        </ToastProvider>
       </AuthProvider>
     </Router>
   );
