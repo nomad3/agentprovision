@@ -204,7 +204,84 @@ sudo certbot --nginx -d "$DOMAIN" -d "$WWW_DOMAIN" --email "$EMAIL" --agree-tos 
 echo "Restarting Nginx after Certbot (if needed)..."
 sudo systemctl reload nginx
 
-echo "Deployment complete!"
-echo "Your application should now be accessible at https://$DOMAIN"
-echo "API is internally exposed on port $API_PORT"
-echo "Web is internally exposed on port $WEB_PORT"
+# --- 7. Wait for Services to be Ready ---
+echo ""
+echo "Waiting for services to be ready..."
+echo "Checking API health..."
+
+MAX_RETRIES=30
+RETRY_COUNT=0
+API_READY=false
+
+while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+    if curl -s -o /dev/null -w "%{http_code}" "https://$DOMAIN/api/v1/" | grep -q "200"; then
+        API_READY=true
+        echo "✓ API is ready!"
+        break
+    fi
+    RETRY_COUNT=$((RETRY_COUNT + 1))
+    echo "Waiting for API... (attempt $RETRY_COUNT/$MAX_RETRIES)"
+    sleep 2
+done
+
+if [ "$API_READY" = false ]; then
+    echo "⚠️  WARNING: API did not become ready within expected time"
+    echo "You may need to check the logs: docker-compose logs api"
+fi
+
+# --- 8. Run End-to-End Tests ---
+echo ""
+echo "==========================================="
+echo "Running End-to-End Tests"
+echo "==========================================="
+
+E2E_TEST_SCRIPT="$PROJECT_ROOT/scripts/e2e_test_production.sh"
+TEST_EXIT_CODE=0
+
+if [ -f "$E2E_TEST_SCRIPT" ]; then
+    chmod +x "$E2E_TEST_SCRIPT"
+
+    # Run tests and capture exit code
+    set +e  # Don't exit on test failure
+    BASE_URL="https://$DOMAIN" "$E2E_TEST_SCRIPT"
+    TEST_EXIT_CODE=$?
+    set -e  # Re-enable exit on error
+
+    echo ""
+    if [ $TEST_EXIT_CODE -eq 0 ]; then
+        echo "✅ All E2E tests passed!"
+    else
+        echo "⚠️  Some E2E tests failed (exit code: $TEST_EXIT_CODE)"
+        echo "Please review the test output above for details"
+        echo "You can re-run tests manually with: $E2E_TEST_SCRIPT"
+    fi
+else
+    echo "⚠️  E2E test script not found at $E2E_TEST_SCRIPT"
+    echo "Skipping automated tests"
+    TEST_EXIT_CODE=0  # Don't fail deployment if test script missing
+fi
+
+echo ""
+echo "==========================================="
+echo "Deployment Complete!"
+echo "==========================================="
+echo "Your application is now accessible at https://$DOMAIN"
+echo ""
+echo "Service Details:"
+echo "  - API: https://$DOMAIN/api/v1/"
+echo "  - Web: https://$DOMAIN/"
+echo "  - API Internal Port: $API_PORT"
+echo "  - Web Internal Port: $WEB_PORT"
+echo "  - Temporal gRPC: localhost:$TEMPORAL_GRPC_PORT"
+echo "  - Temporal Web UI: localhost:$TEMPORAL_WEB_PORT"
+echo ""
+echo "Useful Commands:"
+echo "  - View API logs: docker-compose logs -f api"
+echo "  - View Web logs: docker-compose logs -f web"
+echo "  - Run E2E tests: $E2E_TEST_SCRIPT"
+echo "  - Restart services: docker-compose restart"
+echo ""
+if [ $TEST_EXIT_CODE -ne 0 ]; then
+    echo "⚠️  IMPORTANT: E2E tests detected issues. Please review and fix before considering deployment complete."
+    exit 1
+fi

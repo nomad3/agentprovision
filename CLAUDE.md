@@ -173,6 +173,25 @@ SKIP_WORKFLOW=true ./scripts/run_demo_workflow.sh
 DESCRIBE=true ./scripts/run_demo_workflow.sh
 ```
 
+### Docker Port Management
+
+To avoid port conflicts when running multiple projects:
+
+```bash
+# Use custom ports (recommended for development)
+DB_PORT=8003 API_PORT=8001 WEB_PORT=8002 docker-compose up -d
+
+# Stop and remove all containers
+docker-compose down
+
+# Rebuild after code changes
+docker-compose up --build -d
+
+# View service logs
+docker-compose logs -f api
+docker-compose logs -f web
+```
+
 ## API Structure
 
 ### Models (`apps/api/app/models/`)
@@ -227,8 +246,11 @@ FastAPI routers (mounted at `/api/v1`):
 - `tools.py`, `connectors.py`: Tool/connector catalog
 - `vector_stores.py`: Vector store configurations
 - `chat.py`: Chat session endpoints
+- `databricks.py`: Databricks integration via MCP server
 
 All routes use dependency injection via `deps.py` for database sessions and current user extraction.
+
+**Important**: The API uses **synchronous** SQLAlchemy (not async) despite having `asyncpg` in the DATABASE_URL. The async driver is for future compatibility, but current code uses `Session` and synchronous queries.
 
 ## Web Frontend Structure
 
@@ -291,7 +313,11 @@ Loaded via pydantic-settings. See `apps/api/app/core/config.py` for available se
 - `DATA_STORAGE_PATH`: Local data file storage
 - `TEMPORAL_ADDRESS`, `TEMPORAL_NAMESPACE`: Temporal connection
 - `DEFAULT_WORKFLOW_TIMEOUT_SECONDS`: Workflow timeout
-- **LLM Configuration** (NEW):
+- **MCP Configuration**:
+  - `MCP_SERVER_URL`: MCP server endpoint (default: `http://localhost:8085`)
+  - `MCP_API_KEY`: Authentication key for MCP server
+  - `MCP_ENABLED`: Feature flag for MCP/Databricks integration (default: `True`)
+- **LLM Configuration**:
   - `ANTHROPIC_API_KEY`: Your Anthropic API key (required for AI chat)
   - `LLM_MODEL`: Claude model to use (default: `claude-3-5-sonnet-20241022`)
   - `LLM_MAX_TOKENS`: Maximum response length (default: `4096`)
@@ -348,11 +374,21 @@ Prerequisites:
 - DNS A record for `agentprovision.com` pointing to VM IP
 - Update `PROJECT_ROOT` variable in `deploy.sh`
 
-The script:
+The deployment script performs the following steps:
 1. Stops existing services
-2. Builds and starts Docker containers with fixed ports
-3. Configures Nginx reverse proxy
-4. Obtains/renews SSL certificate via Certbot
+2. Dynamically generates `docker-compose.temporal.yml` with configured ports
+3. Builds and starts Docker containers (including Temporal server) with fixed ports
+4. Configures Nginx reverse proxy
+5. Obtains/renews SSL certificate via Certbot
+6. **Waits for API to be ready** (up to 60 seconds)
+7. **Runs end-to-end tests automatically** (`scripts/e2e_test_production.sh`)
+8. Reports test results and exits with error code if tests fail
+
+The deployment script automatically includes Temporal server setup, exposing:
+- Temporal gRPC on port `7233` (configurable via `TEMPORAL_GRPC_PORT`)
+- Temporal Web UI on port `8233` (configurable via `TEMPORAL_WEB_PORT`)
+
+**Important**: The deployment will **fail** (exit code 1) if E2E tests don't pass, preventing broken deployments from being considered successful. Review test output to identify and fix issues before redeploying.
 
 ### Terraform (AWS Infrastructure)
 
@@ -377,7 +413,33 @@ terraform apply
 
 ## Testing Strategy
 
-### API Tests
+### End-to-End Tests (Production)
+
+Location: `scripts/e2e_test_production.sh`
+
+Comprehensive E2E test suite that validates the entire platform:
+- 22 test cases covering all major endpoints
+- Automatic execution during deployment via `deploy.sh`
+- Can be run manually against any environment
+
+```bash
+# Test production
+./scripts/e2e_test_production.sh
+
+# Test staging or local
+BASE_URL=https://staging.example.com ./scripts/e2e_test_production.sh
+BASE_URL=http://localhost:8001 ./scripts/e2e_test_production.sh
+```
+
+**Test Coverage**:
+- ✅ Public endpoints (homepage, API root)
+- ✅ Authentication flow (registration, login, token validation)
+- ✅ All 13 resource types (agents, datasets, deployments, etc.)
+- ✅ Feature workflows (dataset ingestion, agent kit creation, chat sessions)
+
+**Test Results**: See `E2E_TEST_FINDINGS.md` for detailed analysis of test results and known issues.
+
+### API Unit Tests
 
 Location: `apps/api/tests/`
 
@@ -385,14 +447,27 @@ Location: `apps/api/tests/`
 - `test_integrations.py`: Integration hub and n8n connector tests
 - `data/sample_revenue_dataset.csv`: Test fixture for dataset ingestion
 
-Test configuration: `pytest.ini` sets `asyncio_mode = auto` for async test support.
+Test configuration: Root `pytest.ini` configures pytest for the entire monorepo.
+
+```bash
+cd apps/api
+pytest                                # Run all tests
+pytest tests/test_api.py              # Run specific test file
+pytest tests/test_api.py::test_login  # Run specific test
+pytest -v                             # Verbose output
+```
 
 ### Web Tests
 
 Uses React Testing Library:
 - Component tests via `@testing-library/react`
 - User interaction tests via `@testing-library/user-event`
-- Run with `npm test`
+
+```bash
+cd apps/web
+npm test          # Run tests in watch mode
+npm test -- --ci  # Run tests once (CI mode)
+```
 
 ## Important Patterns
 
@@ -495,3 +570,13 @@ Configuration:
 - `TEMPORAL_NAMESPACE`: Namespace (default: `default`)
 
 Demo workflow script: `scripts/run_demo_workflow.sh`
+
+## Additional Documentation
+
+Detailed feature documentation available in root directory:
+- `LLM_INTEGRATION_README.md`: Claude AI integration setup and usage
+- `CONTEXT_MANAGEMENT_README.md`: Conversation memory and token management
+- `TOOL_FRAMEWORK_README.md`: Agent tool execution framework
+- `AGENTPROVISION_MCP_INTEGRATION.md`: MCP server and Databricks integration architecture
+- `DATABRICKS_INTEGRATION_PLAN.md`: Databricks integration planning
+- `UX_REDESIGN_PLAN.md`: UI/UX design specifications
