@@ -121,11 +121,37 @@ docker_compose() {
 echo "Docker Compose configuration with resolved ports (including Temporal):"
 docker_compose config
 
-# --- 3. Stop Existing Docker Compose Services ---
+# --- 3. Setup API Environment File ---
+echo "Setting up API environment file..."
+PRODUCTION_ENV="$PROJECT_ROOT/PRODUCTION.env"
+API_ENV="$PROJECT_ROOT/apps/api/.env"
+
+if [ -f "$PRODUCTION_ENV" ]; then
+    echo "Copying PRODUCTION.env to apps/api/.env..."
+    cp "$PRODUCTION_ENV" "$API_ENV"
+    echo "✓ API environment file configured"
+
+    # Verify critical variables are present
+    if grep -q "ANTHROPIC_API_KEY" "$API_ENV"; then
+        echo "✓ ANTHROPIC_API_KEY found in environment file"
+    else
+        echo "⚠️  WARNING: ANTHROPIC_API_KEY not found in PRODUCTION.env"
+        echo "   Chat functionality will not work without this key"
+    fi
+else
+    echo "⚠️  WARNING: PRODUCTION.env not found at $PRODUCTION_ENV"
+    echo "   Using existing apps/api/.env if available"
+    if [ ! -f "$API_ENV" ]; then
+        echo "❌ ERROR: No environment file found. Please create PRODUCTION.env or apps/api/.env"
+        exit 1
+    fi
+fi
+
+# --- 4. Stop Existing Docker Compose Services ---
 echo "Stopping any existing Docker Compose services..."
 docker_compose down --remove-orphans || true # Use || true to prevent script from exiting if no services are running
 
-# --- 4. Build and Start Docker Compose ---
+# --- 5. Build and Start Docker Compose ---
 echo "Building and starting Docker Compose services..."
 docker_compose up --build -d
 
@@ -133,7 +159,7 @@ echo "Docker Compose services started."
 echo "Temporal server available on gRPC $TEMPORAL_ADDRESS (host port $TEMPORAL_GRPC_PORT)."
 echo "Temporal Web UI exposed on http://$DOMAIN:$TEMPORAL_WEB_PORT (or host localhost:$TEMPORAL_WEB_PORT during provisioning)."
 
-# --- 5. Configure Nginx ---
+# --- 6. Configure Nginx ---
 echo "Configuring Nginx for $DOMAIN and $WWW_DOMAIN..."
 
 NGINX_CONF_PATH="/etc/nginx/sites-available/$DOMAIN"
@@ -195,7 +221,7 @@ sudo systemctl reload nginx
 
 echo "Nginx configured and reloaded."
 
-# --- 6. Run Certbot for SSL Certificate ---
+# --- 7. Run Certbot for SSL Certificate ---
 echo "Running Certbot to obtain SSL certificate for $DOMAIN..."
 sudo certbot --nginx -d "$DOMAIN" -d "$WWW_DOMAIN" --email "$EMAIL" --agree-tos --non-interactive
 
@@ -204,7 +230,7 @@ sudo certbot --nginx -d "$DOMAIN" -d "$WWW_DOMAIN" --email "$EMAIL" --agree-tos 
 echo "Restarting Nginx after Certbot (if needed)..."
 sudo systemctl reload nginx
 
-# --- 7. Wait for Services to be Ready ---
+# --- 8. Wait for Services to be Ready ---
 echo ""
 echo "Waiting for services to be ready..."
 echo "Checking API health..."
@@ -229,7 +255,7 @@ if [ "$API_READY" = false ]; then
     echo "You may need to check the logs: docker-compose logs api"
 fi
 
-# --- 8. Run End-to-End Tests ---
+# --- 9. Run End-to-End Tests ---
 echo ""
 echo "==========================================="
 echo "Running End-to-End Tests"
