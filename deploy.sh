@@ -50,6 +50,25 @@ fi
 
 echo "All prerequisites found."
 
+# --- Check for API .env file ---
+API_ENV_FILE="$PROJECT_ROOT/apps/api/.env"
+API_ENV_EXAMPLE="$PROJECT_ROOT/apps/api/.env.example"
+
+echo "Checking for API environment file..."
+if [ ! -f "$API_ENV_FILE" ]; then
+    if [ -f "$API_ENV_EXAMPLE" ]; then
+        echo "API .env file not found. Creating from .env.example..."
+        cp "$API_ENV_EXAMPLE" "$API_ENV_FILE"
+        echo "⚠️  IMPORTANT: Please update $API_ENV_FILE with your actual values (SECRET_KEY, ANTHROPIC_API_KEY, etc.)"
+        echo "Continuing with default values for now..."
+    else
+        echo "ERROR: Neither $API_ENV_FILE nor $API_ENV_EXAMPLE found!"
+        exit 1
+    fi
+else
+    echo "API .env file found at $API_ENV_FILE"
+fi
+
 # --- 2. Generate Random Ports ---
 echo "Generating random ports for API and Web services..."
 
