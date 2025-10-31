@@ -22,13 +22,13 @@ const LoginPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    handleLogin(email, password);
+    await handleLogin(email, password);
   };
 
-  const handleDemoLogin = (demoEmail, demoPassword) => {
+  const handleDemoLogin = async (demoEmail, demoPassword) => {
     setEmail(demoEmail);
     setPassword(demoPassword);
-    handleLogin(demoEmail, demoPassword);
+    await handleLogin(demoEmail, demoPassword);
   };
 
   return (
