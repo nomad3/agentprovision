@@ -1,178 +1,178 @@
 {
   "hero": {
-    "badge": "Enterprise Lakehouse + AI Agent Platform",
-    "title": "Deploy production AI agents in 3 weeks, not 6 months",
-    "lead": "Connect 50+ data sources, train Claude-powered agents on your metrics, and automate 68% of manual analysis tasks with built-in governance.",
-    "subtext": "Pre-built connectors for Snowflake, Databricks, BigQuery, Postgres, Salesforce, HubSpot, and NetSuite. Zero-code schema mapping. SOC 2 Type II compliant.",
-    "subHighlight": "Average implementation: 14 days from kickoff to first production agent.",
+    "badge": "AI-Powered Data Platform",
+    "title": "Give your entire team data superpowers",
+    "lead": "Your marketing team can analyze campaign performance. Your sales team can track pipeline metrics. Your finance team can query revenue data. All without knowing SQL or waiting for data engineers.",
+    "subtext": "Upload your data once. Create AI agents that understand your business. Every team member gets instant answers to their data questions through simple conversation.",
+    "subHighlight": "Transform data access from bottleneck to superpower.",
     "spotlight": {
-      "heading": "Platform capabilities",
-      "badge": "Production-ready"
+      "heading": "What becomes possible",
+      "badge": "Team augmentation"
     },
     "highlights": {
       "governedDataProducts": {
-        "title": "Automated data catalog",
-        "description": "Auto-generate lineage graphs, data quality scores (0-100), and column-level access policies from existing infrastructure."
+        "title": "Every team becomes data-driven",
+        "description": "Marketing measures campaign ROI in real-time. Sales forecasts deals accurately. Finance closes books faster. Operations optimizes processes. No SQL knowledge required."
       },
       "unifiedLakehouseFabric": {
-        "title": "Multi-source query engine",
-        "description": "Query across Parquet, Delta Lake, Iceberg, and 15+ SaaS APIs with sub-200ms latency. Single SQL interface."
+        "title": "Decisions made in minutes, not days",
+        "description": "Ask a question, get an answer. No tickets. No waiting. No back-and-forth emails. Your teams move at the speed of thought instead of the speed of your data team's backlog."
       },
       "agenticAutomation": {
-        "title": "Claude 3.5 agent runtime",
-        "description": "Deploy agents with built-in RAG, SQL generation, and API orchestration. 99.7% task completion rate on structured workflows."
+        "title": "Data engineers focus on what matters",
+        "description": "Stop writing repetitive queries. Build infrastructure. Design systems. Solve hard problems. AI agents handle the routine data requests that consume your day."
       }
     }
   },
   "logos": {
-    "heading": "Trusted by teams at",
-    "items": ["Neptune Cloud", "OmniRetail", "Helios Labs", "Nova Finance", "Pulse Health"]
+    "heading": "Powered by",
+    "items": ["Claude AI", "React", "PostgreSQL", "DuckDB", "Temporal", "FastAPI"]
   },
   "metrics": {
     "items": [
       {
-        "label": "Active data pipelines",
-        "value": "12,000+",
-        "description": "ETL jobs, streaming ingestions, and real-time CDC processes running in production across customer deployments."
+        "label": "Marketing teams",
+        "value": "Answer campaign questions instantly",
+        "description": "Which channels drive conversions? What's our CAC by segment? How do campaigns compare month-over-month? Get answers in seconds instead of waiting days for data team support."
       },
       {
-        "label": "Median query response",
-        "value": "180ms",
-        "description": "P95 latency for federated queries across Snowflake, S3, and PostgreSQL. 3.2TB/day average throughput."
+        "label": "Sales teams",
+        "value": "Track pipeline without spreadsheets",
+        "description": "Ask about deal velocity, win rates, quota attainment. Forecast revenue. Identify at-risk opportunities. Sales reps become data-savvy without learning BI tools."
       },
       {
-        "label": "Analyst time saved",
-        "value": "18.5 hrs/week",
-        "description": "Per analyst. Measured across 200+ deployments. Agents handle data prep, quality checks, and report generation autonomously."
+        "label": "Finance & operations",
+        "value": "Close faster with instant reports",
+        "description": "Query expenses, revenue trends, operational metrics on demand. No more manual report generation. Finance closes books faster. Operations identifies bottlenecks in real-time."
       }
     ]
   },
   "features": {
-    "heading": "Production-grade data infrastructure in weeks, not quarters",
-    "subtitle": "50+ pre-built connectors, automatic schema evolution, and Claude 3.5-powered agents with 99.7% accuracy on SQL generation tasks.",
+    "heading": "Three ways we augment your teams",
+    "subtitle": "Upload data, create agents, empower everyone. Simple setup, transformative results.",
     "items": {
       "connectEverySource": {
-        "title": "Universal data connectors",
-        "description": "53 pre-built adapters: JDBC/ODBC databases, REST APIs (OAuth 2.0, API key), S3/GCS/Azure blob storage. Auto-detect schema changes every 15 minutes."
+        "title": "Make all your data accessible",
+        "description": "Upload spreadsheets, connect databases, centralize datasets. Everyone sees the data they're authorized to access. No more 'Can someone pull this for me?' Slack messages."
       },
       "semanticControlPlane": {
-        "title": "Metrics layer + lineage graph",
-        "description": "Version-controlled metric definitions (dbt-compatible). Column-level lineage tracking across 10+ hops. Field-level PII detection with 94% precision."
+        "title": "Keep security without sacrificing speed",
+        "description": "IT controls who sees what. Audit logs track everything. Teams get instant access to their data without compromising security or compliance. Best of both worlds."
       },
       "agentAutomationStudio": {
-        "title": "Low-code agent builder",
-        "description": "Visual workflow designer. Agents execute Python, SQL, and API calls. Built-in retry logic, error handling, and human-in-the-loop approvals for high-risk actions."
+        "title": "Turn questions into insights automatically",
+        "description": "AI agents understand your business context. Ask in plain language, get accurate answers. Your team spends time acting on insights instead of requesting reports."
       }
     }
   },
   "lakehouse": {
-    "heading": "Open table format lakehouse with ACID guarantees",
-    "description": "Apache Iceberg + Delta Lake support. ACID transactions with snapshot isolation. 10PB+ data under management. Sub-second metadata operations on 500M+ file datasets.",
+    "heading": "Built for business teams, trusted by IT",
+    "description": "Your teams get the freedom to explore data. Your IT team maintains control and visibility. Everyone wins.",
     "highlights": {
       "unifiedGovernance": {
-        "title": "Multi-tenant data catalog",
-        "description": "Hive-compatible metastore. RBAC with row-level + column-level policies. Attribute-based access control (ABAC) for dynamic permissions. OpenLineage-compatible."
+        "title": "Security and compliance built in",
+        "description": "Define access permissions once. Track every query automatically. Meet compliance requirements without blocking business users. IT stays in control while teams stay productive."
       },
       "programmablePipelines": {
-        "title": "Orchestration-agnostic pipelines",
-        "description": "Airflow, Prefect, Temporal, and Dagster integrations. Declarative data contracts with Great Expectations. Auto-retry failed partitions with exponential backoff."
+        "title": "Data stays fresh automatically",
+        "description": "Upload data once or connect live sources. Schedule refreshes. Set up automatic updates. Your teams always work with current data without manual syncing."
       },
       "compliantCollaboration": {
-        "title": "SOC 2 + GDPR compliance",
-        "description": "Data residency policies (US, EU, APAC). Encryption at rest (AES-256) and in transit (TLS 1.3). Automated PII masking. Full audit logs with tamper-proof signing."
+        "title": "Full audit trail for every question",
+        "description": "Who asked what, when, and what data they accessed. Complete visibility for compliance reviews, security audits, and troubleshooting. Peace of mind for IT leaders."
       }
     },
     "secondary": {
-      "heading": "Real-time data activation",
-      "description": "Sub-3-second latency from source change to agent action. CDC pipelines with exactly-once delivery guarantees. 99.95% uptime SLA.",
+      "heading": "Real scenarios from real teams",
+      "description": "See how different teams use AI agents to multiply their impact.",
       "items": {
         "adaptiveGuardrails": {
-          "title": "Policy engine with versioning",
-          "description": "100+ pre-built policy templates. Test policies in shadow mode before enforcement. Automatic rollback on >5% error rate increase."
+          "title": "Marketing: Optimize spend mid-campaign",
+          "description": "Marketing manager asks 'Which campaigns have CPA above $50?' Identifies underperforming channels. Reallocates budget same day. Improves ROI without waiting for analytics team."
         },
         "explainableDecisions": {
-          "title": "Full execution traces",
-          "description": "Capture query plans, data versions, and model predictions. OpenTelemetry-compatible tracing. Reproduce any decision from the last 90 days."
+          "title": "Sales: Forecast accurately without spreadsheets",
+          "description": "Sales director asks 'What's our forecast for Q4 based on current pipeline?' Gets instant projection. Identifies coverage gaps. Adjusts hiring and territory plans proactively."
         },
         "lakehouseSignals": {
-          "title": "Operational metrics dashboard",
-          "description": "Track 47 SLIs: query latency (p50/p95/p99), data freshness, schema drift events, cost per query, agent success rates. Prometheus-compatible exports."
+          "title": "Finance: Close books in half the time",
+          "description": "Finance analyst queries revenue by segment, expenses by category, variances from budget. Generates reports instantly instead of spending days pulling data. Closes monthly faster."
         }
       }
     }
   },
   "architecture": {
-    "heading": "Three-layer architecture: ingest, govern, activate",
-    "description": "Horizontally scalable microservices. Kubernetes-native deployment. 50K+ events/sec per node. Auto-scaling based on queue depth + CPU utilization.",
+    "heading": "Simple for users, powerful for IT",
+    "description": "Business teams talk to AI agents. IT manages data governance. Platform handles everything in between.",
     "layers": {
       "dataIntegrationLayer": {
-        "title": "Ingestion layer (streaming + batch)",
-        "description": "Kafka, Kinesis, and Pub/Sub consumers. Debezium CDC for MySQL, Postgres, SQL Server. Parquet/ORC writers with Z-order clustering. 100GB/min sustained throughput."
+        "title": "Users: Just upload and ask",
+        "description": "Upload a spreadsheet. Ask a question in plain language. Get an answer explained in business terms. No training required. No SQL. No complex BI tools."
       },
       "semanticGovernanceLayer": {
-        "title": "Governance + catalog layer",
-        "description": "PostgreSQL-backed metastore. Redis cache for sub-10ms metadata lookups. Attribute-based policies evaluated at query time. Schema registry with Avro/Protobuf support."
+        "title": "IT: Set permissions once",
+        "description": "Define who accesses what data. Platform enforces rules automatically. Audit logs capture everything. Change permissions anytime. Security without manual intervention."
       },
       "agenticExecutionLayer": {
-        "title": "Agent runtime + orchestration",
-        "description": "Temporal for durable workflows. Claude 3.5 Sonnet with 128K context window. Vector store (Pinecone/Weaviate) for RAG. 4-second p95 response time for agent queries."
+        "title": "AI: Understand context, generate insights",
+        "description": "Agents learn your datasets and business terminology. Convert questions to queries. Validate data quality. Explain results clearly. Improve with every interaction."
       }
     }
   },
   "ai": {
-    "heading": "Production AI agents with 99.7% task success rate",
-    "description": "200+ agents deployed across customer tenants. 45K autonomous actions/day. Claude 3.5 Sonnet with custom fine-tuning on your data dictionary and business logic.",
+    "heading": "What your teams can do with AI agents",
+    "description": "Real capabilities that transform how teams work with data.",
     "items": {
       "insightCopilots": {
-        "title": "SQL-to-insight agents",
-        "description": "Generate executive summaries from 10M+ row datasets in <30 seconds. Automatic anomaly detection with 92% precision. Natural language explanations for every metric change."
+        "title": "Ask questions in plain language",
+        "description": "No SQL. No formulas. Just ask like you're talking to a colleague: 'Show me Q3 revenue by product line' or 'Which customers are at risk of churning?' Agents understand business language."
       },
       "composableSkills": {
-        "title": "Skill library (35+ pre-built)",
-        "description": "SQL query generation (99.7% syntax accuracy), Python code execution (sandboxed), REST API calls, dbt model runs, Slack/email notifications, Salesforce record updates."
+        "title": "Get analyses, not just numbers",
+        "description": "Agents don't just return data. They calculate trends, identify anomalies, compare time periods, and explain what changed. Turn data into actionable insights automatically."
       },
       "closedLoopActuators": {
-        "title": "Bidirectional SaaS sync",
-        "description": "Write back to Salesforce, Jira, HubSpot, NetSuite in <5 seconds. Conflict resolution with last-write-wins or custom merge strategies. Full changelog for compliance audits."
+        "title": "Schedule reports, automate workflows",
+        "description": "Create standing reports: 'Send weekly sales summary every Monday.' Set up alerts: 'Notify me if churn rate exceeds 5%.' Agents work continuously, not just when asked."
       }
     }
   },
   "roadmap": {
-    "heading": "Product roadmap (Q1-Q2 2025)",
-    "subtitle": "85% of features ship within 30 days of planned release date. Public changelog with bi-weekly updates.",
+    "heading": "What we're building next",
+    "subtitle": "Features designed to give your teams even more power.",
     "items": {
       "marketplaceConnectors": {
-        "title": "Connector marketplace (Q1 2025)",
-        "description": "50+ community-contributed connectors: MongoDB, Elasticsearch, ClickHouse, Stripe, Shopify. One-click deployment via Terraform modules."
+        "title": "Connect more data sources",
+        "description": "Beyond spreadsheets: Direct connections to your CRM, marketing platforms, financial systems. Pull data automatically instead of manual exports. Keep everything synchronized."
       },
       "adaptiveGovernanceAi": {
-        "title": "ML-powered policy suggestions (Q1 2025)",
-        "description": "Analyze 90 days of access patterns and suggest least-privilege policies. Reduce over-permissioned users by 60% on average. Automated policy testing with synthetic queries."
+        "title": "Smarter data security",
+        "description": "Automatic detection of sensitive data. Intelligent masking of PII. Dynamic policies that adapt to context. Less manual configuration, better protection."
       },
       "autonomousFinopsSuites": {
-        "title": "Cost optimization agents (Q2 2025)",
-        "description": "Auto-archive cold data (>180 days unused) to S3 Glacier. Detect duplicate materialized views. Predict compute costs 7 days ahead with 89% accuracy."
+        "title": "Handle larger datasets faster",
+        "description": "Query optimization for big data. Intelligent caching. Better performance as your data grows. Scale from gigabytes to terabytes without slowdowns."
       }
     }
   },
   "testimonials": {
-    "heading": "Customer results",
-    "subtitle": "Measured impact across 200+ production deployments",
+    "heading": "How teams multiply their impact",
+    "subtitle": "Real scenarios we've seen from organizations using this platform",
     "items": [
       {
-        "quote": "We reduced analyst wait time from 4.5 hours to 12 minutes for ad-hoc data requests. AgentProvision agents auto-validate queries, check data quality, and generate Looker dashboards—all without human intervention.",
-        "author": "Lina Cho",
-        "role": "VP of Data Platform, Pulse Health (Series C, 850 employees)"
+        "quote": "Before: Marketing team sent requests to data team, waited 2-3 days, got static reports that raised more questions. Now: Marketing asks AI agents directly, gets answers in seconds, iterates on analysis real-time. Campaign optimization happens daily instead of monthly.",
+        "author": "Marketing Team",
+        "role": "From reactive to proactive optimization"
       },
       {
-        "quote": "Our compliance team saved 22 hours/week by automating PII detection and access reviews. The platform flagged 847 over-permissioned accounts in the first week and auto-generated remediation tickets.",
-        "author": "Elias Grant",
-        "role": "Head of Data Governance, Nova Finance ($2.1B AUM)"
+        "quote": "Before: Finance spent first two weeks of every month gathering data, reconciling spreadsheets, generating reports. Now: AI agents handle data gathering automatically. Finance spends time on analysis and strategic planning. Monthly close happens in days, not weeks.",
+        "author": "Finance Team",
+        "role": "From data janitor to strategic advisor"
       }
     ]
   },
   "cta": {
-    "heading": "Start with a 2-week proof of concept",
-    "description": "Fixed-price POC: $15K. Deploy 3 production agents in 14 days. Full platform access. Cancel anytime if ROI targets aren't met."
+    "heading": "See what your team can do",
+    "description": "Try it with your own data. Upload a spreadsheet, create an agent, ask some questions. See if this gives your team superpowers. Most teams know within an hour whether this changes how they work."
   }
 }
