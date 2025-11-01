@@ -1,0 +1,346 @@
+/* Landing Page Enhanced Styles */
+
+/* Animated gradient background */
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Hero section enhancements */
+.hero-section {
+  min-height: 95vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  background-size: 200% 200%;
+  animation: gradientShift 15s ease infinite;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.25), transparent 40%),
+    radial-gradient(circle at 85% 10%, rgba(14, 165, 233, 0.20), transparent 45%),
+    radial-gradient(circle at 50% 80%, rgba(249, 115, 22, 0.15), transparent 50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Floating animation for hero spotlight */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.hero-spotlight {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Pulse animation for badges */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(14, 165, 233, 0);
+  }
+}
+
+.badge-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* Enhanced feature cards with tilt effect */
+.feature-card {
+  transform-style: preserve-3d;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.feature-card:hover {
+  transform: translateY(-12px) scale(1.02);
+}
+
+/* Logo badge hover effect */
+.logo-badge {
+  padding: 0.6rem 1.4rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.logo-badge:hover {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(99, 102, 241, 0.2);
+}
+
+/* Metric tiles enhanced animation */
+@keyframes metric-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.metric-tile {
+  animation: metric-reveal 0.6s ease-out backwards;
+}
+
+.metric-tile:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.metric-tile:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.metric-tile:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+/* Gradient text effect for headings */
+.gradient-text {
+  background: linear-gradient(135deg, #e0f2fe 0%, #c7d2fe 50%, #fde68a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Enhanced glass panel */
+.panel-glass {
+  position: relative;
+  overflow: hidden;
+}
+
+.panel-glass::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Icon pill enhanced with shimmer effect */
+.icon-pill,
+.icon-pill-sm {
+  position: relative;
+  overflow: hidden;
+}
+
+.icon-pill::after,
+.icon-pill-sm::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: rotate(45deg);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(45deg);
+  }
+}
+
+/* Testimonial card enhanced */
+.testimonial-card {
+  position: relative;
+  border-left: 3px solid var(--color-accent);
+  transition: all 0.4s ease;
+}
+
+.testimonial-card:hover {
+  border-left-color: var(--color-primary);
+  transform: translateX(8px);
+}
+
+/* CTA banner with animated gradient border */
+.cta-banner {
+  position: relative;
+  padding: 1px;
+  background: linear-gradient(135deg, #6366f1, #0ea5e9, #f97316);
+  background-size: 200% 200%;
+  animation: gradientShift 6s ease infinite;
+}
+
+.cta-banner-content {
+  background: rgba(5, 11, 26, 0.95);
+  border-radius: calc(var(--radius-lg) * 1.4);
+  padding: 3rem;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Section fade-in on scroll */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section-wrapper {
+  animation: fade-in-up 0.8s ease-out;
+}
+
+/* Button enhanced hover */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-primary:hover::before {
+  left: 100%;
+}
+
+/* Navbar shadow on scroll */
+.nav-dark.scrolled {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  background: rgba(5, 11, 26, 0.98) !important;
+}
+
+/* Loading state for language switch */
+.language-switch-loading {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Responsive improvements */
+@media (max-width: 991px) {
+  .hero-section {
+    min-height: auto;
+    padding: 4rem 0;
+  }
+
+  .section-wrapper {
+    padding: 3rem 0;
+  }
+
+  .display-2 {
+    font-size: 2.5rem !important;
+  }
+
+  .display-4 {
+    font-size: 2rem !important;
+  }
+
+  .display-5 {
+    font-size: 1.75rem !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-spotlight {
+    margin-top: 2rem;
+  }
+
+  .metric-tile {
+    text-align: center;
+  }
+
+  .feature-card {
+    text-align: center;
+  }
+
+  .icon-pill {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus states for accessibility */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* Print styles */
+@media print {
+  .nav-dark,
+  .footer,
+  .btn {
+    display: none !important;
+  }
+
+  .section-wrapper {
+    page-break-inside: avoid;
+  }
+}

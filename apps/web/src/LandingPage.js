@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Navbar, Nav, Button, Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -11,13 +11,25 @@ import {
   pipelineHighlights,
   architectureLayers,
 } from './components/marketing/data';
+import './LandingPage.css';
 
 const LandingPage = () => {
   const { t, i18n } = useTranslation(['common', 'landing']);
   const navigate = useNavigate();
+  const [scrolled, setScrolled] = useState(false);
+
   const goToLogin = React.useCallback(() => {
     navigate('/login');
   }, [navigate]);
+
+  // Handle navbar scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const currentLanguage = (i18n.language || 'en').split('-')[0];
   const languageOptions = useMemo(
@@ -107,7 +119,7 @@ const LandingPage = () => {
 
   return (
     <div>
-      <Navbar expand="lg" fixed="top" className="nav-dark py-3">
+      <Navbar expand="lg" fixed="top" className={`nav-dark py-3 ${scrolled ? 'scrolled' : ''}`}>
         <Container>
           <Navbar.Brand href="#hero" className="fw-semibold text-white">
             {t('common:brand')}
@@ -187,7 +199,7 @@ const LandingPage = () => {
         <section id="features" className="section-wrapper section-dark">
           <Container>
             <div className="text-center mb-5">
-              <h2 className="display-4 fw-bold section-heading">{t('landing:features.heading')}</h2>
+              <h2 className="display-4 fw-bold section-heading gradient-text">{t('landing:features.heading')}</h2>
               <p className="lead section-subtitle mt-3">{t('landing:features.subtitle')}</p>
             </div>
             <Row className="g-4">
@@ -303,7 +315,7 @@ const LandingPage = () => {
         <section id="roadmap" className="section-wrapper section-dark">
           <Container>
             <div className="text-center mb-5">
-              <h2 className="display-4 fw-bold text-white">{t('landing:roadmap.heading')}</h2>
+              <h2 className="display-4 fw-bold gradient-text">{t('landing:roadmap.heading')}</h2>
               <p className="section-subtitle">{t('landing:roadmap.subtitle')}</p>
             </div>
             <Row className="g-4">
@@ -324,18 +336,18 @@ const LandingPage = () => {
 
         <section id="stories" className="section-wrapper">
           <Container>
-            <div className="text-center mb-4">
-              <h2 className="display-5 fw-bold">{t('landing:testimonials.heading')}</h2>
-              <p className="text-muted fs-5">{t('landing:testimonials.subtitle')}</p>
+            <div className="text-center mb-5">
+              <h2 className="display-5 fw-bold gradient-text">{t('landing:testimonials.heading')}</h2>
+              <p className="text-soft fs-5 mt-3">{t('landing:testimonials.subtitle')}</p>
             </div>
             <Row className="g-4">
               {testimonials.map(({ quote, author, role }) => (
                 <Col md={6} key={author}>
-                  <div className="feature-card p-4 h-100">
-                    <p className="fs-5 text-contrast">“{quote}”</p>
-                    <div className="mt-4">
-                      <div className="fw-semibold text-white">{author}</div>
-                      <div className="text-soft">{role}</div>
+                  <div className="feature-card testimonial-card p-4 h-100">
+                    <p className="fs-5 text-contrast mb-4">"{quote}"</p>
+                    <div className="mt-auto">
+                      <div className="fw-semibold text-white fs-6">{author}</div>
+                      <div className="text-soft small mt-1">{role}</div>
                     </div>
                   </div>
                 </Col>
@@ -344,20 +356,22 @@ const LandingPage = () => {
           </Container>
         </section>
 
-        <section id="cta" className="section-wrapper section-highlight">
+        <section id="cta" className="section-wrapper">
           <Container>
-            <div className="cta-banner p-5 text-white text-center text-md-start shadow-lg">
-              <Row className="align-items-center">
-                <Col md={8}>
-                  <h2 className="display-5 fw-bold">{t('landing:cta.heading')}</h2>
-                  <p className="mt-3 mb-0 fs-5 text-contrast">{t('landing:cta.description')}</p>
-                </Col>
-                <Col md={4} className="mt-4 mt-md-0 text-md-end">
-                  <Button size="lg" className="px-5 py-3" onClick={goToLogin}>
-                    {t('common:cta.scheduleCall')}
-                  </Button>
-                </Col>
-              </Row>
+            <div className="cta-banner shadow-lg">
+              <div className="cta-banner-content text-white text-center text-md-start">
+                <Row className="align-items-center">
+                  <Col md={8}>
+                    <h2 className="display-5 fw-bold gradient-text">{t('landing:cta.heading')}</h2>
+                    <p className="mt-3 mb-0 fs-5 text-soft">{t('landing:cta.description')}</p>
+                  </Col>
+                  <Col md={4} className="mt-4 mt-md-0 text-md-end">
+                    <Button size="lg" className="px-5 py-3" onClick={goToLogin}>
+                      {t('common:cta.scheduleCall')}
+                    </Button>
+                  </Col>
+                </Row>
+              </div>
             </div>
           </Container>
         </section>
