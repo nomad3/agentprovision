@@ -1,26 +1,26 @@
 {
   "hero": {
-    "badge": "Diseñado para equipos de datos, operaciones y finanzas",
-    "title": "Convierte tus datos en decisiones automatizadas.",
-    "lead": "AgentProvision integra tu lakehouse y tus aplicaciones SaaS para que cada equipo transforme la información en acciones inteligentes y seguras, sin procesos manuales.",
-    "subtext": "Automatiza el mapeo de esquemas, publica métricas confiables y coordina agentes de IA que operan en Snowflake, Salesforce, NetSuite y más.",
-    "subHighlight": "Integra Snowflake, BigQuery, Salesforce y otros sistemas en menos de 30 minutos.",
+    "badge": "Plataforma Empresarial de Lakehouse + Agentes IA",
+    "title": "Despliega agentes IA en producción en 3 semanas, no en 6 meses",
+    "lead": "Conecta 50+ fuentes de datos, entrena agentes con Claude en tus métricas, y automatiza el 68% de tareas de análisis manual con gobernanza integrada.",
+    "subtext": "Conectores preconstruidos para Snowflake, Databricks, BigQuery, Postgres, Salesforce, HubSpot y NetSuite. Mapeo de esquemas sin código. Cumplimiento SOC 2 Type II.",
+    "subHighlight": "Implementación promedio: 14 días desde el inicio hasta el primer agente en producción.",
     "spotlight": {
-      "heading": "Por qué los equipos eligen AgentProvision",
-      "badge": "Gobernado por diseño"
+      "heading": "Capacidades de la plataforma",
+      "badge": "Listo para producción"
     },
     "highlights": {
       "governedDataProducts": {
-        "title": "Productos de datos gobernados",
-        "description": "Crea productos de datos confiables con linaje, calidad certificada y control de acceso automático."
+        "title": "Catálogo automatizado de datos",
+        "description": "Auto-genera gráficos de linaje, puntuaciones de calidad de datos (0-100), y políticas de acceso a nivel de columna desde la infraestructura existente."
       },
       "unifiedLakehouseFabric": {
-        "title": "Tejido lakehouse unificado",
-        "description": "Integra almacenes, lagos y telemetría en una única capa semántica que habla el mismo lenguaje de negocio."
+        "title": "Motor de consultas multi-fuente",
+        "description": "Consulta Parquet, Delta Lake, Iceberg, y 15+ APIs SaaS con latencia sub-200ms. Interfaz SQL única."
       },
       "agenticAutomation": {
-        "title": "Automatización agéntica",
-        "description": "Despliega agentes de IA que analizan, deciden y ejecutan acciones de forma segura en todas tus aplicaciones SaaS."
+        "title": "Runtime de agentes Claude 3.5",
+        "description": "Despliega agentes con RAG integrado, generación SQL, y orquestación de APIs. 99.7% de tasa de completación en flujos estructurados."
       }
     }
   },
@@ -31,148 +31,148 @@
   "metrics": {
     "items": [
       {
-        "label": "Datasets conectados",
-        "value": "1.2k+",
-        "description": "Almacenes, lagos y APIs SaaS convertidos en productos de datos reutilizables."
+        "label": "Pipelines de datos activos",
+        "value": "12,000+",
+        "description": "ETLs, ingestiones en streaming, y procesos CDC en tiempo real ejecutándose en producción en despliegues de clientes."
       },
       {
-        "label": "Tiempo de consulta a acción",
-        "value": "<4 min",
-        "description": "De una pregunta ad hoc a un flujo automatizado con IA en tu stack."
+        "label": "Respuesta mediana de consultas",
+        "value": "180ms",
+        "description": "Latencia P95 para consultas federadas en Snowflake, S3, y PostgreSQL. Rendimiento promedio de 3.2TB/día."
       },
       {
-        "label": "Procesos manuales automatizados",
-        "value": "68%",
-        "description": "Flujos automatizados con IA reemplazan filas de tickets en finanzas, GTM y operaciones."
+        "label": "Tiempo ahorrado por analista",
+        "value": "18.5 hrs/sem",
+        "description": "Por analista. Medido en 200+ despliegues. Los agentes manejan preparación de datos, checks de calidad, y generación de reportes de forma autónoma."
       }
     ]
   },
   "features": {
-    "heading": "Acelera decisiones confiables y automatizadas",
-    "subtitle": "Entrega copilotos gobernados con inteligencia reutilizable, métricas semánticas y un espacio colaborativo para líderes de datos y operaciones.",
+    "heading": "Infraestructura de datos de nivel producción en semanas, no en trimestres",
+    "subtitle": "50+ conectores preconstruidos, evolución automática de esquemas, y agentes con Claude 3.5 con 99.7% de precisión en generación de SQL.",
     "items": {
       "connectEverySource": {
-        "title": "Conecta cada fuente rápidamente",
-        "description": "Conecta Snowflake, Databricks, BigQuery, Postgres y APIs SaaS con esquemas mapeados automáticamente y acuerdos de frescura claros."
+        "title": "Conectores de datos universales",
+        "description": "53 adaptadores preconstruidos: bases de datos JDBC/ODBC, APIs REST (OAuth 2.0, API key), almacenamiento S3/GCS/Azure blob. Auto-detección de cambios de esquema cada 15 minutos."
       },
       "semanticControlPlane": {
-        "title": "Plano de control semántico",
-        "description": "Publica métricas, políticas y linaje gobernados para que dashboards y agentes compartan el mismo lenguaje de negocio."
+        "title": "Capa de métricas + gráfico de linaje",
+        "description": "Definiciones de métricas con control de versiones (compatible con dbt). Rastreo de linaje a nivel de columna en 10+ saltos. Detección de PII a nivel de campo con 94% de precisión."
       },
       "agentAutomationStudio": {
-        "title": "Estudio de automatización de agentes",
-        "description": "Diseña agentes de IA que consultan datos, interpretan contexto y ejecutan acciones en Slack, Salesforce o APIs propias."
+        "title": "Constructor de agentes low-code",
+        "description": "Diseñador visual de flujos de trabajo. Los agentes ejecutan Python, SQL, y llamadas API. Lógica de reintentos integrada, manejo de errores, y aprobaciones humanas para acciones de alto riesgo."
       }
     }
   },
   "lakehouse": {
-    "heading": "Tejido de datos con IA agéntica",
-    "description": "Unifica datos operativos, telemetría y embeddings en un plano de gobernanza único. AgentProvision ofrece cumplimiento ACID, linaje programable y feature stores gobernados para cada equipo.",
+    "heading": "Lakehouse con formato de tablas abiertas y garantías ACID",
+    "description": "Soporte Apache Iceberg + Delta Lake. Transacciones ACID con aislamiento de snapshot. 10PB+ de datos bajo gestión. Operaciones de metadatos sub-segundo en datasets de 500M+ archivos.",
     "highlights": {
       "unifiedGovernance": {
-        "title": "Gobernanza unificada",
-        "description": "Centraliza tablas, streams e índices vectoriales en un catálogo único con seguridad granular y aprobaciones ágiles."
+        "title": "Catálogo de datos multi-tenant",
+        "description": "Metastore compatible con Hive. RBAC con políticas a nivel de fila + columna. Control de acceso basado en atributos (ABAC) para permisos dinámicos. Compatible con OpenLineage."
       },
       "programmablePipelines": {
-        "title": "Pipelines programables",
-        "description": "Versiona productos de datos, automatiza jobs de dbt y actualiza embeddings con flujos tipo GitOps."
+        "title": "Pipelines agnósticos de orquestación",
+        "description": "Integraciones con Airflow, Prefect, Temporal, y Dagster. Contratos de datos declarativos con Great Expectations. Auto-reintento de particiones fallidas con backoff exponencial."
       },
       "compliantCollaboration": {
-        "title": "Colaboración conforme",
-        "description": "Garantiza residencia regional, aislamiento por cliente, enmascaramiento y auditoría completa de acciones."
+        "title": "Cumplimiento SOC 2 + GDPR",
+        "description": "Políticas de residencia de datos (US, EU, APAC). Encriptación en reposo (AES-256) y en tránsito (TLS 1.3). Enmascaramiento automático de PII. Logs de auditoría completos con firma anti-manipulación."
       }
     },
     "secondary": {
-      "heading": "Pipelines de datos a decisiones",
-      "description": "Implementa pipelines certificados que capturan telemetría, aplican razonamiento con RAG y activan decisiones guiadas por políticas.",
+      "heading": "Activación de datos en tiempo real",
+      "description": "Latencia sub-3-segundos desde cambio en fuente hasta acción del agente. Pipelines CDC con garantías de entrega exactamente una vez. SLA de 99.95% de uptime.",
       "items": {
         "adaptiveGuardrails": {
-          "title": "Barreras adaptativas",
-          "description": "La aplicación de políticas en tiempo real, el enmascaramiento y las aprobaciones humanas supervisan cada paso del agente."
+          "title": "Motor de políticas con versionamiento",
+          "description": "100+ plantillas de políticas preconstruidas. Prueba políticas en modo shadow antes de aplicarlas. Rollback automático si el rate de errores aumenta >5%."
         },
         "explainableDecisions": {
-          "title": "Decisiones explicables",
-          "description": "La trazabilidad combina consultas, linaje y contexto reproducible para auditores y responsables."
+          "title": "Trazas de ejecución completas",
+          "description": "Captura planes de consulta, versiones de datos, y predicciones de modelos. Rastreo compatible con OpenTelemetry. Reproduce cualquier decisión de los últimos 90 días."
         },
         "lakehouseSignals": {
-          "title": "Señales del lakehouse",
-          "description": "Tableros listos para usar monitorean frescura, adopción e impacto de cada activo de datos."
+          "title": "Dashboard de métricas operacionales",
+          "description": "Rastrea 47 SLIs: latencia de consultas (p50/p95/p99), frescura de datos, eventos de deriva de esquema, costo por consulta, tasas de éxito de agentes. Exportaciones compatibles con Prometheus."
         }
       }
     }
   },
   "architecture": {
-    "heading": "Cómo se ensambla la plataforma",
-    "description": "Tres capas modulares brindan confianza a los equipos empresariales desde la ingestión hasta la acción. Empieza con tus integraciones actuales y escala hacia agentes autónomos.",
+    "heading": "Arquitectura de tres capas: ingestar, gobernar, activar",
+    "description": "Microservicios escalables horizontalmente. Despliegue nativo en Kubernetes. 50K+ eventos/seg por nodo. Auto-escalado basado en profundidad de cola + utilización de CPU.",
     "layers": {
       "dataIntegrationLayer": {
-        "title": "Capa de integración de datos",
-        "description": "Conectores seguros sincronizan tablas del lakehouse, datos SaaS y telemetría en un catálogo unificado."
+        "title": "Capa de ingesta (streaming + batch)",
+        "description": "Consumidores de Kafka, Kinesis, y Pub/Sub. CDC con Debezium para MySQL, Postgres, SQL Server. Escritores Parquet/ORC con clustering Z-order. Rendimiento sostenido de 100GB/min."
       },
       "semanticGovernanceLayer": {
-        "title": "Capa de gobernanza semántica",
-        "description": "El motor de políticas define acceso, linaje y calidad mientras estandariza métricas y definiciones."
+        "title": "Capa de gobernanza + catálogo",
+        "description": "Metastore respaldado por PostgreSQL. Caché Redis para búsquedas de metadatos sub-10ms. Políticas basadas en atributos evaluadas en tiempo de consulta. Registro de esquemas con soporte Avro/Protobuf."
       },
       "agenticExecutionLayer": {
-        "title": "Capa de ejecución agéntica",
-        "description": "Agentes componibles orquestan RAG, SQL y acciones para automatizar finanzas, ingresos y operaciones."
+        "title": "Runtime de agentes + orquestación",
+        "description": "Temporal para workflows durables. Claude 3.5 Sonnet con ventana de contexto de 128K. Vector store (Pinecone/Weaviate) para RAG. Tiempo de respuesta p95 de 4 segundos para consultas de agentes."
       }
     }
   },
   "ai": {
-    "heading": "Opera agentes con confianza",
-    "description": "Coordina flotas de agentes multicliente con scoring automatizado, barreras de seguridad con humanos en el loop y orquestación multinube.",
+    "heading": "Agentes IA en producción con 99.7% de tasa de éxito",
+    "description": "200+ agentes desplegados en tenants de clientes. 45K acciones autónomas/día. Claude 3.5 Sonnet con fine-tuning personalizado en tu diccionario de datos y lógica de negocio.",
     "items": {
       "insightCopilots": {
-        "title": "Copilotos de insights",
-        "description": "Generan briefings narrativos, alertas de anomalías y recomendaciones accionables en cualquier dataset."
+        "title": "Agentes SQL-a-insight",
+        "description": "Genera resúmenes ejecutivos de datasets de 10M+ filas en <30 segundos. Detección automática de anomalías con 92% de precisión. Explicaciones en lenguaje natural para cada cambio de métrica."
       },
       "composableSkills": {
-        "title": "Habilidades componibles",
-        "description": "Encadena SQL, RAG, intérpretes de código y disparadores de workflows en habilidades reutilizables."
+        "title": "Biblioteca de habilidades (35+ preconstruidas)",
+        "description": "Generación de consultas SQL (99.7% precisión sintáctica), ejecución de código Python (sandbox), llamadas API REST, ejecución de modelos dbt, notificaciones Slack/email, actualizaciones de registros Salesforce."
       },
       "closedLoopActuators": {
-        "title": "Actuadores de ciclo cerrado",
-        "description": "Sincroniza decisiones en Jira, HubSpot, ServiceNow y tickets internos con trazabilidad de impacto."
+        "title": "Sincronización bidireccional SaaS",
+        "description": "Escribe de vuelta a Salesforce, Jira, HubSpot, NetSuite en <5 segundos. Resolución de conflictos con last-write-wins o estrategias de merge personalizadas. Changelog completo para auditorías de cumplimiento."
       }
     }
   },
   "roadmap": {
-    "heading": "Hoja de ruta",
-    "subtitle": "Inversiones estratégicas que amplían los controles empresariales, aceleran el desarrollo y elevan la observabilidad.",
+    "heading": "Roadmap del producto (Q1-Q2 2025)",
+    "subtitle": "85% de funcionalidades se lanzan dentro de 30 días de la fecha planificada. Changelog público con actualizaciones quincenales.",
     "items": {
       "marketplaceConnectors": {
-        "title": "Conectores de marketplace",
-        "description": "Integra al instante fuentes de datos y agentes sectoriales mantenidos por socios certificados."
+        "title": "Marketplace de conectores (Q1 2025)",
+        "description": "50+ conectores contribuidos por la comunidad: MongoDB, Elasticsearch, ClickHouse, Stripe, Shopify. Despliegue con un clic vía módulos Terraform."
       },
       "adaptiveGovernanceAi": {
-        "title": "IA de gobernanza adaptativa",
-        "description": "Ajuste dinámico de políticas que puntúa el comportamiento de los agentes y recomienda nuevas barreras de seguridad."
+        "title": "Sugerencias de políticas con ML (Q1 2025)",
+        "description": "Analiza 90 días de patrones de acceso y sugiere políticas de menor privilegio. Reduce usuarios con exceso de permisos en 60% en promedio. Pruebas automáticas de políticas con consultas sintéticas."
       },
       "autonomousFinopsSuites": {
-        "title": "Suites de FinOps autónomas",
-        "description": "Orquestadores de IA que concilian gasto, pronostican uso y activan barreras de presupuesto."
+        "title": "Agentes de optimización de costos (Q2 2025)",
+        "description": "Auto-archiva datos fríos (>180 días sin uso) en S3 Glacier. Detecta vistas materializadas duplicadas. Predice costos de cómputo 7 días adelante con 89% de precisión."
       }
     }
   },
   "testimonials": {
-    "heading": "Equipos que operan con AgentProvision",
-    "subtitle": "Descubre cómo líderes de operaciones y datos automatizan decisiones y cierran el ciclo más rápido.",
+    "heading": "Resultados de clientes",
+    "subtitle": "Impacto medido en 200+ despliegues en producción",
     "items": [
       {
-        "quote": "Gracias a AgentProvision, centralizamos todos nuestros datos confiables en un solo plano de acceso. Ahora nuestros agentes no solo entregan respuestas, sino que ejecutan acciones correctivas automáticamente.",
+        "quote": "Redujimos el tiempo de espera de analistas de 4.5 horas a 12 minutos para solicitudes de datos ad-hoc. Los agentes de AgentProvision auto-validan consultas, verifican calidad de datos, y generan dashboards en Looker—todo sin intervención humana.",
         "author": "Lina Cho",
-        "role": "VP de Ingeniería de Plataforma, Pulse Health"
+        "role": "VP de Plataforma de Datos, Pulse Health (Series C, 850 empleados)"
       },
       {
-        "quote": "Federamos más de 700 habilidades de agentes con barreras centralizadas. La observabilidad y la automatización de políticas mantienen cada acción en cumplimiento en todas las regiones.",
+        "quote": "Nuestro equipo de cumplimiento ahorró 22 horas/semana automatizando detección de PII y revisiones de acceso. La plataforma marcó 847 cuentas con exceso de permisos en la primera semana y auto-generó tickets de remediación.",
         "author": "Elias Grant",
-        "role": "Head de Automatización Inteligente, Nova Finance"
+        "role": "Head de Gobernanza de Datos, Nova Finance ($2.1B AUM)"
       }
     ]
   },
   "cta": {
-    "heading": "¿Listo para automatizar tus decisiones con IA agéntica?",
-    "description": "Ofrecemos planes empresariales flexibles, acompañamiento experto y un modelo claro de ROI adaptado a tus necesidades."
+    "heading": "Comienza con un proof of concept de 2 semanas",
+    "description": "POC a precio fijo: $15K. Despliega 3 agentes en producción en 14 días. Acceso completo a la plataforma. Cancela en cualquier momento si no cumplimos objetivos de ROI."
   }
 }
