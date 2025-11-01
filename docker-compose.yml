@@ -34,4 +34,4 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=agentprovision
     ports:
-      - "${DB_PORT}:5432"
+      - "${DB_PORT:-8003}:5432"
