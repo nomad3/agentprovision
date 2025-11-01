@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Navbar, Nav, Button, Dropdown } from 'react-
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import HeroSection from './components/marketing/HeroSection';
+import AnimatedSection from './components/common/AnimatedSection';
 import {
   lakehouseHighlights,
   aiHighlights,
@@ -165,14 +166,23 @@ const LandingPage = () => {
 
         <section id="logos" className="section-thin">
           <Container>
-            <div className="d-flex flex-wrap justify-content-center align-items-center gap-3 text-uppercase text-soft">
-              <span className="fw-semibold me-2">{t('landing:logos.heading')}</span>
-              {logos.map((name) => (
-                <span key={name} className="logo-badge">
-                  {name}
-                </span>
-              ))}
-            </div>
+            <AnimatedSection animation="fade-in">
+              <div className="d-flex flex-wrap justify-content-center align-items-center gap-3 text-uppercase text-soft">
+                <span className="fw-semibold me-2">{t('landing:logos.heading')}</span>
+                {logos.map((name, index) => (
+                  <AnimatedSection
+                    key={name}
+                    animation="scale-up"
+                    delay={100 * index}
+                    className="d-inline-block"
+                  >
+                    <span className="logo-badge">
+                      {name}
+                    </span>
+                  </AnimatedSection>
+                ))}
+              </div>
+            </AnimatedSection>
           </Container>
         </section>
 
@@ -180,15 +190,20 @@ const LandingPage = () => {
           <Container>
             {metricsChunks.map((group, index) => (
               <Row className="g-4 justify-content-center" key={`metrics-${index}`}>
-                {group.map((metric) => (
+                {group.map((metric, metricIndex) => (
                   <Col md={4} key={metric.label}>
-                    <div className="metric-tile h-100">
-                      <div className="text-uppercase text-sm text-soft fw-semibold tracking-wide">
-                        {metric.label}
+                    <AnimatedSection
+                      animation="slide-up"
+                      delay={metricIndex * 150}
+                    >
+                      <div className="metric-tile h-100">
+                        <div className="text-uppercase text-sm text-soft fw-semibold tracking-wide">
+                          {metric.label}
+                        </div>
+                        <h3 className="display-5 fw-bold mt-2 mb-3">{metric.value}</h3>
+                        <p className="text-contrast mb-0">{metric.description}</p>
                       </div>
-                      <h3 className="display-5 fw-bold mt-2 mb-3">{metric.value}</h3>
-                      <p className="text-contrast mb-0">{metric.description}</p>
-                    </div>
+                    </AnimatedSection>
                   </Col>
                 ))}
               </Row>
@@ -198,20 +213,24 @@ const LandingPage = () => {
 
         <section id="features" className="section-wrapper section-dark">
           <Container>
-            <div className="text-center mb-5">
-              <h2 className="display-4 fw-bold section-heading gradient-text">{t('landing:features.heading')}</h2>
-              <p className="lead section-subtitle mt-3">{t('landing:features.subtitle')}</p>
-            </div>
+            <AnimatedSection animation="fade-in">
+              <div className="text-center mb-5">
+                <h2 className="display-4 fw-bold section-heading gradient-text">{t('landing:features.heading')}</h2>
+                <p className="lead section-subtitle mt-3">{t('landing:features.subtitle')}</p>
+              </div>
+            </AnimatedSection>
             <Row className="g-4">
-              {featureItems.map(({ key, Icon, title, description }) => (
+              {featureItems.map(({ key, Icon, title, description }, index) => (
                 <Col md={4} key={key}>
-                  <Card className="feature-card h-100 p-4 border-0">
-                    <div className="icon-pill">
-                      <Icon size={28} />
-                    </div>
-                    <Card.Title className="text-white fw-semibold fs-4">{title}</Card.Title>
-                    <Card.Text className="text-soft mt-3">{description}</Card.Text>
-                  </Card>
+                  <AnimatedSection animation="scale-up" delay={index * 100}>
+                    <Card className="feature-card h-100 p-4 border-0">
+                      <div className="icon-pill">
+                        <Icon size={28} />
+                      </div>
+                      <Card.Title className="text-white fw-semibold fs-4">{title}</Card.Title>
+                      <Card.Text className="text-soft mt-3">{description}</Card.Text>
+                    </Card>
+                  </AnimatedSection>
                 </Col>
               ))}
             </Row>
@@ -222,7 +241,8 @@ const LandingPage = () => {
           <Container>
             <Row className="g-5 align-items-center">
               <Col lg={6}>
-                <div className="panel-glass p-5">
+                <AnimatedSection animation="slide-left">
+                  <div className="panel-glass p-5">
                   <h2 className="display-5 fw-bold text-white">{t('landing:lakehouse.heading')}</h2>
                   <p className="text-light mt-3">{t('landing:lakehouse.description')}</p>
                   <div className="gradient-divider my-4" />
@@ -237,10 +257,12 @@ const LandingPage = () => {
                       </div>
                     </div>
                   ))}
-                </div>
+                  </div>
+                </AnimatedSection>
               </Col>
               <Col lg={6}>
-                <div className="glass-card">
+                <AnimatedSection animation="slide-right">
+                  <div className="glass-card">
                   <h3 className="fs-3 fw-semibold text-white">{t('landing:lakehouse.secondary.heading')}</h3>
                   <p className="text-soft">{t('landing:lakehouse.secondary.description')}</p>
                   <Row className="g-3 mt-4">
@@ -254,7 +276,8 @@ const LandingPage = () => {
                       </Col>
                     ))}
                   </Row>
-                </div>
+                  </div>
+                </AnimatedSection>
               </Col>
             </Row>
           </Container>
@@ -264,20 +287,24 @@ const LandingPage = () => {
           <Container>
             <Row className="g-5 align-items-center">
               <Col lg={5}>
-                <h2 className="display-5 fw-bold text-white">{t('landing:architecture.heading')}</h2>
-                <p className="text-soft mt-3">{t('landing:architecture.description')}</p>
+                <AnimatedSection animation="slide-left">
+                  <h2 className="display-5 fw-bold text-white">{t('landing:architecture.heading')}</h2>
+                  <p className="text-soft mt-3">{t('landing:architecture.description')}</p>
+                </AnimatedSection>
               </Col>
               <Col lg={7}>
                 <Row className="g-4">
-                  {architecture.map(({ key, Icon, title, description }) => (
+                  {architecture.map(({ key, Icon, title, description }, index) => (
                     <Col md={4} key={key}>
-                      <div className="feature-card h-100 p-4">
-                        <div className="icon-pill">
-                          <Icon size={26} />
+                      <AnimatedSection animation="slide-up" delay={index * 100}>
+                        <div className="feature-card h-100 p-4">
+                          <div className="icon-pill">
+                            <Icon size={26} />
+                          </div>
+                          <h5 className="text-white fw-semibold mt-2">{title}</h5>
+                          <p className="text-soft mb-0">{description}</p>
                         </div>
-                        <h5 className="text-white fw-semibold mt-2">{title}</h5>
-                        <p className="text-soft mb-0">{description}</p>
-                      </div>
+                      </AnimatedSection>
                     </Col>
                   ))}
                 </Row>
@@ -290,20 +317,24 @@ const LandingPage = () => {
           <Container>
             <Row className="g-5">
               <Col lg={5}>
-                <h2 className="display-5 fw-bold text-white">{t('landing:ai.heading')}</h2>
-                <p className="text-soft mt-3">{t('landing:ai.description')}</p>
+                <AnimatedSection animation="slide-left">
+                  <h2 className="display-5 fw-bold text-white">{t('landing:ai.heading')}</h2>
+                  <p className="text-soft mt-3">{t('landing:ai.description')}</p>
+                </AnimatedSection>
               </Col>
               <Col lg={7}>
                 <Row className="g-4">
-                  {aiItems.map(({ key, Icon, title, description }) => (
+                  {aiItems.map(({ key, Icon, title, description }, index) => (
                     <Col md={4} key={key}>
-                      <div className="feature-card h-100 p-4">
-                        <div className="icon-pill">
-                          <Icon size={26} />
+                      <AnimatedSection animation="scale-up" delay={index * 100}>
+                        <div className="feature-card h-100 p-4">
+                          <div className="icon-pill">
+                            <Icon size={26} />
+                          </div>
+                          <h5 className="text-white fw-semibold">{title}</h5>
+                          <p className="text-soft">{description}</p>
                         </div>
-                        <h5 className="text-white fw-semibold">{title}</h5>
-                        <p className="text-soft">{description}</p>
-                      </div>
+                      </AnimatedSection>
                     </Col>
                   ))}
                 </Row>
@@ -314,20 +345,24 @@ const LandingPage = () => {
 
         <section id="roadmap" className="section-wrapper section-dark">
           <Container>
-            <div className="text-center mb-5">
-              <h2 className="display-4 fw-bold gradient-text">{t('landing:roadmap.heading')}</h2>
-              <p className="section-subtitle">{t('landing:roadmap.subtitle')}</p>
-            </div>
+            <AnimatedSection animation="fade-in">
+              <div className="text-center mb-5">
+                <h2 className="display-4 fw-bold gradient-text">{t('landing:roadmap.heading')}</h2>
+                <p className="section-subtitle">{t('landing:roadmap.subtitle')}</p>
+              </div>
+            </AnimatedSection>
             <Row className="g-4">
-              {roadmap.map(({ key, Icon, title, description }) => (
+              {roadmap.map(({ key, Icon, title, description }, index) => (
                 <Col md={4} key={key}>
-                  <div className="feature-card h-100 p-4">
-                    <div className="icon-pill">
-                      <Icon size={26} />
+                  <AnimatedSection animation="rotate-in" delay={index * 150}>
+                    <div className="feature-card h-100 p-4">
+                      <div className="icon-pill">
+                        <Icon size={26} />
+                      </div>
+                      <h5 className="text-white fw-semibold">{title}</h5>
+                      <p className="text-contrast">{description}</p>
                     </div>
-                    <h5 className="text-white fw-semibold">{title}</h5>
-                    <p className="text-contrast">{description}</p>
-                  </div>
+                  </AnimatedSection>
                 </Col>
               ))}
             </Row>
@@ -336,20 +371,24 @@ const LandingPage = () => {
 
         <section id="stories" className="section-wrapper">
           <Container>
-            <div className="text-center mb-5">
-              <h2 className="display-5 fw-bold gradient-text">{t('landing:testimonials.heading')}</h2>
-              <p className="text-soft fs-5 mt-3">{t('landing:testimonials.subtitle')}</p>
-            </div>
+            <AnimatedSection animation="fade-in">
+              <div className="text-center mb-5">
+                <h2 className="display-5 fw-bold gradient-text">{t('landing:testimonials.heading')}</h2>
+                <p className="text-soft fs-5 mt-3">{t('landing:testimonials.subtitle')}</p>
+              </div>
+            </AnimatedSection>
             <Row className="g-4">
-              {testimonials.map(({ quote, author, role }) => (
+              {testimonials.map(({ quote, author, role }, index) => (
                 <Col md={6} key={author}>
-                  <div className="feature-card testimonial-card p-4 h-100">
-                    <p className="fs-5 text-contrast mb-4">"{quote}"</p>
-                    <div className="mt-auto">
-                      <div className="fw-semibold text-white fs-6">{author}</div>
-                      <div className="text-soft small mt-1">{role}</div>
+                  <AnimatedSection animation={index % 2 === 0 ? 'slide-left' : 'slide-right'} delay={index * 100}>
+                    <div className="feature-card testimonial-card p-4 h-100">
+                      <p className="fs-5 text-contrast mb-4">"{quote}"</p>
+                      <div className="mt-auto">
+                        <div className="fw-semibold text-white fs-6">{author}</div>
+                        <div className="text-soft small mt-1">{role}</div>
+                      </div>
                     </div>
-                  </div>
+                  </AnimatedSection>
                 </Col>
               ))}
             </Row>
@@ -358,21 +397,23 @@ const LandingPage = () => {
 
         <section id="cta" className="section-wrapper">
           <Container>
-            <div className="cta-banner shadow-lg">
-              <div className="cta-banner-content text-white text-center text-md-start">
-                <Row className="align-items-center">
-                  <Col md={8}>
-                    <h2 className="display-5 fw-bold gradient-text">{t('landing:cta.heading')}</h2>
-                    <p className="mt-3 mb-0 fs-5 text-soft">{t('landing:cta.description')}</p>
-                  </Col>
-                  <Col md={4} className="mt-4 mt-md-0 text-md-end">
-                    <Button size="lg" className="px-5 py-3" onClick={goToLogin}>
-                      {t('common:cta.scheduleCall')}
-                    </Button>
-                  </Col>
-                </Row>
+            <AnimatedSection animation="scale-up">
+              <div className="cta-banner shadow-lg">
+                <div className="cta-banner-content text-white text-center text-md-start">
+                  <Row className="align-items-center">
+                    <Col md={8}>
+                      <h2 className="display-5 fw-bold gradient-text">{t('landing:cta.heading')}</h2>
+                      <p className="mt-3 mb-0 fs-5 text-soft">{t('landing:cta.description')}</p>
+                    </Col>
+                    <Col md={4} className="mt-4 mt-md-0 text-md-end">
+                      <Button size="lg" className="px-5 py-3" onClick={goToLogin}>
+                        {t('common:cta.scheduleCall')}
+                      </Button>
+                    </Col>
+                  </Row>
+                </div>
               </div>
-            </div>
+            </AnimatedSection>
           </Container>
         </section>
       </main>
