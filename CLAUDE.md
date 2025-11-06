@@ -582,11 +582,12 @@ Demo workflow script: `scripts/run_demo_workflow.sh`
 
 ## Additional Documentation
 
-Detailed feature documentation available in root directory:
+**Active Feature Documentation:**
 - `LLM_INTEGRATION_README.md`: Claude AI integration setup and usage
 - `CONTEXT_MANAGEMENT_README.md`: Conversation memory and token management
 - `TOOL_FRAMEWORK_README.md`: Agent tool execution framework
 - `DATABRICKS_SYNC_README.md`: Automatic dataset sync to Databricks Unity Catalog
-- `AGENTPROVISION_MCP_INTEGRATION.md`: MCP server and Databricks integration architecture
-- `DATABRICKS_INTEGRATION_PLAN.md`: Databricks integration planning
-- `UX_REDESIGN_PLAN.md`: UI/UX design specifications
+
+**Planning & Design Documents:**
+- `docs/plans/`: Implementation plans and design documents
+- `docs/archive/`: Legacy planning docs and historical test results
