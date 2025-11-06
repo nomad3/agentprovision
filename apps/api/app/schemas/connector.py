@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import uuid
 
 class ConnectorBase(BaseModel):
@@ -7,7 +7,7 @@ class ConnectorBase(BaseModel):
     config: dict
     type: str
     n8n_workflow_id: str | None = None
-    schema: dict | None = None # Add schema field
+    schema_: dict | None = Field(None, alias="schema")  # Use alias to avoid shadowing BaseModel.schema
 
 class ConnectorCreate(ConnectorBase):
     pass
@@ -21,3 +21,4 @@ class Connector(ConnectorBase):
 
     class Config:
         from_attributes = True
+        populate_by_name = True  # Allow both schema_ and schema to be used

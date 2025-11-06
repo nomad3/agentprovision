@@ -5,7 +5,8 @@ from sqlalchemy.orm import sessionmaker
 
 from app.main import app
 from app.db.base import Base
-from app.db.session import get_db, SessionLocal, engine
+from app.db.session import SessionLocal, engine
+from app.api.deps import get_db
 from app.core.config import settings
 import os
 import uuid

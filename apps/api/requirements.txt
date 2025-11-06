@@ -16,3 +16,5 @@ duckdb
 pyarrow
 temporalio
 anthropic
+pytest
+pytest-asyncio

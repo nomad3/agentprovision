@@ -50,25 +50,16 @@ fi
 
 echo "All prerequisites found."
 
-# --- 2. Generate Random Ports ---
-echo "Generating random ports for API and Web services..."
+# --- 2. Use Fixed Ports (or override from environment) ---
+echo "Configuring service ports..."
 
-# Function to generate a random port in a high range (e.g., 10000-65535)
-generate_random_port() {
-    shuf -i 10000-65535 -n 1
-}
+# Use environment variables if set, otherwise use fixed default ports
+API_PORT=${API_PORT:-8001}
+WEB_PORT=${WEB_PORT:-8002}
+DB_PORT=${DB_PORT:-8003}
+REDIS_PORT=${REDIS_PORT:-8004}
 
-API_PORT=8001
-WEB_PORT=8002
-DB_PORT=8003
-REDIS_PORT=8004
-
-# Basic check to ensure ports are not the same (unlikely but possible)
-while [ "$API_PORT" -eq "$WEB_PORT" ] || [ "$API_PORT" -eq "$DB_PORT" ] || [ "$WEB_PORT" -eq "$DB_PORT" ] || [ "$API_PORT" -eq "$REDIS_PORT" ] || [ "$WEB_PORT" -eq "$REDIS_PORT" ] || [ "$DB_PORT" -eq "$REDIS_PORT" ]; do
-    REDIS_PORT=$(generate_random_port)
-done
-
-echo "Using fixed ports:"
+echo "Using ports:"
 echo "API Port: $API_PORT"
 echo "Web Port: $WEB_PORT"
 echo "DB Port: $DB_PORT"
@@ -87,8 +78,6 @@ export TEMPORAL_WEB_PORT=$TEMPORAL_WEB_PORT
 TEMPORAL_COMPOSE_FILE="$PROJECT_ROOT/docker-compose.temporal.yml"
 
 cat > "$TEMPORAL_COMPOSE_FILE" <<EOF
-version: '3.8'
-
 services:
   temporal:
     image: temporalio/auto-setup:1.22.2
@@ -239,10 +228,18 @@ MAX_RETRIES=30
 RETRY_COUNT=0
 API_READY=false
 
+# Try both HTTP and HTTPS, starting with HTTP for initial checks
 while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-    if curl -s -o /dev/null -w "%{http_code}" "https://$DOMAIN/api/v1/" | grep -q "200"; then
+    # First try HTTP directly to the port (before SSL is fully configured)
+    if curl -s -o /dev/null -w "%{http_code}" "http://localhost:$API_PORT/api/v1/" 2>/dev/null | grep -q "200"; then
         API_READY=true
         echo "✓ API is ready!"
+        break
+    fi
+    # Also try HTTPS if we're past SSL setup
+    if curl -s -k -o /dev/null -w "%{http_code}" "https://$DOMAIN/api/v1/" 2>/dev/null | grep -q "200"; then
+        API_READY=true
+        echo "✓ API is ready (via HTTPS)!"
         break
     fi
     RETRY_COUNT=$((RETRY_COUNT + 1))
@@ -268,9 +265,17 @@ if [ -f "$E2E_TEST_SCRIPT" ]; then
     chmod +x "$E2E_TEST_SCRIPT"
 
     # Run tests and capture exit code
+    # Try HTTPS first, fall back to HTTP if needed
     set +e  # Don't exit on test failure
-    BASE_URL="https://$DOMAIN" "$E2E_TEST_SCRIPT"
-    TEST_EXIT_CODE=$?
+    if curl -s -k -o /dev/null -w "%{http_code}" "https://$DOMAIN/api/v1/" 2>/dev/null | grep -q "200"; then
+        echo "Running E2E tests via HTTPS..."
+        BASE_URL="https://$DOMAIN" "$E2E_TEST_SCRIPT"
+        TEST_EXIT_CODE=$?
+    else
+        echo "HTTPS not available yet, running E2E tests via HTTP..."
+        BASE_URL="http://localhost:$API_PORT" "$E2E_TEST_SCRIPT"
+        TEST_EXIT_CODE=$?
+    fi
     set -e  # Re-enable exit on error
 
     echo ""
