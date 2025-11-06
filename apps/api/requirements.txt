@@ -7,7 +7,6 @@ bcrypt<4
 python-jose
 SQLAlchemy
 psycopg2-binary
-asyncpg
 python-multipart
 requests
 httpx
