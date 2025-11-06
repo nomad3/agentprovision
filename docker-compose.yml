@@ -33,3 +33,14 @@ services:
       - POSTGRES_DB=agentprovision
     ports:
       - "${DB_PORT:-8003}:5432"
+
+  databricks-worker:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    command: python -m app.workers.databricks_worker
+    env_file:
+      - ./apps/api/.env
+    depends_on:
+      - db
+    restart: unless-stopped
