@@ -62,6 +62,15 @@ This is a **Turborepo monorepo** managed with `pnpm` workspaces:
 
 **Temporal workflows**: The platform integrates Temporal for durable workflow execution. Workflow service located at `apps/api/app/services/workflows.py`. Configuration via `TEMPORAL_ADDRESS` and `TEMPORAL_NAMESPACE` environment variables.
 
+**Databricks Integration**: Datasets automatically sync to Databricks Unity Catalog via MCP server using Temporal workflows:
+- Bronze layer: External table pointing to Parquet file
+- Silver layer: Managed table with type inference and data cleaning
+- Asynchronous sync with automatic retry logic (3 attempts, 5-minute intervals)
+- Multi-tenant isolation via Unity Catalog per-tenant catalogs
+- Status tracking in dataset metadata (`sync_status`: pending/syncing/synced/failed)
+- Graceful degradation: Local DuckDB always available, Databricks is additive
+- See `DATABRICKS_SYNC_README.md` for detailed documentation
+
 ## Development Commands
 
 ### Initial Setup
@@ -577,6 +586,7 @@ Detailed feature documentation available in root directory:
 - `LLM_INTEGRATION_README.md`: Claude AI integration setup and usage
 - `CONTEXT_MANAGEMENT_README.md`: Conversation memory and token management
 - `TOOL_FRAMEWORK_README.md`: Agent tool execution framework
+- `DATABRICKS_SYNC_README.md`: Automatic dataset sync to Databricks Unity Catalog
 - `AGENTPROVISION_MCP_INTEGRATION.md`: MCP server and Databricks integration architecture
 - `DATABRICKS_INTEGRATION_PLAN.md`: Databricks integration planning
 - `UX_REDESIGN_PLAN.md`: UI/UX design specifications

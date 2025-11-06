@@ -103,12 +103,31 @@ Tests expect n8n to expose `http://localhost:5678/rest/health` and the API at `h
 - To inspect the seeded database, connect to the Postgres container (`docker-compose exec db psql -U postgres agentprovision`).
 - Customize tenant seed data in `apps/api/app/db/init_db.py` or extend models/services for additional resources (workflows, cost policies, etc.).
 
-## Roadmap ideas
+## Roadmap
 
-- Integrate OAuth/SAML SSO providers (e.g., Okta, Azure AD).
-- Add agent creation wizards, evaluation dashboards, and LangGraph visual editor.
-- Expand observability: connect OpenTelemetry traces to Grafana dashboards, expose FinOps insights via cost APIs.
-- Automate deployments with GitHub Actions to a managed environment (EKS/GKE) using the Terraform modules.
+### Completed
+
+- **Databricks Unity Catalog Integration**: Automatic dataset synchronization to Bronze and Silver layers with Temporal workflow orchestration
+- Multi-tenant JWT authentication and authorization
+- Real-time analytics dashboard with live platform metrics
+- Conversation context and memory management for AI chat
+- Tool execution framework for agents (SQL Query, Calculator, Data Summary)
+- Claude AI integration for intelligent chat responses
+- Dataset management with CSV/Excel upload, Parquet storage, and DuckDB querying
+
+### In Progress
+
+- Query federation (cross-system queries)
+- Agent creation wizards
+
+### Planned
+
+- Integrate OAuth/SAML SSO providers (e.g., Okta, Azure AD)
+- Add evaluation dashboards and LangGraph visual editor
+- Expand observability: connect OpenTelemetry traces to Grafana dashboards, expose FinOps insights via cost APIs
+- Automate deployments with GitHub Actions to a managed environment (EKS/GKE) using the Terraform modules
+- Incremental dataset sync for append operations
+- Gold layer with business logic transformations in Databricks
 
 > 🚀 AgentProvision is the foundation for building agent lifecycle management, multi-tenant security, and infrastructure automation across enterprise environments.
 
