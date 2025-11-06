@@ -16,6 +16,12 @@ class Settings(BaseSettings):
     MCP_API_KEY: str = "dev_mcp_key"  # Change in production
     MCP_ENABLED: bool = True  # Feature flag for MCP/Databricks integration
 
+    # Databricks Sync Settings
+    DATABRICKS_SYNC_ENABLED: bool = True
+    DATABRICKS_AUTO_SYNC: bool = True
+    DATABRICKS_RETRY_ATTEMPTS: int = 3
+    DATABRICKS_RETRY_INTERVAL: int = 300  # seconds (5 minutes)
+
     # LLM Configuration
     ANTHROPIC_API_KEY: str | None = None
     LLM_MODEL: str = "claude-3-5-sonnet-20241022"
