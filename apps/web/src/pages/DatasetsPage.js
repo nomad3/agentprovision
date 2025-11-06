@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Container, Table, Button, Modal, Form, Alert, Spinner, Row, Col, Card } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import Layout from '../components/Layout';
+import SyncStatusBadge from '../components/SyncStatusBadge';
 import datasetService from '../services/dataset';
 
 const emptyUploadState = {
@@ -189,6 +190,7 @@ const DatasetsPage = () => {
               <th>{t('table.columns.name')}</th>
               <th>{t('table.columns.description')}</th>
               <th>{t('table.columns.rows')}</th>
+              <th>Databricks Status</th>
               <th>{t('table.columns.created')}</th>
               <th>{t('table.columns.actions')}</th>
             </tr>
@@ -199,6 +201,11 @@ const DatasetsPage = () => {
                 <td>{dataset.name}</td>
                 <td>{dataset.description}</td>
                 <td>{dataset.row_count}</td>
+                <td>
+                  <SyncStatusBadge
+                    status={dataset.metadata?.sync_status}
+                  />
+                </td>
                 <td>{dataset.created_at ? new Date(dataset.created_at).toLocaleString() : '—'}</td>
                 <td>
                   <Button variant="info" size="sm" onClick={() => openPreview(dataset)}>{t('table.actions.preview')}</Button>
@@ -207,7 +214,7 @@ const DatasetsPage = () => {
             ))}
             {datasets.length === 0 && (
               <tr>
-                <td colSpan={5} className="text-center text-muted">{t('table.empty')}</td>
+                <td colSpan={6} className="text-center text-muted">{t('table.empty')}</td>
               </tr>
             )}
           </tbody>
