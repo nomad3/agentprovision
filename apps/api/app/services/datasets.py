@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import uuid
+import asyncio
 from pathlib import Path
 from typing import List, Sequence, Dict, Any
 
@@ -13,8 +14,65 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.models.dataset import Dataset
 from app.schemas.dataset import DatasetPreview
+from app.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 STORAGE_ROOT = Path(settings.DATA_STORAGE_PATH)
+
+
+def _trigger_databricks_sync(db: Session, dataset: Dataset, tenant_id: uuid.UUID) -> None:
+    """
+    Trigger Databricks sync workflow for a dataset.
+
+    This is a non-blocking operation that starts an async workflow.
+    If workflow start fails, the dataset upload still succeeds but the error is logged.
+
+    Args:
+        db: Database session
+        dataset: Dataset to sync
+        tenant_id: Tenant UUID for isolation
+    """
+    if not settings.DATABRICKS_AUTO_SYNC or not settings.MCP_ENABLED:
+        return
+
+    logger.info(f"Triggering Databricks sync for dataset {dataset.id}")
+
+    # Initialize metadata
+    if not dataset.metadata_:
+        dataset.metadata_ = {}
+
+    dataset.metadata_.update({
+        "databricks_enabled": True,
+        "sync_status": "pending",
+        "last_sync_attempt": None
+    })
+    db.commit()
+
+    # Start Temporal workflow (async, non-blocking)
+    try:
+        from app.services import workflows
+        from app.workflows.dataset_sync import DatasetSyncWorkflow
+
+        # Start workflow asynchronously
+        asyncio.create_task(
+            workflows.start_workflow(
+                workflow_type='DatasetSyncWorkflow',
+                workflow_id=f"dataset-sync-{dataset.id}",
+                task_queue="agentprovision-databricks",
+                tenant_id=tenant_id,
+                arguments=[str(dataset.id), str(tenant_id)]
+            )
+        )
+
+        logger.info(f"Databricks sync workflow started for dataset {dataset.id}")
+
+    except Exception as e:
+        # Don't fail dataset upload if workflow start fails
+        logger.error(f"Failed to start Databricks sync workflow: {e}")
+        dataset.metadata_["sync_status"] = "failed"
+        dataset.metadata_["last_sync_error"] = str(e)
+        db.commit()
 
 
 def _ensure_storage_root() -> Path:
@@ -102,7 +160,7 @@ def ingest_tabular(
     description: str | None = None,
 ) -> Dataset:
     df = _load_dataframe(file)
-    return _persist_dataframe(
+    dataset = _persist_dataframe(
         db,
         tenant_id=tenant_id,
         df=df,
@@ -111,6 +169,11 @@ def ingest_tabular(
         source_type="excel_upload",
         file_name=file.filename,
     )
+
+    # Trigger Databricks sync workflow if enabled
+    _trigger_databricks_sync(db, dataset, tenant_id)
+
+    return dataset
 
 
 def ingest_records(
@@ -129,7 +192,7 @@ def ingest_records(
     if df.empty:
         raise ValueError("Generated ingestion dataframe is empty.")
 
-    return _persist_dataframe(
+    dataset = _persist_dataframe(
         db,
         tenant_id=tenant_id,
         df=df,
@@ -138,6 +201,11 @@ def ingest_records(
         source_type=source_type,
         file_name=None,
     )
+
+    # Trigger Databricks sync workflow if enabled
+    _trigger_databricks_sync(db, dataset, tenant_id)
+
+    return dataset
 
 
 def list_datasets(db: Session, *, tenant_id: uuid.UUID) -> List[Dataset]:
