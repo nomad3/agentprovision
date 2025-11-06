@@ -66,6 +66,7 @@ const LoginPage = () => {
             <Button
               variant="outline-secondary"
               className="w-100 mb-2"
+              type="button"
               onClick={() => handleDemoLogin('test@example.com', 'password')}
             >
               Login as Demo User
