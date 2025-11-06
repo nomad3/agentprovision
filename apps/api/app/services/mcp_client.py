@@ -535,6 +535,111 @@ class MCPClient:
             f"/databricks/vector-indexes/{index_name}"
         )
 
+    # ==================== Databricks Dataset Sync Operations ====================
+
+    async def create_dataset_in_databricks(
+        self,
+        tenant_id: str,
+        dataset_id: str,
+        dataset_name: str,
+        parquet_file_name: str,
+        schema: list
+    ) -> Dict[str, Any]:
+        """
+        Create dataset in Databricks Unity Catalog (Bronze + Silver)
+
+        This triggers the MCP server to:
+        1. Download parquet file from AgentProvision
+        2. Upload to Databricks DBFS/Volume
+        3. Create Bronze external table
+        4. Create Silver managed table with transformations
+
+        Args:
+            tenant_id: Tenant UUID
+            dataset_id: Dataset UUID
+            dataset_name: Display name for tables
+            parquet_file_name: File name in storage (e.g., "abc-123.parquet")
+            schema: List of column definitions [{"name": "col", "type": "string"}]
+
+        Returns:
+            Dict with bronze_table, silver_table, row_count
+        """
+        # Build internal file URL for MCP server to download
+        # MCP server will call: GET http://agentprovision-api:8001/internal/storage/datasets/{file_name}
+        parquet_url = f"http://agentprovision-api:8001/internal/storage/datasets/{parquet_file_name}"
+
+        return await self._request(
+            "POST",
+            "/databricks/datasets",
+            json={
+                "tenant_id": tenant_id,
+                "dataset_id": dataset_id,
+                "dataset_name": dataset_name,
+                "parquet_url": parquet_url,
+                "schema": schema
+            }
+        )
+
+    async def get_dataset_sync_status(
+        self,
+        dataset_id: str
+    ) -> Dict[str, Any]:
+        """
+        Get dataset sync status from Databricks
+
+        Returns:
+            Dict with status, bronze_exists, silver_exists, last_sync_at, error
+        """
+        return await self._request(
+            "GET",
+            f"/databricks/datasets/{dataset_id}/status"
+        )
+
+    async def transform_to_silver(
+        self,
+        bronze_table: str,
+        tenant_id: str
+    ) -> Dict[str, Any]:
+        """
+        Transform Bronze table to Silver
+
+        MCP server applies transformations:
+        - Type inference and casting
+        - Data cleaning (nulls, duplicates)
+        - Column renaming (snake_case)
+
+        Args:
+            bronze_table: Full Bronze table name
+            tenant_id: Tenant UUID for isolation
+
+        Returns:
+            Dict with silver_table and row_count
+        """
+        return await self._request(
+            "POST",
+            "/databricks/transformations/silver",
+            json={
+                "bronze_table": bronze_table,
+                "tenant_id": tenant_id
+            }
+        )
+
+    async def delete_dataset_from_databricks(
+        self,
+        dataset_id: str,
+        tenant_id: str
+    ) -> Dict[str, Any]:
+        """
+        Delete dataset tables from Databricks Unity Catalog
+
+        Drops both Bronze and Silver tables
+        """
+        return await self._request(
+            "DELETE",
+            f"/databricks/datasets/{dataset_id}",
+            json={"tenant_id": tenant_id}
+        )
+
     # ==================== Health Check ====================
 
     async def health_check(self) -> Dict[str, Any]:
