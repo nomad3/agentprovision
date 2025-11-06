@@ -129,6 +129,7 @@ async def test_update_dataset_metadata_activity():
 
         mock_dataset = MagicMock()
         mock_dataset.id = "dataset-123"
+        mock_dataset.tenant_id = "tenant-456"
         mock_dataset.metadata_ = {}
 
         mock_db.query.return_value.filter.return_value.first.return_value = mock_dataset
@@ -136,8 +137,8 @@ async def test_update_dataset_metadata_activity():
         bronze_result = {"bronze_table": "catalog.bronze.test", "row_count": 100}
         silver_result = {"silver_table": "catalog.silver.test_clean", "row_count": 100}
 
-        # Execute activity
-        await update_dataset_metadata("dataset-123", bronze_result, silver_result)
+        # Execute activity with tenant_id parameter
+        await update_dataset_metadata("dataset-123", "tenant-456", bronze_result, silver_result)
 
         # Verify metadata was updated
         assert mock_dataset.metadata_["databricks_enabled"] == True
@@ -148,3 +149,52 @@ async def test_update_dataset_metadata_activity():
 
         # Verify commit was called
         mock_db.commit.assert_called()
+
+
+@pytest.mark.asyncio
+async def test_sync_to_bronze_tenant_isolation():
+    """Test that sync_to_bronze enforces tenant isolation"""
+    from app.workflows.activities.databricks_sync import sync_to_bronze
+
+    with patch('app.workflows.activities.databricks_sync.SessionLocal') as mock_session_local, \
+         patch('app.workflows.activities.databricks_sync.get_mcp_client') as mock_get_mcp:
+
+        # Setup mocks
+        mock_db = MagicMock()
+        mock_session_local.return_value = mock_db
+
+        # Mock no dataset found (wrong tenant)
+        mock_db.query.return_value.filter.return_value.first.return_value = None
+
+        # Execute activity - should raise ValueError
+        with pytest.raises(ValueError) as exc_info:
+            await sync_to_bronze("dataset-123", "wrong-tenant-id")
+
+        # Verify error message mentions tenant
+        assert "tenant" in str(exc_info.value).lower()
+        assert "wrong-tenant-id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_dataset_metadata_tenant_isolation():
+    """Test that update_dataset_metadata enforces tenant isolation"""
+    from app.workflows.activities.databricks_sync import update_dataset_metadata
+
+    with patch('app.workflows.activities.databricks_sync.SessionLocal') as mock_session_local:
+        # Setup mocks
+        mock_db = MagicMock()
+        mock_session_local.return_value = mock_db
+
+        # Mock no dataset found (wrong tenant)
+        mock_db.query.return_value.filter.return_value.first.return_value = None
+
+        bronze_result = {"bronze_table": "catalog.bronze.test", "row_count": 100}
+        silver_result = {"silver_table": "catalog.silver.test_clean", "row_count": 100}
+
+        # Execute activity - should raise ValueError
+        with pytest.raises(ValueError) as exc_info:
+            await update_dataset_metadata("dataset-123", "wrong-tenant-id", bronze_result, silver_result)
+
+        # Verify error message mentions tenant
+        assert "tenant" in str(exc_info.value).lower()
+        assert "wrong-tenant-id" in str(exc_info.value)

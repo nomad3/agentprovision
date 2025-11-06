@@ -68,7 +68,7 @@ class DatasetSyncWorkflow:
         # Step 3: Update dataset metadata in PostgreSQL
         await workflow.execute_activity(
             "update_dataset_metadata",
-            args=[dataset_id, bronze_result, silver_result],
+            args=[dataset_id, tenant_id, bronze_result, silver_result],
             start_to_close_timeout=timedelta(minutes=1),
             retry_policy=workflow.RetryPolicy(maximum_attempts=5)
         )
