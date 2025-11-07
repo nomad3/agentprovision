@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Card,
   Button,
@@ -27,6 +28,8 @@ import agentService from '../services/agent';
 import './AgentsPage.css';
 
 const AgentsPage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [agents, setAgents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -48,6 +51,20 @@ const AgentsPage = () => {
   useEffect(() => {
     fetchAgents();
   }, []);
+
+  // Handle navigation state for wizard fallback and success message
+  useEffect(() => {
+    if (location.state?.showQuickForm) {
+      setShowCreateModal(true);
+      // Clear the state
+      window.history.replaceState({}, document.title);
+    }
+    if (location.state?.success) {
+      // Show success message
+      alert(location.state.success);
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   const fetchAgents = async () => {
     try {
@@ -171,7 +188,7 @@ const AgentsPage = () => {
         <Button
           variant="primary"
           size="lg"
-          onClick={() => setShowCreateModal(true)}
+          onClick={() => navigate('/agents/wizard')}
           className="d-flex align-items-center gap-2"
         >
           <Plus size={20} />
@@ -222,7 +239,7 @@ const AgentsPage = () => {
             !searchTerm && (
               <Button
                 variant="primary"
-                onClick={() => setShowCreateModal(true)}
+                onClick={() => navigate('/agents/wizard')}
               >
                 <Plus className="me-2" />
                 Create Your First Agent

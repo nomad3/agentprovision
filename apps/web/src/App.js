@@ -18,6 +18,7 @@ import DatasetsPage from './pages/DatasetsPage';
 import ChatPage from './pages/ChatPage';
 import SettingsPage from './pages/SettingsPage';
 import TenantsPage from './pages/TenantsPage';
+import AgentWizardPage from './pages/AgentWizardPage';
 import authService from './services/auth';
 import { ToastProvider } from './components/common';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -67,6 +68,7 @@ function App() {
             <Route path="/data-pipelines" element={<ProtectedRoute><DataPipelinesPage /></ProtectedRoute>} />
             <Route path="/notebooks" element={<ProtectedRoute><NotebooksPage /></ProtectedRoute>} />
             <Route path="/agents" element={<ProtectedRoute><AgentsPage /></ProtectedRoute>} />
+            <Route path="/agents/wizard" element={<ProtectedRoute><AgentWizardPage /></ProtectedRoute>} />
             <Route path="/datasets" element={<ProtectedRoute><DatasetsPage /></ProtectedRoute>} />
             <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
             <Route path="/tools" element={<ProtectedRoute><ToolsPage /></ProtectedRoute>} />

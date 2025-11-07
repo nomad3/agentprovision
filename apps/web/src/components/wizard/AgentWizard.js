@@ -72,7 +72,7 @@ const AgentWizard = () => {
 
   const handleCancel = () => {
     if (window.confirm('Are you sure you want to cancel? Your progress will be lost.')) {
-      navigate('/dashboard/agents');
+      navigate('/agents');
     }
   };
 
@@ -106,7 +106,7 @@ const AgentWizard = () => {
       await agentService.create(agentData);
 
       // Redirect to agents list with success message
-      navigate('/dashboard/agents', { state: { success: 'Agent created successfully!' } });
+      navigate('/agents', { state: { success: 'Agent created successfully!' } });
     } catch (error) {
       console.error('Error creating agent:', error);
       alert('Failed to create agent. Please try again.');
@@ -122,6 +122,24 @@ const AgentWizard = () => {
           <WizardStepper currentStep={currentStep} steps={STEPS} />
 
           <div className="wizard-content mt-4">
+            {currentStep === 1 && (
+              <div className="text-center mb-3">
+                <small className="text-muted">
+                  Experienced user?{' '}
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (window.confirm('Switch to quick form? Your wizard progress will be lost.')) {
+                        navigate('/agents', { state: { showQuickForm: true } });
+                      }
+                    }}
+                  >
+                    Use quick form instead →
+                  </a>
+                </small>
+              </div>
+            )}
             {currentStep === 1 && (
               <TemplateSelector
                 onSelect={(template) => {
