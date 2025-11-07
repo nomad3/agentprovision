@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Form, Row, Col, Badge, Alert } from 'react-bootstrap';
+import { Card, Form, Row, Col, Alert } from 'react-bootstrap';
 import { Database, Calculator as CalcIcon, BarChart } from 'react-bootstrap-icons';
 import datasetService from '../../services/dataset';
 import { LoadingSpinner } from '../common';
