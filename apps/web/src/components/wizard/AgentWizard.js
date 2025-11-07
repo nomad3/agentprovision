@@ -6,6 +6,9 @@ import TemplateSelector from './TemplateSelector';
 import BasicInfoStep from './BasicInfoStep';
 import PersonalityStep from './PersonalityStep';
 import SkillsDataStep from './SkillsDataStep';
+import ReviewStep from './ReviewStep';
+import agentService from '../../services/agent';
+import datasetService from '../../services/dataset';
 import './AgentWizard.css';
 
 const STEPS = [
@@ -26,6 +29,21 @@ const AgentWizard = () => {
     skills: { sql_query: false, data_summary: false, calculator: false },
     datasets: [],
   });
+  const [datasets, setDatasets] = useState([]);
+  const [creating, setCreating] = useState(false);
+
+  // Fetch datasets on mount
+  useEffect(() => {
+    const fetchDatasets = async () => {
+      try {
+        const response = await datasetService.getAll();
+        setDatasets(response.data || []);
+      } catch (error) {
+        console.error('Error fetching datasets:', error);
+      }
+    };
+    fetchDatasets();
+  }, []);
 
   const handleNext = () => {
     // Validate current step
@@ -60,6 +78,41 @@ const AgentWizard = () => {
 
   const updateWizardData = (stepData) => {
     setWizardData({ ...wizardData, ...stepData });
+  };
+
+  const handleCreate = async () => {
+    try {
+      setCreating(true);
+
+      // Build agent config
+      const agentData = {
+        name: wizardData.basicInfo.name,
+        description: wizardData.basicInfo.description,
+        config: {
+          model: wizardData.template?.config?.model || 'gpt-4',
+          temperature: wizardData.personality.temperature,
+          max_tokens: wizardData.personality.max_tokens,
+          system_prompt: wizardData.personality.system_prompt || wizardData.template?.config?.system_prompt,
+          personality_preset: wizardData.personality.preset,
+          template_used: wizardData.template?.id,
+          avatar: wizardData.basicInfo.avatar,
+          tools: Object.entries(wizardData.skills)
+            .filter(([_, enabled]) => enabled)
+            .map(([tool, _]) => tool),
+          datasets: wizardData.datasets,
+        },
+      };
+
+      await agentService.create(agentData);
+
+      // Redirect to agents list with success message
+      navigate('/dashboard/agents', { state: { success: 'Agent created successfully!' } });
+    } catch (error) {
+      console.error('Error creating agent:', error);
+      alert('Failed to create agent. Please try again.');
+    } finally {
+      setCreating(false);
+    }
   };
 
   return (
@@ -112,6 +165,13 @@ const AgentWizard = () => {
                 templateName={wizardData.template?.name}
               />
             )}
+            {currentStep === 5 && (
+              <ReviewStep
+                wizardData={wizardData}
+                datasets={datasets}
+                onEdit={(step) => setCurrentStep(step)}
+              />
+            )}
           </div>
 
           <div className="wizard-actions mt-4 d-flex justify-content-between">
@@ -129,6 +189,11 @@ const AgentWizard = () => {
               {currentStep < STEPS.length && (
                 <Button variant="primary" onClick={handleNext}>
                   Next
+                </Button>
+              )}
+              {currentStep === STEPS.length && (
+                <Button variant="success" onClick={handleCreate} disabled={creating}>
+                  {creating ? 'Creating...' : 'Create Agent'}
                 </Button>
               )}
             </div>
