@@ -35,6 +35,13 @@ const AgentWizard = () => {
   });
   const [datasets, setDatasets] = useState([]);
   const [creating, setCreating] = useState(false);
+  const [validationState, setValidationState] = useState({
+    step1: false, // Template selected
+    step2: false, // Basic info valid
+    step3: true,  // Always valid (has defaults)
+    step4: true,  // Always valid (optional)
+    step5: true,  // Review step
+  });
 
   // Load draft from localStorage on mount
   useEffect(() => {
@@ -229,6 +236,7 @@ const AgentWizard = () => {
                       return acc;
                     }, { sql_query: false, data_summary: false, calculator: false }),
                   });
+                  setValidationState({ ...validationState, step1: true });
                 }}
                 selectedTemplate={wizardData.template?.id}
               />

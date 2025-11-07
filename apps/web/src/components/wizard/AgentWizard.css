@@ -86,10 +86,48 @@
 @media (max-width: 768px) {
   .wizard-stepper {
     overflow-x: auto;
+    padding-bottom: 10px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .wizard-step {
+    min-width: 60px; /* Prevent collapse */
   }
 
   .step-label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+    max-width: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .step-connector {
+    min-width: 20px;
+  }
+
+  .template-card {
+    margin-bottom: 12px;
+  }
+
+  .template-icon {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 576px) {
+  .wizard-actions {
+    flex-direction: column-reverse !important;
+    gap: 8px;
+  }
+
+  .wizard-actions > div {
+    width: 100%;
+  }
+
+  .wizard-actions button {
+    width: 100%;
   }
 }
 

@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 
-const BasicInfoStep = ({ data, onChange }) => {
-  // Validate name based on current data
-  const isNameValid = data.name.length === 0 || (data.name.length >= 3 && data.name.length <= 50);
-  const [validation, setValidation] = useState({ name: isNameValid });
-
-  // Update validation when data changes externally
-  useEffect(() => {
-    const nameValid = data.name.length === 0 || (data.name.length >= 3 && data.name.length <= 50);
-    setValidation({ name: nameValid });
-  }, [data.name]);
+const BasicInfoStep = ({ data, onChange, onValidationChange }) => {
+  const [validation, setValidation] = useState({
+    name: true,
+    isValid: false
+  });
 
   const handleChange = (field, value) => {
     const updated = { ...data, [field]: value };
@@ -18,9 +13,26 @@ const BasicInfoStep = ({ data, onChange }) => {
 
     // Validate name
     if (field === 'name') {
-      setValidation({ ...validation, name: value.length >= 3 && value.length <= 50 });
+      const isValidName = value.length >= 3 && value.length <= 50;
+      const newValidation = { ...validation, name: isValidName, isValid: isValidName };
+      setValidation(newValidation);
+
+      // Notify parent of validation state
+      if (onValidationChange) {
+        onValidationChange(newValidation.isValid);
+      }
     }
   };
+
+  // Validate on mount
+  useEffect(() => {
+    const isValidName = data.name.length >= 3 && data.name.length <= 50;
+    const newValidation = { name: isValidName, isValid: isValidName };
+    setValidation(newValidation);
+    if (onValidationChange) {
+      onValidationChange(newValidation.isValid);
+    }
+  }, []);
 
   return (
     <div className="basic-info-step">

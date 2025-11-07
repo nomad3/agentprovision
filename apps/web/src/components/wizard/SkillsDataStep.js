@@ -7,24 +7,27 @@ import { LoadingSpinner } from '../common';
 const TOOLS = [
   {
     id: 'sql_query',
-    name: 'SQL Query Tool',
+    name: 'Data Analysis',
     icon: Database,
-    description: 'Query and analyze datasets with SQL',
+    description: 'Let your agent answer questions about your data',
     requiresDataset: true,
+    helpText: 'Enable this if you want your agent to query and analyze datasets',
   },
   {
     id: 'data_summary',
-    name: 'Data Summary Tool',
+    name: 'Quick Statistics',
     icon: BarChart,
-    description: 'Generate statistical summaries of data',
+    description: 'Generate summaries and statistics automatically',
     requiresDataset: false,
+    helpText: 'Your agent can provide statistical overviews of data',
   },
   {
     id: 'calculator',
-    name: 'Calculator Tool',
+    name: 'Math & Calculations',
     icon: CalcIcon,
-    description: 'Perform mathematical calculations',
+    description: 'Perform calculations and number crunching',
     requiresDataset: false,
+    helpText: 'Enable this for pricing, conversions, or any math needs',
   },
 ];
 
@@ -74,9 +77,9 @@ const SkillsDataStep = ({ data, onChange, templateName }) => {
         <Card.Body>
           <h5 className="mb-3">Skills</h5>
           {templateName && (
-            <Alert variant="info" className="mb-3">
+            <Alert variant="success" className="mb-3">
               <small>
-                <strong>{templateName}</strong> agents typically use these tools
+                ✓ Based on your <strong>{templateName}</strong> template, we've pre-selected the recommended tools below. You can enable or disable any of them.
               </small>
             </Alert>
           )}
