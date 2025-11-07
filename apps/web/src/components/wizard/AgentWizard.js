@@ -19,6 +19,8 @@ const STEPS = [
   { number: 5, label: 'Review', component: 'Review' },
 ];
 
+const DRAFT_KEY = 'agent_wizard_draft';
+
 const AgentWizard = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
@@ -32,6 +34,29 @@ const AgentWizard = () => {
   const [datasets, setDatasets] = useState([]);
   const [creating, setCreating] = useState(false);
 
+  // Load draft from localStorage on mount
+  useEffect(() => {
+    const loadDraft = () => {
+      try {
+        const draft = localStorage.getItem(DRAFT_KEY);
+        if (draft) {
+          const parsed = JSON.parse(draft);
+          if (window.confirm('Resume your previous agent draft?')) {
+            setWizardData(parsed.data);
+            setCurrentStep(parsed.step);
+          } else {
+            localStorage.removeItem(DRAFT_KEY);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading draft:', error);
+        localStorage.removeItem(DRAFT_KEY);
+      }
+    };
+
+    loadDraft();
+  }, []);
+
   // Fetch datasets on mount
   useEffect(() => {
     const fetchDatasets = async () => {
@@ -44,6 +69,31 @@ const AgentWizard = () => {
     };
     fetchDatasets();
   }, []);
+
+  // Auto-save draft to localStorage
+  useEffect(() => {
+    // Don't save on first render or if no template selected
+    if (!wizardData.template) return;
+
+    const saveDraft = () => {
+      try {
+        localStorage.setItem(
+          DRAFT_KEY,
+          JSON.stringify({
+            data: wizardData,
+            step: currentStep,
+            timestamp: new Date().toISOString(),
+          })
+        );
+      } catch (error) {
+        console.error('Error saving draft:', error);
+      }
+    };
+
+    // Debounce saves
+    const timeoutId = setTimeout(saveDraft, 1000);
+    return () => clearTimeout(timeoutId);
+  }, [wizardData, currentStep]);
 
   const handleNext = () => {
     // Validate current step
@@ -72,6 +122,7 @@ const AgentWizard = () => {
 
   const handleCancel = () => {
     if (window.confirm('Are you sure you want to cancel? Your progress will be lost.')) {
+      localStorage.removeItem(DRAFT_KEY);
       navigate('/agents');
     }
   };
@@ -104,6 +155,9 @@ const AgentWizard = () => {
       };
 
       await agentService.create(agentData);
+
+      // Clear draft after successful creation
+      localStorage.removeItem(DRAFT_KEY);
 
       // Redirect to agents list with success message
       navigate('/agents', { state: { success: 'Agent created successfully!' } });
