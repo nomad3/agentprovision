@@ -9,6 +9,7 @@ import SkillsDataStep from './SkillsDataStep';
 import ReviewStep from './ReviewStep';
 import agentService from '../../services/agent';
 import datasetService from '../../services/dataset';
+import { useToast } from '../common/Toast';
 import './AgentWizard.css';
 
 const STEPS = [
@@ -23,6 +24,7 @@ const DRAFT_KEY = 'agent_wizard_draft';
 
 const AgentWizard = () => {
   const navigate = useNavigate();
+  const { success, error, warning } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
   const [wizardData, setWizardData] = useState({
     template: null,
@@ -98,13 +100,13 @@ const AgentWizard = () => {
   const handleNext = () => {
     // Validate current step
     if (currentStep === 1 && !wizardData.template) {
-      alert('Please select a template to continue');
+      warning('Please select a template to continue');
       return;
     }
 
     if (currentStep === 2) {
       if (!wizardData.basicInfo.name || wizardData.basicInfo.name.length < 3) {
-        alert('Please enter a valid agent name (at least 3 characters)');
+        warning('Please enter a valid agent name (at least 3 characters)');
         return;
       }
     }
@@ -121,8 +123,8 @@ const AgentWizard = () => {
   };
 
   const handleCancel = () => {
-    if (window.confirm('Are you sure you want to cancel? Your progress will be lost.')) {
-      localStorage.removeItem(DRAFT_KEY);
+    if (window.confirm('Cancel wizard? Your progress is auto-saved and you can resume later.')) {
+      // Keep draft for resume
       navigate('/agents');
     }
   };
@@ -156,14 +158,27 @@ const AgentWizard = () => {
 
       await agentService.create(agentData);
 
-      // Clear draft after successful creation
       localStorage.removeItem(DRAFT_KEY);
 
-      // Redirect to agents list with success message
-      navigate('/agents', { state: { success: 'Agent created successfully!' } });
-    } catch (error) {
-      console.error('Error creating agent:', error);
-      alert('Failed to create agent. Please try again.');
+      // Show success toast before navigation
+      success('Agent created successfully!');
+
+      // Navigate after brief delay so toast is visible
+      setTimeout(() => {
+        navigate('/agents');
+      }, 500);
+    } catch (err) {
+      console.error('Error creating agent:', err);
+
+      // Better error messages based on status
+      if (err.response?.status === 401) {
+        error('Your session has expired. Please log in again.');
+        setTimeout(() => navigate('/login'), 1500);
+      } else if (err.response?.status === 400) {
+        error(`Invalid data: ${err.response.data.detail || 'Please check your inputs'}`);
+      } else {
+        error('Failed to create agent. Please try again.');
+      }
     } finally {
       setCreating(false);
     }
