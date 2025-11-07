@@ -1,0 +1,140 @@
+import React from 'react';
+import { Row, Col, Card, Button } from 'react-bootstrap';
+import { Headset, BarChart, Briefcase, Robot, PencilSquare } from 'react-bootstrap-icons';
+
+const TEMPLATES = [
+  {
+    id: 'customer_support',
+    name: 'Customer Support Agent',
+    icon: Headset,
+    description: 'Helpful and patient. Perfect for handling customer inquiries and FAQs',
+    config: {
+      model: 'gpt-4',
+      personality: 'formal',
+      temperature: 0.5,
+      max_tokens: 1500,
+      system_prompt: 'You are a helpful customer support agent. Be polite, empathetic, and professional. Ask clarifying questions when needed and provide clear solutions.',
+      tools: [],
+      suggestDatasets: false,
+    },
+  },
+  {
+    id: 'data_analyst',
+    name: 'Data Analyst Agent',
+    icon: BarChart,
+    description: 'Analytical and precise. Generates insights from your data using SQL queries',
+    config: {
+      model: 'gpt-4',
+      personality: 'formal',
+      temperature: 0.3,
+      max_tokens: 2500,
+      system_prompt: 'You are a precise data analyst. Use SQL queries to extract insights and present findings with clear numbers and context. Explain technical concepts simply.',
+      tools: ['sql_query', 'data_summary'],
+      suggestDatasets: true,
+    },
+  },
+  {
+    id: 'sales_assistant',
+    name: 'Sales Assistant',
+    icon: Briefcase,
+    description: 'Persuasive and knowledgeable. Helps with product info and sales support',
+    config: {
+      model: 'gpt-4',
+      personality: 'friendly',
+      temperature: 0.6,
+      max_tokens: 2000,
+      system_prompt: 'You are a knowledgeable sales assistant. Be enthusiastic but not pushy. Highlight product benefits and use the calculator for pricing.',
+      tools: ['calculator'],
+      suggestDatasets: false,
+    },
+  },
+  {
+    id: 'general_assistant',
+    name: 'General Assistant',
+    icon: Robot,
+    description: 'Balanced and versatile. Good for general questions and tasks',
+    config: {
+      model: 'gpt-4',
+      personality: 'friendly',
+      temperature: 0.7,
+      max_tokens: 2000,
+      system_prompt: 'You are a helpful AI assistant. Be friendly, clear, and accurate. Assist with a wide range of tasks.',
+      tools: ['calculator', 'data_summary'],
+      suggestDatasets: false,
+    },
+  },
+  {
+    id: 'content_writer',
+    name: 'Content Writer',
+    icon: PencilSquare,
+    description: 'Creative and expressive. Helps draft content, emails, and documents',
+    config: {
+      model: 'gpt-4',
+      personality: 'creative',
+      temperature: 0.8,
+      max_tokens: 3000,
+      system_prompt: 'You are a creative writing assistant. Use imaginative and engaging language. Help draft compelling content.',
+      tools: [],
+      suggestDatasets: false,
+    },
+  },
+];
+
+const TemplateSelector = ({ onSelect, selectedTemplate }) => {
+  const handleSelect = (template) => {
+    onSelect(template);
+  };
+
+  return (
+    <div className="template-selector">
+      <h3 className="mb-2">What type of agent do you want to create?</h3>
+      <p className="text-muted mb-4">Choose a template to get started with pre-configured settings</p>
+
+      <Row className="g-3">
+        {TEMPLATES.map((template) => {
+          const IconComponent = template.icon;
+          const isSelected = selectedTemplate === template.id;
+
+          return (
+            <Col key={template.id} md={6} lg={4}>
+              <Card
+                className={`template-card h-100 ${isSelected ? 'selected' : ''}`}
+                style={{ cursor: 'pointer' }}
+                onClick={() => handleSelect(template)}
+              >
+                <Card.Body className="d-flex flex-column align-items-center text-center">
+                  <div className="template-icon mb-3">
+                    <IconComponent size={48} />
+                  </div>
+                  <Card.Title className="mb-2">{template.name}</Card.Title>
+                  <Card.Text className="text-muted mb-3 flex-grow-1">
+                    {template.description}
+                  </Card.Text>
+                  <Button
+                    variant={isSelected ? 'primary' : 'outline-primary'}
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelect(template);
+                    }}
+                  >
+                    {isSelected ? 'Selected' : 'Select'}
+                  </Button>
+                </Card.Body>
+              </Card>
+            </Col>
+          );
+        })}
+      </Row>
+
+      <div className="mt-4 text-center">
+        <small className="text-muted">
+          Or <a href="#agent-kits">start from one of your saved agent kits →</a>
+        </small>
+      </div>
+    </div>
+  );
+};
+
+export { TEMPLATES };
+export default TemplateSelector;

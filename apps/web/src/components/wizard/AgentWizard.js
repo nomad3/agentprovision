@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Button, Card } from 'react-bootstrap';
 import WizardStepper from './WizardStepper';
+import TemplateSelector from './TemplateSelector';
 import './AgentWizard.css';
 
 const STEPS = [
@@ -53,11 +54,28 @@ const AgentWizard = () => {
 
           <div className="wizard-content mt-4">
             {currentStep === 1 && (
-              <div className="wizard-step-content">
-                <h3>What type of agent do you want to create?</h3>
-                <p className="text-muted">Choose a template to get started</p>
-                {/* TemplateSelector will be implemented next */}
-              </div>
+              <TemplateSelector
+                onSelect={(template) => {
+                  updateWizardData({
+                    template: template,
+                    basicInfo: {
+                      ...wizardData.basicInfo,
+                      name: template.name
+                    },
+                    personality: {
+                      preset: template.config.personality,
+                      temperature: template.config.temperature,
+                      max_tokens: template.config.max_tokens,
+                      system_prompt: template.config.system_prompt,
+                    },
+                    skills: template.config.tools.reduce((acc, tool) => {
+                      acc[tool] = true;
+                      return acc;
+                    }, { sql_query: false, data_summary: false, calculator: false }),
+                  });
+                }}
+                selectedTemplate={wizardData.template?.id}
+              />
             )}
           </div>
 

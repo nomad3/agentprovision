@@ -1,0 +1,35 @@
+import { render, screen, fireEvent } from '@testing-library/react';
+import TemplateSelector from '../TemplateSelector';
+
+describe('TemplateSelector', () => {
+  const mockOnSelect = jest.fn();
+
+  beforeEach(() => {
+    mockOnSelect.mockClear();
+  });
+
+  test('renders all 5 templates', () => {
+    render(<TemplateSelector onSelect={mockOnSelect} />);
+    expect(screen.getByText('Customer Support Agent')).toBeInTheDocument();
+    expect(screen.getByText('Data Analyst Agent')).toBeInTheDocument();
+    expect(screen.getByText('Sales Assistant')).toBeInTheDocument();
+    expect(screen.getByText('General Assistant')).toBeInTheDocument();
+    expect(screen.getByText('Content Writer')).toBeInTheDocument();
+  });
+
+  test('calls onSelect when template is clicked', () => {
+    render(<TemplateSelector onSelect={mockOnSelect} />);
+    const buttons = screen.getAllByText('Select');
+    fireEvent.click(buttons[0]);
+    expect(mockOnSelect).toHaveBeenCalledWith(expect.objectContaining({
+      id: expect.any(String),
+      name: expect.any(String),
+    }));
+  });
+
+  test('highlights selected template', () => {
+    render(<TemplateSelector onSelect={mockOnSelect} selectedTemplate="customer_support" />);
+    const card = screen.getByText('Customer Support Agent').closest('.template-card');
+    expect(card).toHaveClass('selected');
+  });
+});
