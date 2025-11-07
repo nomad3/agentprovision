@@ -5,6 +5,7 @@ import WizardStepper from './WizardStepper';
 import TemplateSelector from './TemplateSelector';
 import BasicInfoStep from './BasicInfoStep';
 import PersonalityStep from './PersonalityStep';
+import SkillsDataStep from './SkillsDataStep';
 import './AgentWizard.css';
 
 const STEPS = [
@@ -102,6 +103,13 @@ const AgentWizard = () => {
               <PersonalityStep
                 data={wizardData.personality}
                 onChange={(personality) => updateWizardData({ personality })}
+              />
+            )}
+            {currentStep === 4 && (
+              <SkillsDataStep
+                data={{ skills: wizardData.skills, datasets: wizardData.datasets }}
+                onChange={(skillsData) => updateWizardData(skillsData)}
+                templateName={wizardData.template?.name}
               />
             )}
           </div>
