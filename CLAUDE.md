@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 AgentProvision is an enterprise-grade unified data & AI lakehouse platform built as a monorepo. It provides multi-tenant control plane capabilities for managing AI agents, data pipelines, notebooks, and deployments across multi-cloud environments. The platform consists of a FastAPI backend and a React frontend.
 
 **Recent Features**:
+- ✅ **Agent Creation Wizard**: 5-step guided wizard for non-technical users with templates, plain-language controls, and smart defaults (see `docs/plans/2025-11-07-agent-creation-wizard-implementation.md`)
 - ✅ **Real-time Analytics Dashboard**: Live platform metrics pulling real data from database (agents, deployments, chat activity, datasets)
 - ✅ **Conversation Context & Memory Management**: Automatic token tracking, conversation summarization, and smart context window management (see `CONTEXT_MANAGEMENT_README.md`)
 - ✅ **Tool Execution Framework**: Extensible system for agents with SQL Query, Calculator, and Data Summary tools (see `TOOL_FRAMEWORK_README.md`)
@@ -34,9 +35,21 @@ This is a **Turborepo monorepo** managed with `pnpm` workspaces:
   - Authenticated console at `/dashboard/*`
   - Marketing landing page at `/`
 
+- **`mcp-server`**: Model Context Protocol server for Databricks integration
+  - TypeScript/Node.js server implementing MCP specification
+  - Provides dataset sync capabilities to Databricks Unity Catalog
+  - Exposes tools for creating external tables and managed tables
+
 - **`infra/terraform`**: Infrastructure as Code for AWS deployment (EKS, Aurora PostgreSQL, VPC, IAM)
 
 - **`packages`**: Future shared libraries (currently placeholder)
+
+- **`scripts`**: Utility scripts
+  - `deploy.sh`: Production deployment with E2E testing
+  - `e2e_test_production.sh`: End-to-end test suite (22 test cases)
+  - `run_demo_workflow.sh`: Temporal workflow demonstration
+  - `start_databricks_worker.sh`: Starts Databricks sync worker
+  - `production_health_check.sh`: Health monitoring script
 
 ### Key Architectural Patterns
 
@@ -79,8 +92,11 @@ This is a **Turborepo monorepo** managed with `pnpm` workspaces:
 # Install dependencies
 pnpm install
 
-# Start Docker services (API, Web, DB)
+# Start Docker services (API, Web, DB, Databricks Worker)
 docker-compose up --build
+
+# Start with custom ports to avoid conflicts
+DB_PORT=8003 API_PORT=8001 WEB_PORT=8002 docker-compose up --build
 ```
 
 ### API Development
@@ -181,6 +197,22 @@ SKIP_WORKFLOW=true ./scripts/run_demo_workflow.sh
 # Describe workflow after creation
 DESCRIBE=true ./scripts/run_demo_workflow.sh
 ```
+
+### MCP Server (Databricks Integration)
+
+```bash
+cd mcp-server
+
+# Install dependencies
+npm install
+
+# Start MCP server (required for Databricks sync)
+npm start
+
+# Server runs on http://localhost:8085 by default
+```
+
+**Note**: MCP server must be running for Databricks dataset sync to work. The Databricks worker (`databricks-worker` service in docker-compose) handles async sync jobs and requires both MCP server and Temporal to be available.
 
 ### Docker Port Management
 
@@ -293,6 +325,15 @@ One page per resource type (organized in 3-section navigation):
   - User dropdown in footer
 - `Layout.css`: Updated with scrollable sidebar, visible scrollbar
 - `marketing/`: Landing page components
+- `wizard/`: Agent creation wizard components
+  - `AgentWizard.js`: Main wizard container with navigation and state management
+  - `WizardStepper.js`: Progress indicator for 5 steps
+  - `TemplateSelector.js`: Step 1 - Choose from 5 pre-configured templates
+  - `BasicInfoStep.js`: Step 2 - Name, description, avatar selector
+  - `PersonalityStep.js`: Step 3 - Communication style presets with advanced fine-tuning
+  - `SkillsDataStep.js`: Step 4 - Tool selection and dataset connection
+  - `ReviewStep.js`: Step 5 - Summary with edit links and creation button
+  - Auto-saves drafts to localStorage, supports resume flow
 
 ### Services (`apps/web/src/services/`)
 
@@ -322,10 +363,12 @@ Loaded via pydantic-settings. See `apps/api/app/core/config.py` for available se
 - `DATA_STORAGE_PATH`: Local data file storage
 - `TEMPORAL_ADDRESS`, `TEMPORAL_NAMESPACE`: Temporal connection
 - `DEFAULT_WORKFLOW_TIMEOUT_SECONDS`: Workflow timeout
-- **MCP Configuration**:
+- **MCP Configuration** (Model Context Protocol for Databricks integration):
   - `MCP_SERVER_URL`: MCP server endpoint (default: `http://localhost:8085`)
   - `MCP_API_KEY`: Authentication key for MCP server
   - `MCP_ENABLED`: Feature flag for MCP/Databricks integration (default: `True`)
+  - `DATABRICKS_HOST`: Databricks workspace URL
+  - `DATABRICKS_TOKEN`: Personal access token for Databricks API
 - **LLM Configuration**:
   - `ANTHROPIC_API_KEY`: Your Anthropic API key (required for AI chat)
   - `LLM_MODEL`: Claude model to use (default: `claude-3-5-sonnet-20241022`)
@@ -386,16 +429,19 @@ Prerequisites:
 The deployment script performs the following steps:
 1. Stops existing services
 2. Dynamically generates `docker-compose.temporal.yml` with configured ports
-3. Builds and starts Docker containers (including Temporal server) with fixed ports
-4. Configures Nginx reverse proxy
+3. Builds and starts Docker containers (API, Web, DB, Databricks Worker, Temporal) with fixed ports
+4. Configures Nginx reverse proxy for SSL termination
 5. Obtains/renews SSL certificate via Certbot
 6. **Waits for API to be ready** (up to 60 seconds)
 7. **Runs end-to-end tests automatically** (`scripts/e2e_test_production.sh`)
 8. Reports test results and exits with error code if tests fail
 
-The deployment script automatically includes Temporal server setup, exposing:
-- Temporal gRPC on port `7233` (configurable via `TEMPORAL_GRPC_PORT`)
-- Temporal Web UI on port `8233` (configurable via `TEMPORAL_WEB_PORT`)
+**Services exposed in production**:
+- API: Port `8001` (proxied via Nginx at `/api`)
+- Web: Port `8002` (proxied via Nginx at `/`)
+- DB: Port `8003` (internal only)
+- Temporal gRPC: Port `7233` (configurable via `TEMPORAL_GRPC_PORT`)
+- Temporal Web UI: Port `8233` (configurable via `TEMPORAL_WEB_PORT`)
 
 **Important**: The deployment will **fail** (exit code 1) if E2E tests don't pass, preventing broken deployments from being considered successful. Review test output to identify and fix issues before redeploying.
 
@@ -430,6 +476,7 @@ Comprehensive E2E test suite that validates the entire platform:
 - 22 test cases covering all major endpoints
 - Automatic execution during deployment via `deploy.sh`
 - Can be run manually against any environment
+- Tests create temporary test data (tenant, user, resources) and clean up afterward
 
 ```bash
 # Test production
@@ -446,7 +493,11 @@ BASE_URL=http://localhost:8001 ./scripts/e2e_test_production.sh
 - ✅ All 13 resource types (agents, datasets, deployments, etc.)
 - ✅ Feature workflows (dataset ingestion, agent kit creation, chat sessions)
 
-**Test Results**: See `E2E_TEST_FINDINGS.md` for detailed analysis of test results and known issues.
+**Exit Codes**:
+- `0`: All tests passed
+- `1`: One or more tests failed (deployment will be blocked)
+
+**Test Results**: See `docs/archive/E2E_TEST_FINDINGS.md` for detailed analysis of test results and known issues.
 
 ### API Unit Tests
 
@@ -471,12 +522,21 @@ pytest -v                             # Verbose output
 Uses React Testing Library:
 - Component tests via `@testing-library/react`
 - User interaction tests via `@testing-library/user-event`
+- Wizard components have comprehensive unit and integration tests
 
 ```bash
 cd apps/web
-npm test          # Run tests in watch mode
-npm test -- --ci  # Run tests once (CI mode)
+npm test                                    # Run tests in watch mode
+npm test -- --ci                            # Run tests once (CI mode)
+npm test -- WizardStepper.test.js          # Run specific wizard test
+npm test -- AgentWizard.integration.test.js # Run wizard integration tests
 ```
+
+**Wizard Test Coverage**:
+- Unit tests for each wizard step component
+- Integration test for complete 5-step flow
+- Draft persistence and resume functionality tests
+- Template selection and smart defaults tests
 
 ## Important Patterns
 
