@@ -1,11 +1,11 @@
 import api from './api';
 
 const agentService = {
-  getAll: () => api.get('/agents'),
+  getAll: () => api.get('/agents/'),
 
   getById: (id) => api.get(`/agents/${id}`),
 
-  create: (data) => api.post('/agents', data),
+  create: (data) => api.post('/agents/', data),
 
   update: (id, data) => api.put(`/agents/${id}`, data),
 
