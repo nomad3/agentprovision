@@ -245,6 +245,9 @@ const AgentWizard = () => {
               <BasicInfoStep
                 data={wizardData.basicInfo}
                 onChange={(basicInfo) => updateWizardData({ basicInfo })}
+                onValidationChange={(isValid) => {
+                  setValidationState({ ...validationState, step2: isValid });
+                }}
               />
             )}
             {currentStep === 3 && (
@@ -282,7 +285,11 @@ const AgentWizard = () => {
                 Cancel
               </Button>
               {currentStep < STEPS.length && (
-                <Button variant="primary" onClick={handleNext}>
+                <Button
+                  variant="primary"
+                  onClick={handleNext}
+                  disabled={!validationState[`step${currentStep}`]}
+                >
                   Next
                 </Button>
               )}

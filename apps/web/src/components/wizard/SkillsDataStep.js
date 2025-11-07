@@ -31,6 +31,51 @@ const TOOLS = [
   },
 ];
 
+const ToolCard = ({ tool, isChecked, onToggle }) => {
+  const [showHelp, setShowHelp] = useState(false);
+  const IconComponent = tool.icon;
+
+  return (
+    <Card key={tool.id} className="mb-2" style={{ border: '1px solid #dee2e6' }}>
+      <Card.Body className="py-3">
+        <div className="d-flex align-items-start justify-content-between">
+          <div className="d-flex align-items-start gap-3 flex-grow-1">
+            <div className="tool-icon" style={{ fontSize: '1.5rem', color: '#0d6efd' }}>
+              <IconComponent />
+            </div>
+            <div className="flex-grow-1">
+              <div className="d-flex align-items-center gap-2 mb-1">
+                <strong>{tool.name}</strong>
+                <button
+                  className="btn btn-link btn-sm p-0"
+                  onClick={() => setShowHelp(!showHelp)}
+                  style={{ textDecoration: 'none', fontSize: '0.85rem' }}
+                >
+                  {showHelp ? 'Hide' : 'Learn more'}
+                </button>
+              </div>
+              <small className="text-muted">{tool.description}</small>
+              {showHelp && (
+                <div className="alert alert-info mt-2 mb-0 p-2">
+                  <small>{tool.helpText}</small>
+                </div>
+              )}
+            </div>
+          </div>
+          <Form.Check
+            type="switch"
+            id={`tool-${tool.id}`}
+            label=""
+            checked={isChecked}
+            onChange={onToggle}
+            aria-label={tool.name}
+          />
+        </div>
+      </Card.Body>
+    </Card>
+  );
+};
+
 const SkillsDataStep = ({ data, onChange, templateName }) => {
   const [datasets, setDatasets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -84,56 +129,29 @@ const SkillsDataStep = ({ data, onChange, templateName }) => {
             </Alert>
           )}
 
-          {TOOLS.map((tool) => {
-            const IconComponent = tool.icon;
-            return (
-              <Card key={tool.id} className="mb-2" style={{ border: '1px solid #dee2e6' }}>
-                <Card.Body className="py-3">
-                  <div className="d-flex align-items-start justify-content-between">
-                    <div className="d-flex align-items-start gap-3 flex-grow-1">
-                      <div className="tool-icon" style={{ fontSize: '1.5rem', color: '#0d6efd' }}>
-                        <IconComponent />
-                      </div>
-                      <div className="flex-grow-1">
-                        <div className="d-flex align-items-center gap-2 mb-1">
-                          <strong>{tool.name}</strong>
-                          {tool.requiresDataset && (
-                            <Badge bg="secondary" className="text-xs">
-                              Requires dataset
-                            </Badge>
-                          )}
-                        </div>
-                        <small className="text-muted">{tool.description}</small>
-                      </div>
-                    </div>
-                    <Form.Check
-                      type="switch"
-                      id={`tool-${tool.id}`}
-                      label=""
-                      checked={data.skills[tool.id]}
-                      onChange={() => handleToolToggle(tool.id)}
-                      aria-label={tool.name}
-                    />
-                  </div>
-                </Card.Body>
-              </Card>
-            );
-          })}
+          {TOOLS.map((tool) => (
+            <ToolCard
+              key={tool.id}
+              tool={tool}
+              isChecked={data.skills[tool.id]}
+              onToggle={() => handleToolToggle(tool.id)}
+            />
+          ))}
         </Card.Body>
       </Card>
 
       {/* Datasets Section */}
       <Card>
         <Card.Body>
-          <h5 className="mb-2">Connect Datasets (Optional)</h5>
+          <h5 className="mb-2">Give Your Agent Access to Data</h5>
           <p className="text-muted small mb-3">
-            Give your agent access to specific data for analysis
+            Select which datasets your agent can analyze (you can change this later)
           </p>
 
           {noDatasetSelected && (
             <Alert variant="warning" className="mb-3">
               <small>
-                SQL Query Tool is enabled but no datasets are selected. Your agent won't be able to query data.
+                Data Analysis is enabled but no datasets are selected. Your agent won't be able to analyze data.
               </small>
             </Alert>
           )}
