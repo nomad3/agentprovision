@@ -4,6 +4,7 @@ import { Container, Button, Card } from 'react-bootstrap';
 import WizardStepper from './WizardStepper';
 import TemplateSelector from './TemplateSelector';
 import BasicInfoStep from './BasicInfoStep';
+import PersonalityStep from './PersonalityStep';
 import './AgentWizard.css';
 
 const STEPS = [
@@ -95,6 +96,12 @@ const AgentWizard = () => {
               <BasicInfoStep
                 data={wizardData.basicInfo}
                 onChange={(basicInfo) => updateWizardData({ basicInfo })}
+              />
+            )}
+            {currentStep === 3 && (
+              <PersonalityStep
+                data={wizardData.personality}
+                onChange={(personality) => updateWizardData({ personality })}
               />
             )}
           </div>
