@@ -118,3 +118,16 @@
   justify-content: center;
   color: white;
 }
+
+.avatar-option {
+  transition: all 0.2s ease;
+}
+
+.avatar-option:hover {
+  transform: scale(1.1);
+  background-color: #f8f9fa;
+}
+
+.avatar-option.selected {
+  background-color: #e7f1ff;
+}

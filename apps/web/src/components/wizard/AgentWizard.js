@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Button, Card } from 'react-bootstrap';
 import WizardStepper from './WizardStepper';
 import TemplateSelector from './TemplateSelector';
+import BasicInfoStep from './BasicInfoStep';
 import './AgentWizard.css';
 
 const STEPS = [
@@ -25,6 +26,19 @@ const AgentWizard = () => {
   });
 
   const handleNext = () => {
+    // Validate current step
+    if (currentStep === 1 && !wizardData.template) {
+      alert('Please select a template to continue');
+      return;
+    }
+
+    if (currentStep === 2) {
+      if (!wizardData.basicInfo.name || wizardData.basicInfo.name.length < 3) {
+        alert('Please enter a valid agent name (at least 3 characters)');
+        return;
+      }
+    }
+
     if (currentStep < STEPS.length) {
       setCurrentStep(currentStep + 1);
     }
@@ -75,6 +89,12 @@ const AgentWizard = () => {
                   });
                 }}
                 selectedTemplate={wizardData.template?.id}
+              />
+            )}
+            {currentStep === 2 && (
+              <BasicInfoStep
+                data={wizardData.basicInfo}
+                onChange={(basicInfo) => updateWizardData({ basicInfo })}
               />
             )}
           </div>
