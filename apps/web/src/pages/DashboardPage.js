@@ -5,6 +5,7 @@ import Layout from '../components/Layout';
 import { useAuth } from '../App';
 import { getDashboardStats } from '../services/analytics';
 import QuickStartSection from '../components/dashboard/QuickStartSection';
+import EnhancedUploadModal from '../components/upload/EnhancedUploadModal';
 
 const DashboardPage = () => {
   const { user } = useAuth();
@@ -295,6 +296,15 @@ const DashboardPage = () => {
           </Card>
         </Col>
       </Row>
+
+      <EnhancedUploadModal
+        show={showUploadModal}
+        onHide={() => setShowUploadModal(false)}
+        onSuccess={() => {
+          // Refresh quick start section
+          window.location.reload(); // Simple approach, or lift state up
+        }}
+      />
     </Layout>
   );
 };
