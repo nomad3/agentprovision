@@ -4,6 +4,7 @@ import { FaChartBar, FaDatabase, FaRobot, FaComments } from 'react-icons/fa';
 import Layout from '../components/Layout';
 import { useAuth } from '../App';
 import { getDashboardStats } from '../services/analytics';
+import QuickStartSection from '../components/dashboard/QuickStartSection';
 
 const DashboardPage = () => {
   const { user } = useAuth();
@@ -12,6 +13,8 @@ const DashboardPage = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showConnectModal, setShowConnectModal] = useState(false);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -64,6 +67,11 @@ const DashboardPage = () => {
 
   return (
     <Layout>
+      <QuickStartSection
+        onUploadClick={() => setShowUploadModal(true)}
+        onConnectClick={() => setShowConnectModal(true)}
+      />
+
       <div className="d-flex flex-wrap align-items-center justify-content-between mb-4">
         <div>
           <h2 className="mb-1">Analytics Command Center</h2>
