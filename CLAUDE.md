@@ -7,7 +7,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 AgentProvision is an enterprise-grade unified data & AI lakehouse platform built as a monorepo. It provides multi-tenant control plane capabilities for managing AI agents, data pipelines, notebooks, and deployments across multi-cloud environments. The platform consists of a FastAPI backend and a React frontend.
 
 **Recent Features**:
-- ✅ **Agent Creation Wizard**: 5-step guided wizard for non-technical users with templates, plain-language controls, and smart defaults (see `docs/plans/2025-11-07-agent-creation-wizard-implementation.md`)
+- ✅ **Quick Start Onboarding**: Dashboard cards with guided 3-step journey (Upload Data → Create Agent → Chat) with sequential unlocking
+- ✅ **Enhanced File Upload**: Drag-and-drop upload with CSV preview, auto-populated metadata, and progress tracking (see `docs/plans/2025-11-07-navigation-onboarding-implementation.md`)
+- ✅ **Menu Tooltips**: Descriptive help tooltips on all 11 navigation items explaining each feature
+- ✅ **Agent Creation Wizard**: 5-step guided wizard with templates, real-time validation, Toast notifications, and mobile-responsive design (see `docs/plans/2025-11-07-agent-creation-wizard-implementation.md`)
+- ✅ **Data Source Wizard**: Connector selector for PostgreSQL, Google Sheets, Salesforce, REST API, and file upload
 - ✅ **Real-time Analytics Dashboard**: Live platform metrics pulling real data from database (agents, deployments, chat activity, datasets)
 - ✅ **Conversation Context & Memory Management**: Automatic token tracking, conversation summarization, and smart context window management (see `CONTEXT_MANAGEMENT_README.md`)
 - ✅ **Tool Execution Framework**: Extensible system for agents with SQL Query, Calculator, and Data Summary tools (see `TOOL_FRAMEWORK_README.md`)

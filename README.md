@@ -107,6 +107,10 @@ Tests expect n8n to expose `http://localhost:5678/rest/health` and the API at `h
 
 ### Completed
 
+- **Agent Creation Wizard**: 5-step guided wizard with templates, drag-and-drop uploads, and real-time validation
+- **Quick Start Onboarding**: Dashboard cards guiding users through data upload → agent creation → chat flow
+- **Enhanced File Upload**: Drag-and-drop with preview, CSV parsing, and progress indicators
+- **Menu Tooltips**: Descriptive help for all navigation items
 - **Databricks Unity Catalog Integration**: Automatic dataset synchronization to Bronze and Silver layers with Temporal workflow orchestration
 - Multi-tenant JWT authentication and authorization
 - Real-time analytics dashboard with live platform metrics
@@ -114,11 +118,12 @@ Tests expect n8n to expose `http://localhost:5678/rest/health` and the API at `h
 - Tool execution framework for agents (SQL Query, Calculator, Data Summary)
 - Claude AI integration for intelligent chat responses
 - Dataset management with CSV/Excel upload, Parquet storage, and DuckDB querying
+- Mobile-responsive design across all wizards and pages
 
 ### In Progress
 
-- Query federation (cross-system queries)
-- Agent creation wizards
+- Data source connection wizard (PostgreSQL, Google Sheets, Salesforce, REST API)
+- Automated sync configuration for connected data sources
 
 ### Planned
 
