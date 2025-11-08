@@ -6,6 +6,7 @@ import { useAuth } from '../App';
 import { getDashboardStats } from '../services/analytics';
 import QuickStartSection from '../components/dashboard/QuickStartSection';
 import EnhancedUploadModal from '../components/upload/EnhancedUploadModal';
+import DataSourceWizard from '../components/datasource/DataSourceWizard';
 
 const DashboardPage = () => {
   const { user } = useAuth();
@@ -304,6 +305,11 @@ const DashboardPage = () => {
           // Refresh quick start section
           window.location.reload(); // Simple approach, or lift state up
         }}
+      />
+
+      <DataSourceWizard
+        show={showConnectModal}
+        onHide={() => setShowConnectModal(false)}
       />
     </Layout>
   );
