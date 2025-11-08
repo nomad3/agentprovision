@@ -1,0 +1,109 @@
+.quick-start-card {
+  position: relative;
+  border-radius: 16px;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+  min-height: 320px;
+}
+
+.quick-start-card.active {
+  border-color: #0d6efd;
+  box-shadow: 0 8px 24px rgba(13, 110, 253, 0.15);
+  animation: pulse-border 2s ease-in-out infinite;
+}
+
+.quick-start-card.completed {
+  border-color: #198754;
+  background: linear-gradient(135deg, #f8fff9 0%, #e8f5e9 100%);
+}
+
+.quick-start-card.locked {
+  opacity: 0.6;
+  background: #f8f9fa;
+}
+
+@keyframes pulse-border {
+  0%, 100% {
+    box-shadow: 0 8px 24px rgba(13, 110, 253, 0.15);
+  }
+  50% {
+    box-shadow: 0 8px 32px rgba(13, 110, 253, 0.25);
+  }
+}
+
+.step-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.quick-start-card.completed .step-badge {
+  background: #198754;
+}
+
+.quick-start-card.locked .step-badge {
+  background: #6c757d;
+}
+
+.card-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quick-start-card.completed .card-icon {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.card-description {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.status-text {
+  font-size: 0.9rem;
+  color: #198754;
+  font-weight: 500;
+}
+
+.locked-message {
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.card-arrow {
+  position: absolute;
+  right: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2rem;
+  color: #0d6efd;
+  font-weight: bold;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .card-arrow {
+    display: none;
+  }
+
+  .quick-start-card {
+    margin-bottom: 20px;
+  }
+}
