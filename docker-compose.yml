@@ -1,4 +1,18 @@
 services:
+  temporal:
+    image: temporalio/auto-setup:1.22.2
+    restart: unless-stopped
+    environment:
+      - DB=sqlite
+      - DBNAME=temporal
+      - SKIP_SCHEMA_SETUP=false
+      - SKIP_DEFAULT_NAMESPACE_CREATION=false
+    ports:
+      - "${TEMPORAL_GRPC_PORT:-7233}:7233"
+      - "${TEMPORAL_WEB_PORT:-8233}:8233"
+    volumes:
+      - temporal-data:/etc/temporal
+
   api:
     build:
       context: ./apps/api
@@ -11,6 +25,7 @@ services:
       - ./apps/api/.env
     depends_on:
       - db
+      - temporal
 
   web:
     build:
@@ -39,8 +54,14 @@ services:
       context: ./apps/api
       dockerfile: Dockerfile
     command: python -m app.workers.databricks_worker
+    volumes:
+      - ./apps/api:/app
     env_file:
       - ./apps/api/.env
     depends_on:
       - db
+      - temporal
     restart: unless-stopped
+
+volumes:
+  temporal-data:

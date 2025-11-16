@@ -84,13 +84,14 @@ services:
     restart: unless-stopped
     environment:
       - DB=sqlite
-      - SQL_PLUGIN=sqlite
-      - SQLITE_PATH=/temporal/tmp/temporal.db
-      - TEMPORAL_ADDRESS=${TEMPORAL_ADDRESS}
-      - TEMPORAL_NAMESPACE=${TEMPORAL_NAMESPACE}
+      - DBNAME=temporal
+      - SKIP_SCHEMA_SETUP=false
+      - SKIP_DEFAULT_NAMESPACE_CREATION=false
     ports:
       - "${TEMPORAL_GRPC_PORT}:7233"
       - "${TEMPORAL_WEB_PORT}:8233"
+    volumes:
+      - temporal-data:/etc/temporal
 
   api:
     environment:
@@ -99,6 +100,17 @@ services:
     depends_on:
       - db
       - temporal
+
+  databricks-worker:
+    environment:
+      - TEMPORAL_ADDRESS=$TEMPORAL_ADDRESS
+      - TEMPORAL_NAMESPACE=$TEMPORAL_NAMESPACE
+    depends_on:
+      - db
+      - temporal
+
+volumes:
+  temporal-data:
 EOF
 
 COMPOSE_FILES=("-f" "$PROJECT_ROOT/docker-compose.yml" "-f" "$TEMPORAL_COMPOSE_FILE")
