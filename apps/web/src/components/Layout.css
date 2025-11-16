@@ -64,20 +64,20 @@
   padding: 1rem 0.75rem;
   overflow-y: auto;
   overflow-x: hidden;
-  display: flex !important;
-  flex-direction: column !important;
+  display: block !important;
   min-height: 0;
   width: 100%;
 }
 
-/* Ensure nav items render in rows (vertically stacked) */
+/* Force all child elements to stack vertically */
 .sidebar-nav > * {
-  width: 100%;
+  display: block !important;
+  width: 100% !important;
 }
 
 .sidebar-nav .nav-link {
   display: flex !important;
-  width: 100%;
+  width: 100% !important;
 }
 
 .sidebar-nav::-webkit-scrollbar {
@@ -100,14 +100,19 @@
 
 .nav-section {
   margin-bottom: 1rem;
-  display: flex !important;
-  flex-direction: column !important;
-  flex-wrap: nowrap !important;
-  width: 100%;
+  display: block !important;
+  width: 100% !important;
 }
 
 .nav-section > * {
-  width: 100%;
+  display: block !important;
+  width: 100% !important;
+}
+
+/* Override any Bootstrap/React-Bootstrap styles that might cause horizontal layout */
+.nav-section .nav-item {
+  display: block !important;
+  width: 100% !important;
 }
 
 .nav-section:last-child {
