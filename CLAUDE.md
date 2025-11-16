@@ -108,13 +108,16 @@ DB_PORT=8003 API_PORT=8001 WEB_PORT=8002 docker-compose up --build
 ```bash
 cd apps/api
 
+# Install dependencies (if not using Docker)
+pip install -r requirements.txt
+
 # Run API server locally (outside Docker)
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
-# Run tests
+# Run tests (pytest configured with asyncio_mode=auto in pytest.ini)
 pytest
 
-# Run tests with async support (configured in pytest.ini)
+# Run tests with verbose output
 pytest -v
 
 # Lint code
@@ -132,11 +135,20 @@ pytest tests/test_api.py::test_login
 ```bash
 cd apps/web
 
-# Start development server
+# Install dependencies (if not using Docker)
+npm install
+
+# Start development server (runs on port 3000 by default)
 npm start
 
-# Run tests
+# Run tests in watch mode
 npm test
+
+# Run tests once (CI mode)
+npm test -- --ci --watchAll=false
+
+# Run specific test file
+npm test -- WizardStepper.test.js
 
 # Build for production
 npm run build
@@ -297,6 +309,8 @@ All routes use dependency injection via `deps.py` for database sessions and curr
 
 **Important**: The API uses **synchronous** SQLAlchemy (not async) despite having `asyncpg` in the DATABASE_URL. The async driver is for future compatibility, but current code uses `Session` and synchronous queries.
 
+**Note**: When running tests, pytest is configured with `asyncio_mode = auto` in the root `pytest.ini` file, which enables automatic async test detection.
+
 ## Web Frontend Structure
 
 ### Pages (`apps/web/src/pages/`)
@@ -349,35 +363,50 @@ API client wrappers (uses axios):
 
 ### `.env` (root level, used by docker-compose)
 
+Docker Compose uses environment variables for port configuration. Default ports if not specified:
+
 ```
-DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/agentprovision
-SECRET_KEY=your_secret_key
-TEMPORAL_ADDRESS=localhost:7233
-TEMPORAL_NAMESPACE=default
 API_PORT=8001
 WEB_PORT=8002
 DB_PORT=8003
 ```
 
+**Docker Services**:
+- `api`: FastAPI backend (exposed at `${API_PORT:-8001}:8000`)
+- `web`: React frontend (exposed at `${WEB_PORT:-8002}:80`)
+- `db`: PostgreSQL 13 (exposed at `${DB_PORT:-8003}:5432`)
+- `databricks-worker`: Background worker for Databricks sync (`python -m app.workers.databricks_worker`)
+
 ### `apps/api/.env` (API service overrides)
 
 Loaded via pydantic-settings. See `apps/api/app/core/config.py` for available settings:
-- `SECRET_KEY`, `ALGORITHM`, `ACCESS_TOKEN_EXPIRE_MINUTES`: Auth config
-- `DATABASE_URL`: PostgreSQL connection string
-- `DATA_STORAGE_PATH`: Local data file storage
-- `TEMPORAL_ADDRESS`, `TEMPORAL_NAMESPACE`: Temporal connection
-- `DEFAULT_WORKFLOW_TIMEOUT_SECONDS`: Workflow timeout
-- **MCP Configuration** (Model Context Protocol for Databricks integration):
-  - `MCP_SERVER_URL`: MCP server endpoint (default: `http://localhost:8085`)
-  - `MCP_API_KEY`: Authentication key for MCP server
-  - `MCP_ENABLED`: Feature flag for MCP/Databricks integration (default: `True`)
-  - `DATABRICKS_HOST`: Databricks workspace URL
-  - `DATABRICKS_TOKEN`: Personal access token for Databricks API
-- **LLM Configuration**:
-  - `ANTHROPIC_API_KEY`: Your Anthropic API key (required for AI chat)
-  - `LLM_MODEL`: Claude model to use (default: `claude-3-5-sonnet-20241022`)
-  - `LLM_MAX_TOKENS`: Maximum response length (default: `4096`)
-  - `LLM_TEMPERATURE`: Response creativity (default: `0.7`)
+
+**Authentication & Database**:
+- `SECRET_KEY`: JWT signing key (default: `"secret"`)
+- `ALGORITHM`: JWT algorithm (default: `"HS256"`)
+- `ACCESS_TOKEN_EXPIRE_MINUTES`: Token expiration (default: `30`)
+- `DATABASE_URL`: PostgreSQL connection string (default: `"postgresql://postgres:postgres@db:5432/agentprovision"`)
+- `DATA_STORAGE_PATH`: Local data file storage (default: `"/app/storage"`)
+
+**Temporal Workflow**:
+- `TEMPORAL_ADDRESS`: Temporal server address (default: `"localhost:7233"`)
+- `TEMPORAL_NAMESPACE`: Namespace (default: `"default"`)
+- `DEFAULT_WORKFLOW_TIMEOUT_SECONDS`: Workflow timeout (default: `600`)
+
+**MCP & Databricks Integration**:
+- `MCP_SERVER_URL`: MCP server endpoint (default: `"http://localhost:8085"`)
+- `MCP_API_KEY`: Authentication key for MCP server (default: `"dev_mcp_key"`)
+- `MCP_ENABLED`: Feature flag for MCP/Databricks integration (default: `True`)
+- `DATABRICKS_SYNC_ENABLED`: Enable Databricks sync (default: `True`)
+- `DATABRICKS_AUTO_SYNC`: Auto-sync datasets to Databricks (default: `True`)
+- `DATABRICKS_RETRY_ATTEMPTS`: Retry attempts for failed syncs (default: `3`)
+- `DATABRICKS_RETRY_INTERVAL`: Retry interval in seconds (default: `300` = 5 minutes)
+
+**LLM Configuration**:
+- `ANTHROPIC_API_KEY`: Your Anthropic API key (required for AI chat, default: `None`)
+- `LLM_MODEL`: Claude model to use (default: `"claude-3-5-sonnet-20241022"`)
+- `LLM_MAX_TOKENS`: Maximum response length (default: `4096`)
+- `LLM_TEMPERATURE`: Response creativity (default: `0.7`)
 
 **Example `.env` file**:
 ```
@@ -393,10 +422,10 @@ LLM_TEMPERATURE=0.7
 ### `apps/web/.env.local` (Web app)
 
 ```
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+REACT_APP_API_BASE_URL=http://localhost:8001
 ```
 
-Note: Despite the naming, this is a **React app** (Create React App), not Next.js. The `NEXT_PUBLIC_` prefix is used for consistency but is not required.
+**Note**: This is a **React app** built with Create React App, not Next.js. Environment variables should use the `REACT_APP_` prefix to be accessible in the browser. The API base URL should point to where the API is running (default: `http://localhost:8001` when using Docker Compose).
 
 ## Deployment
 

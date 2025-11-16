@@ -67,6 +67,17 @@
   display: flex !important;
   flex-direction: column !important;
   min-height: 0;
+  width: 100%;
+}
+
+/* Ensure nav items render in rows (vertically stacked) */
+.sidebar-nav > * {
+  width: 100%;
+}
+
+.sidebar-nav .nav-link {
+  display: flex !important;
+  width: 100%;
 }
 
 .sidebar-nav::-webkit-scrollbar {
@@ -89,8 +100,13 @@
 
 .nav-section {
   margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  width: 100%;
+}
+
+.nav-section > * {
   width: 100%;
 }
 
