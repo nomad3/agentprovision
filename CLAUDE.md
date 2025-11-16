@@ -78,6 +78,10 @@ This is a **Turborepo monorepo** managed with `pnpm` workspaces:
 - See `LLM_INTEGRATION_README.md` for setup and usage
 
 **Temporal workflows**: The platform integrates Temporal for durable workflow execution. Workflow service located at `apps/api/app/services/workflows.py`. Configuration via `TEMPORAL_ADDRESS` and `TEMPORAL_NAMESPACE` environment variables.
+- Temporal runs in a Docker container using PostgreSQL for persistence
+- Shares the same PostgreSQL database (`db` service) as the main application
+- Exposed on ports 7233 (gRPC) and 8233 (Web UI)
+- Databricks worker connects to Temporal for async dataset sync jobs
 
 **Databricks Integration**: Datasets automatically sync to Databricks Unity Catalog via MCP server using Temporal workflows:
 - Bronze layer: External table pointing to Parquet file
@@ -389,7 +393,7 @@ Loaded via pydantic-settings. See `apps/api/app/core/config.py` for available se
 - `DATA_STORAGE_PATH`: Local data file storage (default: `"/app/storage"`)
 
 **Temporal Workflow**:
-- `TEMPORAL_ADDRESS`: Temporal server address (default: `"localhost:7233"`)
+- `TEMPORAL_ADDRESS`: Temporal server address (use `"temporal:7233"` in Docker, `"localhost:7233"` for local dev, default: `"localhost:7233"`)
 - `TEMPORAL_NAMESPACE`: Namespace (default: `"default"`)
 - `DEFAULT_WORKFLOW_TIMEOUT_SECONDS`: Workflow timeout (default: `600`)
 
