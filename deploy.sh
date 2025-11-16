@@ -83,15 +83,18 @@ services:
     image: temporalio/auto-setup:1.22.2
     restart: unless-stopped
     environment:
-      - DB=sqlite
-      - DBNAME=temporal
+      - DB=postgresql
+      - DB_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PWD=postgres
+      - POSTGRES_SEEDS=db
       - SKIP_SCHEMA_SETUP=false
       - SKIP_DEFAULT_NAMESPACE_CREATION=false
     ports:
       - "${TEMPORAL_GRPC_PORT}:7233"
       - "${TEMPORAL_WEB_PORT}:8233"
-    volumes:
-      - temporal-data:/etc/temporal
+    depends_on:
+      - db
 
   api:
     environment:
@@ -108,9 +111,6 @@ services:
     depends_on:
       - db
       - temporal
-
-volumes:
-  temporal-data:
 EOF
 
 COMPOSE_FILES=("-f" "$PROJECT_ROOT/docker-compose.yml" "-f" "$TEMPORAL_COMPOSE_FILE")
