@@ -31,3 +31,7 @@ packages = ["src"]
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+norecursedirs = ["src", "build", "dist", ".git", ".tox", ".venv"]
