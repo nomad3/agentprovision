@@ -15,3 +15,8 @@ class DataSource(DataSourceBase):
 
     class Config:
         from_attributes = True
+
+
+class DataSourceWithCredentials(DataSource):
+    """Data source with decrypted credentials for internal use"""
+    config: dict  # Includes decrypted sensitive fields

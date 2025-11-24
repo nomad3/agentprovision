@@ -39,10 +39,12 @@ This is a **Turborepo monorepo** managed with `pnpm` workspaces:
   - Authenticated console at `/dashboard/*`
   - Marketing landing page at `/`
 
-- **`mcp-server`**: Model Context Protocol server for Databricks integration
-  - TypeScript/Node.js server implementing MCP specification
-  - Provides dataset sync capabilities to Databricks Unity Catalog
-  - Exposes tools for creating external tables and managed tables
+- **`apps/mcp-server`**: Model Context Protocol server for data integration (Python 3.11)
+  - MCP-compliant server following Anthropic's Model Context Protocol specification
+  - Provides 9 tools: PostgreSQL connections, data ingestion, Databricks queries
+  - Works with Claude Desktop, Claude Code, and AgentProvision Chat
+  - Bronze/Silver/Gold data layer architecture via Databricks Unity Catalog
+  - See `docs/plans/2025-11-24-mcp-integration-server-design.md` for architecture
 
 - **`infra/terraform`**: Infrastructure as Code for AWS deployment (EKS, Aurora PostgreSQL, VPC, IAM)
 
@@ -218,21 +220,35 @@ SKIP_WORKFLOW=true ./scripts/run_demo_workflow.sh
 DESCRIBE=true ./scripts/run_demo_workflow.sh
 ```
 
-### MCP Server (Databricks Integration)
+### MCP Server (Data Integration)
 
 ```bash
-cd mcp-server
+cd apps/mcp-server
 
 # Install dependencies
-npm install
+pip install -e ".[dev]"
 
-# Start MCP server (required for Databricks sync)
-npm start
+# Run tests
+pytest tests/ -v
 
-# Server runs on http://localhost:8085 by default
+# Start MCP server locally
+python -m src.server
+
+# Server runs on http://localhost:8085
 ```
 
-**Note**: MCP server must be running for Databricks dataset sync to work. The Databricks worker (`databricks-worker` service in docker-compose) handles async sync jobs and requires both MCP server and Temporal to be available.
+**MCP Server Tools:**
+- `connect_postgres`: Register PostgreSQL database connections
+- `verify_connection`: Test connection health
+- `list_source_tables`: List tables from source database
+- `sync_table_to_bronze`: Sync table to Databricks Bronze layer
+- `upload_file`: Upload CSV/Excel to Bronze layer
+- `query_sql`: Execute SQL on Databricks
+- `list_tables`: List tables by layer
+- `describe_table`: Get table schema and stats
+- `transform_to_silver`: Transform Bronze to Silver
+
+**Note**: MCP server must be running for Databricks dataset sync to work. The server can be started via Docker Compose (`mcp-server` service) or locally for development.
 
 ### Docker Port Management
 

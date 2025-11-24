@@ -65,3 +65,20 @@ services:
       - db
       - temporal
     restart: unless-stopped
+
+  mcp-server:
+    build:
+      context: ./apps/mcp-server
+      dockerfile: Dockerfile
+    ports:
+      - "${MCP_PORT:-8085}:8085"
+    environment:
+      - API_BASE_URL=http://api:8000
+      - API_INTERNAL_KEY=${API_INTERNAL_KEY:-internal-service-key}
+      - DATABRICKS_HOST=${DATABRICKS_HOST}
+      - DATABRICKS_TOKEN=${DATABRICKS_TOKEN}
+      - DATABRICKS_WAREHOUSE_ID=${DATABRICKS_WAREHOUSE_ID}
+      - MCP_PORT=8085
+    depends_on:
+      - api
+    restart: unless-stopped
