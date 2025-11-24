@@ -36,6 +36,28 @@ class DatabricksClient:
         self.catalog_prefix = settings.DATABRICKS_CATALOG_PREFIX
         self._connection = None
 
+    def _validate_identifier(self, name: str, identifier_type: str = "identifier") -> str:
+        """Validate and sanitize SQL identifier to prevent injection"""
+        import re
+        if not re.match(r'^[a-zA-Z_][a-zA-Z0-9_]*$', name.replace(".", "_")):
+            raise DatabricksClientError(f"Invalid {identifier_type}: {name}")
+        return name
+
+    def _pandas_to_databricks_type(self, dtype) -> str:
+        """Map pandas dtype to Databricks SQL type"""
+        import pandas as pd
+        dtype_str = str(dtype)
+        if 'int' in dtype_str:
+            return "BIGINT"
+        elif 'float' in dtype_str:
+            return "DOUBLE"
+        elif 'bool' in dtype_str:
+            return "BOOLEAN"
+        elif 'datetime' in dtype_str:
+            return "TIMESTAMP"
+        else:
+            return "STRING"
+
     def _get_connection(self):
         """Get or create Databricks SQL connection"""
         if self._connection is None:
@@ -70,6 +92,7 @@ class DatabricksClient:
         Automatically scopes to tenant's catalog for security.
         """
         catalog = self._get_catalog(tenant_id)
+        self._validate_identifier(catalog, "catalog")
 
         # Ensure query is scoped to tenant catalog
         scoped_sql = f"USE CATALOG {catalog};\n{sql}"
@@ -77,10 +100,13 @@ class DatabricksClient:
             scoped_sql = f"{scoped_sql} LIMIT {limit}"
 
         conn = self._get_connection()
-        with conn.cursor() as cursor:
-            cursor.execute(scoped_sql)
-            rows = cursor.fetchall()
-            columns = [desc[0] for desc in cursor.description] if cursor.description else []
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(scoped_sql)
+                rows = cursor.fetchall()
+                columns = [desc[0] for desc in cursor.description] if cursor.description else []
+        except Exception as e:
+            raise DatabricksClientError(f"Query execution failed: {str(e)}")
 
         return {
             "rows": [dict(zip(columns, row)) for row in rows],
@@ -100,14 +126,23 @@ class DatabricksClient:
             tenant_id: Tenant identifier
             layer: bronze, silver, or gold
         """
+        # Validate layer parameter
+        if layer not in ["bronze", "silver", "gold"]:
+            raise DatabricksClientError(f"Invalid layer: {layer}. Must be bronze, silver, or gold")
+
         catalog = self._get_catalog(tenant_id)
+        self._validate_identifier(catalog, "catalog")
+        self._validate_identifier(layer, "layer")
 
         sql = f"SHOW TABLES IN {catalog}.{layer}"
 
         conn = self._get_connection()
-        with conn.cursor() as cursor:
-            cursor.execute(sql)
-            rows = cursor.fetchall()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(sql)
+                rows = cursor.fetchall()
+        except Exception as e:
+            raise DatabricksClientError(f"Failed to list tables: {str(e)}")
 
         tables = []
         for row in rows:
@@ -138,19 +173,27 @@ class DatabricksClient:
             tenant_id: Tenant identifier
         """
         catalog = self._get_catalog(tenant_id)
+        self._validate_identifier(catalog, "catalog")
 
-        # Parse table name
+        # Parse and validate table name
         if "." in table_name:
+            parts = table_name.split(".")
+            for part in parts:
+                self._validate_identifier(part, "table name part")
             full_table = f"{catalog}.{table_name}"
         else:
+            self._validate_identifier(table_name, "table name")
             full_table = f"{catalog}.bronze.{table_name}"
 
         conn = self._get_connection()
 
         # Get schema
-        with conn.cursor() as cursor:
-            cursor.execute(f"DESCRIBE TABLE {full_table}")
-            schema_rows = cursor.fetchall()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(f"DESCRIBE TABLE {full_table}")
+                schema_rows = cursor.fetchall()
+        except Exception as e:
+            raise DatabricksClientError(f"Failed to describe table: {str(e)}")
 
         columns = []
         for row in schema_rows:
@@ -160,10 +203,13 @@ class DatabricksClient:
                 columns.append({"name": col_name, "type": col_type})
 
         # Get row count
-        with conn.cursor() as cursor:
-            cursor.execute(f"SELECT COUNT(*) as cnt FROM {full_table}")
-            count_row = cursor.fetchone()
-            row_count = count_row[0] if count_row else 0
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(f"SELECT COUNT(*) as cnt FROM {full_table}")
+                count_row = cursor.fetchone()
+                row_count = count_row[0] if count_row else 0
+        except Exception as e:
+            raise DatabricksClientError(f"Failed to count rows: {str(e)}")
 
         return {
             "table": full_table,
@@ -191,6 +237,15 @@ class DatabricksClient:
             parquet_data: Parquet file bytes
             mode: overwrite or append
         """
+        # Validate identifiers
+        self._validate_identifier(catalog, "catalog")
+        self._validate_identifier(schema, "schema")
+        self._validate_identifier(table_name, "table name")
+
+        # Validate mode
+        if mode not in ["overwrite", "append"]:
+            raise DatabricksClientError(f"Invalid mode: {mode}. Must be overwrite or append")
+
         full_table = f"{catalog}.{schema}.{table_name}"
 
         # Read parquet to get schema
@@ -201,33 +256,41 @@ class DatabricksClient:
         # For MVP, use INSERT with VALUES (real implementation would use volumes)
         conn = self._get_connection()
 
-        # Create table if not exists
+        # Create table with proper type inference
         columns_sql = ", ".join([
-            f"{col} STRING" for col in df.columns
+            f"{col} {self._pandas_to_databricks_type(df[col].dtype)}"
+            for col in df.columns
         ])
 
-        with conn.cursor() as cursor:
-            if mode == "overwrite":
-                cursor.execute(f"DROP TABLE IF EXISTS {full_table}")
+        try:
+            with conn.cursor() as cursor:
+                if mode == "overwrite":
+                    cursor.execute(f"DROP TABLE IF EXISTS {full_table}")
 
-            cursor.execute(f"""
-                CREATE TABLE IF NOT EXISTS {full_table} ({columns_sql})
-                USING DELTA
-            """)
+                cursor.execute(f"""
+                    CREATE TABLE IF NOT EXISTS {full_table} ({columns_sql})
+                    USING DELTA
+                """)
 
-            # Insert data in batches
-            if len(df) > 0:
-                for i in range(0, len(df), 1000):
-                    batch = df.iloc[i:i+1000]
-                    values = []
-                    for _, row in batch.iterrows():
-                        row_values = ", ".join([f"'{str(v)}'" for v in row.values])
-                        values.append(f"({row_values})")
+                # Insert data in batches
+                if len(df) > 0:
+                    for i in range(0, len(df), 1000):
+                        batch = df.iloc[i:i+1000]
+                        values = []
+                        for _, row in batch.iterrows():
+                            # Properly escape single quotes and handle NULL values
+                            row_values = ", ".join([
+                                f"'{str(v).replace(chr(39), chr(39)+chr(39))}'" if v is not None else "NULL"
+                                for v in row.values
+                            ])
+                            values.append(f"({row_values})")
 
-                    if values:
-                        cursor.execute(f"""
-                            INSERT INTO {full_table} VALUES {", ".join(values)}
-                        """)
+                        if values:
+                            cursor.execute(f"""
+                                INSERT INTO {full_table} VALUES {", ".join(values)}
+                            """)
+        except Exception as e:
+            raise DatabricksClientError(f"Failed to create table from parquet: {str(e)}")
 
         return {
             "table": full_table,
@@ -253,24 +316,30 @@ class DatabricksClient:
         - Infer and cast types
         """
         catalog = self._get_catalog(tenant_id)
+        self._validate_identifier(catalog, "catalog")
 
-        # Parse bronze table name to get base name
+        # Parse and validate bronze table name
         parts = bronze_table.split(".")
+        for part in parts:
+            self._validate_identifier(part, "table name part")
         base_name = parts[-1]
         silver_table = f"{catalog}.silver.{base_name}"
 
         conn = self._get_connection()
 
-        with conn.cursor() as cursor:
-            # Create silver table with deduplication
-            cursor.execute(f"""
-                CREATE OR REPLACE TABLE {silver_table} AS
-                SELECT DISTINCT * FROM {bronze_table}
-            """)
+        try:
+            with conn.cursor() as cursor:
+                # Create silver table with deduplication
+                cursor.execute(f"""
+                    CREATE OR REPLACE TABLE {silver_table} AS
+                    SELECT DISTINCT * FROM {bronze_table}
+                """)
 
-            # Get row count
-            cursor.execute(f"SELECT COUNT(*) FROM {silver_table}")
-            row_count = cursor.fetchone()[0]
+                # Get row count
+                cursor.execute(f"SELECT COUNT(*) FROM {silver_table}")
+                row_count = cursor.fetchone()[0]
+        except Exception as e:
+            raise DatabricksClientError(f"Failed to transform to silver: {str(e)}")
 
         return {
             "bronze_table": bronze_table,
