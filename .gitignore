@@ -41,6 +41,9 @@ apps/api/storage/
 # turbo
 .turbo/
 
+# git worktrees
+.worktrees/
+
 # web app public index.html
 !/apps/web/public/
 /apps/web/public/*
