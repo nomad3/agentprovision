@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     MCP_API_KEY: str = "dev_mcp_key"  # Change in production
     MCP_ENABLED: bool = True  # Feature flag for MCP/Databricks integration
 
+    # Internal API Key (for MCP server to access credentials)
+    API_INTERNAL_KEY: str = "internal-service-key"
+
     # Databricks Sync Settings
     DATABRICKS_SYNC_ENABLED: bool = True
     DATABRICKS_AUTO_SYNC: bool = True

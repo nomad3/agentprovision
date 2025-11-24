@@ -1,12 +1,13 @@
-from typing import List
+from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Header
 from sqlalchemy.orm import Session
 
 from app import schemas
 from app.api import deps
 from app.services import data_source as data_source_service
 from app.models.user import User
+from app.core.config import settings
 import uuid
 
 router = APIRouter()
@@ -86,3 +87,30 @@ def delete_data_source(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Data source not found")
     data_source_service.delete_data_source(db=db, data_source_id=data_source_id)
     return {"message": "Data source deleted successfully"}
+
+
+# ==================== Internal Endpoints (MCP Server) ====================
+
+@router.get("/{data_source_id}/with-credentials", response_model=schemas.data_source.DataSourceWithCredentials)
+def get_data_source_with_credentials(
+    data_source_id: uuid.UUID,
+    db: Session = Depends(deps.get_db),
+    x_internal_key: Optional[str] = Header(None, alias="X-Internal-Key"),
+):
+    """
+    Get data source with decrypted credentials.
+
+    INTERNAL USE ONLY - requires X-Internal-Key header.
+    Used by MCP server to fetch connection credentials.
+    """
+    # Verify internal key
+    if x_internal_key != settings.API_INTERNAL_KEY:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid internal key")
+
+    data_source = data_source_service.get_data_source(db, data_source_id=data_source_id)
+    if not data_source:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Data source not found")
+
+    # In production, decrypt sensitive fields here
+    # For MVP, config is stored as-is
+    return data_source
