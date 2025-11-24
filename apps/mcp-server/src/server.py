@@ -189,7 +189,10 @@ async def transform_to_silver(
 
 def main():
     """Run MCP server"""
-    mcp.run(transport=settings.MCP_TRANSPORT, port=settings.MCP_PORT)
+    import os
+    # Set port via environment variable for SSE transport
+    os.environ["FASTMCP_PORT"] = str(settings.MCP_PORT)
+    mcp.run(transport=settings.MCP_TRANSPORT)
 
 
 if __name__ == "__main__":
