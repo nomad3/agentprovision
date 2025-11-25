@@ -147,3 +147,12 @@ def test_agent_kit_extended_fields():
     assert hasattr(AgentKit, 'default_agents')
     assert hasattr(AgentKit, 'default_hierarchy')
     assert hasattr(AgentKit, 'industry')
+
+
+def test_enhanced_chat_service():
+    """Test EnhancedChatService exists with required methods."""
+    from app.services.enhanced_chat import EnhancedChatService
+
+    assert hasattr(EnhancedChatService, 'create_session_with_orchestration')
+    assert hasattr(EnhancedChatService, 'post_message_with_memory')
+    assert hasattr(EnhancedChatService, 'select_llm_for_task')
