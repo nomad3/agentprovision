@@ -179,3 +179,21 @@ def test_agent_group_schema():
     assert create_data.description == "Handles enterprise sales"
     assert create_data.strategy == {"approach": "consultative"}
     assert create_data.escalation_rules == {"timeout": 30}
+
+def test_agent_task_schema():
+    """Test AgentTask schemas work correctly."""
+    from app.schemas.agent_task import AgentTaskCreate, AgentTask as AgentTaskSchema
+    import uuid
+
+    # Test create schema
+    create_data = AgentTaskCreate(
+        assigned_agent_id=uuid.uuid4(),
+        objective="Analyze quarterly data",
+        task_type="analyze",
+        priority="high",
+        context={"dataset": "q4_sales"}
+    )
+    assert create_data.objective == "Analyze quarterly data"
+    assert create_data.priority == "high"
+    assert create_data.task_type == "analyze"
+    assert create_data.context == {"dataset": "q4_sales"}
