@@ -6,7 +6,8 @@ from datetime import datetime, timedelta
 import uuid
 
 from app.models.tenant_analytics import TenantAnalytics
-from app.models.chat import ChatMessage
+from app.models.chat import ChatMessage, ChatSession
+from app.models.agent import Agent
 from app.models.agent_task import AgentTask
 from app.schemas.tenant_analytics import TenantAnalyticsCreate, TenantAnalyticsSummary
 
@@ -70,11 +71,20 @@ def calculate_period_analytics(
     else:  # hourly
         period_end = period_start + timedelta(hours=1)
 
-    # Count messages in period (simplified - in production would filter by tenant)
-    total_messages = db.query(func.count(ChatMessage.id)).scalar() or 0
+    # Count messages in period, filtered by tenant via ChatSession
+    total_messages = db.query(func.count(ChatMessage.id)).join(
+        ChatSession, ChatMessage.session_id == ChatSession.id
+    ).filter(
+        ChatSession.tenant_id == tenant_id,
+        ChatMessage.created_at >= period_start,
+        ChatMessage.created_at < period_end
+    ).scalar() or 0
 
-    # Count tasks
-    total_tasks = db.query(func.count(AgentTask.id)).filter(
+    # Count tasks, filtered by tenant via Agent
+    total_tasks = db.query(func.count(AgentTask.id)).join(
+        Agent, AgentTask.assigned_agent_id == Agent.id
+    ).filter(
+        Agent.tenant_id == tenant_id,
         AgentTask.created_at >= period_start,
         AgentTask.created_at < period_end
     ).scalar() or 0
