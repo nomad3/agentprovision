@@ -170,3 +170,18 @@ def test_knowledge_entity_model():
     assert hasattr(KnowledgeEntity, 'source_agent_id')
     assert hasattr(KnowledgeEntity, 'created_at')
     assert hasattr(KnowledgeEntity, 'updated_at')
+
+
+def test_knowledge_relation_model():
+    """Test KnowledgeRelation model has required fields."""
+    from app.models.knowledge_relation import KnowledgeRelation
+
+    assert hasattr(KnowledgeRelation, 'id')
+    assert hasattr(KnowledgeRelation, 'tenant_id')
+    assert hasattr(KnowledgeRelation, 'from_entity_id')
+    assert hasattr(KnowledgeRelation, 'to_entity_id')
+    assert hasattr(KnowledgeRelation, 'relation_type')
+    assert hasattr(KnowledgeRelation, 'strength')
+    assert hasattr(KnowledgeRelation, 'evidence')
+    assert hasattr(KnowledgeRelation, 'discovered_by_agent_id')
+    assert hasattr(KnowledgeRelation, 'created_at')
