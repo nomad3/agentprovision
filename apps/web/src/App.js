@@ -20,6 +20,7 @@ import SettingsPage from './pages/SettingsPage';
 import TenantsPage from './pages/TenantsPage';
 import AgentWizardPage from './pages/AgentWizardPage';
 import TeamsPage from './pages/TeamsPage';
+import MemoryPage from './pages/MemoryPage';
 import authService from './services/auth';
 import { ToastProvider } from './components/common';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -79,6 +80,7 @@ function App() {
             <Route path="/agent-kits" element={<ProtectedRoute><AgentKitsPage /></ProtectedRoute>} />
             <Route path="/tenants" element={<ProtectedRoute><TenantsPage /></ProtectedRoute>} />
             <Route path="/teams" element={<ProtectedRoute><TeamsPage /></ProtectedRoute>} />
+            <Route path="/memory" element={<ProtectedRoute><MemoryPage /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
           </Routes>
         </ToastProvider>
