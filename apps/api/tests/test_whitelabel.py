@@ -53,3 +53,4 @@ def test_tenant_features_model():
     assert hasattr(TenantFeatures, 'storage_limit_gb')
     # UI
     assert hasattr(TenantFeatures, 'hide_agentprovision_branding')
+    assert hasattr(TenantFeatures, 'plan_type')
