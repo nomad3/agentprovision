@@ -23,6 +23,7 @@ from app.models.agent_memory import AgentMemory  # noqa: F401
 from app.models.knowledge_entity import KnowledgeEntity  # noqa: F401
 from app.models.knowledge_relation import KnowledgeRelation  # noqa: F401
 from app.models.llm_provider import LLMProvider  # noqa: F401
+from app.models.llm_model import LLMModel  # noqa: F401
 from app.models.tool import Tool
 from app.models.connector import Connector
 from app.models.deployment import Deployment  # noqa: F401
