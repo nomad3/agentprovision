@@ -100,3 +100,11 @@ def test_tenant_analytics_api_routes():
     assert hasattr(tenant_analytics, 'router')
     assert hasattr(tenant_analytics, 'get_analytics_summary')
     assert hasattr(tenant_analytics, 'get_analytics_history')
+
+
+def test_agent_extended_fields():
+    """Test Agent model has integration fields."""
+    from app.models.agent import Agent
+
+    assert hasattr(Agent, 'llm_config_id')
+    assert hasattr(Agent, 'memory_config')

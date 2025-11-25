@@ -22,6 +22,13 @@ class Agent(Base):
     autonomy_level = Column(String, default="supervised")  # "full", "supervised", "approval_required"
     max_delegation_depth = Column(Integer, default=2)
 
+    # LLM and Memory configuration
+    llm_config_id = Column(UUID(as_uuid=True), ForeignKey("llm_configs.id"), nullable=True)
+    memory_config = Column(JSON, nullable=True)  # {"retention_days": 30, "max_memories": 1000}
+
+    # Relationships
+    llm_config = relationship("LLMConfig", foreign_keys=[llm_config_id])
+
     # Add relationship to skills
     skills = relationship("AgentSkill", back_populates="agent")
 
