@@ -16,6 +16,7 @@ from app.models.notebook import Notebook
 from app.models.agent import Agent
 from app.models.agent_group import AgentGroup  # noqa: F401
 from app.models.agent_relationship import AgentRelationship  # noqa: F401
+from app.models.agent_task import AgentTask  # noqa: F401
 from app.models.tool import Tool
 from app.models.connector import Connector
 from app.models.deployment import Deployment  # noqa: F401

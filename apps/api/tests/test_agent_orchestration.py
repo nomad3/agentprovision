@@ -104,3 +104,29 @@ def test_agent_relationship_model():
     assert hasattr(AgentRelationship, 'communication_style')
     assert hasattr(AgentRelationship, 'handoff_rules')
     assert hasattr(AgentRelationship, 'created_at')
+
+def test_agent_task_model():
+    """Test AgentTask model has required fields."""
+    from app.models.agent_task import AgentTask
+
+    assert hasattr(AgentTask, 'id')
+    assert hasattr(AgentTask, 'group_id')
+    assert hasattr(AgentTask, 'assigned_agent_id')
+    assert hasattr(AgentTask, 'created_by_agent_id')
+    assert hasattr(AgentTask, 'human_requested')
+    assert hasattr(AgentTask, 'status')
+    assert hasattr(AgentTask, 'priority')
+    assert hasattr(AgentTask, 'task_type')
+    assert hasattr(AgentTask, 'objective')
+    assert hasattr(AgentTask, 'context')
+    assert hasattr(AgentTask, 'reasoning')
+    assert hasattr(AgentTask, 'output')
+    assert hasattr(AgentTask, 'confidence')
+    assert hasattr(AgentTask, 'error')
+    assert hasattr(AgentTask, 'parent_task_id')
+    assert hasattr(AgentTask, 'requires_approval')
+    assert hasattr(AgentTask, 'tokens_used')
+    assert hasattr(AgentTask, 'cost')
+    assert hasattr(AgentTask, 'created_at')
+    assert hasattr(AgentTask, 'started_at')
+    assert hasattr(AgentTask, 'completed_at')
