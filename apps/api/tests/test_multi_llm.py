@@ -32,3 +32,21 @@ def test_llm_model_model():
     assert hasattr(LLMModel, 'speed_tier')
     assert hasattr(LLMModel, 'quality_tier')
     assert hasattr(LLMModel, 'is_active')
+
+
+def test_llm_config_model():
+    """Test LLMConfig has required fields."""
+    from app.models.llm_config import LLMConfig
+
+    assert hasattr(LLMConfig, 'id')
+    assert hasattr(LLMConfig, 'tenant_id')
+    assert hasattr(LLMConfig, 'name')
+    assert hasattr(LLMConfig, 'is_tenant_default')
+    assert hasattr(LLMConfig, 'primary_model_id')
+    assert hasattr(LLMConfig, 'fallback_model_id')
+    assert hasattr(LLMConfig, 'api_key_encrypted')
+    assert hasattr(LLMConfig, 'use_platform_key')
+    assert hasattr(LLMConfig, 'temperature')
+    assert hasattr(LLMConfig, 'max_tokens')
+    assert hasattr(LLMConfig, 'routing_rules')
+    assert hasattr(LLMConfig, 'budget_limit_daily')
