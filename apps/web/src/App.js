@@ -19,6 +19,7 @@ import ChatPage from './pages/ChatPage';
 import SettingsPage from './pages/SettingsPage';
 import TenantsPage from './pages/TenantsPage';
 import AgentWizardPage from './pages/AgentWizardPage';
+import TeamsPage from './pages/TeamsPage';
 import authService from './services/auth';
 import { ToastProvider } from './components/common';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -77,6 +78,7 @@ function App() {
             <Route path="/vector-stores" element={<ProtectedRoute><VectorStoresPage /></ProtectedRoute>} />
             <Route path="/agent-kits" element={<ProtectedRoute><AgentKitsPage /></ProtectedRoute>} />
             <Route path="/tenants" element={<ProtectedRoute><TenantsPage /></ProtectedRoute>} />
+            <Route path="/teams" element={<ProtectedRoute><TeamsPage /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
           </Routes>
         </ToastProvider>
