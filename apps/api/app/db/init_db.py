@@ -19,6 +19,8 @@ from app.models.agent_relationship import AgentRelationship  # noqa: F401
 from app.models.agent_task import AgentTask  # noqa: F401
 from app.models.agent_message import AgentMessage  # noqa: F401
 from app.models.agent_skill import AgentSkill  # noqa: F401
+from app.models.agent_memory import AgentMemory  # noqa: F401
+from app.models.knowledge_entity import KnowledgeEntity  # noqa: F401
 from app.models.tool import Tool
 from app.models.connector import Connector
 from app.models.deployment import Deployment  # noqa: F401
