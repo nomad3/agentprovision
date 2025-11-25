@@ -24,3 +24,6 @@ class Agent(Base):
 
     # Add relationship to skills
     skills = relationship("AgentSkill", back_populates="agent")
+
+    # Add relationship to memories
+    memories = relationship("AgentMemory", back_populates="agent", cascade="all, delete-orphan")
