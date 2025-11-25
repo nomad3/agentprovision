@@ -91,3 +91,12 @@ def test_features_api_routes():
     assert hasattr(features, 'router')
     assert hasattr(features, 'get_features')
     assert hasattr(features, 'check_feature')
+
+
+def test_tenant_analytics_api_routes():
+    """Test tenant analytics API routes exist."""
+    from app.api.v1 import tenant_analytics
+
+    assert hasattr(tenant_analytics, 'router')
+    assert hasattr(tenant_analytics, 'get_analytics_summary')
+    assert hasattr(tenant_analytics, 'get_analytics_history')

@@ -22,6 +22,7 @@ from app.api.v1 import (
     llm,
     branding,
     features,
+    tenant_analytics,
 )
 
 router = APIRouter()
@@ -52,3 +53,4 @@ router.include_router(knowledge.router, prefix="/knowledge", tags=["knowledge"])
 router.include_router(llm.router, prefix="/llm", tags=["llm"])
 router.include_router(branding.router, prefix="/branding", tags=["branding"])
 router.include_router(features.router, prefix="/features", tags=["features"])
+router.include_router(tenant_analytics.router, prefix="/tenant-analytics", tags=["tenant-analytics"])
