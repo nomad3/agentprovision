@@ -156,3 +156,11 @@ def test_enhanced_chat_service():
     assert hasattr(EnhancedChatService, 'create_session_with_orchestration')
     assert hasattr(EnhancedChatService, 'post_message_with_memory')
     assert hasattr(EnhancedChatService, 'select_llm_for_task')
+
+
+def test_chat_enhanced_routes():
+    """Test chat API has enhanced routes."""
+    from app.api.v1 import chat
+
+    assert hasattr(chat, 'create_session_enhanced')
+    assert hasattr(chat, 'post_message_enhanced')

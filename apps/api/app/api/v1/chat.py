@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List
+from typing import List, Optional
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -10,6 +10,7 @@ from app.api import deps
 from app.models.user import User
 from app.schemas import chat as chat_schema
 from app.services import chat as chat_service
+from app.services.enhanced_chat import get_enhanced_chat_service
 
 router = APIRouter()
 
@@ -104,3 +105,46 @@ def post_message(
         user_message=chat_schema.ChatMessage.model_validate(user_message),
         assistant_message=chat_schema.ChatMessage.model_validate(assistant_message)
     )
+
+
+@router.post("/sessions/enhanced", response_model=chat_schema.ChatSession)
+def create_session_enhanced(
+    *,
+    db: Session = Depends(deps.get_db),
+    current_user=Depends(deps.get_current_user),
+    session_in: chat_schema.ChatSessionCreate,
+    agent_group_id: Optional[uuid.UUID] = None,
+):
+    """Create chat session with optional agent group orchestration."""
+    enhanced_service = get_enhanced_chat_service(db, current_user.tenant_id)
+    return enhanced_service.create_session_with_orchestration(
+        dataset_id=session_in.dataset_id,
+        agent_kit_id=session_in.agent_kit_id,
+        agent_group_id=agent_group_id,
+        title=session_in.title,
+    )
+
+
+@router.post("/sessions/{session_id}/messages/enhanced")
+def post_message_enhanced(
+    *,
+    db: Session = Depends(deps.get_db),
+    current_user=Depends(deps.get_current_user),
+    session_id: uuid.UUID,
+    message_in: chat_schema.ChatMessageCreate,
+    agent_id: Optional[uuid.UUID] = None,
+):
+    """Post message with memory integration."""
+    session = chat_service.get_session(
+        db, session_id=session_id, tenant_id=current_user.tenant_id
+    )
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    enhanced_service = get_enhanced_chat_service(db, current_user.tenant_id)
+    user_msg, assistant_msg = enhanced_service.post_message_with_memory(
+        session=session,
+        content=message_in.content,
+        agent_id=agent_id,
+    )
+    return {"user": user_msg, "assistant": assistant_msg}
