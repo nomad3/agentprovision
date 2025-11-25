@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, String, ForeignKey, JSON, DateTime
+from sqlalchemy import Column, String, ForeignKey, JSON, DateTime, Float, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -45,4 +45,15 @@ class ChatMessage(Base):
     context = Column(JSON, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
+    # Agent integration
+    agent_id = Column(UUID(as_uuid=True), ForeignKey("agents.id"), nullable=True)
+    task_id = Column(UUID(as_uuid=True), ForeignKey("agent_tasks.id"), nullable=True)
+
+    # Response metadata
+    reasoning = Column(String, nullable=True)  # Chain of thought explanation
+    confidence = Column(Float, nullable=True)  # 0.0-1.0 confidence score
+    tokens_used = Column(Integer, nullable=True)  # Token count for this message
+
+    # Relationships
     session = relationship("ChatSession", back_populates="messages")
+    agent = relationship("Agent", foreign_keys=[agent_id])
