@@ -50,3 +50,12 @@ def test_llm_config_model():
     assert hasattr(LLMConfig, 'max_tokens')
     assert hasattr(LLMConfig, 'routing_rules')
     assert hasattr(LLMConfig, 'budget_limit_daily')
+
+
+def test_llm_router_service():
+    """Test LLMRouter service exists with required methods."""
+    from app.services.llm.router import LLMRouter
+
+    assert hasattr(LLMRouter, 'select_model')
+    assert hasattr(LLMRouter, 'estimate_cost')
+    assert callable(getattr(LLMRouter, 'select_model'))
