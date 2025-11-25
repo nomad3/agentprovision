@@ -201,3 +201,32 @@ def test_memory_schema():
     )
     assert create_data.memory_type == "fact"
     assert create_data.importance == 0.8
+
+
+def test_knowledge_entity_schema():
+    """Test KnowledgeEntity schemas work correctly."""
+    from app.schemas.knowledge_entity import KnowledgeEntityCreate
+
+    create_data = KnowledgeEntityCreate(
+        entity_type="customer",
+        name="Acme Corp",
+        attributes={"industry": "tech", "size": "enterprise"},
+        confidence=0.95
+    )
+    assert create_data.entity_type == "customer"
+    assert create_data.name == "Acme Corp"
+
+
+def test_knowledge_relation_schema():
+    """Test KnowledgeRelation schemas work correctly."""
+    from app.schemas.knowledge_relation import KnowledgeRelationCreate
+    import uuid
+
+    create_data = KnowledgeRelationCreate(
+        from_entity_id=uuid.uuid4(),
+        to_entity_id=uuid.uuid4(),
+        relation_type="purchased",
+        strength=0.9,
+        evidence={"order_id": "123"}
+    )
+    assert create_data.relation_type == "purchased"
