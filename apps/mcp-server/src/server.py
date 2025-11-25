@@ -10,18 +10,20 @@ Usage:
 """
 import os
 
-# Set FastMCP host/port BEFORE importing FastMCP (it reads env at import time)
-os.environ["FASTMCP_HOST"] = os.environ.get("FASTMCP_HOST", "0.0.0.0")
-os.environ["FASTMCP_PORT"] = os.environ.get("FASTMCP_PORT", "8000")
-
 from mcp.server.fastmcp import FastMCP
 
 from src.config import settings
 
-# Initialize MCP Server
+# Get host/port from environment (for Docker) or use defaults
+MCP_HOST = os.environ.get("FASTMCP_HOST", "0.0.0.0")
+MCP_PORT = int(os.environ.get("FASTMCP_PORT", "8000"))
+
+# Initialize MCP Server with explicit host/port for Docker compatibility
 mcp = FastMCP(
     name="AgentProvision",
-    instructions="Data lakehouse integration server - connect sources, sync to Databricks, query with AI"
+    instructions="Data lakehouse integration server - connect sources, sync to Databricks, query with AI",
+    host=MCP_HOST,
+    port=MCP_PORT,
 )
 
 
