@@ -3,6 +3,7 @@ import uuid
 from datetime import datetime
 from sqlalchemy import Column, String, Integer, Float, Boolean, DateTime, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
 from app.db.base import Base
 
@@ -42,6 +43,9 @@ class TenantFeatures(Base):
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    tenant = relationship("Tenant", back_populates="features")
 
     def __repr__(self):
         return f"<TenantFeatures {self.tenant_id} plan={self.plan_type}>"

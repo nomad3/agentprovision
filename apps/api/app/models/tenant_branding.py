@@ -46,5 +46,8 @@ class TenantBranding(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    # Relationships
+    tenant = relationship("Tenant", back_populates="branding")
+
     def __repr__(self):
         return f"<TenantBranding {self.company_name or self.tenant_id}>"

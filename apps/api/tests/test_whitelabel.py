@@ -128,3 +128,12 @@ def test_chat_message_extended_fields():
     assert hasattr(ChatMessage, 'reasoning')
     assert hasattr(ChatMessage, 'confidence')
     assert hasattr(ChatMessage, 'tokens_used')
+
+
+def test_tenant_extended_fields():
+    """Test Tenant model has integration fields."""
+    from app.models.tenant import Tenant
+
+    assert hasattr(Tenant, 'default_llm_config_id')
+    assert hasattr(Tenant, 'branding')
+    assert hasattr(Tenant, 'features')
