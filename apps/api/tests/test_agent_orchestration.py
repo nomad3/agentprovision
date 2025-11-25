@@ -161,3 +161,21 @@ def test_agent_skill_model():
     assert hasattr(AgentSkill, 'examples')
     assert hasattr(AgentSkill, 'created_at')
     assert hasattr(AgentSkill, 'last_used_at')
+
+def test_agent_group_schema():
+    """Test AgentGroup schemas work correctly."""
+    from app.schemas.agent_group import AgentGroupCreate, AgentGroup as AgentGroupSchema
+
+    # Test create schema
+    create_data = AgentGroupCreate(
+        name="Sales Team",
+        description="Handles enterprise sales",
+        goal="Close deals efficiently",
+        strategy={"approach": "consultative"},
+        escalation_rules={"timeout": 30}
+    )
+    assert create_data.name == "Sales Team"
+    assert create_data.goal == "Close deals efficiently"
+    assert create_data.description == "Handles enterprise sales"
+    assert create_data.strategy == {"approach": "consultative"}
+    assert create_data.escalation_rules == {"timeout": 30}
