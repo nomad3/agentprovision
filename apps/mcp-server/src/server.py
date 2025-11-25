@@ -190,7 +190,8 @@ async def transform_to_silver(
 def main():
     """Run MCP server"""
     import os
-    # Set port via environment variable for SSE transport
+    # Set host and port via environment variables for Docker compatibility
+    os.environ["FASTMCP_HOST"] = "0.0.0.0"  # Bind to all interfaces for Docker
     os.environ["FASTMCP_PORT"] = str(settings.MCP_PORT)
     mcp.run(transport=settings.MCP_TRANSPORT)
 
