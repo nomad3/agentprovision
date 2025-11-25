@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, ForeignKey, JSON
+from sqlalchemy import Column, String, ForeignKey, JSON, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -14,3 +14,10 @@ class Agent(Base):
     config = Column(JSON)
     tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"))
     tenant = relationship("Tenant")
+
+    # Orchestration fields
+    role = Column(String, nullable=True)  # "analyst", "manager", "specialist"
+    capabilities = Column(JSON, nullable=True)  # list of capability strings
+    personality = Column(JSON, nullable=True)  # dict with tone, verbosity settings
+    autonomy_level = Column(String, default="supervised")  # "full", "supervised", "approval_required"
+    max_delegation_depth = Column(Integer, default=2)

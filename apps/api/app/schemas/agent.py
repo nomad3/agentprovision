@@ -5,6 +5,12 @@ class AgentBase(BaseModel):
     name: str
     description: str | None = None
     config: dict
+    # Orchestration fields
+    role: str | None = None  # "analyst", "manager", "specialist"
+    capabilities: list[str] | None = None  # list of capability strings
+    personality: dict | None = None  # dict with tone, verbosity settings
+    autonomy_level: str = "supervised"  # "full", "supervised", "approval_required"
+    max_delegation_depth: int = 2
 
 class AgentCreate(AgentBase):
     pass
