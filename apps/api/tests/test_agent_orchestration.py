@@ -6,6 +6,7 @@ os.environ["TESTING"] = "True"
 
 from app.models.agent import Agent
 from app.models.agent_group import AgentGroup
+from app.models.agent_relationship import AgentRelationship
 from app.schemas import agent as agent_schema
 
 def test_agent_model_has_orchestration_fields():
@@ -91,3 +92,15 @@ def test_agent_group_model():
     assert hasattr(AgentGroup, 'escalation_rules')
     assert hasattr(AgentGroup, 'created_at')
     assert hasattr(AgentGroup, 'updated_at')
+
+def test_agent_relationship_model():
+    """Test AgentRelationship model has required fields."""
+    assert hasattr(AgentRelationship, 'id')
+    assert hasattr(AgentRelationship, 'group_id')
+    assert hasattr(AgentRelationship, 'from_agent_id')
+    assert hasattr(AgentRelationship, 'to_agent_id')
+    assert hasattr(AgentRelationship, 'relationship_type')
+    assert hasattr(AgentRelationship, 'trust_level')
+    assert hasattr(AgentRelationship, 'communication_style')
+    assert hasattr(AgentRelationship, 'handoff_rules')
+    assert hasattr(AgentRelationship, 'created_at')
