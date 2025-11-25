@@ -54,3 +54,22 @@ def test_tenant_features_model():
     # UI
     assert hasattr(TenantFeatures, 'hide_agentprovision_branding')
     assert hasattr(TenantFeatures, 'plan_type')
+
+
+def test_tenant_analytics_model():
+    """Test TenantAnalytics model has required fields."""
+    from app.models.tenant_analytics import TenantAnalytics
+
+    assert hasattr(TenantAnalytics, 'id')
+    assert hasattr(TenantAnalytics, 'tenant_id')
+    assert hasattr(TenantAnalytics, 'period')
+    assert hasattr(TenantAnalytics, 'period_start')
+    # Usage Metrics
+    assert hasattr(TenantAnalytics, 'total_messages')
+    assert hasattr(TenantAnalytics, 'total_tasks')
+    assert hasattr(TenantAnalytics, 'total_tokens_used')
+    assert hasattr(TenantAnalytics, 'total_cost')
+    # AI-Generated
+    assert hasattr(TenantAnalytics, 'ai_insights')
+    assert hasattr(TenantAnalytics, 'ai_recommendations')
+    assert hasattr(TenantAnalytics, 'ai_forecast')
