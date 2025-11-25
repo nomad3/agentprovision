@@ -27,3 +27,29 @@ def test_tenant_branding_model():
     assert hasattr(TenantBranding, 'domain_verified')
     assert hasattr(TenantBranding, 'industry')
     assert hasattr(TenantBranding, 'compliance_mode')
+
+
+def test_tenant_features_model():
+    """Test TenantFeatures model has required fields."""
+    from app.models.tenant_features import TenantFeatures
+
+    assert hasattr(TenantFeatures, 'id')
+    assert hasattr(TenantFeatures, 'tenant_id')
+    # Core Features
+    assert hasattr(TenantFeatures, 'agents_enabled')
+    assert hasattr(TenantFeatures, 'agent_groups_enabled')
+    assert hasattr(TenantFeatures, 'datasets_enabled')
+    assert hasattr(TenantFeatures, 'chat_enabled')
+    assert hasattr(TenantFeatures, 'multi_llm_enabled')
+    assert hasattr(TenantFeatures, 'agent_memory_enabled')
+    # AI Intelligence
+    assert hasattr(TenantFeatures, 'ai_insights_enabled')
+    assert hasattr(TenantFeatures, 'ai_recommendations_enabled')
+    assert hasattr(TenantFeatures, 'ai_anomaly_detection')
+    # Limits
+    assert hasattr(TenantFeatures, 'max_agents')
+    assert hasattr(TenantFeatures, 'max_agent_groups')
+    assert hasattr(TenantFeatures, 'monthly_token_limit')
+    assert hasattr(TenantFeatures, 'storage_limit_gb')
+    # UI
+    assert hasattr(TenantFeatures, 'hide_agentprovision_branding')
