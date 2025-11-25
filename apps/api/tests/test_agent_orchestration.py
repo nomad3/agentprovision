@@ -5,6 +5,7 @@ import os
 os.environ["TESTING"] = "True"
 
 from app.models.agent import Agent
+from app.models.agent_group import AgentGroup
 from app.schemas import agent as agent_schema
 
 def test_agent_model_has_orchestration_fields():
@@ -76,3 +77,17 @@ def test_agent_schema_default_values():
     assert agent_create.role is None
     assert agent_create.capabilities is None
     assert agent_create.personality is None
+
+def test_agent_group_model():
+    """Test AgentGroup model has required fields."""
+    # Check model has all required attributes
+    assert hasattr(AgentGroup, 'id')
+    assert hasattr(AgentGroup, 'name')
+    assert hasattr(AgentGroup, 'description')
+    assert hasattr(AgentGroup, 'tenant_id')
+    assert hasattr(AgentGroup, 'goal')
+    assert hasattr(AgentGroup, 'strategy')
+    assert hasattr(AgentGroup, 'shared_context')
+    assert hasattr(AgentGroup, 'escalation_rules')
+    assert hasattr(AgentGroup, 'created_at')
+    assert hasattr(AgentGroup, 'updated_at')
