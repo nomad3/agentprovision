@@ -21,3 +21,6 @@ class Agent(Base):
     personality = Column(JSON, nullable=True)  # dict with tone, verbosity settings
     autonomy_level = Column(String, default="supervised")  # "full", "supervised", "approval_required"
     max_delegation_depth = Column(Integer, default=2)
+
+    # Add relationship to skills
+    skills = relationship("AgentSkill", back_populates="agent")

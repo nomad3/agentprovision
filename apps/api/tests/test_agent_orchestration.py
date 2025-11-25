@@ -146,3 +146,18 @@ def test_agent_message_model():
     assert hasattr(AgentMessage, 'requires_response')
     assert hasattr(AgentMessage, 'response_deadline')
     assert hasattr(AgentMessage, 'created_at')
+
+def test_agent_skill_model():
+    """Test AgentSkill model has required fields."""
+    from app.models.agent_skill import AgentSkill
+
+    assert hasattr(AgentSkill, 'id')
+    assert hasattr(AgentSkill, 'agent_id')
+    assert hasattr(AgentSkill, 'skill_name')
+    assert hasattr(AgentSkill, 'proficiency')
+    assert hasattr(AgentSkill, 'times_used')
+    assert hasattr(AgentSkill, 'success_rate')
+    assert hasattr(AgentSkill, 'learned_from')
+    assert hasattr(AgentSkill, 'examples')
+    assert hasattr(AgentSkill, 'created_at')
+    assert hasattr(AgentSkill, 'last_used_at')
