@@ -20,6 +20,7 @@ from app.api.v1 import (
     memories,
     knowledge,
     llm,
+    branding,
 )
 
 router = APIRouter()
@@ -48,3 +49,4 @@ router.include_router(internal.router, prefix="/internal", tags=["internal"])
 router.include_router(memories.router, prefix="/memories", tags=["memories"])
 router.include_router(knowledge.router, prefix="/knowledge", tags=["knowledge"])
 router.include_router(llm.router, prefix="/llm", tags=["llm"])
+router.include_router(branding.router, prefix="/branding", tags=["branding"])

@@ -73,3 +73,12 @@ def test_tenant_analytics_model():
     assert hasattr(TenantAnalytics, 'ai_insights')
     assert hasattr(TenantAnalytics, 'ai_recommendations')
     assert hasattr(TenantAnalytics, 'ai_forecast')
+
+
+def test_branding_api_routes():
+    """Test branding API routes exist."""
+    from app.api.v1 import branding
+
+    assert hasattr(branding, 'router')
+    assert hasattr(branding, 'get_branding')
+    assert hasattr(branding, 'update_branding')
