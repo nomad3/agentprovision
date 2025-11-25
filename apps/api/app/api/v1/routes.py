@@ -17,6 +17,7 @@ from app.api.v1 import (
     chat,
     databricks,
     internal,
+    memories,
 )
 
 router = APIRouter()
@@ -42,3 +43,4 @@ router.include_router(datasets.router, prefix="/datasets", tags=["datasets"])
 router.include_router(chat.router, prefix="/chat", tags=["chat"])
 router.include_router(databricks.router, prefix="/databricks", tags=["databricks"])
 router.include_router(internal.router, prefix="/internal", tags=["internal"])
+router.include_router(memories.router, prefix="/memories", tags=["memories"])

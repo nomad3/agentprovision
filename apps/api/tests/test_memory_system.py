@@ -185,3 +185,19 @@ def test_knowledge_relation_model():
     assert hasattr(KnowledgeRelation, 'evidence')
     assert hasattr(KnowledgeRelation, 'discovered_by_agent_id')
     assert hasattr(KnowledgeRelation, 'created_at')
+
+
+def test_memory_schema():
+    """Test AgentMemory schemas work correctly."""
+    from app.schemas.agent_memory import AgentMemoryCreate
+    import uuid
+
+    create_data = AgentMemoryCreate(
+        agent_id=uuid.uuid4(),
+        memory_type="fact",
+        content="Customer prefers email communication",
+        importance=0.8,
+        source="conversation"
+    )
+    assert create_data.memory_type == "fact"
+    assert create_data.importance == 0.8
