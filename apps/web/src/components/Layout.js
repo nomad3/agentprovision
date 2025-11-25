@@ -14,7 +14,11 @@ import {
   BoxArrowRight,
   PersonCircle,
   LightbulbFill,
-  BuildingFill
+  BuildingFill,
+  PeopleFill,
+  BrainFill,
+  CpuFill,
+  PaletteFill
 } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../App';
@@ -60,6 +64,8 @@ const Layout = ({ children }) => {
         { path: '/chat', icon: ChatDotsFill, label: 'Ask AI', description: 'Chat with your AI agents and get insights' },
         { path: '/agents', icon: Robot, label: 'AI Assistants', description: 'Create and manage your AI agents' },
         { path: '/agent-kits', icon: Grid3x3GapFill, label: 'AI Templates', description: 'Save and reuse agent configurations' },
+        { path: '/teams', icon: PeopleFill, label: 'Teams', description: 'Manage agent teams and group assignments' },
+        { path: '/memory', icon: BrainFill, label: 'Memory', description: 'View and manage agent memory and conversation history' },
       ]
     },
     {
@@ -68,6 +74,8 @@ const Layout = ({ children }) => {
         { path: '/data-sources', icon: PlugFill, label: 'Data Connections', description: 'Connect to databases and external tools' },
         { path: '/data-pipelines', icon: DatabaseFill, label: 'Automations', description: 'Set up automated data pipelines and workflows' },
         { path: '/tenants', icon: BuildingFill, label: 'Organization', description: 'Manage teams and permissions' },
+        { path: '/settings/llm', icon: CpuFill, label: 'LLM Models', description: 'Configure AI models and API settings' },
+        { path: '/settings/branding', icon: PaletteFill, label: 'Branding', description: 'Customize platform appearance and branding' },
         { path: '/settings', icon: GearFill, label: 'Settings', description: 'Configure your account preferences' },
       ]
     }
