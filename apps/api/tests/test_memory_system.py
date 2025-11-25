@@ -230,3 +230,15 @@ def test_knowledge_relation_schema():
         evidence={"order_id": "123"}
     )
     assert create_data.relation_type == "purchased"
+
+
+def test_memory_service_class():
+    """Test MemoryService class exists with required methods."""
+    from app.services.memory.memory_service import MemoryService
+
+    assert hasattr(MemoryService, 'store')
+    assert hasattr(MemoryService, 'recall')
+    assert hasattr(MemoryService, 'forget')
+    assert hasattr(MemoryService, 'share')
+    assert hasattr(MemoryService, 'get_relevant_memories')
+    assert callable(getattr(MemoryService, 'store'))
