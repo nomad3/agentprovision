@@ -19,6 +19,7 @@ from app.api.v1 import (
     internal,
     memories,
     knowledge,
+    llm,
 )
 
 router = APIRouter()
@@ -46,3 +47,4 @@ router.include_router(databricks.router, prefix="/databricks", tags=["databricks
 router.include_router(internal.router, prefix="/internal", tags=["internal"])
 router.include_router(memories.router, prefix="/memories", tags=["memories"])
 router.include_router(knowledge.router, prefix="/knowledge", tags=["knowledge"])
+router.include_router(llm.router, prefix="/llm", tags=["llm"])

@@ -59,3 +59,12 @@ def test_llm_router_service():
     assert hasattr(LLMRouter, 'select_model')
     assert hasattr(LLMRouter, 'estimate_cost')
     assert callable(getattr(LLMRouter, 'select_model'))
+
+
+def test_llm_api_routes():
+    """Test LLM API routes exist."""
+    from app.api.v1 import llm
+
+    assert hasattr(llm, 'router')
+    assert hasattr(llm, 'list_providers')
+    assert hasattr(llm, 'list_models')
