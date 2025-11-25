@@ -1,7 +1,7 @@
 """TenantAnalytics model for usage tracking and AI insights."""
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, Integer, Float, DateTime, ForeignKey, JSON
+from sqlalchemy import Column, String, Integer, Float, DateTime, ForeignKey, JSON, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.db.base import Base
@@ -10,6 +10,9 @@ from app.db.base import Base
 class TenantAnalytics(Base):
     """Tenant usage analytics and AI-generated insights."""
     __tablename__ = "tenant_analytics"
+    __table_args__ = (
+        UniqueConstraint('tenant_id', 'period', 'period_start', name='uq_tenant_analytics_period'),
+    )
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False, index=True)
