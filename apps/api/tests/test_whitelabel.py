@@ -164,3 +164,11 @@ def test_chat_enhanced_routes():
 
     assert hasattr(chat, 'create_session_enhanced')
     assert hasattr(chat, 'post_message_enhanced')
+
+
+def test_llm_router_enhanced():
+    """Test LLMRouter has enhanced methods."""
+    from app.services.llm.router import LLMRouter
+
+    assert hasattr(LLMRouter, 'get_tenant_config')
+    assert hasattr(LLMRouter, 'track_usage')

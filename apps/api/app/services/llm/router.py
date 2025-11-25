@@ -70,3 +70,49 @@ class LLMRouter:
         input_cost = (input_tokens / 1000) * float(model.input_cost_per_1k)
         output_cost = (output_tokens / 1000) * float(model.output_cost_per_1k)
         return input_cost + output_cost
+
+    def get_tenant_config(self, tenant_id: uuid.UUID) -> Optional[LLMConfig]:
+        """Get tenant's default LLM configuration."""
+        from app.models.tenant import Tenant
+        tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+        if tenant and tenant.default_llm_config_id:
+            return self.db.query(LLMConfig).filter(
+                LLMConfig.id == tenant.default_llm_config_id
+            ).first()
+        return None
+
+    def track_usage(
+        self,
+        tenant_id: uuid.UUID,
+        model_id: uuid.UUID,
+        tokens_input: int,
+        tokens_output: int,
+        cost: float,
+    ) -> None:
+        """Track LLM usage for analytics."""
+        from app.models.tenant_analytics import TenantAnalytics
+        from datetime import datetime
+
+        today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+
+        # Update or create daily analytics
+        analytics = self.db.query(TenantAnalytics).filter(
+            TenantAnalytics.tenant_id == tenant_id,
+            TenantAnalytics.period == "daily",
+            TenantAnalytics.period_start == today,
+        ).first()
+
+        if analytics:
+            analytics.total_tokens_used = (analytics.total_tokens_used or 0) + tokens_input + tokens_output
+            analytics.total_cost = (analytics.total_cost or 0) + cost
+        else:
+            analytics = TenantAnalytics(
+                tenant_id=tenant_id,
+                period="daily",
+                period_start=today,
+                total_tokens_used=tokens_input + tokens_output,
+                total_cost=cost,
+            )
+            self.db.add(analytics)
+
+        self.db.commit()
