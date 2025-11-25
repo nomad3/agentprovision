@@ -8,6 +8,12 @@ and AI-assisted analysis.
 Usage:
     python -m src.server
 """
+import os
+
+# Set FastMCP host/port BEFORE importing FastMCP (it reads env at import time)
+os.environ["FASTMCP_HOST"] = os.environ.get("FASTMCP_HOST", "0.0.0.0")
+os.environ["FASTMCP_PORT"] = os.environ.get("FASTMCP_PORT", "8000")
+
 from mcp.server.fastmcp import FastMCP
 
 from src.config import settings
@@ -189,10 +195,7 @@ async def transform_to_silver(
 
 def main():
     """Run MCP server"""
-    import os
-    # Set host and port via environment variables for Docker compatibility
-    os.environ["FASTMCP_HOST"] = "0.0.0.0"  # Bind to all interfaces for Docker
-    os.environ["FASTMCP_PORT"] = str(settings.MCP_PORT)
+    # Host/port are set via FASTMCP_HOST and FASTMCP_PORT env vars at top of file
     mcp.run(transport=settings.MCP_TRANSPORT)
 
 
