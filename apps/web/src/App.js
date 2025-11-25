@@ -21,6 +21,7 @@ import TenantsPage from './pages/TenantsPage';
 import AgentWizardPage from './pages/AgentWizardPage';
 import TeamsPage from './pages/TeamsPage';
 import MemoryPage from './pages/MemoryPage';
+import LLMSettingsPage from './pages/LLMSettingsPage';
 import authService from './services/auth';
 import { ToastProvider } from './components/common';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -82,6 +83,7 @@ function App() {
             <Route path="/teams" element={<ProtectedRoute><TeamsPage /></ProtectedRoute>} />
             <Route path="/memory" element={<ProtectedRoute><MemoryPage /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+            <Route path="/settings/llm" element={<ProtectedRoute><LLMSettingsPage /></ProtectedRoute>} />
           </Routes>
         </ToastProvider>
       </AuthProvider>
