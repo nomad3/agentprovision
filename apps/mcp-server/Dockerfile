@@ -10,8 +10,8 @@ RUN pip install --no-cache-dir .
 COPY src/ src/
 COPY .env.example .env
 
-# Expose MCP port
-EXPOSE 8085
+# Expose MCP port (8086 to avoid conflict with dental-erp MCP on 8085)
+EXPOSE 8086
 
 # Run server
 CMD ["python", "-m", "src.server"]
