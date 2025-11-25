@@ -111,7 +111,7 @@ def post_message(
 def create_session_enhanced(
     *,
     db: Session = Depends(deps.get_db),
-    current_user=Depends(deps.get_current_user),
+    current_user: User = Depends(deps.get_current_active_user),
     session_in: chat_schema.ChatSessionCreate,
     agent_group_id: Optional[uuid.UUID] = None,
 ):
@@ -125,11 +125,11 @@ def create_session_enhanced(
     )
 
 
-@router.post("/sessions/{session_id}/messages/enhanced")
+@router.post("/sessions/{session_id}/messages/enhanced", response_model=chat_schema.ChatTurn)
 def post_message_enhanced(
     *,
     db: Session = Depends(deps.get_db),
-    current_user=Depends(deps.get_current_user),
+    current_user: User = Depends(deps.get_current_active_user),
     session_id: uuid.UUID,
     message_in: chat_schema.ChatMessageCreate,
     agent_id: Optional[uuid.UUID] = None,
@@ -147,4 +147,7 @@ def post_message_enhanced(
         content=message_in.content,
         agent_id=agent_id,
     )
-    return {"user": user_msg, "assistant": assistant_msg}
+    return chat_schema.ChatTurn(
+        user_message=chat_schema.ChatMessage.model_validate(user_msg),
+        assistant_message=chat_schema.ChatMessage.model_validate(assistant_msg)
+    )
