@@ -197,3 +197,14 @@ def test_agent_task_schema():
     assert create_data.priority == "high"
     assert create_data.task_type == "analyze"
     assert create_data.context == {"dataset": "q4_sales"}
+
+def test_task_dispatcher_class():
+    """Test TaskDispatcher class exists with required methods."""
+    from app.services.orchestration.task_dispatcher import TaskDispatcher
+
+    # Verify class has required methods
+    assert hasattr(TaskDispatcher, 'find_best_agent')
+    assert hasattr(TaskDispatcher, 'get_supervisor')
+    assert hasattr(TaskDispatcher, 'get_subordinates')
+    assert hasattr(TaskDispatcher, 'can_delegate')
+    assert callable(getattr(TaskDispatcher, 'find_best_agent'))
