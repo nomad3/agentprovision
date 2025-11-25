@@ -108,3 +108,12 @@ def test_agent_extended_fields():
 
     assert hasattr(Agent, 'llm_config_id')
     assert hasattr(Agent, 'memory_config')
+
+
+def test_chat_session_extended_fields():
+    """Test ChatSession model has integration fields."""
+    from app.models.chat import ChatSession
+
+    assert hasattr(ChatSession, 'agent_group_id')
+    assert hasattr(ChatSession, 'root_task_id')
+    assert hasattr(ChatSession, 'memory_context')
