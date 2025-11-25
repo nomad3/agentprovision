@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { heroHighlights } from './data';
+import NeuralCanvas from '../common/NeuralCanvas';
 
 const noop = () => {};
 
@@ -24,6 +25,8 @@ const HeroSection = ({ onPrimaryCta = noop, onSecondaryCta = noop }) => {
 
   return (
     <section className="hero-section text-white pt-5 pb-4" id="hero">
+      <NeuralCanvas />
+      <div className="hero-overlay" />
       <Container className="hero-content py-5">
         <Row className="align-items-center gy-5">
           <Col lg={7} className="text-center text-lg-start pe-lg-5">

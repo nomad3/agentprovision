@@ -114,23 +114,30 @@
   display: flex;
   align-items: center;
   position: relative;
-  background-size: 200% 200%;
-  animation: gradientShift 15s ease infinite;
+  background: #030508;
+  overflow: hidden;
 }
 
-.hero-section::before {
-  content: '';
+/* Neural canvas container adjustments */
+.neural-canvas {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background:
-    radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.25), transparent 40%),
-    radial-gradient(circle at 85% 10%, rgba(14, 165, 233, 0.20), transparent 45%),
-    radial-gradient(circle at 50% 80%, rgba(249, 115, 22, 0.15), transparent 50%);
-  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* Hero overlay for better text readability */
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, transparent 0%, rgba(3, 5, 8, 0.85) 80%);
   z-index: 1;
+  pointer-events: none;
 }
 
 .hero-content {
@@ -440,5 +447,373 @@ button:focus-visible {
 
   .section-wrapper {
     page-break-inside: avoid;
+  }
+}
+
+/* =================================
+   ENHANCED MICRO-ANIMATIONS
+   Inspired by ai-agency-website
+   ================================= */
+
+/* Pulse Animation for Badges */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.03);
+    opacity: 0.85;
+  }
+}
+
+.badge-glow {
+  animation: pulse 3s ease-in-out infinite;
+}
+
+/* Enhanced Glow Effect on Hover */
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.6), 0 0 45px rgba(14, 165, 233, 0.3);
+  }
+}
+
+.btn-primary:hover {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Service Icon Bounce on Hover */
+.icon-pill,
+.icon-pill-sm {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.feature-card:hover .icon-pill,
+.feature-card:hover .icon-pill-sm {
+  transform: scale(1.15) rotate(5deg);
+}
+
+/* Stat Items Bounce Animation */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.stat-item,
+.metric-tile {
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.stat-item:hover,
+.metric-tile:hover {
+  animation: bounce 0.6s ease;
+}
+
+.stat-item:hover .stat-number,
+.metric-tile:hover h3 {
+  color: var(--color-primary);
+}
+
+/* Navigation Link Slide Effect */
+.nav-dark .nav-link {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-dark .nav-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.nav-dark .nav-link:hover::before {
+  left: 100%;
+}
+
+/* Ripple Effect for Buttons */
+.btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  transform: translate(-50%, -50%);
+  transition: width 0.5s, height 0.5s;
+}
+
+.btn:active::after {
+  width: 250px;
+  height: 250px;
+}
+
+/* Elastic Bounce for CTAs */
+@keyframes elasticBounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.04);
+  }
+  50% {
+    transform: scale(0.98);
+  }
+  70% {
+    transform: scale(1.02);
+  }
+}
+
+.btn-primary:active {
+  animation: elasticBounce 0.5s ease;
+}
+
+/* Enhanced Card Lift Effect */
+.feature-card,
+.glass-card,
+.panel-glass {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.feature-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15), 0 10px 20px rgba(14, 165, 233, 0.1);
+}
+
+.glass-card:hover,
+.panel-glass:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 35px rgba(99, 102, 241, 0.12);
+}
+
+/* Shimmer Effect for Icon Pills */
+.icon-pill::after,
+.icon-pill-sm::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  transform: rotate(45deg);
+  animation: shimmer 4s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(45deg);
+  }
+}
+
+/* Testimonial Card Slide Effect */
+.testimonial-card {
+  border-left: 3px solid var(--color-accent);
+  transition: all 0.4s ease;
+}
+
+.testimonial-card:hover {
+  border-left-color: var(--color-primary);
+  transform: translateX(8px);
+}
+
+/* CTA Banner Gradient Animation */
+.cta-banner {
+  position: relative;
+  padding: 2px;
+  background: linear-gradient(135deg, #6366f1, #0ea5e9, #f97316);
+  background-size: 200% 200%;
+  animation: gradientShift 6s ease infinite;
+  border-radius: calc(var(--radius-lg, 16px) * 1.5);
+}
+
+.cta-banner-content {
+  background: rgba(5, 11, 26, 0.96);
+  border-radius: calc(var(--radius-lg, 16px) * 1.4);
+  padding: 3rem;
+}
+
+/* Fade-in Up with Stagger */
+.animate-stagger > * {
+  opacity: 0;
+  transform: translateY(25px);
+  animation: fadeInStagger 0.7s ease forwards;
+}
+
+.animate-stagger > *:nth-child(1) { animation-delay: 0.1s; }
+.animate-stagger > *:nth-child(2) { animation-delay: 0.2s; }
+.animate-stagger > *:nth-child(3) { animation-delay: 0.3s; }
+.animate-stagger > *:nth-child(4) { animation-delay: 0.4s; }
+.animate-stagger > *:nth-child(5) { animation-delay: 0.5s; }
+.animate-stagger > *:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeInStagger {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Text Gradient Animation */
+.gradient-text {
+  background: linear-gradient(135deg, #e0f2fe 0%, #c7d2fe 35%, #6366f1 65%, #0ea5e9 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 5s ease infinite;
+}
+
+/* Hero Title Typing Effect */
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+/* Floating Animation for Spotlight Cards */
+.hero-spotlight {
+  animation: float 6s ease-in-out infinite;
+}
+
+.hero-highlight {
+  transition: all 0.3s ease;
+}
+
+.hero-highlight:hover {
+  transform: translateX(6px);
+  background: rgba(99, 102, 241, 0.08);
+  border-radius: 8px;
+  padding-left: 8px;
+  margin-left: -8px;
+}
+
+/* Logo Badge Hover Enhancement */
+.logo-badge {
+  position: relative;
+  overflow: hidden;
+}
+
+.logo-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.2), transparent);
+  transition: left 0.4s ease;
+}
+
+.logo-badge:hover::before {
+  left: 100%;
+}
+
+/* Section Divider Gradient */
+.gradient-divider {
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent), transparent);
+  border: none;
+  opacity: 0.4;
+}
+
+/* Scroll Indicator Animation */
+@keyframes scrollBounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.scroll-indicator {
+  animation: scrollBounce 2s ease infinite;
+}
+
+/* Loading Spinner Animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* 3D Tilt Effect for Cards (subtle) */
+.feature-card {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px) rotateX(2deg) rotateY(-2deg);
+}
+
+/* Footer Link Slide Arrow */
+.footer a {
+  position: relative;
+  padding-left: 0;
+  transition: padding-left 0.3s ease, color 0.3s ease;
+}
+
+.footer a::before {
+  content: '\2192';
+  position: absolute;
+  left: -15px;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.footer a:hover {
+  padding-left: 15px;
+  color: var(--color-primary);
+}
+
+.footer a:hover::before {
+  left: 0;
+  opacity: 1;
+}
+
+/* Reduce Motion for Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .neural-canvas {
+    display: none;
   }
 }
