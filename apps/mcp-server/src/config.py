@@ -17,13 +17,14 @@ class Settings(BaseSettings):
     DATABRICKS_WAREHOUSE_ID: str = ""
     DATABRICKS_CATALOG_PREFIX: str = "tenant_"
 
-    # MCP Server
-    MCP_PORT: int = 8085
+    # MCP Server (port 8086 to avoid conflict with dental-erp MCP on 8085)
+    MCP_PORT: int = 8086
     MCP_TRANSPORT: str = "streamable-http"
 
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
+        extra = "ignore"  # Allow FASTMCP_* and other extra env vars
 
 
 settings = Settings()
