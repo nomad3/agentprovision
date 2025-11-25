@@ -15,3 +15,9 @@ class AgentKit(Base):
     config = Column(JSON)
     tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"))
     tenant = relationship("Tenant")
+
+    # Kit configuration
+    kit_type = Column(String, default="single")  # "single", "team", "hierarchy"
+    default_agents = Column(JSON, nullable=True)  # [{"name": "Analyst", "role": "analyst", ...}]
+    default_hierarchy = Column(JSON, nullable=True)  # {"supervisor": "Manager", "workers": ["Analyst"]}
+    industry = Column(String, nullable=True)  # "healthcare", "finance", "legal", "retail"
