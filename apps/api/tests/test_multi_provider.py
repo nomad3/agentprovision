@@ -2,6 +2,77 @@
 import pytest
 from sqlalchemy import inspect
 from unittest.mock import patch, MagicMock
+from fastapi.testclient import TestClient
+import os
+
+# Set TESTING environment variable for app.main to skip init_db
+os.environ["TESTING"] = "True"
+
+from app.main import app
+from app.db.base import Base
+from app.db.session import SessionLocal, engine
+from app.api.deps import get_db
+
+
+# Override the get_db dependency for tests
+def override_get_db():
+    try:
+        db = SessionLocal()
+        yield db
+    finally:
+        db.close()
+
+
+app.dependency_overrides[get_db] = override_get_db
+
+
+@pytest.fixture(name="client")
+def client_fixture():
+    """Create a test client."""
+    return TestClient(app)
+
+
+@pytest.fixture(name="db_session")
+def db_session_fixture():
+    """Create a database session for tests."""
+    Base.metadata.create_all(bind=engine)
+    db = SessionLocal()
+    yield db
+    db.close()
+    Base.metadata.drop_all(bind=engine)
+
+
+@pytest.fixture(name="auth_headers")
+def auth_headers_fixture(db_session, client):
+    """Create auth headers with a valid token."""
+    # Register a user
+    client.post(
+        "/api/v1/auth/register",
+        json={
+            "user_in": {
+                "email": "test@example.com",
+                "password": "testpassword",
+                "full_name": "Test User"
+            },
+            "tenant_in": {
+                "name": "Test Tenant"
+            }
+        }
+    )
+
+    # Log in to get a token
+    response = client.post(
+        "/api/v1/auth/login",
+        data={
+            "username": "test@example.com",
+            "password": "testpassword"
+        },
+        headers={
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
+    )
+    token = response.json()["access_token"]
+    return {"Authorization": f"Bearer {token}"}
 
 
 def test_llm_config_has_provider_api_keys():
@@ -152,3 +223,20 @@ def test_llm_config_schema_accepts_provider_keys():
     )
     assert config.provider_api_keys["openai"] == "sk-test"
     assert config.provider_api_keys["deepseek"] == "sk-deep"
+
+
+def test_set_provider_key(client, auth_headers):
+    """POST /llm/providers/{name}/key should set API key for provider."""
+    response = client.post(
+        "/api/v1/llm/providers/openai/key",
+        headers=auth_headers,
+        json={"api_key": "sk-test-key-12345"}
+    )
+
+    assert response.status_code == 200
+    assert response.json()["success"] == True
+
+    # Verify it's stored (via status endpoint)
+    status = client.get("/api/v1/llm/providers/status", headers=auth_headers)
+    openai_status = next(p for p in status.json() if p["name"] == "openai")
+    assert openai_status["configured"] == True

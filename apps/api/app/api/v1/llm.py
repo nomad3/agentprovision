@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Optional
 import uuid
+from pydantic import BaseModel
 
 from app.api.deps import get_db, get_current_user
 from app.models.user import User
@@ -12,6 +13,11 @@ from app.schemas.llm_config import LLMConfig, LLMConfigCreate, LLMConfigUpdate
 from app.models import llm_provider, llm_model, llm_config
 
 router = APIRouter()
+
+
+class ProviderKeyInput(BaseModel):
+    """Request body for setting provider API key."""
+    api_key: str
 
 
 @router.get("/providers", response_model=List[LLMProvider])
@@ -122,3 +128,44 @@ def get_provider_status(
         }
         for p in providers
     ]
+
+
+@router.post("/providers/{provider_name}/key")
+def set_provider_key(
+    provider_name: str,
+    key_input: ProviderKeyInput,
+    *,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Set API key for a provider."""
+    # Get or create tenant's default config
+    config = db.query(llm_config.LLMConfig).filter(
+        llm_config.LLMConfig.tenant_id == current_user.tenant_id,
+        llm_config.LLMConfig.is_tenant_default == True
+    ).first()
+
+    if not config:
+        # Create default config if none exists
+        default_model = db.query(llm_model.LLMModel).first()
+        config = llm_config.LLMConfig(
+            tenant_id=current_user.tenant_id,
+            name="Default",
+            is_tenant_default=True,
+            primary_model_id=default_model.id if default_model else None,
+            provider_api_keys={}
+        )
+        db.add(config)
+
+    # Update provider key
+    if config.provider_api_keys is None:
+        config.provider_api_keys = {}
+
+    # Create new dict to trigger SQLAlchemy change detection
+    new_keys = dict(config.provider_api_keys)
+    new_keys[provider_name] = key_input.api_key
+    config.provider_api_keys = new_keys
+
+    db.commit()
+
+    return {"success": True, "provider": provider_name}
