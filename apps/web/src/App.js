@@ -1,31 +1,31 @@
-import React, { useState, createContext, useContext } from 'react';
-import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
-import LandingPage from './LandingPage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import HomePage from './pages/HomePage';
-import DashboardPage from './pages/DashboardPage';
-import DataSourcesPage from './pages/DataSourcesPage';
-import DataPipelinesPage from './pages/DataPipelinesPage';
-import NotebooksPage from './pages/NotebooksPage';
-import AgentsPage from './pages/AgentsPage';
-import ToolsPage from './pages/ToolsPage';
-import ConnectorsPage from './pages/ConnectorsPage';
-import DeploymentsPage from './pages/DeploymentsPage';
-import VectorStoresPage from './pages/VectorStoresPage';
-import AgentKitsPage from './pages/AgentKitsPage';
-import DatasetsPage from './pages/DatasetsPage';
-import ChatPage from './pages/ChatPage';
-import SettingsPage from './pages/SettingsPage';
-import TenantsPage from './pages/TenantsPage';
-import AgentWizardPage from './pages/AgentWizardPage';
-import TeamsPage from './pages/TeamsPage';
-import MemoryPage from './pages/MemoryPage';
-import LLMSettingsPage from './pages/LLMSettingsPage';
-import BrandingPage from './pages/BrandingPage';
-import authService from './services/auth';
+import { createContext, useContext, useState } from 'react';
+import { Route, BrowserRouter as Router, Routes, useNavigate } from 'react-router-dom';
 import { ToastProvider } from './components/common';
 import ProtectedRoute from './components/ProtectedRoute';
+import LandingPage from './LandingPage';
+import AgentKitsPage from './pages/AgentKitsPage';
+import AgentsPage from './pages/AgentsPage';
+import AgentWizardPage from './pages/AgentWizardPage';
+import BrandingPage from './pages/BrandingPage';
+import ChatPage from './pages/ChatPage';
+import ConnectorsPage from './pages/ConnectorsPage';
+import DashboardPage from './pages/DashboardPage';
+import DataPipelinesPage from './pages/DataPipelinesPage';
+import DatasetsPage from './pages/DatasetsPage';
+import DataSourcesPage from './pages/DataSourcesPage';
+import DeploymentsPage from './pages/DeploymentsPage';
+import HomePage from './pages/HomePage';
+import LLMSettingsPage from './pages/LLMSettingsPage';
+import LoginPage from './pages/LoginPage';
+import MemoryPage from './pages/MemoryPage';
+import NotebooksPage from './pages/NotebooksPage';
+import RegisterPage from './pages/RegisterPage';
+import SettingsPage from './pages/SettingsPage';
+import TeamsPage from './pages/TeamsPage';
+import TenantsPage from './pages/TenantsPage';
+import ToolsPage from './pages/ToolsPage';
+import VectorStoresPage from './pages/VectorStoresPage';
+import authService from './services/auth';
 
 // Create an Auth Context
 const AuthContext = createContext(null);
@@ -65,6 +65,7 @@ function App() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
