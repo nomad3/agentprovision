@@ -1,125 +1,165 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Table, Badge, Button, Modal, Form } from 'react-bootstrap';
-import { llmService } from '../services/llm';
+import { Container, Row, Col, Card, Badge, Form, InputGroup, Alert, Spinner } from 'react-bootstrap';
+import { CpuFill, CheckCircleFill, XCircleFill, EyeFill, EyeSlashFill, KeyFill } from 'react-bootstrap-icons';
+import llmService from '../services/llm';
 
-function LLMSettingsPage() {
+const LLMSettingsPage = () => {
   const [providers, setProviders] = useState([]);
-  const [models, setModels] = useState([]);
-  const [configs, setConfigs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
+  const [error, setError] = useState(null);
+  const [savingProvider, setSavingProvider] = useState(null);
+  const [apiKeys, setApiKeys] = useState({});
+  const [showKeys, setShowKeys] = useState({});
+  const [saveSuccess, setSaveSuccess] = useState({});
 
   useEffect(() => {
-    loadData();
+    loadProviders();
   }, []);
 
-  const loadData = async () => {
+  const loadProviders = async () => {
     try {
-      const [providersData, modelsData, configsData] = await Promise.all([
-        llmService.getProviders(),
-        llmService.getModels(),
-        llmService.getConfigs(),
-      ]);
-      setProviders(providersData);
-      setModels(modelsData);
-      setConfigs(configsData);
-    } catch (error) {
-      console.error('Failed to load LLM data:', error);
+      setLoading(true);
+      const data = await llmService.getProviderStatus();
+      setProviders(data);
+    } catch (err) {
+      setError('Failed to load providers');
     } finally {
       setLoading(false);
     }
   };
 
-  const speedBadge = (tier) => {
-    const colors = { fast: 'success', standard: 'warning', slow: 'secondary' };
-    return <Badge bg={colors[tier] || 'secondary'}>{tier}</Badge>;
+  const handleKeyChange = (providerName, value) => {
+    setApiKeys(prev => ({ ...prev, [providerName]: value }));
+    setSaveSuccess(prev => ({ ...prev, [providerName]: false }));
   };
 
-  const qualityBadge = (tier) => {
-    const colors = { best: 'primary', good: 'info', basic: 'secondary' };
-    return <Badge bg={colors[tier] || 'secondary'}>{tier}</Badge>;
+  const handleSaveKey = async (providerName) => {
+    const key = apiKeys[providerName];
+    if (!key) return;
+
+    try {
+      setSavingProvider(providerName);
+      await llmService.setProviderKey(providerName, key);
+      setSaveSuccess(prev => ({ ...prev, [providerName]: true }));
+      setApiKeys(prev => ({ ...prev, [providerName]: '' }));
+      await loadProviders();
+    } catch (err) {
+      setError(`Failed to save ${providerName} key`);
+    } finally {
+      setSavingProvider(null);
+    }
   };
+
+  const toggleShowKey = (providerName) => {
+    setShowKeys(prev => ({ ...prev, [providerName]: !prev[providerName] }));
+  };
+
+  const getProviderIcon = (name) => {
+    const icons = {
+      openai: '🤖',
+      anthropic: '🧠',
+      deepseek: '🔍',
+      google: '🌐',
+      mistral: '💨'
+    };
+    return icons[name] || '🔌';
+  };
+
+  if (loading) {
+    return (
+      <Container className="py-4 text-center">
+        <Spinner animation="border" />
+      </Container>
+    );
+  }
 
   return (
-    <Container fluid className="py-4">
-      <Row className="mb-4">
-        <Col>
-          <h2>LLM Settings</h2>
-          <p className="text-muted">Configure AI models and providers</p>
-        </Col>
-      </Row>
+    <Container className="py-4">
+      <div className="d-flex align-items-center mb-4">
+        <CpuFill size={28} className="text-primary me-3" />
+        <div>
+          <h2 className="mb-0">LLM Providers</h2>
+          <p className="text-muted mb-0">Configure API keys for each provider</p>
+        </div>
+      </div>
 
-      <Row className="mb-4">
-        <Col md={4}>
-          <Card className="h-100">
-            <Card.Body>
-              <Card.Title>Providers</Card.Title>
-              <div className="display-4 text-primary">{providers.length}</div>
-              <p className="text-muted">Active providers</p>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={4}>
-          <Card className="h-100">
-            <Card.Body>
-              <Card.Title>Models</Card.Title>
-              <div className="display-4 text-success">{models.length}</div>
-              <p className="text-muted">Available models</p>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={4}>
-          <Card className="h-100">
-            <Card.Body>
-              <Card.Title>Configurations</Card.Title>
-              <div className="display-4 text-info">{configs.length}</div>
-              <p className="text-muted">Tenant configs</p>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+      {error && (
+        <Alert variant="danger" dismissible onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      )}
 
-      <Card>
-        <Card.Header className="d-flex justify-content-between align-items-center">
-          <span>Available Models</span>
-        </Card.Header>
-        <Card.Body>
-          {loading ? (
-            <div className="text-center py-5">Loading...</div>
-          ) : (
-            <Table striped hover responsive>
-              <thead>
-                <tr>
-                  <th>Model</th>
-                  <th>Provider</th>
-                  <th>Context</th>
-                  <th>Speed</th>
-                  <th>Quality</th>
-                  <th>Cost (per 1K)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {models.map((model) => (
-                  <tr key={model.id}>
-                    <td>{model.display_name}</td>
-                    <td>
-                      {providers.find(p => p.id === model.provider_id)?.display_name || 'Unknown'}
-                    </td>
-                    <td>{(model.context_window / 1000).toFixed(0)}K</td>
-                    <td>{speedBadge(model.speed_tier)}</td>
-                    <td>{qualityBadge(model.quality_tier)}</td>
-                    <td>
-                      ${model.input_cost_per_1k?.toFixed(4)} / ${model.output_cost_per_1k?.toFixed(4)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          )}
-        </Card.Body>
-      </Card>
+      <Row xs={1} md={2} lg={3} className="g-4">
+        {providers.map((provider) => (
+          <Col key={provider.name}>
+            <Card className={`h-100 ${provider.configured ? 'border-success' : 'border-secondary'}`}>
+              <Card.Header className="d-flex align-items-center justify-content-between">
+                <div className="d-flex align-items-center">
+                  <span className="me-2" style={{ fontSize: '1.5rem' }}>
+                    {getProviderIcon(provider.name)}
+                  </span>
+                  <strong>{provider.display_name}</strong>
+                </div>
+                {provider.configured ? (
+                  <Badge bg="success" className="d-flex align-items-center">
+                    <CheckCircleFill className="me-1" /> Connected
+                  </Badge>
+                ) : (
+                  <Badge bg="secondary" className="d-flex align-items-center">
+                    <XCircleFill className="me-1" /> Not configured
+                  </Badge>
+                )}
+              </Card.Header>
+              <Card.Body>
+                <Form.Label className="small text-muted">
+                  <KeyFill className="me-1" />
+                  API Key
+                </Form.Label>
+                <InputGroup>
+                  <Form.Control
+                    type={showKeys[provider.name] ? 'text' : 'password'}
+                    placeholder={provider.configured ? '••••••••••••' : 'Enter API key'}
+                    value={apiKeys[provider.name] || ''}
+                    onChange={(e) => handleKeyChange(provider.name, e.target.value)}
+                    disabled={savingProvider === provider.name}
+                  />
+                  <InputGroup.Text
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => toggleShowKey(provider.name)}
+                  >
+                    {showKeys[provider.name] ? <EyeSlashFill /> : <EyeFill />}
+                  </InputGroup.Text>
+                </InputGroup>
+
+                {saveSuccess[provider.name] && (
+                  <small className="text-success mt-2 d-block">
+                    <CheckCircleFill className="me-1" /> Key saved successfully
+                  </small>
+                )}
+
+                <div className="mt-3 d-grid">
+                  <button
+                    className="btn btn-primary btn-sm"
+                    onClick={() => handleSaveKey(provider.name)}
+                    disabled={!apiKeys[provider.name] || savingProvider === provider.name}
+                  >
+                    {savingProvider === provider.name ? (
+                      <Spinner animation="border" size="sm" />
+                    ) : (
+                      'Save Key'
+                    )}
+                  </button>
+                </div>
+              </Card.Body>
+              <Card.Footer className="text-muted small">
+                {provider.is_openai_compatible ? 'OpenAI-compatible API' : 'Native API'}
+              </Card.Footer>
+            </Card>
+          </Col>
+        ))}
+      </Row>
     </Container>
   );
-}
+};
 
 export default LLMSettingsPage;
