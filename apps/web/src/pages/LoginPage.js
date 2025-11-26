@@ -1,22 +1,29 @@
-import React, { useState } from 'react';
-import { Container, Form, Button, Card, Alert } from 'react-bootstrap';
-import { useNavigate, Link } from 'react-router-dom';
-import authService from '../services/auth';
+import { useState } from 'react';
+import { Alert, Button, Card, Container, Form } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../App';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = async (loginEmail, loginPassword) => {
     setError('');
+    setLoading(true);
     try {
-      await authService.login(loginEmail, loginPassword);
-      navigate('/dashboard');
+      await login(loginEmail, loginPassword);
+      // Small delay to ensure state is updated
+      setTimeout(() => {
+        navigate('/dashboard', { replace: true });
+      }, 100);
     } catch (err) {
       setError('Invalid email or password');
       console.error('Login error:', err);
+      setLoading(false);
     }
   };
 
@@ -60,14 +67,15 @@ const LoginPage = () => {
               />
             </Form.Group>
 
-            <Button variant="primary" type="submit" className="w-100 mb-2">
-              Login
+            <Button variant="primary" type="submit" className="w-100 mb-2" disabled={loading}>
+              {loading ? 'Logging in...' : 'Login'}
             </Button>
             <Button
               variant="outline-secondary"
               className="w-100 mb-2"
               type="button"
               onClick={() => handleDemoLogin('test@example.com', 'password')}
+              disabled={loading}
             >
               Login as Demo User
             </Button>
