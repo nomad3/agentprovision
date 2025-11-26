@@ -138,3 +138,17 @@ def test_llm_service_uses_router_to_select_model():
         mock_router.select_model.assert_called_once_with(tenant_id, "general")
         mock_factory.get_client.assert_called_once_with("openai", "sk-test")
         mock_client.chat.completions.create.assert_called_once()
+
+
+def test_llm_config_schema_accepts_provider_keys():
+    """LLMConfigCreate schema should accept provider_api_keys."""
+    from app.schemas.llm_config import LLMConfigCreate
+    import uuid
+
+    config = LLMConfigCreate(
+        name="test",
+        primary_model_id=uuid.uuid4(),
+        provider_api_keys={"openai": "sk-test", "deepseek": "sk-deep"}
+    )
+    assert config.provider_api_keys["openai"] == "sk-test"
+    assert config.provider_api_keys["deepseek"] == "sk-deep"

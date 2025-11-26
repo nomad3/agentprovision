@@ -14,6 +14,7 @@ class LLMConfigBase(BaseModel):
     routing_rules: Optional[Dict[str, Any]] = None
     budget_limit_daily: Optional[float] = None
     budget_limit_monthly: Optional[float] = None
+    provider_api_keys: Optional[Dict[str, str]] = None
 
 
 class LLMConfigCreate(LLMConfigBase):
@@ -34,6 +35,7 @@ class LLMConfigUpdate(BaseModel):
     routing_rules: Optional[Dict[str, Any]] = None
     budget_limit_daily: Optional[float] = None
     budget_limit_monthly: Optional[float] = None
+    provider_api_keys: Optional[Dict[str, str]] = None
 
 
 class LLMConfig(LLMConfigBase):
