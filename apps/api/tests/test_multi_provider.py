@@ -91,3 +91,50 @@ def test_anthropic_adapter_converts_messages():
         assert response.choices[0].message.content == "Hello!"
         assert response.usage.prompt_tokens == 10
         assert response.usage.completion_tokens == 5
+
+
+def test_llm_service_uses_router_to_select_model():
+    """LLMService should use router to select model and factory to create client."""
+    from app.services.llm.service import LLMService
+    import uuid
+
+    mock_db = MagicMock()
+    tenant_id = uuid.uuid4()
+
+    with patch('app.services.llm.service.LLMRouter') as mock_router_class, \
+         patch('app.services.llm.service.LLMProviderFactory') as mock_factory_class:
+
+        # Setup mocks
+        mock_router = MagicMock()
+        mock_model = MagicMock()
+        mock_model.model_id = "gpt-4o"
+        mock_model.provider.name = "openai"
+        mock_model.id = uuid.uuid4()
+        mock_router.select_model.return_value = mock_model
+
+        mock_config = MagicMock()
+        mock_config.provider_api_keys = {"openai": "sk-test"}
+        mock_router.get_tenant_config.return_value = mock_config
+
+        mock_router_class.return_value = mock_router
+
+        mock_factory = MagicMock()
+        mock_client = MagicMock()
+        mock_response = MagicMock()
+        mock_response.usage.prompt_tokens = 100
+        mock_response.usage.completion_tokens = 50
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_factory.get_client.return_value = mock_client
+        mock_factory_class.return_value = mock_factory
+
+        # Create service and call
+        service = LLMService(mock_db, tenant_id)
+        response = service.generate_response(
+            messages=[{"role": "user", "content": "Hello"}],
+            task_type="general"
+        )
+
+        # Verify router was used
+        mock_router.select_model.assert_called_once_with(tenant_id, "general")
+        mock_factory.get_client.assert_called_once_with("openai", "sk-test")
+        mock_client.chat.completions.create.assert_called_once()
