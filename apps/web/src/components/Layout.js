@@ -16,7 +16,7 @@ import {
   LightbulbFill,
   BuildingFill,
   PeopleFill,
-  BrainFill,
+  Diagram3Fill,
   CpuFill,
   PaletteFill
 } from 'react-bootstrap-icons';
@@ -65,7 +65,7 @@ const Layout = ({ children }) => {
         { path: '/agents', icon: Robot, label: 'AI Assistants', description: 'Create and manage your AI agents' },
         { path: '/agent-kits', icon: Grid3x3GapFill, label: 'AI Templates', description: 'Save and reuse agent configurations' },
         { path: '/teams', icon: PeopleFill, label: 'Teams', description: 'Manage agent teams and group assignments' },
-        { path: '/memory', icon: BrainFill, label: 'Memory', description: 'View and manage agent memory and conversation history' },
+        { path: '/memory', icon: Diagram3Fill, label: 'Memory', description: 'View and manage agent memory and conversation history' },
       ]
     },
     {
