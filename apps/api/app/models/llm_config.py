@@ -32,6 +32,9 @@ class LLMConfig(Base):
     # Advanced
     routing_rules = Column(JSON, nullable=True)  # Rules for task-based routing
 
+    # Provider API Keys (BYOK)
+    provider_api_keys = Column(JSON, nullable=True)  # {"openai": "sk-...", "deepseek": "sk-..."}
+
     # Budget
     budget_limit_daily = Column(Numeric(10, 2), nullable=True)
     budget_limit_monthly = Column(Numeric(10, 2), nullable=True)
