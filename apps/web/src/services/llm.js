@@ -21,4 +21,18 @@ export const llmService = {
     const response = await api.post('/llm/configs', data);
     return response.data;
   },
+
+  async getProviderStatus() {
+    const response = await api.get('/llm/providers/status');
+    return response.data;
+  },
+
+  async setProviderKey(providerName, apiKey) {
+    const response = await api.post(`/llm/providers/${providerName}/key`, {
+      api_key: apiKey
+    });
+    return response.data;
+  },
 };
+
+export default llmService;
