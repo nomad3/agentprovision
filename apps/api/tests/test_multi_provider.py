@@ -56,3 +56,38 @@ def test_provider_factory_returns_anthropic_adapter():
         mock_adapter.return_value = MagicMock()
         client = factory.get_client("anthropic", "sk-ant-key")
         mock_adapter.assert_called_once_with("sk-ant-key")
+
+
+def test_anthropic_adapter_converts_messages():
+    """AnthropicAdapter should convert OpenAI format to Anthropic format."""
+    from app.services.llm.provider_factory import AnthropicAdapter
+
+    with patch('app.services.llm.provider_factory.anthropic') as mock_anthropic:
+        mock_client = MagicMock()
+        mock_response = MagicMock()
+        mock_response.content = [MagicMock(type="text", text="Hello!")]
+        mock_response.usage = MagicMock(input_tokens=10, output_tokens=5)
+        mock_response.stop_reason = "end_turn"
+        mock_client.messages.create.return_value = mock_response
+        mock_anthropic.Anthropic.return_value = mock_client
+
+        adapter = AnthropicAdapter("sk-ant-key")
+        response = adapter.chat.completions.create(
+            model="claude-sonnet-4-20250514",
+            messages=[
+                {"role": "system", "content": "You are helpful."},
+                {"role": "user", "content": "Hi"}
+            ],
+            max_tokens=100
+        )
+
+        # Verify Anthropic was called with converted format
+        mock_client.messages.create.assert_called_once()
+        call_kwargs = mock_client.messages.create.call_args[1]
+        assert call_kwargs["system"] == "You are helpful."
+        assert call_kwargs["messages"] == [{"role": "user", "content": "Hi"}]
+
+        # Verify response is OpenAI-compatible
+        assert response.choices[0].message.content == "Hello!"
+        assert response.usage.prompt_tokens == 10
+        assert response.usage.completion_tokens == 5
