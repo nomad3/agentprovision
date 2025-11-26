@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 /**
  * NeuralCanvas - Interactive neural network particle animation
@@ -219,7 +219,7 @@ const NeuralCanvas = ({ className = '' }) => {
             ctx.globalAlpha = opacity * 0.35;
           }
 
-          ctx.moveTo(particles[i].x, particles[j].y);
+          ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
           ctx.stroke();
           ctx.shadowBlur = 0;
@@ -313,7 +313,7 @@ const NeuralCanvas = ({ className = '' }) => {
         width: '100%',
         height: '100%',
         pointerEvents: 'auto',
-        zIndex: 0,
+        zIndex: 1,
       }}
     />
   );
