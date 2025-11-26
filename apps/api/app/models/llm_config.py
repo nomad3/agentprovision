@@ -37,7 +37,7 @@ class LLMConfig(Base):
     budget_limit_monthly = Column(Numeric(10, 2), nullable=True)
 
     # Relationships
-    tenant = relationship("Tenant")
+    tenant = relationship("Tenant", foreign_keys=[tenant_id])
     primary_model = relationship("LLMModel", foreign_keys=[primary_model_id])
     fallback_model = relationship("LLMModel", foreign_keys=[fallback_model_id])
 
