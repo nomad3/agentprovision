@@ -62,6 +62,8 @@ def init_db(db: Session) -> None:
                 print("Max retries reached. Could not connect to database.")
                 raise
 
+    seed_llm_providers(db)
+    seed_llm_models(db)
     seed_demo_data(db)
 
 
@@ -301,5 +303,203 @@ def seed_demo_data(db: Session) -> None:
         ),
     ]
     db.add_all(chat_messages)
+
+    db.commit()
+
+
+def seed_llm_providers(db: Session) -> None:
+    """Seed LLM providers."""
+    providers = [
+        {
+            "name": "openai",
+            "display_name": "OpenAI",
+            "base_url": "https://api.openai.com/v1",
+            "auth_type": "api_key",
+            "supported_features": {"streaming": True, "function_calling": True, "vision": True},
+            "is_active": True,
+        },
+        {
+            "name": "anthropic",
+            "display_name": "Anthropic",
+            "base_url": "https://api.anthropic.com/v1",
+            "auth_type": "api_key",
+            "supported_features": {"streaming": True, "function_calling": True, "vision": True},
+            "is_active": True,
+        },
+        {
+            "name": "deepseek",
+            "display_name": "DeepSeek",
+            "base_url": "https://api.deepseek.com/v1",
+            "auth_type": "api_key",
+            "supported_features": {"streaming": True, "function_calling": True, "vision": False},
+            "is_active": True,
+        },
+        {
+            "name": "google",
+            "display_name": "Google AI",
+            "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
+            "auth_type": "api_key",
+            "supported_features": {"streaming": True, "function_calling": True, "vision": True},
+            "is_active": True,
+        },
+        {
+            "name": "mistral",
+            "display_name": "Mistral AI",
+            "base_url": "https://api.mistral.ai/v1",
+            "auth_type": "api_key",
+            "supported_features": {"streaming": True, "function_calling": True, "vision": False},
+            "is_active": True,
+        },
+    ]
+
+    for provider_data in providers:
+        existing = db.query(LLMProvider).filter(LLMProvider.name == provider_data["name"]).first()
+        if not existing:
+            db.add(LLMProvider(**provider_data))
+
+    db.commit()
+
+
+def seed_llm_models(db: Session) -> None:
+    """Seed LLM models for each provider."""
+    from decimal import Decimal
+
+    models = [
+        # OpenAI
+        {
+            "provider": "openai",
+            "model_id": "gpt-4o",
+            "display_name": "GPT-4o",
+            "input_cost": "2.50",
+            "output_cost": "10.00",
+            "context_window": 128000,
+            "speed_tier": "fast",
+            "quality_tier": "best",
+            "size_category": "large",
+        },
+        {
+            "provider": "openai",
+            "model_id": "gpt-4o-mini",
+            "display_name": "GPT-4o Mini",
+            "input_cost": "0.15",
+            "output_cost": "0.60",
+            "context_window": 128000,
+            "speed_tier": "fast",
+            "quality_tier": "good",
+            "size_category": "small",
+        },
+        # Anthropic
+        {
+            "provider": "anthropic",
+            "model_id": "claude-sonnet-4-20250514",
+            "display_name": "Claude Sonnet 4",
+            "input_cost": "3.00",
+            "output_cost": "15.00",
+            "context_window": 200000,
+            "speed_tier": "standard",
+            "quality_tier": "best",
+            "size_category": "large",
+        },
+        {
+            "provider": "anthropic",
+            "model_id": "claude-3-5-haiku-20241022",
+            "display_name": "Claude 3.5 Haiku",
+            "input_cost": "0.80",
+            "output_cost": "4.00",
+            "context_window": 200000,
+            "speed_tier": "fast",
+            "quality_tier": "good",
+            "size_category": "small",
+        },
+        # DeepSeek
+        {
+            "provider": "deepseek",
+            "model_id": "deepseek-chat",
+            "display_name": "DeepSeek Chat",
+            "input_cost": "0.14",
+            "output_cost": "0.28",
+            "context_window": 64000,
+            "speed_tier": "fast",
+            "quality_tier": "good",
+            "size_category": "medium",
+        },
+        {
+            "provider": "deepseek",
+            "model_id": "deepseek-coder",
+            "display_name": "DeepSeek Coder",
+            "input_cost": "0.14",
+            "output_cost": "0.28",
+            "context_window": 64000,
+            "speed_tier": "fast",
+            "quality_tier": "good",
+            "size_category": "medium",
+        },
+        # Google
+        {
+            "provider": "google",
+            "model_id": "gemini-1.5-pro",
+            "display_name": "Gemini 1.5 Pro",
+            "input_cost": "1.25",
+            "output_cost": "5.00",
+            "context_window": 1000000,
+            "speed_tier": "standard",
+            "quality_tier": "best",
+            "size_category": "xl",
+        },
+        {
+            "provider": "google",
+            "model_id": "gemini-1.5-flash",
+            "display_name": "Gemini 1.5 Flash",
+            "input_cost": "0.075",
+            "output_cost": "0.30",
+            "context_window": 1000000,
+            "speed_tier": "fast",
+            "quality_tier": "good",
+            "size_category": "small",
+        },
+        # Mistral
+        {
+            "provider": "mistral",
+            "model_id": "mistral-large-latest",
+            "display_name": "Mistral Large",
+            "input_cost": "2.00",
+            "output_cost": "6.00",
+            "context_window": 128000,
+            "speed_tier": "standard",
+            "quality_tier": "best",
+            "size_category": "large",
+        },
+        {
+            "provider": "mistral",
+            "model_id": "codestral-latest",
+            "display_name": "Codestral",
+            "input_cost": "0.30",
+            "output_cost": "0.90",
+            "context_window": 32000,
+            "speed_tier": "fast",
+            "quality_tier": "good",
+            "size_category": "medium",
+        },
+    ]
+
+    for model_data in models:
+        provider = db.query(LLMProvider).filter(LLMProvider.name == model_data["provider"]).first()
+        if provider:
+            existing = db.query(LLMModel).filter(LLMModel.model_id == model_data["model_id"]).first()
+            if not existing:
+                db.add(
+                    LLMModel(
+                        provider_id=provider.id,
+                        model_id=model_data["model_id"],
+                        display_name=model_data["display_name"],
+                        input_cost_per_1k=Decimal(model_data["input_cost"]),
+                        output_cost_per_1k=Decimal(model_data["output_cost"]),
+                        context_window=model_data["context_window"],
+                        speed_tier=model_data["speed_tier"],
+                        quality_tier=model_data["quality_tier"],
+                        size_category=model_data["size_category"],
+                        is_active=True,
+                    )
+                )
 
     db.commit()
