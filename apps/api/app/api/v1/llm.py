@@ -86,3 +86,39 @@ def create_config(
     db.commit()
     db.refresh(config)
     return config
+
+
+@router.get("/providers/status")
+def get_provider_status(
+    *,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Get status of all LLM providers for current tenant."""
+    # Get all active providers
+    providers = db.query(llm_provider.LLMProvider).filter(
+        llm_provider.LLMProvider.is_active == True
+    ).all()
+
+    # Get tenant's LLM config to check which providers have keys configured
+    config = db.query(llm_config.LLMConfig).filter(
+        llm_config.LLMConfig.tenant_id == current_user.tenant_id,
+        llm_config.LLMConfig.is_tenant_default == True
+    ).first()
+
+    configured_keys = config.provider_api_keys if config and config.provider_api_keys else {}
+
+    # Determine which providers are OpenAI-compatible
+    # Based on LLMProviderFactory: anthropic uses native SDK, others use OpenAI client
+    openai_compatible_providers = {"openai", "deepseek", "mistral", "google"}
+
+    return [
+        {
+            "id": str(p.id),
+            "name": p.name,
+            "display_name": p.display_name,
+            "configured": p.name in configured_keys,
+            "is_openai_compatible": p.name in openai_compatible_providers,
+        }
+        for p in providers
+    ]
