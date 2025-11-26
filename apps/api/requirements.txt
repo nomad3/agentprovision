@@ -16,5 +16,6 @@ duckdb
 pyarrow
 temporalio
 anthropic
+openai
 pytest
 pytest-asyncio
