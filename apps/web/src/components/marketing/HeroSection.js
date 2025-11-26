@@ -1,27 +1,13 @@
-import React from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { heroHighlights } from './data';
-import NeuralCanvas from '../common/NeuralCanvas';
+import React from "react";
+import { Container, Row, Col, Button } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
+import { FaRocket, FaChartLine, FaUsers } from "react-icons/fa";
+import NeuralCanvas from "../common/NeuralCanvas";
 
 const noop = () => {};
 
 const HeroSection = ({ onPrimaryCta = noop, onSecondaryCta = noop }) => {
-  const { t, i18n } = useTranslation(['landing', 'common']);
-  const heroContent = React.useMemo(() => t('landing:hero', { returnObjects: true }), [t, i18n.language]);
-  const highlightItems = React.useMemo(
-    () =>
-      heroHighlights.map(({ key, icon: Icon }) => {
-        const highlight = t(`landing:hero.highlights.${key}`, { returnObjects: true });
-        return {
-          key,
-          Icon,
-          title: highlight?.title || '',
-          description: highlight?.description || '',
-        };
-      }),
-    [t, i18n.language]
-  );
+  const { t } = useTranslation(["landing", "common"]);
 
   return (
     <section className="hero-section text-white pt-5 pb-4" id="hero">
@@ -29,14 +15,18 @@ const HeroSection = ({ onPrimaryCta = noop, onSecondaryCta = noop }) => {
       <div className="hero-overlay" />
       <Container className="hero-content py-5">
         <Row className="align-items-center gy-5">
-          <Col lg={7} className="text-center text-lg-start pe-lg-5">
-            <span className="badge-glow">{heroContent?.badge}</span>
-            <h1 className="display-2 fw-bold mt-4 mb-3 section-heading">{heroContent?.title}</h1>
-            <p className="lead text-soft mt-3 mb-3">{heroContent?.lead}</p>
-            <p className="text-subtle mb-0">{heroContent?.subtext}</p>
-            <div className="d-flex flex-column flex-md-row gap-3 justify-content-center justify-content-lg-start mt-5">
+          <Col lg={6} className="text-center text-lg-start pe-lg-5">
+            <span className="badge-glow">AI-Powered Data Platform</span>
+            <h1 className="display-2 fw-bold mt-4 mb-3 section-heading">
+              Give your entire team data superpowers
+            </h1>
+            <p className="lead text-soft mt-3 mb-4">
+              Transform how your team works with data. Ask questions in plain
+              language, get instant answers.
+            </p>
+            <div className="d-flex flex-column flex-md-row gap-3 justify-content-center justify-content-lg-start mt-4">
               <Button size="lg" className="px-5 py-3" onClick={onPrimaryCta}>
-                {t('common:cta.bookDemo')}
+                Start Free Trial
               </Button>
               <Button
                 size="lg"
@@ -44,31 +34,39 @@ const HeroSection = ({ onPrimaryCta = noop, onSecondaryCta = noop }) => {
                 className="px-5 py-3"
                 onClick={onSecondaryCta}
               >
-                {t('common:cta.watchTour')}
+                Watch Demo
               </Button>
             </div>
-            <div className="text-subtle mt-3">{heroContent?.subHighlight}</div>
           </Col>
-          <Col lg={5}>
-            <div className="hero-grid">
-              <div className="hero-spotlight">
-                <div className="d-flex justify-content-between align-items-center mb-3">
-                  <span className="text-soft text-uppercase" style={{ letterSpacing: '0.12em', fontSize: '0.72rem' }}>
-                    {heroContent?.spotlight?.heading}
-                  </span>
-                  <span className="badge-glow">{heroContent?.spotlight?.badge}</span>
-                </div>
-                {highlightItems.map(({ key, Icon, title, description }) => (
-                  <div className="hero-highlight" key={key}>
-                    <div className="icon-pill-sm flex-shrink-0">
-                      <Icon size={20} />
-                    </div>
-                    <div>
-                      <div className="hero-highlight-title">{title}</div>
-                      <p className="text-subtle mb-0">{description}</p>
-                    </div>
+          <Col lg={6}>
+            <div className="hero-visual">
+              <div className="floating-cards">
+                <div className="floating-card card-1">
+                  <div className="card-icon">
+                    <FaChartLine />
                   </div>
-                ))}
+                  <div className="card-title">Real-time Analytics</div>
+                  <div className="card-value">+47%</div>
+                  <div className="card-label">Faster Decisions</div>
+                </div>
+
+                <div className="floating-card card-2">
+                  <div className="card-icon">
+                    <FaUsers />
+                  </div>
+                  <div className="card-title">Team Collaboration</div>
+                  <div className="card-value">12x</div>
+                  <div className="card-label">More Insights</div>
+                </div>
+
+                <div className="floating-card card-3">
+                  <div className="card-icon">
+                    <FaRocket />
+                  </div>
+                  <div className="card-title">Time Saved</div>
+                  <div className="card-value">8hrs</div>
+                  <div className="card-label">Per Week</div>
+                </div>
               </div>
             </div>
           </Col>

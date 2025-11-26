@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from "react";
 
 /**
  * NeuralCanvas - Interactive neural network particle animation
@@ -9,7 +9,7 @@ import { useCallback, useEffect, useRef } from 'react';
  * - Mouse interaction with electric lightning effects
  * - Responsive canvas sizing
  */
-const NeuralCanvas = ({ className = '' }) => {
+const NeuralCanvas = ({ className = "" }) => {
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
   const particlesRef = useRef([]);
@@ -18,15 +18,15 @@ const NeuralCanvas = ({ className = '' }) => {
 
   // Configuration
   const config = {
-    particleCount: 80,
-    connectionDistance: 160,
-    mouseDistance: 280,
-    electricDistance: 180,
+    particleCount: 50,
+    connectionDistance: 180,
+    mouseDistance: 300,
+    electricDistance: 200,
     colors: {
-      primary: '#6366f1',    // Indigo (matches AgentProvision theme)
-      secondary: '#0ea5e9',  // Sky blue
-      accent: '#f97316',     // Orange accent
-    }
+      primary: "#6366f1", // Indigo (matches AgentProvision theme)
+      secondary: "#0ea5e9", // Sky blue
+      accent: "#f97316", // Orange accent
+    },
   };
 
   // Particle class
@@ -40,8 +40,9 @@ const NeuralCanvas = ({ className = '' }) => {
       this.floatSpeed = 0.0008 + Math.random() * 0.0008;
       this.floatRadius = 2 + Math.random() * 4;
       this.size = Math.random() * 2 + 1.5;
-      this.color = Math.random() > 0.5 ? config.colors.primary : config.colors.secondary;
-      this.baseAlpha = 0.6 + Math.random() * 0.3;
+      this.color =
+        Math.random() > 0.5 ? config.colors.primary : config.colors.secondary;
+      this.baseAlpha = 0.9 + Math.random() * 0.1;
       this.alpha = this.baseAlpha;
       this.isElectric = false;
     }
@@ -58,9 +59,9 @@ const NeuralCanvas = ({ className = '' }) => {
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         if (distance < mouseDistance) {
-          const proximity = 1 - (distance / mouseDistance);
-          this.alpha = this.baseAlpha + (proximity * 0.3);
-          this.size = (Math.random() * 2 + 1.5) + (proximity * 2.5);
+          const proximity = 1 - distance / mouseDistance;
+          this.alpha = this.baseAlpha + proximity * 0.3;
+          this.size = Math.random() * 2 + 1.5 + proximity * 2.5;
 
           if (distance < electricDistance) {
             this.isElectric = true;
@@ -90,7 +91,7 @@ const NeuralCanvas = ({ className = '' }) => {
       // Extra bright core for electric nodes
       if (this.isElectric) {
         ctx.globalAlpha = 0.9;
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = "#ffffff";
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size * 0.35, 0, Math.PI * 2);
         ctx.fill();
@@ -112,15 +113,19 @@ const NeuralCanvas = ({ className = '' }) => {
     if (mouse.x === null) return;
 
     const electricNodes = particles
-      .filter(p => {
+      .filter((p) => {
         const dx = mouse.x - p.x;
         const dy = mouse.y - p.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         return dist < config.electricDistance;
       })
       .sort((a, b) => {
-        const distA = Math.sqrt(Math.pow(mouse.x - a.x, 2) + Math.pow(mouse.y - a.y, 2));
-        const distB = Math.sqrt(Math.pow(mouse.x - b.x, 2) + Math.pow(mouse.y - b.y, 2));
+        const distA = Math.sqrt(
+          Math.pow(mouse.x - a.x, 2) + Math.pow(mouse.y - a.y, 2),
+        );
+        const distB = Math.sqrt(
+          Math.pow(mouse.x - b.x, 2) + Math.pow(mouse.y - b.y, 2),
+        );
         return distA - distB;
       })
       .slice(0, 4);
@@ -129,7 +134,7 @@ const NeuralCanvas = ({ className = '' }) => {
       const dx = mouse.x - node.x;
       const dy = mouse.y - node.y;
       const distance = Math.sqrt(dx * dx + dy * dy);
-      const proximity = 1 - (distance / config.electricDistance);
+      const proximity = 1 - distance / config.electricDistance;
 
       // Draw lightning with multiple layers
       for (let layer = 0; layer < 3; layer++) {
@@ -140,8 +145,14 @@ const NeuralCanvas = ({ className = '' }) => {
         const segments = 4;
         for (let i = 1; i < segments; i++) {
           const t = i / segments;
-          const x = mouse.x + (node.x - mouse.x) * t + (Math.random() - 0.5) * 12 * (1 - t);
-          const y = mouse.y + (node.y - mouse.y) * t + (Math.random() - 0.5) * 12 * (1 - t);
+          const x =
+            mouse.x +
+            (node.x - mouse.x) * t +
+            (Math.random() - 0.5) * 12 * (1 - t);
+          const y =
+            mouse.y +
+            (node.y - mouse.y) * t +
+            (Math.random() - 0.5) * 12 * (1 - t);
           ctx.lineTo(x, y);
         }
         ctx.lineTo(node.x, node.y);
@@ -159,11 +170,11 @@ const NeuralCanvas = ({ className = '' }) => {
           ctx.shadowBlur = 8;
           ctx.shadowColor = node.color;
         } else {
-          ctx.strokeStyle = '#ffffff';
+          ctx.strokeStyle = "#ffffff";
           ctx.lineWidth = 0.6 * proximity;
           ctx.globalAlpha = 0.7 * proximity;
           ctx.shadowBlur = 4;
-          ctx.shadowColor = '#ffffff';
+          ctx.shadowColor = "#ffffff";
         }
 
         ctx.stroke();
@@ -181,22 +192,22 @@ const NeuralCanvas = ({ className = '' }) => {
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         if (distance < config.connectionDistance) {
-          let opacity = 1 - (distance / config.connectionDistance);
+          let opacity = 1 - distance / config.connectionDistance;
           let isElectricConnection = false;
 
           if (mouse.x !== null) {
             const distToMouse1 = Math.sqrt(
               Math.pow(mouse.x - particles[i].x, 2) +
-              Math.pow(mouse.y - particles[i].y, 2)
+                Math.pow(mouse.y - particles[i].y, 2),
             );
             const distToMouse2 = Math.sqrt(
               Math.pow(mouse.x - particles[j].x, 2) +
-              Math.pow(mouse.y - particles[j].y, 2)
+                Math.pow(mouse.y - particles[j].y, 2),
             );
 
             const minDistToMouse = Math.min(distToMouse1, distToMouse2);
             if (minDistToMouse < config.mouseDistance) {
-              const mouseProximity = 1 - (minDistToMouse / config.mouseDistance);
+              const mouseProximity = 1 - minDistToMouse / config.mouseDistance;
               opacity = Math.min(1, opacity + mouseProximity * 0.5);
 
               if (minDistToMouse < config.electricDistance) {
@@ -209,13 +220,13 @@ const NeuralCanvas = ({ className = '' }) => {
 
           if (isElectricConnection) {
             ctx.strokeStyle = particles[i].color;
-            ctx.lineWidth = 1.2 + (opacity * 1.2);
+            ctx.lineWidth = 1.2 + opacity * 1.2;
             ctx.globalAlpha = opacity * 0.7;
             ctx.shadowBlur = 8;
             ctx.shadowColor = particles[i].color;
           } else {
             ctx.strokeStyle = particles[i].color;
-            ctx.lineWidth = 0.4 + (opacity * 0.4);
+            ctx.lineWidth = 0.4 + opacity * 0.4;
             ctx.globalAlpha = opacity * 0.35;
           }
 
@@ -233,7 +244,7 @@ const NeuralCanvas = ({ className = '' }) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     const { width, height } = dimensionsRef.current;
     const particles = particlesRef.current;
     const mouse = mouseRef.current;
@@ -273,7 +284,7 @@ const NeuralCanvas = ({ className = '' }) => {
       const rect = canvas.getBoundingClientRect();
       mouseRef.current = {
         x: e.clientX - rect.left,
-        y: e.clientY - rect.top
+        y: e.clientY - rect.top,
       };
     };
 
@@ -288,14 +299,14 @@ const NeuralCanvas = ({ className = '' }) => {
     animate();
 
     // Event listeners
-    window.addEventListener('resize', handleResize);
-    canvas.addEventListener('mousemove', handleMouseMove);
-    canvas.addEventListener('mouseleave', handleMouseLeave);
+    window.addEventListener("resize", handleResize);
+    canvas.addEventListener("mousemove", handleMouseMove);
+    canvas.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
-      canvas.removeEventListener('mousemove', handleMouseMove);
-      canvas.removeEventListener('mouseleave', handleMouseLeave);
+      window.removeEventListener("resize", handleResize);
+      canvas.removeEventListener("mousemove", handleMouseMove);
+      canvas.removeEventListener("mouseleave", handleMouseLeave);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
@@ -307,13 +318,13 @@ const NeuralCanvas = ({ className = '' }) => {
       ref={canvasRef}
       className={`neural-canvas ${className}`}
       style={{
-        position: 'absolute',
+        position: "absolute",
         top: 0,
         left: 0,
-        width: '100%',
-        height: '100%',
-        pointerEvents: 'auto',
-        zIndex: 1,
+        width: "100%",
+        height: "100%",
+        pointerEvents: "auto",
+        zIndex: 0,
       }}
     />
   );
