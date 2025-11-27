@@ -234,6 +234,7 @@ const LandingPage = () => {
       <main>
         <HeroSection onPrimaryCta={goToLogin} onSecondaryCta={goToLogin} />
         <InteractivePreview />
+        <FeatureDemoSection />
         <FeaturesSection />
         <CTASection />
 
