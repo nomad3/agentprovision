@@ -458,7 +458,7 @@ const LandingPage = () => {
           </Container>
         </section>
 
-        <section id="roadmap" className="section-wrapper section-dark">
+        <section id="roadmap" className="section-wrapper section-with-bg bg-tech">
           <Container>
             <AnimatedSection animation="fade-in">
               <div className="text-center mb-5">
@@ -488,7 +488,7 @@ const LandingPage = () => {
           </Container>
         </section>
 
-        <section id="stories" className="section-wrapper">
+        <section id="stories" className="section-wrapper section-with-bg bg-people">
           <Container>
             <AnimatedSection animation="fade-in">
               <div className="text-center mb-5">

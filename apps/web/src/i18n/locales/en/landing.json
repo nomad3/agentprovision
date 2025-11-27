@@ -26,7 +26,14 @@
   },
   "logos": {
     "heading": "Powered by",
-    "items": ["Claude AI", "React", "PostgreSQL", "DuckDB", "Temporal", "FastAPI"]
+    "items": [
+      "Claude AI",
+      "React",
+      "PostgreSQL",
+      "DuckDB",
+      "Temporal",
+      "FastAPI"
+    ]
   },
   "metrics": {
     "items": [
@@ -143,15 +150,15 @@
     "items": {
       "marketplaceConnectors": {
         "title": "Connect more data sources",
-        "description": "Beyond spreadsheets: Direct connections to your CRM, marketing platforms, financial systems. Pull data automatically instead of manual exports. Keep everything synchronized."
+        "description": "Direct connections to CRM, marketing, and financial systems. Auto-sync data instead of manual exports."
       },
       "adaptiveGovernanceAi": {
         "title": "Smarter data security",
-        "description": "Automatic detection of sensitive data. Intelligent masking of PII. Dynamic policies that adapt to context. Less manual configuration, better protection."
+        "description": "Auto-detect sensitive data. Intelligent PII masking. Dynamic policies that adapt to context."
       },
       "autonomousFinopsSuites": {
-        "title": "Handle larger datasets faster",
-        "description": "Query optimization for big data. Intelligent caching. Better performance as your data grows. Scale from gigabytes to terabytes without slowdowns."
+        "title": "Handle larger datasets",
+        "description": "Query optimization for big data. Intelligent caching. Scale from gigabytes to terabytes seamlessly."
       }
     }
   },
@@ -160,14 +167,14 @@
     "subtitle": "Real scenarios we've seen from organizations using this platform",
     "items": [
       {
-        "quote": "Before: Marketing team sent requests to data team, waited 2-3 days, got static reports that raised more questions. Now: Marketing asks AI agents directly, gets answers in seconds, iterates on analysis real-time. Campaign optimization happens daily instead of monthly.",
+        "quote": "Marketing used to wait days for static reports. Now, we ask AI agents directly and get answers in seconds. Campaign optimization happens daily instead of monthly.",
         "author": "Marketing Team",
-        "role": "From reactive to proactive optimization"
+        "role": "From reactive to proactive"
       },
       {
-        "quote": "Before: Finance spent first two weeks of every month gathering data, reconciling spreadsheets, generating reports. Now: AI agents handle data gathering automatically. Finance spends time on analysis and strategic planning. Monthly close happens in days, not weeks.",
+        "quote": "Finance spent weeks gathering data. Now, AI agents handle it automatically. We spend our time on strategy, and the monthly close happens in days, not weeks.",
         "author": "Finance Team",
-        "role": "From data janitor to strategic advisor"
+        "role": "From data gathering to strategy"
       }
     ]
   },

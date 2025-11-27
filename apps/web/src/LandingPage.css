@@ -150,6 +150,10 @@
   overflow: hidden;
 }
 
+.hero-section::after {
+  display: none;
+}
+
 /* Neural canvas container adjustments */
 .neural-canvas {
   position: absolute;
@@ -1451,7 +1455,7 @@ button:focus-visible {
     transition-duration: 0.01ms !important;
   }
 
-  ..neural-canvas {
+  .neural-canvas {
     display: none;
   }
 }
@@ -1517,4 +1521,8 @@ button:focus-visible {
 
 .bg-tech {
   background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80');
+}
+
+.bg-people {
+  background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1920&q=80');
 }
