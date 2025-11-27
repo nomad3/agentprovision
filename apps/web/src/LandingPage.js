@@ -21,6 +21,7 @@ import {
   pipelineHighlights,
   roadmapItems,
 } from "./components/marketing/data";
+import FeatureDemoSection from "./components/marketing/FeatureDemoSection";
 import FeaturesSection from "./components/marketing/FeaturesSection";
 import HeroSection from "./components/marketing/HeroSection";
 import InteractivePreview from "./components/marketing/InteractivePreview";
