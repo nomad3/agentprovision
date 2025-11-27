@@ -330,7 +330,7 @@ const LandingPage = () => {
           </Container>
         </section>
 
-        <section id="lakehouse" className="section-wrapper">
+        <section id="lakehouse" className="section-wrapper section-with-bg bg-data">
           <Container>
             <Row className="g-5 align-items-center">
               <Col lg={6}>
@@ -339,9 +339,6 @@ const LandingPage = () => {
                     <h2 className="display-5 fw-bold text-white">
                       {t("landing:lakehouse.heading")}
                     </h2>
-                    <p className="text-light mt-3">
-                      {t("landing:lakehouse.description")}
-                    </p>
                     <div className="gradient-divider my-4" />
                     {lakehousePrimary.map(
                       ({ key, Icon, title, description }) => (
@@ -370,9 +367,6 @@ const LandingPage = () => {
                     <h3 className="fs-3 fw-semibold text-white">
                       {t("landing:lakehouse.secondary.heading")}
                     </h3>
-                    <p className="text-soft">
-                      {t("landing:lakehouse.secondary.description")}
-                    </p>
                     <Row className="g-3 mt-4">
                       {pipelineItems.map(
                         ({ key, title, description, Icon }) => (
@@ -395,7 +389,7 @@ const LandingPage = () => {
           </Container>
         </section>
 
-        <section id="architecture" className="section-wrapper section-contrast">
+        <section id="architecture" className="section-wrapper section-with-bg bg-devops">
           <Container>
             <Row className="g-5 align-items-center">
               <Col lg={5}>
@@ -403,9 +397,6 @@ const LandingPage = () => {
                   <h2 className="display-5 fw-bold text-white">
                     {t("landing:architecture.heading")}
                   </h2>
-                  <p className="text-soft mt-3">
-                    {t("landing:architecture.description")}
-                  </p>
                 </AnimatedSection>
               </Col>
               <Col lg={7}>
@@ -436,7 +427,7 @@ const LandingPage = () => {
           </Container>
         </section>
 
-        <section id="ai" className="section-wrapper section-contrast">
+        <section id="ai" className="section-wrapper section-with-bg bg-ai">
           <Container>
             <Row className="g-5">
               <Col lg={5}>
@@ -444,9 +435,6 @@ const LandingPage = () => {
                   <h2 className="display-5 fw-bold text-white">
                     {t("landing:ai.heading")}
                   </h2>
-                  <p className="text-soft mt-3">
-                    {t("landing:ai.description")}
-                  </p>
                 </AnimatedSection>
               </Col>
               <Col lg={7}>
