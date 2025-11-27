@@ -18,7 +18,7 @@ const NeuralCanvas = ({ className = "" }) => {
 
   // Configuration
   const config = {
-    particleCount: 50,
+    particleCount: 100,
     connectionDistance: 180,
     mouseDistance: 300,
     electricDistance: 200,
@@ -42,7 +42,7 @@ const NeuralCanvas = ({ className = "" }) => {
       this.size = Math.random() * 2 + 1.5;
       this.color =
         Math.random() > 0.5 ? config.colors.primary : config.colors.secondary;
-      this.baseAlpha = 0.9 + Math.random() * 0.1;
+      this.baseAlpha = 0.3 + Math.random() * 0.2;
       this.alpha = this.baseAlpha;
       this.isElectric = false;
     }
@@ -198,11 +198,11 @@ const NeuralCanvas = ({ className = "" }) => {
           if (mouse.x !== null) {
             const distToMouse1 = Math.sqrt(
               Math.pow(mouse.x - particles[i].x, 2) +
-                Math.pow(mouse.y - particles[i].y, 2),
+              Math.pow(mouse.y - particles[i].y, 2),
             );
             const distToMouse2 = Math.sqrt(
               Math.pow(mouse.x - particles[j].x, 2) +
-                Math.pow(mouse.y - particles[j].y, 2),
+              Math.pow(mouse.y - particles[j].y, 2),
             );
 
             const minDistToMouse = Math.min(distToMouse1, distToMouse2);
@@ -300,12 +300,12 @@ const NeuralCanvas = ({ className = "" }) => {
 
     // Event listeners
     window.addEventListener("resize", handleResize);
-    canvas.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
       window.removeEventListener("resize", handleResize);
-      canvas.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("mouseleave", handleMouseLeave);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
