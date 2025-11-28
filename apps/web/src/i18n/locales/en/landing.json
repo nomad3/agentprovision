@@ -1,10 +1,10 @@
 {
   "hero": {
-    "badge": "AI-Powered Data Platform",
-    "title": "Give your entire team data superpowers",
-    "lead": "Your marketing team can analyze campaign performance. Your sales team can track pipeline metrics. Your finance team can query revenue data. All without knowing SQL or waiting for data engineers.",
-    "subtext": "Upload your data once. Create AI agents that understand your business. Every team member gets instant answers to their data questions through simple conversation.",
-    "subHighlight": "Transform data access from bottleneck to superpower.",
+    "badge": "Enterprise AI Data Lakehouse",
+    "title": "Unified Data Lake. Autonomous AI Agents.",
+    "lead": "Connect your data lakehouse to a fleet of AI agents. Query petabytes of data in plain English. Automate complex data pipelines with autonomous intelligence.",
+    "subtext": "Transform your raw data into actionable intelligence. Secure, scalable, and built for the AI era.",
+    "subHighlight": "The modern stack for data-driven enterprises.",
     "spotlight": {
       "heading": "What becomes possible",
       "badge": "Team augmentation"

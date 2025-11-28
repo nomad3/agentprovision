@@ -1,10 +1,9 @@
-import React from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { FaRocket, FaChartLine, FaUsers } from "react-icons/fa";
+import { FaBolt, FaDatabase, FaRobot } from "react-icons/fa6";
 import NeuralCanvas from "../common/NeuralCanvas";
 
-const noop = () => {};
+const noop = () => { };
 
 const HeroSection = ({ onPrimaryCta = noop, onSecondaryCta = noop }) => {
   const { t } = useTranslation(["landing", "common"]);
@@ -41,31 +40,35 @@ const HeroSection = ({ onPrimaryCta = noop, onSecondaryCta = noop }) => {
           <Col lg={6}>
             <div className="hero-visual">
               <div className="floating-cards">
+                {/* Floating Cards - Data Lake & AI Themed */}
                 <div className="floating-card card-1">
                   <div className="card-icon">
-                    <FaChartLine />
+                    <FaDatabase />
                   </div>
-                  <div className="card-title">Real-time Analytics</div>
-                  <div className="card-value">+47%</div>
-                  <div className="card-label">Faster Decisions</div>
+                  <div className="card-content">
+                    <span className="card-label">Data Processed</span>
+                    <span className="card-value">2.5 PB</span>
+                  </div>
                 </div>
 
                 <div className="floating-card card-2">
                   <div className="card-icon">
-                    <FaUsers />
+                    <FaRobot />
                   </div>
-                  <div className="card-title">Team Collaboration</div>
-                  <div className="card-value">12x</div>
-                  <div className="card-label">More Insights</div>
+                  <div className="card-content">
+                    <span className="card-label">Active Agents</span>
+                    <span className="card-value">150+</span>
+                  </div>
                 </div>
 
                 <div className="floating-card card-3">
                   <div className="card-icon">
-                    <FaRocket />
+                    <FaBolt />
                   </div>
-                  <div className="card-title">Time Saved</div>
-                  <div className="card-value">8hrs</div>
-                  <div className="card-label">Per Week</div>
+                  <div className="card-content">
+                    <span className="card-label">Query Speed</span>
+                    <span className="card-value">&lt; 50ms</span>
+                  </div>
                 </div>
               </div>
             </div>
