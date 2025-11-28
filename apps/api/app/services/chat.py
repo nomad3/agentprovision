@@ -16,7 +16,8 @@ from app.services.tool_executor import (
     get_tool_registry,
     SQLQueryTool,
     CalculatorTool,
-    DataSummaryTool
+    DataSummaryTool,
+    ReportGenerationTool
 )
 from app.services.context_manager import get_context_manager
 
@@ -163,6 +164,7 @@ def _generate_agentic_response(
         tool_registry.register(SQLQueryTool(dataset_service, dataset))
         tool_registry.register(CalculatorTool())
         tool_registry.register(DataSummaryTool(dataset_service, dataset))
+        tool_registry.register(ReportGenerationTool(dataset_service, dataset))
 
         # Build initial system prompt with all context
         base_system_prompt = llm_service.build_data_analysis_system_prompt(

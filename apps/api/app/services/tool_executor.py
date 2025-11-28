@@ -284,6 +284,110 @@ class DataSummaryTool(Tool):
             )
 
 
+class ReportGenerationTool(Tool):
+    """Tool for generating structured reports with visualizations."""
+
+    def __init__(self, dataset_service, dataset):
+        super().__init__(
+            name="generate_report",
+            description="Generate a structured report with visualizations (bar, line, pie charts) from the dataset."
+        )
+        self.dataset_service = dataset_service
+        self.dataset = dataset
+
+    def get_schema(self) -> Dict[str, Any]:
+        """Get schema for report generation tool."""
+        return {
+            "name": self.name,
+            "description": self.description,
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "description": "Title of the report or visualization"
+                    },
+                    "sql": {
+                        "type": "string",
+                        "description": "SQL query to fetch data. Table name is 'dataset'. Only SELECT queries allowed."
+                    },
+                    "chart_type": {
+                        "type": "string",
+                        "enum": ["bar", "line", "pie", "table", "metric"],
+                        "description": "Type of visualization to generate"
+                    },
+                    "x_axis": {
+                        "type": "string",
+                        "description": "Column name for X-axis (required for bar/line charts)"
+                    },
+                    "y_axis": {
+                        "type": "string",
+                        "description": "Column name for Y-axis (required for bar/line charts)"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Brief description of the insight or finding"
+                    }
+                },
+                "required": ["title", "sql", "chart_type"]
+            }
+        }
+
+    def execute(self, **kwargs) -> ToolResult:
+        """Execute report generation."""
+        try:
+            sql = kwargs.get("sql")
+            chart_type = kwargs.get("chart_type")
+            title = kwargs.get("title")
+            x_axis = kwargs.get("x_axis")
+            y_axis = kwargs.get("y_axis")
+            description = kwargs.get("description", "")
+
+            if not sql:
+                return ToolResult(success=False, error="SQL query is required")
+
+            # Execute the query
+            result = self.dataset_service.execute_query(
+                self.dataset,
+                sql,
+                limit=100  # Reasonable limit for charts
+            )
+
+            rows = result.get("rows", [])
+
+            # Validate data for charts
+            if chart_type in ["bar", "line"] and rows:
+                if x_axis and x_axis not in rows[0]:
+                    return ToolResult(success=False, error=f"X-axis column '{x_axis}' not found in query results")
+                if y_axis and y_axis not in rows[0]:
+                    return ToolResult(success=False, error=f"Y-axis column '{y_axis}' not found in query results")
+
+            return ToolResult(
+                success=True,
+                data={
+                    "type": "report_visualization",
+                    "chart_type": chart_type,
+                    "title": title,
+                    "description": description,
+                    "data": rows,
+                    "config": {
+                        "x_axis": x_axis,
+                        "y_axis": y_axis
+                    }
+                },
+                metadata={
+                    "row_count": len(rows),
+                    "query": sql
+                }
+            )
+
+        except Exception as e:
+            return ToolResult(
+                success=False,
+                error=f"Report generation failed: {str(e)}"
+            )
+
+
 class ToolRegistry:
     """Registry for managing available tools."""
 

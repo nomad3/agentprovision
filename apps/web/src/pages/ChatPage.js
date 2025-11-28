@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Container, Row, Col, Button, Card, ListGroup, Modal, Form, Alert, Spinner, Badge } from 'react-bootstrap';
+import { useEffect, useMemo, useState } from 'react';
+import { Alert, Badge, Button, Card, Col, Container, Form, ListGroup, Modal, Row, Spinner } from 'react-bootstrap';
+import { useAuth } from '../App';
 import Layout from '../components/Layout';
-import datasetService from '../services/dataset';
 import agentKitService from '../services/agentKit';
 import chatService from '../services/chat';
-import { useAuth } from '../App';
+import datasetService from '../services/dataset';
 
 const initialSessionState = {
   datasetId: '',
@@ -161,6 +161,8 @@ const ChatPage = () => {
 
   const renderMessage = (message) => {
     const timeLabel = message.created_at ? new Date(message.created_at).toLocaleTimeString() : '';
+    const queryResults = message.context?.query_results || [];
+
     return (
       <ListGroup.Item key={message.id} className={message.role === 'assistant' ? 'bg-light' : ''}>
         <div className="d-flex justify-content-between align-items-start">
@@ -168,10 +170,19 @@ const ChatPage = () => {
             <Badge bg={message.role === 'assistant' ? 'primary' : 'secondary'} className="me-2 text-uppercase">
               {message.role}
             </Badge>
-            <span>{message.content}</span>
+            <span style={{ whiteSpace: 'pre-wrap' }}>{message.content}</span>
           </div>
           <small className="text-muted">{timeLabel}</small>
         </div>
+
+        {/* Render Visualizations */}
+        {queryResults.map((result, idx) => {
+          if (result.tool === 'generate_report') {
+            return <ReportVisualization key={idx} toolResult={result} />;
+          }
+          return null;
+        })}
+
         {message.context && message.context.summary && (
           <details className="mt-2">
             <summary>View agent context</summary>
