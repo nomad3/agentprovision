@@ -271,7 +271,7 @@ def _persist_dataframe(
         for column, dtype in df.dtypes.items()
     ]
 
-    sample_rows = df.head(10).where(pd.notnull(df.head(10)), None).to_dict(orient="records")
+    sample_rows = df.head(10).astype(object).where(pd.notnull(df.head(10)), None).to_dict(orient="records")
 
     dataset = Dataset(
         id=dataset_id,
