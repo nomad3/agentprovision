@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Alert, Badge, Button, Card, Col, Container, Form, ListGroup, Modal, Row, Spinner } from 'react-bootstrap';
 import { useAuth } from '../App';
 import Layout from '../components/Layout';
+import ReportVisualization from '../components/chat/ReportVisualization';
 import agentKitService from '../services/agentKit';
 import chatService from '../services/chat';
 import datasetService from '../services/dataset';
