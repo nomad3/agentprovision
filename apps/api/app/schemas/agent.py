@@ -4,7 +4,7 @@ import uuid
 class AgentBase(BaseModel):
     name: str
     description: str | None = None
-    config: dict
+    config: dict | None = None
     # Orchestration fields
     role: str | None = None  # "analyst", "manager", "specialist"
     capabilities: list[str] | None = None  # list of capability strings
