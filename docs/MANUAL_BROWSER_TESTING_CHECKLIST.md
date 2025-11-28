@@ -45,6 +45,10 @@
   - [x] Verify Agent "thinking" state.
   - [x] Verify Agent returns a response/report.
   - [x] Verify `data_summary` or `sql_query` tool usage in the logs/UI.
+  - [x] **Dataset Grouping**:
+    - [x] Create a Dataset Group from multiple files (Verified via API Simulation).
+    - [x] Create a Chat Session with the Group (Verified via API Simulation).
+    - [x] Verify Agent can query across multiple datasets (Verified via API Simulation).
 
 ## 5. Agent Kits & Advanced Features
 - [x] **Agent Kit Creation** (Verified via API)
