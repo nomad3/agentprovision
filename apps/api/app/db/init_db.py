@@ -188,7 +188,7 @@ def seed_demo_data(db: Session) -> None:
             version="1.1.0",
             config={
                 "primary_objective": "Analyze data and provide actionable insights to drive business decisions",
-                "base_model": "claude-3",
+                "base_model": "claude-3-5-sonnet-20240620",
                 "tools": ["sql_query", "chart_generation"]
             },
             tenant_id=demo_tenant.id,
@@ -391,8 +391,8 @@ def seed_llm_models(db: Session) -> None:
         # Anthropic
         {
             "provider": "anthropic",
-            "model_id": "claude-3-5-sonnet-20241022",
-            "display_name": "Claude 3.5 Sonnet",
+            "model_id": "claude-3-5-sonnet-20240620",
+            "display_name": "Claude 3.5 Sonnet (v1)",
             "input_cost": "3.00",
             "output_cost": "15.00",
             "context_window": 200000,
