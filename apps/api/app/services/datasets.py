@@ -136,17 +136,27 @@ def _load_dataframe(file: UploadFile) -> pd.DataFrame:
             # and is followed by rows with the same number of columns.
             lines = decoded_content.splitlines()
             header_row_index = 0
-            max_cols = 0
 
-            # Scan first 50 lines
+            # Scan first 50 lines using csv.reader to handle quotes correctly
             candidate_rows = []
-            for i, line in enumerate(lines[:50]):
-                if not line.strip(): continue
+            try:
+                # Use the detected delimiter
+                reader = csv.reader(lines[:50], delimiter=delimiter)
+                for i, row in enumerate(reader):
+                    # Skip empty rows or rows with only empty strings
+                    if not row or not any(field.strip() for field in row):
+                        continue
 
-                # Count potential columns
-                cols = len(line.split(delimiter))
-                if cols > 1:
-                    candidate_rows.append((i, cols))
+                    cols = len(row)
+                    if cols > 1:
+                        candidate_rows.append((i, cols))
+            except csv.Error:
+                # Fallback to naive split if csv.reader fails
+                for i, line in enumerate(lines[:50]):
+                    if not line.strip(): continue
+                    cols = len(line.split(delimiter))
+                    if cols > 1:
+                        candidate_rows.append((i, cols))
 
             # If we found candidates, pick the best one
             # We look for stability: a row with N columns followed by other rows with N columns
@@ -154,7 +164,16 @@ def _load_dataframe(file: UploadFile) -> pd.DataFrame:
                 # Group by column count
                 from collections import Counter
                 col_counts = Counter([c[1] for c in candidate_rows])
-                most_common_col_count = col_counts.most_common(1)[0][0]
+                # Filter out counts that only appear once (noise), unless it's the only one
+                if len(col_counts) > 1:
+                     # Prefer counts that appear multiple times
+                     stable_counts = {k: v for k, v in col_counts.items() if v > 1}
+                     if stable_counts:
+                         most_common_col_count = max(stable_counts, key=stable_counts.get)
+                     else:
+                         most_common_col_count = col_counts.most_common(1)[0][0]
+                else:
+                    most_common_col_count = col_counts.most_common(1)[0][0]
 
                 # Find the first row with this column count
                 for i, cols in candidate_rows:
@@ -198,6 +217,35 @@ def _load_dataframe(file: UploadFile) -> pd.DataFrame:
     # Clean up column names (strip whitespace, handle unnamed)
     df.columns = [str(c).strip() for c in df.columns]
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+
+    # Attempt to convert currency columns to numeric
+    for col in df.columns:
+        if df[col].dtype == 'object':
+            try:
+                # Check a sample for currency symbols
+                sample = df[col].dropna().astype(str).head(20)
+                if any('$' in x for x in sample):
+                    # Remove '$' and ','
+                    cleaned = df[col].astype(str).str.replace('$', '', regex=False).str.replace(',', '', regex=False)
+
+                    # Handle parentheses for negative: (100.00) -> -100.00
+                    mask_neg = cleaned.str.startswith('(') & cleaned.str.endswith(')')
+                    # Ensure mask is boolean (handle NaNs)
+                    mask_neg = mask_neg.fillna(False)
+
+                    cleaned = cleaned.str.replace('(', '', regex=False).str.replace(')', '', regex=False)
+
+                    # Convert to numeric
+                    numeric_col = pd.to_numeric(cleaned, errors='coerce')
+
+                    # Apply negatives
+                    if mask_neg.any():
+                        numeric_col.loc[mask_neg] = -numeric_col.loc[mask_neg]
+
+                    df[col] = numeric_col
+            except Exception:
+                # If conversion fails, keep original column
+                pass
 
     return df
 
