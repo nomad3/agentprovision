@@ -391,8 +391,8 @@ def seed_llm_models(db: Session) -> None:
         # Anthropic
         {
             "provider": "anthropic",
-            "model_id": "claude-sonnet-4-20250514",
-            "display_name": "Claude Sonnet 4",
+            "model_id": "claude-3-5-sonnet-20241022",
+            "display_name": "Claude 3.5 Sonnet",
             "input_cost": "3.00",
             "output_cost": "15.00",
             "context_window": 200000,
