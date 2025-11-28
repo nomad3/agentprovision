@@ -43,7 +43,7 @@ router.include_router(connectors.router, prefix="/connectors", tags=["connectors
 router.include_router(deployments.router, prefix="/deployments", tags=["deployments"])
 router.include_router(analytics.router, prefix="/analytics", tags=["analytics"])
 router.include_router(vector_stores.router, prefix="/vector_stores", tags=["vector_stores"])
-router.include_router(agent_kits.router, prefix="/agent_kits", tags=["agent_kits"])
+router.include_router(agent_kits.router, prefix="/agent-kits", tags=["agent_kits"])
 router.include_router(datasets.router, prefix="/datasets", tags=["datasets"])
 router.include_router(chat.router, prefix="/chat", tags=["chat"])
 router.include_router(databricks.router, prefix="/databricks", tags=["databricks"])

@@ -281,6 +281,12 @@ const ChatPage = () => {
                             placeholder="Ask a question or request an action."
                             value={messageDraft}
                             onChange={(event) => setMessageDraft(event.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' && !e.shiftKey) {
+                                e.preventDefault();
+                                handleMessageSubmit(e);
+                              }
+                            }}
                           />
                         </Form.Group>
                       </Col>

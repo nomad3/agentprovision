@@ -140,7 +140,7 @@ echo ""
 echo "5️⃣  Agent Kit Flow"
 echo "-----------------"
 
-test_endpoint "List Agent Kits" "GET" "/agent_kits/" "" "200" "$AUTH_HEADER"
+test_endpoint "List Agent Kits" "GET" "/agent-kits/" "" "200" "$AUTH_HEADER"
 
 echo ""
 echo "6️⃣  Chat Session Flow"
