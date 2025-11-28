@@ -36,7 +36,6 @@ def create_session(
     current_user: User = Depends(deps.get_current_active_user),
 ):
     try:
-        print(f"DEBUG: create_session payload: {payload}")
         session = chat_service.create_session(
             db,
             tenant_id=current_user.tenant_id,
