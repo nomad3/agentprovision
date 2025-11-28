@@ -96,6 +96,28 @@ def seed_llm_models(db: Session):
                 "speed_tier": "fast",
                 "quality_tier": "good",
                 "capabilities": {"vision": True}
+            },
+            {
+                "provider_id": anthropic.id,
+                "model_id": "claude-4-5-opus",
+                "display_name": "Claude 4.5 Opus",
+                "context_window": 200000,
+                "input_cost_per_1k": 0.015,
+                "output_cost_per_1k": 0.075,
+                "speed_tier": "standard",
+                "quality_tier": "best",
+                "capabilities": {"vision": True, "reasoning": True}
+            },
+            {
+                "provider_id": anthropic.id,
+                "model_id": "claude-4-5-sonnet",
+                "display_name": "Claude 4.5 Sonnet",
+                "context_window": 200000,
+                "input_cost_per_1k": 0.003,
+                "output_cost_per_1k": 0.015,
+                "speed_tier": "fast",
+                "quality_tier": "best",
+                "capabilities": {"vision": True, "coding": True}
             }
         ])
 

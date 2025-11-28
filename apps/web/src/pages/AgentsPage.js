@@ -1,29 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import {
-  Card,
-  Button,
-  Table,
   Badge,
-  Modal,
-  Form,
-  Row,
+  Button,
+  Card,
   Col,
+  Form,
   InputGroup,
-  Dropdown,
+  Modal,
+  Row,
+  Table
 } from 'react-bootstrap';
 import {
-  Robot,
-  Plus,
-  Search,
   Pencil,
-  Trash,
-  Play,
-  Pause,
-  ThreeDotsVertical,
+  Plus,
+  Robot,
+  Search,
+  Trash
 } from 'react-bootstrap-icons';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
-import { EmptyState, LoadingSpinner, ConfirmModal } from '../components/common';
+import { ConfirmModal, EmptyState, LoadingSpinner } from '../components/common';
 import agentService from '../services/agent';
 import './AgentsPage.css';
 
@@ -354,6 +350,8 @@ const AgentsPage = () => {
                     <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
                     <option value="claude-3-opus">Claude 3 Opus</option>
                     <option value="claude-3-sonnet">Claude 3 Sonnet</option>
+                    <option value="claude-4-5-opus">Claude 4.5 Opus</option>
+                    <option value="claude-4-5-sonnet">Claude 4.5 Sonnet</option>
                   </Form.Select>
                 </Form.Group>
               </Col>
@@ -443,8 +441,8 @@ const AgentsPage = () => {
               {submitting
                 ? 'Saving...'
                 : showCreateModal
-                ? 'Create Agent'
-                : 'Save Changes'}
+                  ? 'Create Agent'
+                  : 'Save Changes'}
             </Button>
           </Modal.Footer>
         </Form>
