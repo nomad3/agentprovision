@@ -87,55 +87,117 @@ def _tenant_storage_path(tenant_id: uuid.UUID) -> Path:
     return tenant_path
 
 
+import csv
+import io
+
 def _load_dataframe(file: UploadFile) -> pd.DataFrame:
     suffix = (Path(file.filename).suffix or "").lower() if file.filename else ""
     content_type = (file.content_type or "").lower()
 
     try:
         if (
-            suffix in {".csv"}
+            suffix in {".csv", ".txt"}
             or content_type in {"text/csv", "application/csv", "text/plain"}
         ):
-            # Try reading normally first
+            # Read content to analyze
+            content_bytes = file.file.read()
+            file.file.seek(0)
+
+            # Try different encodings
+            encodings = ['utf-8', 'latin1', 'cp1252', 'utf-16']
+            decoded_content = None
+            used_encoding = 'utf-8'
+
+            for encoding in encodings:
+                try:
+                    decoded_content = content_bytes.decode(encoding)
+                    used_encoding = encoding
+                    break
+                except UnicodeDecodeError:
+                    continue
+
+            if not decoded_content:
+                raise ValueError("Failed to decode file with common encodings.")
+
+            # Analyze structure to find header and delimiter
+            buffer = io.StringIO(decoded_content)
+            sample = buffer.read(8192) # Read first 8KB
+            buffer.seek(0)
+
+            # Detect delimiter
             try:
-                df = pd.read_csv(file.file)
-                # Check if it looks like a NetSuite export (few columns, metadata in first rows)
-                if len(df.columns) < 2 and len(df) > 0:
-                    raise ValueError("Potential metadata header detected")
+                dialect = csv.Sniffer().sniff(sample, delimiters=[',', ';', '\t', '|'])
+                delimiter = dialect.delimiter
+            except csv.Error:
+                delimiter = ',' # Fallback
+
+            # Find the header row
+            # Heuristic: Find the first row that has a significant number of columns
+            # and is followed by rows with the same number of columns.
+            lines = decoded_content.splitlines()
+            header_row_index = 0
+            max_cols = 0
+
+            # Scan first 50 lines
+            candidate_rows = []
+            for i, line in enumerate(lines[:50]):
+                if not line.strip(): continue
+
+                # Count potential columns
+                cols = len(line.split(delimiter))
+                if cols > 1:
+                    candidate_rows.append((i, cols))
+
+            # If we found candidates, pick the best one
+            # We look for stability: a row with N columns followed by other rows with N columns
+            if candidate_rows:
+                # Group by column count
+                from collections import Counter
+                col_counts = Counter([c[1] for c in candidate_rows])
+                most_common_col_count = col_counts.most_common(1)[0][0]
+
+                # Find the first row with this column count
+                for i, cols in candidate_rows:
+                    if cols == most_common_col_count:
+                        header_row_index = i
+                        break
+
+            # Read CSV with detected parameters
+            file.file.seek(0)
+            try:
+                df = pd.read_csv(
+                    file.file,
+                    skiprows=header_row_index,
+                    encoding=used_encoding,
+                    sep=delimiter,
+                    on_bad_lines='skip'
+                )
             except Exception:
-                # Reset and try to find the header
+                # Last resort: engine='python' is more forgiving
                 file.file.seek(0)
-                # Read first 20 lines to find the header
-                content = file.file.read(4096).decode('utf-8', errors='ignore')
-                file.file.seek(0)
-
-                lines = content.split('\n')
-                skip_rows = 0
-                max_cols = 0
-
-                # Simple heuristic: find the row with the most commas
-                for i, line in enumerate(lines[:20]):
-                    cols = line.count(',')
-                    if cols > max_cols:
-                        max_cols = cols
-                        skip_rows = i
-
-                if max_cols > 1:
-                    df = pd.read_csv(file.file, skiprows=skip_rows)
-                else:
-                    # Fallback to default
-                    file.file.seek(0)
-                    df = pd.read_csv(file.file, on_bad_lines='skip')
+                df = pd.read_csv(
+                    file.file,
+                    skiprows=header_row_index,
+                    encoding=used_encoding,
+                    sep=delimiter,
+                    on_bad_lines='skip',
+                    engine='python'
+                )
 
         else:
             df = pd.read_excel(file.file)
+
     except Exception as exc:  # noqa: BLE001
-        raise ValueError("Failed to parse uploaded file. Ensure it is a valid Excel or CSV document.") from exc
+        raise ValueError(f"Failed to parse uploaded file: {str(exc)}") from exc
     finally:
         file.file.seek(0)
 
     if df.empty:
         raise ValueError("Uploaded file contains no rows.")
+
+    # Clean up column names (strip whitespace, handle unnamed)
+    df.columns = [str(c).strip() for c in df.columns]
+    df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
 
     return df
 
