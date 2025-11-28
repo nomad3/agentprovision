@@ -42,21 +42,44 @@ def create_session(
     db: Session,
     *,
     tenant_id: uuid.UUID,
-    dataset_id: uuid.UUID,
     agent_kit_id: uuid.UUID,
+    dataset_id: uuid.UUID | None = None,
+    dataset_group_id: uuid.UUID | None = None,
     title: str | None = None,
 ) -> ChatSessionModel:
-    dataset = dataset_service.get_dataset(db, dataset_id=dataset_id, tenant_id=tenant_id)
-    if not dataset:
-        raise ValueError("Dataset not found for tenant")
+    if not dataset_id and not dataset_group_id:
+        raise ValueError("Either dataset_id or dataset_group_id must be provided")
+
+    dataset = None
+    dataset_group = None
+
+    if dataset_id:
+        dataset = dataset_service.get_dataset(db, dataset_id=dataset_id, tenant_id=tenant_id)
+        if not dataset:
+            raise ValueError("Dataset not found for tenant")
+
+    if dataset_group_id:
+        # Import here to avoid circular dependency
+        from app.services import dataset_groups as dataset_group_service
+        dataset_group = dataset_group_service.get_dataset_group(db, group_id=dataset_group_id)
+        if not dataset_group or dataset_group.tenant_id != tenant_id:
+            raise ValueError("Dataset group not found for tenant")
 
     agent_kit = agent_kit_service.get_agent_kit(db, agent_kit_id=agent_kit_id)
     if not agent_kit or str(agent_kit.tenant_id) != str(tenant_id):
         raise ValueError("Agent kit not found for tenant")
 
+    session_title = title
+    if not session_title:
+        if dataset:
+            session_title = f"{agent_kit.name} on {dataset.name}"
+        elif dataset_group:
+            session_title = f"{agent_kit.name} on {dataset_group.name} (Group)"
+
     session = ChatSessionModel(
-        title=title or f"{agent_kit.name} on {dataset.name}",
-        dataset_id=dataset.id,
+        title=session_title,
+        dataset_id=dataset.id if dataset else None,
+        dataset_group_id=dataset_group.id if dataset_group else None,
         agent_kit_id=agent_kit.id,
         tenant_id=tenant_id,
     )
@@ -103,7 +126,8 @@ def _generate_agentic_response(
     session: ChatSessionModel,
     user_message: str,
 ) -> ChatMessage:
-    dataset: Dataset = session.dataset
+    dataset: Dataset | None = session.dataset
+    dataset_group = session.dataset_group
     agent_kit: AgentKit | None = session.agent_kit
 
     if not agent_kit:
@@ -122,9 +146,42 @@ def _generate_agentic_response(
             context={"error": str(exc)},
         )
 
-    # Get dataset context
-    summary_payload = dataset_service.run_summary_query(dataset)
-    sample_rows = dataset.sample_rows or []
+    # Get dataset context (single or group)
+    datasets_to_analyze = []
+    if dataset:
+        datasets_to_analyze = [dataset]
+    elif dataset_group:
+        datasets_to_analyze = dataset_group.datasets
+
+    if not datasets_to_analyze:
+        response_text = "No datasets found for this session."
+        return _append_message(db, session=session, role="assistant", content=response_text, context=None)
+
+    # Aggregate context from all datasets
+    summary_payload = {"numeric_columns": []}
+    sample_rows = []
+    dataset_schemas = {}
+    dataset_names = []
+
+    for ds in datasets_to_analyze:
+        ds_summary = dataset_service.run_summary_query(ds)
+        # Prefix columns with dataset name if multiple
+        if len(datasets_to_analyze) > 1:
+            for col in ds_summary.get("numeric_columns", []):
+                col["column"] = f"{ds.name}.{col['column']}"
+
+        summary_payload["numeric_columns"].extend(ds_summary.get("numeric_columns", []))
+
+        if ds.sample_rows:
+            # Add dataset name to sample rows
+            rows = ds.sample_rows
+            if len(datasets_to_analyze) > 1:
+                for row in rows:
+                    row["_dataset_source"] = ds.name
+            sample_rows.extend(rows)
+
+        dataset_schemas[ds.name] = ds.schema
+        dataset_names.append(ds.name)
 
     # Get agent kit simulation
     try:
@@ -161,17 +218,27 @@ def _generate_agentic_response(
 
         # Create tool registry and register available tools
         tool_registry = get_tool_registry()
-        tool_registry.register(SQLQueryTool(dataset_service, dataset))
+
+        # Register tools for EACH dataset or a unified tool?
+        # For now, let's register tools that can handle multiple datasets or register one tool per dataset?
+        # The current Tool implementation takes a single dataset.
+        # We need to update Tool implementations to handle multiple datasets or instantiate multiple tools.
+        # Instantiating multiple tools (one per dataset) is safer for now.
+
+        for ds in datasets_to_analyze:
+            suffix = f"_{ds.name.replace(' ', '_').lower()}" if len(datasets_to_analyze) > 1 else ""
+            tool_registry.register(SQLQueryTool(dataset_service, ds, alias=f"sql_query{suffix}"))
+            tool_registry.register(DataSummaryTool(dataset_service, ds, alias=f"data_summary{suffix}"))
+            tool_registry.register(ReportGenerationTool(dataset_service, ds, alias=f"report_generation{suffix}"))
+
         tool_registry.register(CalculatorTool())
-        tool_registry.register(DataSummaryTool(dataset_service, dataset))
-        tool_registry.register(ReportGenerationTool(dataset_service, dataset))
 
         # Build initial system prompt with all context
         base_system_prompt = llm_service.build_data_analysis_system_prompt(
             agent_kit_name=agent_kit.name,
             primary_objective=config.primary_objective,
-            dataset_name=dataset.name,
-            dataset_schema=dataset.schema,
+            dataset_name=", ".join(dataset_names),
+            dataset_schema=dataset_schemas, # Updated to handle dict of schemas
             dataset_summary=summary_payload,
             sample_rows=sample_rows,
             tools=tools if tools else None,

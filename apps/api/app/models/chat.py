@@ -13,7 +13,8 @@ class ChatSession(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title = Column(String, nullable=True)
-    dataset_id = Column(UUID(as_uuid=True), ForeignKey("datasets.id"), nullable=False)
+    dataset_id = Column(UUID(as_uuid=True), ForeignKey("datasets.id"), nullable=True)
+    dataset_group_id = Column(UUID(as_uuid=True), ForeignKey("dataset_groups.id"), nullable=True)
     agent_kit_id = Column(UUID(as_uuid=True), ForeignKey("agent_kits.id"), nullable=True)
     tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -24,6 +25,7 @@ class ChatSession(Base):
     memory_context = Column(JSON, nullable=True)  # {"summary": "...", "key_entities": [...]}
 
     dataset = relationship("Dataset", back_populates="chat_sessions")
+    dataset_group = relationship("DatasetGroup")
     agent_kit = relationship("AgentKit")
     tenant = relationship("Tenant")
     agent_group = relationship("AgentGroup", foreign_keys=[agent_group_id])

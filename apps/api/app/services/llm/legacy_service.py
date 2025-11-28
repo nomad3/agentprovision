@@ -148,12 +148,26 @@ class LLMService:
         prompt_parts.append(f"\n\nYou are currently analyzing the dataset: '{dataset_name}'")
 
         if dataset_schema:
-            # Handle both dict and list schema formats
-            if isinstance(dataset_schema, list):
+            prompt_parts.append("\nDataset columns:")
+            # Handle both dict of schemas (multiple datasets) and single schema
+            if isinstance(dataset_schema, dict) and any(isinstance(v, (list, dict)) for v in dataset_schema.values()):
+                # It's a dict of schemas: {dataset_name: schema}
+                for ds_name, schema in dataset_schema.items():
+                    if isinstance(schema, list):
+                        schema_info = ", ".join([f"{col.get('name', col)}" for col in schema])
+                    elif isinstance(schema, dict):
+                         schema_info = ", ".join([f"{col}" for col in schema.keys()])
+                    else:
+                        schema_info = str(schema)
+                    prompt_parts.append(f"\n- {ds_name}: {schema_info}")
+            elif isinstance(dataset_schema, list):
+                # Single dataset list schema
                 schema_info = ", ".join([f"{col.get('name', col)}" for col in dataset_schema])
+                prompt_parts.append(f" {schema_info}")
             else:
+                # Single dataset dict schema
                 schema_info = ", ".join([f"{col}" for col in dataset_schema.keys()])
-            prompt_parts.append(f"\nDataset columns: {schema_info}")
+                prompt_parts.append(f" {schema_info}")
 
         # Statistical summary
         if dataset_summary and dataset_summary.get("numeric_columns"):

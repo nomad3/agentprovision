@@ -12,13 +12,15 @@ class ChatSessionBase(BaseModel):
 
 
 class ChatSessionCreate(ChatSessionBase):
-    dataset_id: uuid.UUID
+    dataset_id: Optional[uuid.UUID] = None
+    dataset_group_id: Optional[uuid.UUID] = None
     agent_kit_id: uuid.UUID
 
 
 class ChatSession(ChatSessionBase):
     id: uuid.UUID
-    dataset_id: uuid.UUID
+    dataset_id: uuid.UUID | None = None
+    dataset_group_id: uuid.UUID | None = None
     agent_kit_id: uuid.UUID | None = None
     created_at: datetime
 

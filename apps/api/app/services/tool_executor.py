@@ -38,8 +38,9 @@ class ToolResult:
 class Tool(ABC):
     """Base class for all executable tools."""
 
-    def __init__(self, name: str, description: str):
-        self.name = name
+    def __init__(self, name: str, description: str, alias: Optional[str] = None):
+        self.name = alias or name
+        self.original_name = name
         self.description = description
 
     @abstractmethod
@@ -87,10 +88,11 @@ class Tool(ABC):
 class SQLQueryTool(Tool):
     """Tool for executing SQL queries on datasets."""
 
-    def __init__(self, dataset_service, dataset):
+    def __init__(self, dataset_service, dataset, alias: Optional[str] = None):
         super().__init__(
             name="sql_query",
-            description="Execute SQL queries on the current dataset to retrieve and analyze data"
+            description=f"Execute SQL queries on the dataset '{dataset.name}' to retrieve and analyze data" if alias else "Execute SQL queries on the current dataset to retrieve and analyze data",
+            alias=alias
         )
         self.dataset_service = dataset_service
         self.dataset = dataset
@@ -225,10 +227,11 @@ class CalculatorTool(Tool):
 class DataSummaryTool(Tool):
     """Tool for getting statistical summaries of datasets."""
 
-    def __init__(self, dataset_service, dataset):
+    def __init__(self, dataset_service, dataset, alias: Optional[str] = None):
         super().__init__(
             name="data_summary",
-            description="Get statistical summary of the dataset including averages, min, max for numeric columns"
+            description=f"Get statistical summary of the dataset '{dataset.name}' including averages, min, max for numeric columns" if alias else "Get statistical summary of the dataset including averages, min, max for numeric columns",
+            alias=alias
         )
         self.dataset_service = dataset_service
         self.dataset = dataset
@@ -287,10 +290,11 @@ class DataSummaryTool(Tool):
 class ReportGenerationTool(Tool):
     """Tool for generating structured reports with visualizations."""
 
-    def __init__(self, dataset_service, dataset):
+    def __init__(self, dataset_service, dataset, alias: Optional[str] = None):
         super().__init__(
             name="generate_report",
-            description="Generate a structured report with visualizations (bar, line, pie charts) from the dataset."
+            description=f"Generate a structured report with visualizations (bar, line, pie charts) from the dataset '{dataset.name}'." if alias else "Generate a structured report with visualizations (bar, line, pie charts) from the dataset.",
+            alias=alias
         )
         self.dataset_service = dataset_service
         self.dataset = dataset
