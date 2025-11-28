@@ -42,6 +42,8 @@ def create_chat_session(token, agent_kit_id, dataset_group_id):
         "title": "Group Analysis Session"
     }
     response = requests.post(f"{BASE_URL}/chat/sessions", json=payload, headers={"Authorization": f"Bearer {token}"})
+    if response.status_code not in [200, 201]:
+        print(f"Failed to create chat session: {response.text}")
     response.raise_for_status()
     return response.json()
 
