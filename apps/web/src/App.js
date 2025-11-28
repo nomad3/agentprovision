@@ -1,5 +1,5 @@
-import { createContext, useContext, useState } from 'react';
 import { Route, BrowserRouter as Router, Routes, useNavigate } from 'react-router-dom';
+import { createContext, useContext, useState } from 'react';
 import { ToastProvider } from './components/common';
 import ProtectedRoute from './components/ProtectedRoute';
 import LandingPage from './LandingPage';

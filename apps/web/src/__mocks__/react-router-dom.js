@@ -1,5 +1,8 @@
+const useLocation = jest.fn(() => ({ pathname: '/', search: '', hash: '', state: null }));
+
 module.exports = {
   useNavigate: () => jest.fn(),
+  useLocation,
   BrowserRouter: ({ children }) => children,
   MemoryRouter: ({ children }) => children,
   Route: ({ children }) => children,
