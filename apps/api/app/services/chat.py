@@ -219,14 +219,18 @@ def _generate_agentic_response(
         # Create tool registry and register available tools
         tool_registry = get_tool_registry()
 
-        # Register tools for EACH dataset or a unified tool?
-        # For now, let's register tools that can handle multiple datasets or register one tool per dataset?
-        # The current Tool implementation takes a single dataset.
-        # We need to update Tool implementations to handle multiple datasets or instantiate multiple tools.
-        # Instantiating multiple tools (one per dataset) is safer for now.
+        # Register tools for EACH dataset
+        import re
 
         for ds in datasets_to_analyze:
-            suffix = f"_{ds.name.replace(' ', '_').lower()}" if len(datasets_to_analyze) > 1 else ""
+            # Sanitize dataset name for tool alias
+            safe_name = re.sub(r'[^a-zA-Z0-9_-]', '_', ds.name.replace(' ', '_').lower())
+            # Ensure it doesn't start with _ or - if that's an issue, but regex allows it.
+            # Truncate if too long (max 64 chars to leave room for prefix)
+            safe_name = safe_name[:64]
+
+            suffix = f"_{safe_name}" if len(datasets_to_analyze) > 1 else ""
+
             tool_registry.register(SQLQueryTool(dataset_service, ds, alias=f"sql_query{suffix}"))
             tool_registry.register(DataSummaryTool(dataset_service, ds, alias=f"data_summary{suffix}"))
             tool_registry.register(ReportGenerationTool(dataset_service, ds, alias=f"report_generation{suffix}"))
@@ -307,7 +311,7 @@ def _generate_agentic_response(
                             response_text += f"**{tool_name}:** {explanation}\n"
 
                         # Format based on tool type
-                        if tool_name == "sql_query":
+                        if "sql_query" in tool_name:
                             sql = tool_result.metadata.get("query", "")
                             response_text += f"```sql\n{sql}\n```\n"
                             response_text += f"**Results:** {tool_result.metadata.get('row_count', 0)} rows\n"
@@ -322,7 +326,7 @@ def _generate_agentic_response(
                             expression = tool_result.data.get("expression")
                             response_text += f"**Calculation:** `{expression}` = **{result_val}**\n"
 
-                        elif tool_name == "data_summary":
+                        elif "data_summary" in tool_name:
                             if "column" in tool_result.metadata:
                                 col = tool_result.metadata["column"]
                                 response_text += f"**Summary for {col}:**\n"
@@ -367,9 +371,19 @@ def _generate_agentic_response(
 
     # Save context (convert UUIDs to strings for JSON serialization)
     import json
+    import math
+
     def make_json_serializable(obj):
-        """Convert UUIDs and other non-serializable objects to strings"""
-        return json.loads(json.dumps(obj, default=str))
+        """Convert UUIDs and other non-serializable objects to strings. Handle NaN."""
+        if isinstance(obj, float) and math.isnan(obj):
+            return None
+        if isinstance(obj, dict):
+            return {k: make_json_serializable(v) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [make_json_serializable(v) for v in obj]
+        if isinstance(obj, uuid.UUID):
+            return str(obj)
+        return obj
 
     # Include context management metadata
     context_management_info = {}
