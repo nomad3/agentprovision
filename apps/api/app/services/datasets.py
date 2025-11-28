@@ -96,7 +96,37 @@ def _load_dataframe(file: UploadFile) -> pd.DataFrame:
             suffix in {".csv"}
             or content_type in {"text/csv", "application/csv", "text/plain"}
         ):
-            df = pd.read_csv(file.file)
+            # Try reading normally first
+            try:
+                df = pd.read_csv(file.file)
+                # Check if it looks like a NetSuite export (few columns, metadata in first rows)
+                if len(df.columns) < 2 and len(df) > 0:
+                    raise ValueError("Potential metadata header detected")
+            except Exception:
+                # Reset and try to find the header
+                file.file.seek(0)
+                # Read first 20 lines to find the header
+                content = file.file.read(4096).decode('utf-8', errors='ignore')
+                file.file.seek(0)
+
+                lines = content.split('\n')
+                skip_rows = 0
+                max_cols = 0
+
+                # Simple heuristic: find the row with the most commas
+                for i, line in enumerate(lines[:20]):
+                    cols = line.count(',')
+                    if cols > max_cols:
+                        max_cols = cols
+                        skip_rows = i
+
+                if max_cols > 1:
+                    df = pd.read_csv(file.file, skiprows=skip_rows)
+                else:
+                    # Fallback to default
+                    file.file.seek(0)
+                    df = pd.read_csv(file.file, on_bad_lines='skip')
+
         else:
             df = pd.read_excel(file.file)
     except Exception as exc:  # noqa: BLE001

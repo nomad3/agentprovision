@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { Row, Col, Container } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
 import {
+  ChatDotsFill,
   CloudUploadFill,
-  Robot,
-  ChatDotsFill
+  Robot
 } from 'react-bootstrap-icons';
-import QuickStartCard from './QuickStartCard';
-import datasetService from '../../services/dataset';
+import { useNavigate } from 'react-router-dom';
 import agentService from '../../services/agent';
 import chatService from '../../services/chat';
+import datasetService from '../../services/dataset';
+import QuickStartCard from './QuickStartCard';
 
 const QuickStartSection = ({ onUploadClick, onConnectClick }) => {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const QuickStartSection = ({ onUploadClick, onConnectClick }) => {
       const [datasetsResp, agentsResp, chatsResp] = await Promise.all([
         datasetService.getAll(),
         agentService.getAll(),
-        chatService.getSessions(),
+        chatService.listSessions(),
       ]);
 
       setProgress({
@@ -120,9 +120,9 @@ const QuickStartSection = ({ onUploadClick, onConnectClick }) => {
             primaryAction={
               progress.hasData
                 ? {
-                    label: progress.hasAgents ? 'Create Another' : 'Create Agent',
-                    onClick: () => navigate('/agents/wizard'),
-                  }
+                  label: progress.hasAgents ? 'Create Another' : 'Create Agent',
+                  onClick: () => navigate('/agents/wizard'),
+                }
                 : null
             }
           />
@@ -147,9 +147,9 @@ const QuickStartSection = ({ onUploadClick, onConnectClick }) => {
             primaryAction={
               progress.hasAgents
                 ? {
-                    label: 'Start Chatting',
-                    onClick: () => navigate('/chat'),
-                  }
+                  label: 'Start Chatting',
+                  onClick: () => navigate('/chat'),
+                }
                 : null
             }
           />
