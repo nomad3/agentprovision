@@ -1,0 +1,13 @@
+{
+  "name": "agentprovision-e2e-tests",
+  "version": "1.0.0",
+  "description": "End-to-end tests for AgentProvision",
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  }
+}
