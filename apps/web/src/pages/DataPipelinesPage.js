@@ -190,7 +190,7 @@ const DataPipelinesPage = () => {
 
       <Row xs={1} md={2} lg={3} className="g-4">
         {pipelines.map((pipeline) => {
-          const kit = agentKits.find(k => k.id === pipeline.config?.agent_kit_id);
+          const kit = (agentKits || []).find(k => k.id === pipeline.config?.agent_kit_id);
           return (
             <Col key={pipeline.id}>
               <Card className="h-100 pipeline-card">
@@ -316,7 +316,7 @@ const DataPipelinesPage = () => {
                   onChange={(e) => setFormData({...formData, agent_kit_id: e.target.value})}
                 >
                   <option value="">Select an Agent Kit...</option>
-                  {agentKits.map(kit => (
+                  {(agentKits || []).map(kit => (
                     <option key={kit.id} value={kit.id}>{kit.name}</option>
                   ))}
                 </Form.Select>
