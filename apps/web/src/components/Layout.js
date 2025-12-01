@@ -1,26 +1,22 @@
-import React, { useMemo } from 'react';
-import { Container, Nav, Navbar, Button, Dropdown, Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useMemo } from 'react';
+import { Badge, Dropdown, Nav, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import {
-  HouseDoorFill,
-  DatabaseFill,
   BarChartFill,
-  FileTextFill,
-  Robot,
-  ChatDotsFill,
-  Grid3x3GapFill,
-  PlugFill,
-  GearFill,
   BoxArrowRight,
-  PersonCircle,
-  LightbulbFill,
   BuildingFill,
-  PeopleFill,
-  Diagram3Fill,
+  ChatDotsFill,
   CpuFill,
-  PaletteFill
+  DatabaseFill,
+  FileTextFill,
+  GearFill,
+  Grid3x3GapFill,
+  HouseDoorFill,
+  PersonCircle,
+  PlugFill,
+  Robot
 } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../App';
 import './Layout.css';
 
@@ -48,35 +44,37 @@ const Layout = ({ children }) => {
     i18n.changeLanguage(code);
   };
 
-  // Simplified 3-section navigation for business users
+  // Simplified navigation structure
   const navSections = [
     {
-      title: 'INSIGHTS',
+      title: 'OVERVIEW',
       items: [
-        { path: '/home', icon: HouseDoorFill, label: 'Home', description: 'Your personalized homepage and quick start guide' },
-        { path: '/dashboard', icon: BarChartFill, label: 'Dashboard', description: 'Platform analytics and activity overview' },
-        { path: '/datasets', icon: FileTextFill, label: 'Reports & Data', description: 'Upload files and view your datasets' },
+        { path: '/home', icon: HouseDoorFill, label: 'Home', description: 'Your personalized homepage' },
+        { path: '/dashboard', icon: BarChartFill, label: 'Dashboard', description: 'Platform analytics overview' },
       ]
     },
     {
-      title: 'AI ASSISTANT',
+      title: 'AI STUDIO',
       items: [
-        { path: '/chat', icon: ChatDotsFill, label: 'Ask AI', description: 'Chat with your AI agents and get insights' },
-        { path: '/agents', icon: Robot, label: 'AI Assistants', description: 'Create and manage your AI agents' },
-        { path: '/agent-kits', icon: Grid3x3GapFill, label: 'AI Templates', description: 'Save and reuse agent configurations' },
-        { path: '/teams', icon: PeopleFill, label: 'Teams', description: 'Manage agent teams and group assignments' },
-        { path: '/memory', icon: Diagram3Fill, label: 'Memory', description: 'View and manage agent memory and conversation history' },
+        { path: '/chat', icon: ChatDotsFill, label: 'Chat', description: 'Chat with AI agents' },
+        { path: '/agents', icon: Robot, label: 'Agents', description: 'Manage AI agents' },
+        { path: '/agent-kits', icon: Grid3x3GapFill, label: 'Agent Kits', description: 'Reusable agent templates' },
       ]
     },
     {
-      title: 'WORKSPACE',
+      title: 'DATA PLATFORM',
       items: [
-        { path: '/data-sources', icon: PlugFill, label: 'Data Connections', description: 'Connect to databases and external tools' },
-        { path: '/data-pipelines', icon: DatabaseFill, label: 'Automations', description: 'Set up automated data pipelines and workflows' },
-        { path: '/tenants', icon: BuildingFill, label: 'Organization', description: 'Manage teams and permissions' },
-        { path: '/settings/llm', icon: CpuFill, label: 'LLM Models', description: 'Configure AI models and API settings' },
-        { path: '/settings/branding', icon: PaletteFill, label: 'Branding', description: 'Customize platform appearance and branding' },
-        { path: '/settings', icon: GearFill, label: 'Settings', description: 'Configure your account preferences' },
+        { path: '/data-sources', icon: PlugFill, label: 'Data Sources', description: 'Connect external data' },
+        { path: '/datasets', icon: FileTextFill, label: 'Datasets', description: 'Manage data files' },
+        { path: '/data-pipelines', icon: DatabaseFill, label: 'Automations', description: 'Data pipelines & workflows' },
+      ]
+    },
+    {
+      title: 'CONFIGURATION',
+      items: [
+        { path: '/tenants', icon: BuildingFill, label: 'Organization', description: 'Manage organization' },
+        { path: '/settings/llm', icon: CpuFill, label: 'LLM Models', description: 'Configure AI models' },
+        { path: '/settings', icon: GearFill, label: 'Settings', description: 'Platform settings' },
       ]
     }
   ];

@@ -1,0 +1,51 @@
+.datasources-page {
+  padding: 2rem 0;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--bs-body-color);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.title-icon {
+  color: var(--bs-primary);
+}
+
+.page-subtitle {
+  color: var(--bs-secondary-color);
+  font-size: 1.1rem;
+}
+
+.datasource-card {
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.datasource-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.datasource-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-color: var(--bs-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.config-section {
+  border: 1px solid var(--bs-border-color);
+}
