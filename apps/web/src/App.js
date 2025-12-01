@@ -1,5 +1,5 @@
-import { Route, BrowserRouter as Router, Routes, useNavigate } from 'react-router-dom';
 import { createContext, useContext, useState } from 'react';
+import { Route, BrowserRouter as Router, Routes, useNavigate } from 'react-router-dom';
 import { ToastProvider } from './components/common';
 import ProtectedRoute from './components/ProtectedRoute';
 import LandingPage from './LandingPage';
@@ -87,6 +87,7 @@ function App() {
             <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
             <Route path="/settings/llm" element={<ProtectedRoute><LLMSettingsPage /></ProtectedRoute>} />
             <Route path="/settings/branding" element={<ProtectedRoute><BrandingPage /></ProtectedRoute>} />
+            <Route path="/branding" element={<ProtectedRoute><BrandingPage /></ProtectedRoute>} />
           </Routes>
         </ToastProvider>
       </AuthProvider>
