@@ -2,15 +2,21 @@ import requests
 import sys
 
 BASE_URL = "http://localhost:8001"
-LOGIN_URL = f"{BASE_URL}/api/v1/auth/login"
-USERS_ME_URL = f"{BASE_URL}/api/v1/users/me"
 
-EMAIL = "test@example.com"
-PASSWORD = "password"
-
-def verify_users_me():
+def verify():
+    # 1. Login
     print("1. Logging in...")
-    response = requests.post(LOGIN_URL, data={"username": EMAIL, "password": PASSWORD})
+    login_data = {
+        "username": "test@example.com",
+        "password": "password"
+    }
+
+    try:
+        response = requests.post(f"{BASE_URL}/api/v1/login/access-token", data=login_data)
+    except requests.exceptions.ConnectionError:
+        print(f"❌ Could not connect to {BASE_URL}. Is the API running?")
+        sys.exit(1)
+
     if response.status_code != 200:
         print(f"❌ Login failed: {response.status_code}")
         print(response.text)
@@ -19,17 +25,33 @@ def verify_users_me():
     token = response.json()["access_token"]
     print("✅ Login successful")
 
-    print("\n2. Checking /api/v1/users/me...")
+    # 2. Get User Me
+    print("\n2. Fetching /users/me...")
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get(USERS_ME_URL, headers=headers)
+    response = requests.get(f"{BASE_URL}/api/v1/users/me", headers=headers)
 
     if response.status_code == 200:
-        print("✅ /users/me is accessible")
-        print(response.json())
+        user_data = response.json()
+        print("✅ Success!")
+        print(f"User: {user_data.get('email')}")
+        print(f"Tenant: {user_data.get('tenant', {}).get('name', 'N/A')}")
+
+        # 3. Get Dashboard Stats
+        print("\n3. Fetching /analytics/dashboard...")
+        stats_response = requests.get(f"{BASE_URL}/api/v1/analytics/dashboard", headers=headers)
+
+        if stats_response.status_code == 200:
+            stats_data = stats_response.json()
+            print("✅ Analytics Success!")
+            print(f"Overview: {stats_data.get('overview')}")
+        else:
+            print(f"❌ Analytics Failed: {stats_response.status_code}")
+            print(stats_response.text)
+
     else:
-        print(f"❌ /users/me failed: {response.status_code}")
+        print(f"❌ Failed: {response.status_code}")
         print(response.text)
         sys.exit(1)
 
 if __name__ == "__main__":
-    verify_users_me()
+    verify()
