@@ -22,6 +22,8 @@ class ChatSession(ChatSessionBase):
     dataset_id: uuid.UUID | None = None
     dataset_group_id: uuid.UUID | None = None
     agent_kit_id: uuid.UUID | None = None
+    source: str = "native"
+    external_id: str | None = None
     created_at: datetime
 
     class Config:

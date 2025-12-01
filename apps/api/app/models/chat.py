@@ -24,6 +24,10 @@ class ChatSession(Base):
     root_task_id = Column(UUID(as_uuid=True), ForeignKey("agent_tasks.id"), nullable=True)
     memory_context = Column(JSON, nullable=True)  # {"summary": "...", "key_entities": [...]}
 
+    # Import metadata
+    source = Column(String, default="native")  # native, chatgpt_import, claude_import
+    external_id = Column(String, nullable=True)  # ID from external system
+
     dataset = relationship("Dataset", back_populates="chat_sessions")
     dataset_group = relationship("DatasetGroup")
     agent_kit = relationship("AgentKit")
