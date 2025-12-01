@@ -1,4 +1,4 @@
-import api from '../utils/api';
+import api from '../services/api';
 
 const getAll = () => {
   return api.get("/agent-kits/");
