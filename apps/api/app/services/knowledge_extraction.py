@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from app.models.chat import ChatSession
 from app.models.knowledge_entity import KnowledgeEntity
-from app.services.llm.legacy_service import llm_service
+from app.services.llm.legacy_service import get_llm_service
 import uuid
 import logging
 import json
@@ -35,15 +35,22 @@ class KnowledgeExtractionService:
         """
 
         try:
+            try:
+                llm_service = get_llm_service()
+            except ValueError:
+                logger.warning("LLM service not configured (missing API key). Skipping knowledge extraction.")
+                return
+
             # Use a cheap/fast model for this background task
-            response = llm_service.get_completion(
-                prompt=prompt,
+            response = llm_service.generate_chat_response(
+                user_message=prompt,
+                conversation_history=[],
                 system_prompt="You are a knowledge extraction agent. Output valid JSON only.",
                 temperature=0.0
             )
 
             # Parse JSON (naive)
-            content = response.content
+            content = response["text"]
             # Try to find JSON block
             if "```json" in content:
                 content = content.split("```json")[1].split("```")[0]

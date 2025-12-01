@@ -63,11 +63,27 @@ def verify_sessions(token):
     for s in imported:
         print(f"- {s['title']} ({s['source']})")
 
+def verify_knowledge(token):
+    print("\nVerifying Knowledge Extraction...")
+    # Wait a bit for background task
+    import time
+    time.sleep(5)
+
+    response = requests.get(
+        f"{BASE_URL}/knowledge/entities",
+        headers={"Authorization": f"Bearer {token}"}
+    )
+    entities = response.json()
+    print(f"Found {len(entities)} knowledge entities.")
+    for e in entities:
+        print(f"- {e['name']} ({e['entity_type']})")
+
 def main():
     token = login()
     test_import_chatgpt(token)
     test_import_claude(token)
     verify_sessions(token)
+    verify_knowledge(token)
 
 if __name__ == "__main__":
     main()
