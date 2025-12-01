@@ -1,14 +1,15 @@
 from typing import Dict, Any
 from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, BackgroundTasks
 from sqlalchemy.orm import Session
+from temporalio.client import Client
 
 from app.api import deps
+from app.core.config import settings
 from app.models.user import User
 from app.services.chat_import import chat_import_service
 from app.models.chat import ChatSession, ChatMessage
 from app.schemas.chat import ChatSession as ChatSessionSchema
-
-from app.services.knowledge_extraction import knowledge_extraction_service
+from app.workflows.knowledge_extraction import KnowledgeExtractionWorkflow
 
 router = APIRouter()
 
@@ -70,16 +71,19 @@ async def import_chatgpt_history(
 
     db.commit()
 
-    # Trigger knowledge extraction for each imported session
-    for session_id in session_ids:
-        background_tasks.add_task(
-            knowledge_extraction_service.extract_from_session,
-            db, # Note: Passing db session to background task is risky in FastAPI, usually need new session.
-                # But for simplicity in this prototype we'll assume it works or fix later.
-                # Better: Pass ID and create new session in task.
-            session_id,
-            current_user.tenant_id
-        )
+    # Trigger knowledge extraction via Temporal Workflow
+    try:
+        temporal_client = await Client.connect(settings.TEMPORAL_ADDRESS)
+
+        for session_id in session_ids:
+            await temporal_client.start_workflow(
+                KnowledgeExtractionWorkflow.run,
+                args=[str(session_id), str(current_user.tenant_id)],
+                id=f"knowledge-extraction-{session_id}",
+                task_queue="agentprovision-databricks",
+            )
+    except Exception as e:
+        print(f"Failed to start Temporal workflow: {e}")
 
     return {"message": f"Successfully imported {imported_count} chat sessions from ChatGPT. Knowledge extraction started."}
 
@@ -140,13 +144,19 @@ async def import_claude_history(
 
     db.commit()
 
-    # Trigger knowledge extraction
-    for session_id in session_ids:
-        background_tasks.add_task(
-            knowledge_extraction_service.extract_from_session,
-            db,
-            session_id,
-            current_user.tenant_id
-        )
+    # Trigger knowledge extraction via Temporal Workflow
+    try:
+        temporal_client = await Client.connect(settings.TEMPORAL_ADDRESS)
+
+        for session_id in session_ids:
+            await temporal_client.start_workflow(
+                KnowledgeExtractionWorkflow.run,
+                args=[str(session_id), str(current_user.tenant_id)],
+                id=f"knowledge-extraction-{session_id}",
+                task_queue="agentprovision-databricks", # Using the existing worker queue
+            )
+    except Exception as e:
+        # Log error but don't fail the import response
+        print(f"Failed to start Temporal workflow: {e}")
 
     return {"message": f"Successfully imported {imported_count} chat sessions from Claude. Knowledge extraction started."}

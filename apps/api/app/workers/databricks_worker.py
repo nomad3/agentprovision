@@ -8,11 +8,13 @@ from temporalio.worker import Worker
 
 from app.core.config import settings
 from app.workflows.dataset_sync import DatasetSyncWorkflow
+from app.workflows.knowledge_extraction import KnowledgeExtractionWorkflow
 from app.workflows.activities.databricks_sync import (
     sync_to_bronze,
     transform_to_silver,
     update_dataset_metadata
 )
+from app.workflows.activities.knowledge_extraction import extract_knowledge_from_session
 from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -24,6 +26,7 @@ async def run_databricks_worker():
 
     This worker processes:
     - DatasetSyncWorkflow
+    - KnowledgeExtractionWorkflow
     - Related activities
 
     Task queue: agentprovision-databricks
@@ -39,11 +42,12 @@ async def run_databricks_worker():
     worker = Worker(
         client,
         task_queue="agentprovision-databricks",
-        workflows=[DatasetSyncWorkflow],
+        workflows=[DatasetSyncWorkflow, KnowledgeExtractionWorkflow],
         activities=[
             sync_to_bronze,
             transform_to_silver,
-            update_dataset_metadata
+            update_dataset_metadata,
+            extract_knowledge_from_session
         ]
     )
 
