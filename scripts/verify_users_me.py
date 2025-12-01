@@ -12,7 +12,7 @@ def verify():
     }
 
     try:
-        response = requests.post(f"{BASE_URL}/api/v1/login/access-token", data=login_data)
+        response = requests.post(f"{BASE_URL}/api/v1/auth/login", data=login_data)
     except requests.exceptions.ConnectionError:
         print(f"❌ Could not connect to {BASE_URL}. Is the API running?")
         sys.exit(1)
