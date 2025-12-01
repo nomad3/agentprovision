@@ -1,6 +1,20 @@
 import { useEffect, useState } from 'react';
-import { Alert, Badge, Card, Col, Row, Spinner, Table } from 'react-bootstrap';
-import { Building, CalendarCheck, Person } from 'react-bootstrap-icons';
+import { Alert, Badge, Card, Col, Row, Spinner } from 'react-bootstrap';
+import {
+  BoxSeam,
+  Building,
+  CalendarCheck,
+  ChatDots,
+  ChatText,
+  CloudCheck,
+  Database,
+  Diagram3,
+  HddNetwork,
+  Layers,
+  Person,
+  Robot,
+  Tools
+} from 'react-bootstrap-icons';
 import { useAuth } from '../App';
 import Layout from '../components/Layout';
 import api from '../services/api';
@@ -58,6 +72,20 @@ const TenantsPage = () => {
       </Layout>
     );
   }
+
+  const StatItem = ({ icon: Icon, label, value, color = "primary" }) => (
+    <Col xs={6} md={4} lg={2} className="mb-4">
+      <div className="stat-item">
+        <div className={`stat-icon-wrapper bg-${color}-subtle`}>
+          <Icon className={`text-${color}`} size={20} />
+        </div>
+        <div className="stat-content">
+          <div className="stat-value">{value}</div>
+          <div className="stat-label">{label}</div>
+        </div>
+      </div>
+    </Col>
+  );
 
   return (
     <Layout>
@@ -130,59 +158,67 @@ const TenantsPage = () => {
               <h5 className="mb-0 text-white">Platform Usage Statistics</h5>
             </div>
             <Card.Body className="card-body-custom">
-              <Row>
-                <Col md={6}>
-                  <Table borderless className="stats-table mb-0">
-                    <tbody>
-                      <tr>
-                        <td className="text-muted">AI Agents</td>
-                        <td className="text-end fw-bold">{stats.overview.total_agents}</td>
-                      </tr>
-                      <tr>
-                        <td className="text-muted">Active Deployments</td>
-                        <td className="text-end fw-bold">{stats.overview.total_deployments}</td>
-                      </tr>
-                      <tr>
-                        <td className="text-muted">Datasets</td>
-                        <td className="text-end fw-bold">{stats.overview.total_datasets}</td>
-                      </tr>
-                      <tr>
-                        <td className="text-muted">Agent Kits</td>
-                        <td className="text-end fw-bold">{stats.overview.total_agent_kits}</td>
-                      </tr>
-                      <tr>
-                        <td className="text-muted">Vector Stores</td>
-                        <td className="text-end fw-bold">{stats.overview.total_vector_stores}</td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                </Col>
-                <Col md={6}>
-                  <Table borderless className="stats-table mb-0">
-                    <tbody>
-                      <tr>
-                        <td className="text-muted">Chat Sessions</td>
-                        <td className="text-end fw-bold">{stats.overview.total_chat_sessions}</td>
-                      </tr>
-                      <tr>
-                        <td className="text-muted">Total Messages</td>
-                        <td className="text-end fw-bold">{stats.activity.total_messages}</td>
-                      </tr>
-                      <tr>
-                        <td className="text-muted">Data Sources</td>
-                        <td className="text-end fw-bold">{stats.overview.total_data_sources}</td>
-                      </tr>
-                      <tr>
-                        <td className="text-muted">Data Pipelines</td>
-                        <td className="text-end fw-bold">{stats.overview.total_pipelines}</td>
-                      </tr>
-                      <tr>
-                        <td className="text-muted">Tools</td>
-                        <td className="text-end fw-bold">{stats.overview.total_tools}</td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                </Col>
+              <Row className="g-3">
+                <StatItem
+                  icon={Robot}
+                  label="AI Agents"
+                  value={stats.overview.total_agents}
+                  color="primary"
+                />
+                <StatItem
+                  icon={CloudCheck}
+                  label="Deployments"
+                  value={stats.overview.total_deployments}
+                  color="success"
+                />
+                <StatItem
+                  icon={Database}
+                  label="Datasets"
+                  value={stats.overview.total_datasets}
+                  color="info"
+                />
+                <StatItem
+                  icon={BoxSeam}
+                  label="Agent Kits"
+                  value={stats.overview.total_agent_kits}
+                  color="warning"
+                />
+                <StatItem
+                  icon={Layers}
+                  label="Vector Stores"
+                  value={stats.overview.total_vector_stores}
+                  color="danger"
+                />
+                <StatItem
+                  icon={ChatDots}
+                  label="Chat Sessions"
+                  value={stats.overview.total_chat_sessions}
+                  color="primary"
+                />
+                <StatItem
+                  icon={ChatText}
+                  label="Total Messages"
+                  value={stats.activity.total_messages}
+                  color="info"
+                />
+                <StatItem
+                  icon={HddNetwork}
+                  label="Data Sources"
+                  value={stats.overview.total_data_sources}
+                  color="success"
+                />
+                <StatItem
+                  icon={Diagram3}
+                  label="Pipelines"
+                  value={stats.overview.total_pipelines}
+                  color="warning"
+                />
+                <StatItem
+                  icon={Tools}
+                  label="Tools"
+                  value={stats.overview.total_tools}
+                  color="secondary"
+                />
               </Row>
             </Card.Body>
           </Card>
