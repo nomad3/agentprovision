@@ -86,3 +86,23 @@ def delete_data_pipeline(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Data pipeline not found")
     data_pipeline_service.delete_data_pipeline(db=db, data_pipeline_id=data_pipeline_id)
     return {"message": "Data pipeline deleted successfully"}
+
+@router.post("/{data_pipeline_id}/execute", status_code=status.HTTP_202_ACCEPTED)
+async def execute_data_pipeline(
+    *,
+    db: Session = Depends(deps.get_db),
+    data_pipeline_id: uuid.UUID,
+    current_user: User = Depends(deps.get_current_active_user),
+):
+    """
+    Execute a data pipeline manually.
+    """
+    data_pipeline = data_pipeline_service.get_data_pipeline(db, data_pipeline_id=data_pipeline_id)
+    if not data_pipeline or str(data_pipeline.tenant_id) != str(current_user.tenant_id):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Data pipeline not found")
+
+    try:
+        result = await data_pipeline_service.execute_pipeline(db, data_pipeline_id=data_pipeline_id)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

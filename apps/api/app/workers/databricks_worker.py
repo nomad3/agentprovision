@@ -15,6 +15,8 @@ from app.workflows.activities.databricks_sync import (
     update_dataset_metadata
 )
 from app.workflows.activities.knowledge_extraction import extract_knowledge_from_session
+from app.workflows.agent_kit_execution import AgentKitExecutionWorkflow
+from app.workflows.activities.agent_kit_execution import execute_agent_kit_activity
 from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -42,12 +44,13 @@ async def run_databricks_worker():
     worker = Worker(
         client,
         task_queue="agentprovision-databricks",
-        workflows=[DatasetSyncWorkflow, KnowledgeExtractionWorkflow],
+        workflows=[DatasetSyncWorkflow, KnowledgeExtractionWorkflow, AgentKitExecutionWorkflow],
         activities=[
             sync_to_bronze,
             transform_to_silver,
             update_dataset_metadata,
-            extract_knowledge_from_session
+            extract_knowledge_from_session,
+            execute_agent_kit_activity
         ]
     )
 

@@ -77,8 +77,22 @@ def test_automations_api():
         print("❌ Created pipeline not found in list")
         return
 
-    # 4. Delete pipeline
-    print("\n4. Deleting automation...")
+    # 4. Execute pipeline
+    print("\n4. Executing automation...")
+    execute_response = requests.post(
+        f"{BASE_URL}/api/v1/data_pipelines/{pipeline_id}/execute",
+        headers=headers
+    )
+
+    if execute_response.status_code != 202:
+        print(f"❌ Execution failed: {execute_response.status_code}")
+        print(execute_response.text)
+    else:
+        execution_data = execute_response.json()
+        print(f"✅ Execution started: Workflow ID {execution_data.get('workflow_id')}")
+
+    # 5. Delete pipeline
+    print("\n5. Deleting automation...")
     delete_response = requests.delete(
         f"{BASE_URL}/api/v1/data_pipelines/{pipeline_id}",
         headers=headers

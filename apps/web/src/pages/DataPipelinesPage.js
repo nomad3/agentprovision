@@ -1,17 +1,22 @@
-import { useEffect, useState } from 'react';
-import { Alert, Badge, Button, Card, Col, Form, Modal, Row, Spinner } from 'react-bootstrap';
-import { ArrowRepeat, BellFill, ClockFill, Gear, LightbulbFill, PlayCircleFill, PlusCircleFill, Trash } from 'react-bootstrap-icons';
+```javascript
+import React, { useState, useEffect } from 'react';
+import { Card, Button, Row, Col, Modal, Form, Spinner, Badge, Alert } from 'react-bootstrap';
+import { ArrowRepeat, PlusCircleFill, LightbulbFill, ClockFill, PlayCircleFill, BellFill, Trash, Gear, PlayFill } from 'react-bootstrap-icons';
 import Layout from '../components/Layout';
 import dataPipelineService from '../services/dataPipeline';
+import agentKitService from '../services/agentKit';
 import './DataPipelinesPage.css';
 
 const DataPipelinesPage = () => {
   const [pipelines, setPipelines] = useState([]);
+  const [agentKits, setAgentKits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [formData, setFormData] = useState({ name: '', type: 'schedule', frequency: 'daily', target: '' });
+  const [formData, setFormData] = useState({ name: '', type: 'schedule', frequency: 'daily', agent_kit_id: '' });
   const [submitting, setSubmitting] = useState(false);
+  const [executingId, setExecutingId] = useState(null);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const useCases = [
     {
@@ -32,17 +37,21 @@ const DataPipelinesPage = () => {
   ];
 
   useEffect(() => {
-    fetchPipelines();
+    fetchData();
   }, []);
 
-  const fetchPipelines = async () => {
+  const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await dataPipelineService.getAll();
-      setPipelines(response.data);
+      const [pipelinesRes, kitsRes] = await Promise.all([
+        dataPipelineService.getAll(),
+        agentKitService.getAll()
+      ]);
+      setPipelines(pipelinesRes.data);
+      setAgentKits(kitsRes.data);
       setError(null);
     } catch (err) {
-      console.error('Error fetching pipelines:', err);
+      console.error('Error fetching data:', err);
       setError('Failed to load automations');
     } finally {
       setLoading(false);
@@ -56,7 +65,7 @@ const DataPipelinesPage = () => {
       const config = {
         type: formData.type,
         frequency: formData.frequency,
-        target: formData.target
+        agent_kit_id: formData.agent_kit_id
       };
 
       await dataPipelineService.create({
@@ -65,8 +74,10 @@ const DataPipelinesPage = () => {
       });
 
       setShowModal(false);
-      setFormData({ name: '', type: 'schedule', frequency: 'daily', target: '' });
-      fetchPipelines();
+      setFormData({ name: '', type: 'schedule', frequency: 'daily', agent_kit_id: '' });
+      fetchData();
+      setSuccess('Automation created successfully');
+      setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
       console.error('Error creating pipeline:', err);
       setError('Failed to create automation');
@@ -79,11 +90,25 @@ const DataPipelinesPage = () => {
     if (window.confirm('Are you sure you want to delete this automation?')) {
       try {
         await dataPipelineService.delete(id);
-        fetchPipelines();
+        fetchData();
       } catch (err) {
         console.error('Error deleting pipeline:', err);
         setError('Failed to delete automation');
       }
+    }
+  };
+
+  const handleExecute = async (id) => {
+    try {
+      setExecutingId(id);
+      await dataPipelineService.execute(id);
+      setSuccess('Automation triggered successfully');
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      console.error('Error executing pipeline:', err);
+      setError('Failed to trigger automation');
+    } finally {
+      setExecutingId(null);
     }
   };
 
@@ -164,39 +189,57 @@ const DataPipelinesPage = () => {
       </div>
 
       <Row xs={1} md={2} lg={3} className="g-4">
-        {pipelines.map((pipeline) => (
-          <Col key={pipeline.id}>
-            <Card className="h-100 pipeline-card">
-              <Card.Body>
-                <div className="d-flex justify-content-between align-items-start mb-3">
-                  <div className="pipeline-icon-wrapper">
-                    <ArrowRepeat size={24} />
+        {pipelines.map((pipeline) => {
+          const kit = agentKits.find(k => k.id === pipeline.config?.agent_kit_id);
+          return (
+            <Col key={pipeline.id}>
+              <Card className="h-100 pipeline-card">
+                <Card.Body>
+                  <div className="d-flex justify-content-between align-items-start mb-3">
+                    <div className="pipeline-icon-wrapper">
+                      <ArrowRepeat size={24} />
+                    </div>
+                    <div className="pipeline-actions">
+                      <Button variant="link" className="text-danger p-0" onClick={() => handleDelete(pipeline.id)}>
+                        <Trash size={16} />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="pipeline-actions">
-                    <Button variant="link" className="text-danger p-0" onClick={() => handleDelete(pipeline.id)}>
-                      <Trash size={16} />
-                    </Button>
+                  <Card.Title>{pipeline.name}</Card.Title>
+                  <Card.Text className="text-muted small mb-3">
+                    Type: {pipeline.config?.type || 'Custom'}
+                    <br />
+                    Frequency: {pipeline.config?.frequency || 'Manual'}
+                    <br />
+                    Agent Kit: {kit ? kit.name : 'None'}
+                  </Card.Text>
+                  <div className="d-flex gap-2 mb-3">
+                    <Badge bg="success">Active</Badge>
+                    <Badge bg="light" text="dark">Last run: Never</Badge>
                   </div>
-                </div>
-                <Card.Title>{pipeline.name}</Card.Title>
-                <Card.Text className="text-muted small mb-3">
-                  Type: {pipeline.config?.type || 'Custom'}
-                  <br />
-                  Frequency: {pipeline.config?.frequency || 'Manual'}
-                </Card.Text>
-                <div className="d-flex gap-2">
-                  <Badge bg="success">Active</Badge>
-                  <Badge bg="light" text="dark">Last run: Never</Badge>
-                </div>
-              </Card.Body>
-              <Card.Footer className="bg-transparent border-0">
-                <Button variant="outline-primary" size="sm" className="w-100">
-                  <Gear className="me-2" /> Configure
-                </Button>
-              </Card.Footer>
-            </Card>
-          </Col>
-        ))}
+                  <Button
+                    variant="outline-success"
+                    size="sm"
+                    className="w-100"
+                    onClick={() => handleExecute(pipeline.id)}
+                    disabled={executingId === pipeline.id}
+                  >
+                    {executingId === pipeline.id ? (
+                      <><Spinner size="sm" animation="border" className="me-2" /> Running...</>
+                    ) : (
+                      <><PlayFill className="me-2" /> Run Now</>
+                    )}
+                  </Button>
+                </Card.Body>
+                <Card.Footer className="bg-transparent border-0">
+                  <Button variant="outline-primary" size="sm" className="w-100">
+                    <Gear className="me-2" /> Configure
+                  </Button>
+                </Card.Footer>
+              </Card>
+            </Col>
+          );
+        })}
       </Row>
     </div>
   );
@@ -213,6 +256,7 @@ const DataPipelinesPage = () => {
         </div>
 
         {error && <Alert variant="danger" onClose={() => setError(null)} dismissible>{error}</Alert>}
+        {success && <Alert variant="success" onClose={() => setSuccess(null)} dismissible>{success}</Alert>}
 
         {loading ? (
           <div className="text-center py-5">
@@ -235,7 +279,7 @@ const DataPipelinesPage = () => {
                   type="text"
                   placeholder="e.g., Weekly Sales Report"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
                   required
                 />
               </Form.Group>
@@ -244,7 +288,7 @@ const DataPipelinesPage = () => {
                 <Form.Label>Type</Form.Label>
                 <Form.Select
                   value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                  onChange={(e) => setFormData({...formData, type: e.target.value})}
                 >
                   <option value="schedule">Scheduled Task</option>
                   <option value="sync">Data Sync</option>
@@ -256,7 +300,7 @@ const DataPipelinesPage = () => {
                 <Form.Label>Frequency</Form.Label>
                 <Form.Select
                   value={formData.frequency}
-                  onChange={(e) => setFormData({ ...formData, frequency: e.target.value })}
+                  onChange={(e) => setFormData({...formData, frequency: e.target.value})}
                 >
                   <option value="hourly">Hourly</option>
                   <option value="daily">Daily</option>
@@ -266,13 +310,19 @@ const DataPipelinesPage = () => {
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Label>Target (Optional)</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Dataset ID or Email"
-                  value={formData.target}
-                  onChange={(e) => setFormData({ ...formData, target: e.target.value })}
-                />
+                <Form.Label>Agent Kit (Optional)</Form.Label>
+                <Form.Select
+                  value={formData.agent_kit_id}
+                  onChange={(e) => setFormData({...formData, agent_kit_id: e.target.value})}
+                >
+                  <option value="">Select an Agent Kit...</option>
+                  {agentKits.map(kit => (
+                    <option key={kit.id} value={kit.id}>{kit.name}</option>
+                  ))}
+                </Form.Select>
+                <Form.Text className="text-muted">
+                  Select an Agent Kit to execute for this automation.
+                </Form.Text>
               </Form.Group>
             </Modal.Body>
             <Modal.Footer>
