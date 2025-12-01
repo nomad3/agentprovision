@@ -1,31 +1,31 @@
 {
   "hero": {
-    "badge": "Enterprise AI Data Lakehouse",
-    "title": "Unified Data Lake. Autonomous AI Agents.",
-    "lead": "Connect your data lakehouse to a fleet of AI agents. Query petabytes of data in plain English. Automate complex data pipelines with autonomous intelligence.",
-    "subtext": "Transform your raw data into actionable intelligence. Secure, scalable, and built for the AI era.",
-    "subHighlight": "The modern stack for data-driven enterprises.",
+    "badge": "Enterprise AI Data Platform",
+    "title": "Your Data Lake. Your AI Workforce.",
+    "lead": "Empower your organization with autonomous AI agents that understand your data. Secure, multi-tenant, and built for enterprise scale.",
+    "subtext": "Transform raw data into actionable intelligence. Solve complex problems with AI agents that work 24/7.",
+    "subHighlight": "The modern operating system for data-driven organizations.",
     "spotlight": {
-      "heading": "What becomes possible",
-      "badge": "Team augmentation"
+      "heading": "Core Capabilities",
+      "badge": "Enterprise Ready"
     },
     "highlights": {
       "governedDataProducts": {
-        "title": "Every team becomes data-driven",
-        "description": "Marketing measures campaign ROI in real-time. Sales forecasts deals accurately. Finance closes books faster. Operations optimizes processes. No SQL knowledge required."
+        "title": "Unified Data Lake",
+        "description": "Centralize all your data in a secure, governed lakehouse. Support for structured and unstructured data with enterprise-grade security."
       },
       "unifiedLakehouseFabric": {
-        "title": "Decisions made in minutes, not days",
-        "description": "Ask a question, get an answer. No tickets. No waiting. No back-and-forth emails. Your teams move at the speed of thought instead of the speed of your data team's backlog."
+        "title": "Autonomous AI Agents",
+        "description": "Deploy specialized agents that understand your business context. From data analysis to complex workflow automation, agents handle the heavy lifting."
       },
       "agenticAutomation": {
-        "title": "Data engineers focus on what matters",
-        "description": "Stop writing repetitive queries. Build infrastructure. Design systems. Solve hard problems. AI agents handle the routine data requests that consume your day."
+        "title": "Multi-Tenant Organizations",
+        "description": "Built for scale. Manage multiple teams, departments, or clients with strict data isolation and granular access controls."
       }
     }
   },
   "logos": {
-    "heading": "Powered by",
+    "heading": "Powered by Modern Tech Stack",
     "items": [
       "Claude AI",
       "React",
@@ -38,148 +38,148 @@
   "metrics": {
     "items": [
       {
-        "label": "Marketing teams",
-        "value": "Answer campaign questions instantly",
-        "description": "Which channels drive conversions? What's our CAC by segment? How do campaigns compare month-over-month? Get answers in seconds instead of waiting days for data team support."
+        "label": "Data Teams",
+        "value": "Eliminate Ad-Hoc Requests",
+        "description": "Free your data engineers from endless SQL queries. Let AI agents handle routine data retrieval and analysis, allowing your team to focus on infrastructure and strategy."
       },
       {
-        "label": "Sales teams",
-        "value": "Track pipeline without spreadsheets",
-        "description": "Ask about deal velocity, win rates, quota attainment. Forecast revenue. Identify at-risk opportunities. Sales reps become data-savvy without learning BI tools."
+        "label": "Business Users",
+        "value": "Self-Service Intelligence",
+        "description": "Empower non-technical users to get answers instantly. Ask questions in plain English and get visualized results without waiting for a ticket to be resolved."
       },
       {
-        "label": "Finance & operations",
-        "value": "Close faster with instant reports",
-        "description": "Query expenses, revenue trends, operational metrics on demand. No more manual report generation. Finance closes books faster. Operations identifies bottlenecks in real-time."
+        "label": "Enterprise IT",
+        "value": "Secure & Compliant",
+        "description": "Maintain full control with role-based access, audit logs, and tenant isolation. Deploy with confidence knowing your data is secure and compliant."
       }
     ]
   },
   "features": {
-    "heading": "Three ways we augment your teams",
-    "subtitle": "Upload data, create agents, empower everyone. Simple setup, transformative results.",
+    "heading": "Core Platform Features",
+    "subtitle": "Everything you need to build a data-driven organization.",
     "items": {
       "connectEverySource": {
-        "title": "Make all your data accessible",
-        "description": "Upload spreadsheets, connect databases, centralize datasets. Everyone sees the data they're authorized to access. No more 'Can someone pull this for me?' Slack messages."
+        "title": "Data Ingestion & Management",
+        "description": "Seamlessly ingest data from various sources. Manage datasets, schemas, and metadata in a centralized catalog."
       },
       "semanticControlPlane": {
-        "title": "Keep security without sacrificing speed",
-        "description": "IT controls who sees what. Audit logs track everything. Teams get instant access to their data without compromising security or compliance. Best of both worlds."
+        "title": "Agentic Workflows",
+        "description": "Design and deploy complex workflows using Temporal. Orchestrate multiple agents to solve intricate business problems reliably."
       },
       "agentAutomationStudio": {
-        "title": "Turn questions into insights automatically",
-        "description": "AI agents understand your business context. Ask in plain language, get accurate answers. Your team spends time acting on insights instead of requesting reports."
+        "title": "Organization Management",
+        "description": "Create and manage tenants for different departments or clients. Ensure data isolation and customize settings for each organization."
       }
     }
   },
   "lakehouse": {
-    "heading": "Built for business teams, trusted by IT",
-    "description": "Your teams get the freedom to explore data. Your IT team maintains control and visibility. Everyone wins.",
+    "heading": "Solving Real Business Problems",
+    "description": "Move beyond dashboards. Implement solutions that drive action.",
     "highlights": {
       "unifiedGovernance": {
-        "title": "Security and compliance built in",
-        "description": "Define access permissions once. Track every query automatically. Meet compliance requirements without blocking business users. IT stays in control while teams stay productive."
+        "title": "The Bottleneck Problem",
+        "description": "Traditional data teams are overwhelmed with requests. AgentProvision removes this bottleneck by enabling self-service through AI agents."
       },
       "programmablePipelines": {
-        "title": "Data stays fresh automatically",
-        "description": "Upload data once or connect live sources. Schedule refreshes. Set up automatic updates. Your teams always work with current data without manual syncing."
+        "title": "The Context Gap",
+        "description": "Generic AI doesn't know your business. Our Agent Kits are tailored to your specific data and domain, providing accurate and relevant insights."
       },
       "compliantCollaboration": {
-        "title": "Full audit trail for every question",
-        "description": "Who asked what, when, and what data they accessed. Complete visibility for compliance reviews, security audits, and troubleshooting. Peace of mind for IT leaders."
+        "title": "The Trust Issue",
+        "description": "Black-box AI is risky. We provide full visibility, citations, and audit trails so you can trust the decisions made by your AI agents."
       }
     },
     "secondary": {
-      "heading": "Real scenarios from real teams",
-      "description": "See how different teams use AI agents to multiply their impact.",
+      "heading": "Value Delivered",
+      "description": "Tangible benefits for your organization.",
       "items": {
         "adaptiveGuardrails": {
-          "title": "Marketing: Optimize spend mid-campaign",
-          "description": "Marketing manager asks 'Which campaigns have CPA above $50?' Identifies underperforming channels. Reallocates budget same day. Improves ROI without waiting for analytics team."
+          "title": "Speed to Insight",
+          "description": "Reduce time-to-answer from days to seconds. Accelerate decision-making across the entire organization."
         },
         "explainableDecisions": {
-          "title": "Sales: Forecast accurately without spreadsheets",
-          "description": "Sales director asks 'What's our forecast for Q4 based on current pipeline?' Gets instant projection. Identifies coverage gaps. Adjusts hiring and territory plans proactively."
+          "title": "Operational Efficiency",
+          "description": "Automate repetitive tasks and workflows. Free up human capital for high-value strategic work."
         },
         "lakehouseSignals": {
-          "title": "Finance: Close books in half the time",
-          "description": "Finance analyst queries revenue by segment, expenses by category, variances from budget. Generates reports instantly instead of spending days pulling data. Closes monthly faster."
+          "title": "Scalable Governance",
+          "description": "Grow your data initiatives without losing control. Manage access and security at scale across multiple tenants."
         }
       }
     }
   },
   "architecture": {
-    "heading": "Simple for users, powerful for IT",
-    "description": "Business teams talk to AI agents. IT manages data governance. Platform handles everything in between.",
+    "heading": "Enterprise Architecture",
+    "description": "Built on a robust, scalable foundation.",
     "layers": {
       "dataIntegrationLayer": {
-        "title": "Users: Just upload and ask",
-        "description": "Upload a spreadsheet. Ask a question in plain language. Get an answer explained in business terms. No training required. No SQL. No complex BI tools."
+        "title": "Data Layer",
+        "description": "Secure storage, efficient processing (DuckDB), and seamless integration with your existing data sources."
       },
       "semanticGovernanceLayer": {
-        "title": "IT: Set permissions once",
-        "description": "Define who accesses what data. Platform enforces rules automatically. Audit logs capture everything. Change permissions anytime. Security without manual intervention."
+        "title": "Orchestration Layer",
+        "description": "Temporal-powered workflows ensure reliability, retries, and state management for long-running processes."
       },
       "agenticExecutionLayer": {
-        "title": "AI: Understand context, generate insights",
-        "description": "Agents learn your datasets and business terminology. Convert questions to queries. Validate data quality. Explain results clearly. Improve with every interaction."
+        "title": "Intelligence Layer",
+        "description": "Advanced LLM integration (Claude, GPT) with context-aware agents that can reason, plan, and execute tasks."
       }
     }
   },
   "ai": {
-    "heading": "What your teams can do with AI agents",
-    "description": "Real capabilities that transform how teams work with data.",
+    "heading": "Agent Capabilities",
+    "description": "What your AI workforce can do.",
     "items": {
       "insightCopilots": {
-        "title": "Ask questions in plain language",
-        "description": "No SQL. No formulas. Just ask like you're talking to a colleague: 'Show me Q3 revenue by product line' or 'Which customers are at risk of churning?' Agents understand business language."
+        "title": "Data Analysis Agents",
+        "description": "Analyze trends, generate reports, and visualize data on command. Like having a dedicated data analyst available 24/7."
       },
       "composableSkills": {
-        "title": "Get analyses, not just numbers",
-        "description": "Agents don't just return data. They calculate trends, identify anomalies, compare time periods, and explain what changed. Turn data into actionable insights automatically."
+        "title": "Operational Agents",
+        "description": "Trigger workflows, update records, and send notifications based on data insights. Close the loop from insight to action."
       },
       "closedLoopActuators": {
-        "title": "Schedule reports, automate workflows",
-        "description": "Create standing reports: 'Send weekly sales summary every Monday.' Set up alerts: 'Notify me if churn rate exceeds 5%.' Agents work continuously, not just when asked."
+        "title": "Custom Agent Kits",
+        "description": "Build and deploy specialized agent kits tailored to your unique business needs and workflows."
       }
     }
   },
   "roadmap": {
-    "heading": "What we're building next",
-    "subtitle": "Features designed to give your teams even more power.",
+    "heading": "Future Innovation",
+    "subtitle": "Continuously evolving to meet your needs.",
     "items": {
       "marketplaceConnectors": {
-        "title": "Connect more data sources",
-        "description": "Direct connections to CRM, marketing, and financial systems. Auto-sync data instead of manual exports."
+        "title": "Expanded Integrations",
+        "description": "More native connectors for CRM, ERP, and Marketing platforms."
       },
       "adaptiveGovernanceAi": {
-        "title": "Smarter data security",
-        "description": "Auto-detect sensitive data. Intelligent PII masking. Dynamic policies that adapt to context."
+        "title": "Advanced Reasoning",
+        "description": "Next-generation agents with enhanced planning and problem-solving capabilities."
       },
       "autonomousFinopsSuites": {
-        "title": "Handle larger datasets",
-        "description": "Query optimization for big data. Intelligent caching. Scale from gigabytes to terabytes seamlessly."
+        "title": "Global Scale",
+        "description": "Multi-region deployment options and enhanced enterprise compliance features."
       }
     }
   },
   "testimonials": {
-    "heading": "How teams multiply their impact",
-    "subtitle": "Real scenarios we've seen from organizations using this platform",
+    "heading": "Trusted by Innovators",
+    "subtitle": "See how organizations are transforming with AgentProvision",
     "items": [
       {
-        "quote": "Marketing used to wait days for static reports. Now, we ask AI agents directly and get answers in seconds. Campaign optimization happens daily instead of monthly.",
-        "author": "Marketing Team",
-        "role": "From reactive to proactive"
+        "quote": "AgentProvision allowed us to scale our data operations without hiring more staff. The multi-tenant features are perfect for managing our diverse client base.",
+        "author": "CTO",
+        "role": "Enterprise SaaS Provider"
       },
       {
-        "quote": "Finance spent weeks gathering data. Now, AI agents handle it automatically. We spend our time on strategy, and the monthly close happens in days, not weeks.",
-        "author": "Finance Team",
-        "role": "From data gathering to strategy"
+        "quote": "The ability to automate complex workflows with Temporal and AI agents has been a game-changer. We've reduced manual reporting time by 90%.",
+        "author": "Head of Operations",
+        "role": "FinTech Company"
       }
     ]
   },
   "cta": {
-    "heading": "See what your team can do",
-    "description": "Try it with your own data. Upload a spreadsheet, create an agent, ask some questions. See if this gives your team superpowers. Most teams know within an hour whether this changes how they work."
+    "heading": "Ready to Transform Your Organization?",
+    "description": "Experience the power of autonomous AI agents. Start your journey towards a more efficient, data-driven future today."
   }
 }
