@@ -29,6 +29,8 @@ services:
     depends_on:
       - db
       - temporal
+    environment:
+      - MCP_SERVER_URL=http://mcp-server:8000
 
   web:
     build:
@@ -64,6 +66,8 @@ services:
     depends_on:
       - db
       - temporal
+    environment:
+      - MCP_SERVER_URL=http://mcp-server:8000
     restart: unless-stopped
 
   mcp-server:
