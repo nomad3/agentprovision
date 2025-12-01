@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Badge, Button, Col, Container, Form, InputGroup, Row, Tab, Table, Tabs } from 'react-bootstrap';
+import { Alert, Badge, Button, Col, Container, Form, InputGroup, Row, Spinner, Tab, Table, Tabs } from 'react-bootstrap';
+import { CloudUploadFill, FileEarmarkTextFill } from 'react-bootstrap-icons';
 import PremiumCard from '../components/common/PremiumCard';
 import Layout from '../components/Layout';
+import api from '../services/api';
 import { memoryService } from '../services/memory';
 
 function MemoryPage() {
@@ -9,6 +11,8 @@ function MemoryPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [entityType, setEntityType] = useState('');
   const [loading, setLoading] = useState(true);
+  const [importing, setImporting] = useState(false);
+  const [importMessage, setImportMessage] = useState(null);
 
   useEffect(() => {
     loadEntities();
@@ -38,6 +42,41 @@ function MemoryPage() {
       console.error('Search failed:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleImport = async (event, provider) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setImporting(true);
+    setImportMessage(null);
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const endpoint = provider === 'chatgpt'
+        ? '/integrations/import/chatgpt'
+        : '/integrations/import/claude';
+
+      const response = await api.post(endpoint, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      setImportMessage({ type: 'success', text: response.data.message });
+    } catch (error) {
+      console.error('Import failed:', error);
+      setImportMessage({
+        type: 'danger',
+        text: error.response?.data?.detail || 'Failed to import chat history'
+      });
+    } finally {
+      setImporting(false);
+      // Reset file input
+      event.target.value = null;
     }
   };
 
@@ -123,6 +162,11 @@ function MemoryPage() {
                         </td>
                       </tr>
                     ))}
+                    {entities.length === 0 && (
+                      <tr>
+                        <td colSpan="5" className="text-center py-4">No entities found. Import chat history to build knowledge.</td>
+                      </tr>
+                    )}
                   </tbody>
                 </Table>
               )}
@@ -134,6 +178,79 @@ function MemoryPage() {
               <div className="text-center py-5">
                 <p className="text-soft mb-0">Select an agent to view their memories</p>
               </div>
+            </PremiumCard>
+          </Tab>
+
+          <Tab eventKey="import" title="Import Knowledge">
+            <PremiumCard>
+              <div className="mb-4">
+                <h4 className="text-white">Import Chat History</h4>
+                <p className="text-soft">Upload chat exports from other LLM providers to build your knowledge base.</p>
+              </div>
+
+              {importMessage && (
+                <Alert variant={importMessage.type} dismissible onClose={() => setImportMessage(null)}>
+                  {importMessage.text}
+                </Alert>
+              )}
+
+              <Row className="g-4">
+                <Col md={6}>
+                  <div className="p-4 border border-secondary border-opacity-25 rounded bg-dark bg-opacity-25 text-center h-100">
+                    <div className="mb-3">
+                      <FileEarmarkTextFill size={48} className="text-success" />
+                    </div>
+                    <h5 className="text-white">ChatGPT Export</h5>
+                    <p className="text-soft small mb-4">Upload your <code>conversations.json</code> file from OpenAI export.</p>
+
+                    <div className="d-grid">
+                      <input
+                        type="file"
+                        id="chatgpt-upload"
+                        accept=".json"
+                        style={{ display: 'none' }}
+                        onChange={(e) => handleImport(e, 'chatgpt')}
+                        disabled={importing}
+                      />
+                      <Button
+                        variant="outline-success"
+                        onClick={() => document.getElementById('chatgpt-upload').click()}
+                        disabled={importing}
+                      >
+                        {importing ? <Spinner animation="border" size="sm" /> : <><CloudUploadFill className="me-2" /> Upload ChatGPT JSON</>}
+                      </Button>
+                    </div>
+                  </div>
+                </Col>
+
+                <Col md={6}>
+                  <div className="p-4 border border-secondary border-opacity-25 rounded bg-dark bg-opacity-25 text-center h-100">
+                    <div className="mb-3">
+                      <FileEarmarkTextFill size={48} className="text-warning" />
+                    </div>
+                    <h5 className="text-white">Claude Export</h5>
+                    <p className="text-soft small mb-4">Upload your <code>conversations.json</code> file from Anthropic export.</p>
+
+                    <div className="d-grid">
+                      <input
+                        type="file"
+                        id="claude-upload"
+                        accept=".json"
+                        style={{ display: 'none' }}
+                        onChange={(e) => handleImport(e, 'claude')}
+                        disabled={importing}
+                      />
+                      <Button
+                        variant="outline-warning"
+                        onClick={() => document.getElementById('claude-upload').click()}
+                        disabled={importing}
+                      >
+                        {importing ? <Spinner animation="border" size="sm" /> : <><CloudUploadFill className="me-2" /> Upload Claude JSON</>}
+                      </Button>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
             </PremiumCard>
           </Tab>
         </Tabs>
