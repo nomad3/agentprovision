@@ -1,10 +1,9 @@
-```javascript
-import React, { useState, useEffect } from 'react';
-import { Card, Button, Row, Col, Modal, Form, Spinner, Badge, Alert } from 'react-bootstrap';
-import { ArrowRepeat, PlusCircleFill, LightbulbFill, ClockFill, PlayCircleFill, BellFill, Trash, Gear, PlayFill } from 'react-bootstrap-icons';
+import { useEffect, useState } from 'react';
+import { Alert, Badge, Button, Card, Col, Form, Modal, Row, Spinner } from 'react-bootstrap';
+import { ArrowRepeat, BellFill, ClockFill, Gear, LightbulbFill, PlayCircleFill, PlayFill, PlusCircleFill, Trash } from 'react-bootstrap-icons';
 import Layout from '../components/Layout';
-import dataPipelineService from '../services/dataPipeline';
 import agentKitService from '../services/agentKit';
+import dataPipelineService from '../services/dataPipeline';
 import './DataPipelinesPage.css';
 
 const DataPipelinesPage = () => {
@@ -279,7 +278,7 @@ const DataPipelinesPage = () => {
                   type="text"
                   placeholder="e.g., Weekly Sales Report"
                   value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
                 />
               </Form.Group>
@@ -288,7 +287,7 @@ const DataPipelinesPage = () => {
                 <Form.Label>Type</Form.Label>
                 <Form.Select
                   value={formData.type}
-                  onChange={(e) => setFormData({...formData, type: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
                 >
                   <option value="schedule">Scheduled Task</option>
                   <option value="sync">Data Sync</option>
@@ -300,7 +299,7 @@ const DataPipelinesPage = () => {
                 <Form.Label>Frequency</Form.Label>
                 <Form.Select
                   value={formData.frequency}
-                  onChange={(e) => setFormData({...formData, frequency: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, frequency: e.target.value })}
                 >
                   <option value="hourly">Hourly</option>
                   <option value="daily">Daily</option>
@@ -313,7 +312,7 @@ const DataPipelinesPage = () => {
                 <Form.Label>Agent Kit (Optional)</Form.Label>
                 <Form.Select
                   value={formData.agent_kit_id}
-                  onChange={(e) => setFormData({...formData, agent_kit_id: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, agent_kit_id: e.target.value })}
                 >
                   <option value="">Select an Agent Kit...</option>
                   {(agentKits || []).map(kit => (
