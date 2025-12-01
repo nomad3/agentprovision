@@ -1,7 +1,7 @@
 import requests
 import sys
 
-BASE_URL = "http://localhost:8000"
+BASE_URL = "http://localhost:8001"
 LOGIN_URL = f"{BASE_URL}/api/v1/auth/login"
 USERS_ME_URL = f"{BASE_URL}/api/v1/users/me"
 
