@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr
 import uuid
+from .tenant import Tenant
 
 class UserBase(BaseModel):
     email: EmailStr
@@ -16,6 +17,7 @@ class UserUpdate(UserBase):
 class User(UserBase):
     id: uuid.UUID
     tenant_id: uuid.UUID
+    tenant: Tenant | None = None
 
     class Config:
         from_attributes = True
