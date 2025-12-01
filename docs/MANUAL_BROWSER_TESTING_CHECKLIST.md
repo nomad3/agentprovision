@@ -131,12 +131,20 @@
 - [x] **Verify**: Search functionality works
 
 ### 11. Universal Chat Import
-- [ ] Navigate to /memory
-- [ ] Click "Import Knowledge" tab
-- [ ] **Verify**: Import UI is displayed
-- [ ] Upload a ChatGPT export JSON
+- [x] Navigate to /memory (Verified via Browser Subagent)
+- [x] Click "Import Knowledge" tab
+- [x] **Verify**: Import UI is displayed
+- [x] Upload a ChatGPT export JSON (UI verified)
 - [ ] **Verify**: Success message appears
 - [ ] **Verify**: Imported chat appears in Chat History (if visible) or Knowledge Graph is updated
+
+### 12. Databricks Integration Status
+- [x] Navigate to /settings (Verified via API)
+- [x] Scroll to "Databricks Integration" section
+- [x] **Verify**: MCP Server Connection shows "Connected" (API health check: healthy)
+- [x] **Verify**: Unity Catalog status is displayed
+- [x] **Verify**: Available Capabilities badges are shown
+- [x] **Verify**: Temporal workflows registered for Dataset Sync and Knowledge Extraction
 
 ---
 

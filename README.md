@@ -138,6 +138,196 @@ agentprovision/
 └── README.md
 ```
 
+## 🎨 Key Features with Visuals
+
+### 1. Databricks Integration - Automatic Dataset Sync
+
+![Databricks Integration](./docs/images/databricks_integration_connected.png)
+
+AgentProvision automatically syncs your datasets to Databricks Unity Catalog with a medallion architecture:
+
+- **✅ MCP Server Connection**: Real-time status monitoring
+- **📊 Bronze Layer**: Raw data ingestion from uploads
+- **🔄 Silver Layer**: Automated data cleaning and transformations
+- **🏆 Gold Layer**: Business-ready analytics tables
+
+**How it works:**
+1. Upload a CSV/Parquet file via the UI
+2. Temporal workflow triggers Bronze table creation
+3. Automatic transformation to Silver layer with data quality checks
+4. Query your data directly from the chat interface
+
+```bash
+# Example: Upload and sync a dataset
+POST /api/v1/datasets/ingest
+{
+  "name": "sales_data",
+  "file": "sales_q1_2025.csv"
+}
+
+# Response includes Databricks table locations
+{
+  "bronze_table": "catalog_dev.bronze.sales_data",
+  "silver_table": "catalog_dev.silver.sales_data_clean",
+  "row_count": 10245
+}
+```
+
+### 2. Universal Chat Import & Knowledge Extraction
+
+Import your chat histories from ChatGPT and Claude to build a knowledge base:
+
+**Features:**
+- 📥 **Import ChatGPT conversations.json** - Preserve your valuable AI interactions
+- 📥 **Import Claude conversations.json** - Migrate your Claude chat history
+- 🧠 **Automatic Knowledge Extraction** - Uses Temporal workflows to extract entities
+- 🔗 **Knowledge Graph** - Visualize relationships between people, companies, and concepts
+
+**Temporal Workflow Integration:**
+- Knowledge extraction runs as a reliable background workflow
+- Retry logic ensures no data is lost
+- Monitor extraction progress in Temporal UI
+- Extracted entities feed into agent context
+
+```python
+# Knowledge extraction workflow
+@workflow.defn
+class KnowledgeExtractionWorkflow:
+    async def run(self, session_id: str, tenant_id: str):
+        # Extract entities using LLM
+        result = await workflow.execute_activity(
+            extract_knowledge_from_session,
+            args=[session_id, tenant_id],
+            start_to_close_timeout=timedelta(minutes=5)
+        )
+        return result
+```
+
+### 3. Multi-LLM Router with Cost Optimization
+
+Smart routing across 5+ LLM providers with automatic cost optimization:
+
+| Provider  | Best For                | Cost/1M tokens | Speed    |
+|-----------|-------------------------|----------------|----------|
+| DeepSeek  | Code generation         | $0.14          | Fast     |
+| Claude    | Complex reasoning       | $3.00          | Medium   |
+| GPT-4o    | General tasks           | $2.50          | Fast     |
+| Gemini    | Multimodal analysis     | $1.25          | Fast     |
+| Mistral   | European compliance     | $2.00          | Medium   |
+
+**Features:**
+- 🎯 **Automatic Model Selection** - Based on task complexity and cost
+- 💰 **Cost Tracking** - Real-time token usage and cost monitoring
+- 🔄 **Fallback Logic** - Automatic failover if a provider is down
+- ⚙️ **Per-Tenant Configuration** - Different models for different customers
+
+### 4. Agent Teams & Hierarchical Delegation
+
+Create sophisticated AI agent teams with defined roles and relationships:
+
+```python
+# Example: Sales Analytics Team
+{
+  "name": "Sales Analytics Team",
+  "goal": "Analyze Q1 sales and generate executive report",
+  "agents": [
+    {
+      "role": "Data Analyst",
+      "capabilities": ["sql_query", "data_visualization"],
+      "llm_config": "deepseek-chat"  # Cost-effective for data tasks
+    },
+    {
+      "role": "Report Writer",
+      "capabilities": ["summarization", "report_generation"],
+      "llm_config": "claude-sonnet-4"  # High quality for writing
+    },
+    {
+      "role": "Team Lead",
+      "autonomy": "supervised",
+      "max_delegation_depth": 2,
+      "llm_config": "gpt-4o"  # Balanced for coordination
+    }
+  ]
+}
+```
+
+**Delegation Flow:**
+1. User asks: "Analyze Q1 sales performance"
+2. Team Lead delegates to Data Analyst
+3. Data Analyst queries dataset and creates visualizations
+4. Report Writer generates executive summary
+5. Team Lead reviews and delivers final report
+
+### 5. Three-Tier Memory System
+
+Persistent learning across conversations with intelligent memory retrieval:
+
+```
+┌─────────────────────────────────────────────────┐
+│  HOT CONTEXT (Redis)                            │
+│  - Active conversation messages                 │
+│  - Session state and variables                  │
+│  - Access time: <1ms                            │
+└─────────────────────────────────────────────────┘
+                    ↓
+┌─────────────────────────────────────────────────┐
+│  SEMANTIC MEMORY (Vector Store)                 │
+│  - Past conversation embeddings                 │
+│  - Similar experience retrieval                 │
+│  - Access time: ~10ms                           │
+└─────────────────────────────────────────────────┘
+                    ↓
+┌─────────────────────────────────────────────────┐
+│  KNOWLEDGE GRAPH (PostgreSQL)                   │
+│  - Entities: People, Companies, Concepts        │
+│  - Relationships and facts                      │
+│  - Access time: ~50ms                           │
+└─────────────────────────────────────────────────┘
+```
+
+### 6. Whitelabel & Multi-Tenancy
+
+Complete platform customization for each tenant:
+
+**Branding:**
+- 🎨 Custom colors, logos, and themes
+- 🏷️ Custom AI assistant names
+- 🌐 Custom domains (e.g., `acme.agentprovision.com`)
+- 📱 Industry-specific templates (Finance, Healthcare, Retail)
+
+**Feature Flags:**
+```json
+{
+  "features": {
+    "databricks_integration": true,
+    "advanced_analytics": true,
+    "custom_tools": false,
+    "white_glove_support": true
+  },
+  "limits": {
+    "max_agents": 50,
+    "max_datasets": 100,
+    "monthly_tokens": 10000000
+  }
+}
+```
+
+### 7. Real-Time Analytics Dashboard
+
+Monitor platform usage and AI performance:
+
+**Metrics Tracked:**
+- 📊 **Usage**: Messages sent, tasks completed, tokens consumed
+- 💰 **Costs**: Per-provider spending, cost per task
+- 🤖 **Agent Performance**: Success rates, delegation patterns
+- 📈 **Trends**: Daily/weekly/monthly comparisons
+- 🎯 **AI Insights**: Automatically generated recommendations
+
+**Example Insights:**
+- "DeepSeek usage increased 40% this week, saving $2,400 in LLM costs"
+- "Agent 'Data Analyst' has 95% task success rate, highest in team"
+- "Dataset sync to Databricks averages 2.3 minutes for 10K rows"
+
 ## 🔧 Core Features
 
 ### Agent Orchestration
