@@ -1,11 +1,11 @@
 import api from './api';
 
 const dataPipelineService = {
-  getAll: () => api.get('/data_pipelines'),
+  getAll: () => api.get('/data_pipelines/'),
 
   getById: (id) => api.get(`/data_pipelines/${id}`),
 
-  create: (data) => api.post('/data_pipelines', data),
+  create: (data) => api.post('/data_pipelines/', data),
 
   update: (id, data) => api.put(`/data_pipelines/${id}`, data),
 
