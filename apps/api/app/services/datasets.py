@@ -33,7 +33,7 @@ def _trigger_databricks_sync(db: Session, dataset: Dataset, tenant_id: uuid.UUID
         dataset: Dataset to sync
         tenant_id: Tenant UUID for isolation
     """
-    if not settings.DATABRICKS_AUTO_SYNC or not settings.MCP_ENABLED:
+    if not settings.DATABRICKS_AUTO_SYNC:
         return
 
     logger.info(f"Triggering Databricks sync for dataset {dataset.id}")
