@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Alert, Badge, Button, Card, Col, Form, Modal, Row, Spinner } from 'react-bootstrap';
-import { ArrowRepeat, BellFill, ClockFill, Gear, LightbulbFill, PlayCircleFill, PlayFill, PlusCircleFill, Trash } from 'react-bootstrap-icons';
+import { ArrowRepeat, BellFill, ClockFill, Gear, LightbulbFill, PlayCircleFill, PlayFill, Plus, PlusCircleFill, Trash } from 'react-bootstrap-icons';
 import Layout from '../components/Layout';
 import agentKitService from '../services/agentKit';
 import dataPipelineService from '../services/dataPipeline';
+import dataSourceService from '../services/dataSource';
 import './DataPipelinesPage.css';
 
 const DataPipelinesPage = () => {
