@@ -9,9 +9,17 @@ import './DataPipelinesPage.css';
 const DataPipelinesPage = () => {
   const [pipelines, setPipelines] = useState([]);
   const [agentKits, setAgentKits] = useState([]);
+  const [dataSources, setDataSources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [formData, setFormData] = useState({ name: '', type: 'schedule', frequency: 'daily', agent_kit_id: '' });
+  const [formData, setFormData] = useState({
+    name: '',
+    type: 'schedule',
+    frequency: 'daily',
+    agent_kit_id: '',
+    data_source_id: '',
+    notebook_path: ''
+  });
   const [submitting, setSubmitting] = useState(false);
   const [executingId, setExecutingId] = useState(null);
   const [error, setError] = useState(null);
@@ -42,12 +50,16 @@ const DataPipelinesPage = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [pipelinesRes, kitsRes] = await Promise.all([
+      const [pipelinesRes, kitsRes, sourcesRes] = await Promise.all([
         dataPipelineService.getAll(),
-        agentKitService.getAll()
+        agentKitService.getAll(),
+        dataSourceService.getAll()
       ]);
+      console.log('Pipelines Response:', pipelinesRes);
+      console.log('Agent Kits Response:', kitsRes);
       setPipelines(pipelinesRes.data);
       setAgentKits(kitsRes.data);
+      setDataSources(sourcesRes.data);
       setError(null);
     } catch (err) {
       console.error('Error fetching data:', err);
@@ -64,7 +76,9 @@ const DataPipelinesPage = () => {
       const config = {
         type: formData.type,
         frequency: formData.frequency,
-        agent_kit_id: formData.agent_kit_id
+        agent_kit_id: formData.agent_kit_id,
+        data_source_id: formData.data_source_id,
+        notebook_path: formData.notebook_path
       };
 
       await dataPipelineService.create({
@@ -73,7 +87,14 @@ const DataPipelinesPage = () => {
       });
 
       setShowModal(false);
-      setFormData({ name: '', type: 'schedule', frequency: 'daily', agent_kit_id: '' });
+      setFormData({
+        name: '',
+        type: 'schedule',
+        frequency: 'daily',
+        agent_kit_id: '',
+        data_source_id: '',
+        notebook_path: ''
+      });
       fetchData();
       setSuccess('Automation created successfully');
       setTimeout(() => setSuccess(null), 3000);
@@ -180,9 +201,9 @@ const DataPipelinesPage = () => {
   const renderPipelinesList = () => (
     <div className="pipelines-list">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h4 className="mb-0">Active Automations</h4>
+        <h1>Data Pipelines</h1>
         <Button variant="primary" onClick={() => setShowModal(true)}>
-          <PlusCircleFill className="me-2" />
+          <Plus className="me-2" />
           New Automation
         </Button>
       </div>
@@ -308,21 +329,49 @@ const DataPipelinesPage = () => {
                 </Form.Select>
               </Form.Group>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Agent Kit (Optional)</Form.Label>
-                <Form.Select
-                  value={formData.agent_kit_id}
-                  onChange={(e) => setFormData({ ...formData, agent_kit_id: e.target.value })}
-                >
-                  <option value="">Select an Agent Kit...</option>
-                  {(agentKits || []).map(kit => (
-                    <option key={kit.id} value={kit.id}>{kit.name}</option>
-                  ))}
-                </Form.Select>
-                <Form.Text className="text-muted">
-                  Select an Agent Kit to execute for this automation.
-                </Form.Text>
-              </Form.Group>
+              {formData.type === 'databricks_job' ? (
+                <>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Databricks Data Source</Form.Label>
+                    <Form.Select
+                      value={formData.data_source_id}
+                      onChange={(e) => setFormData({ ...formData, data_source_id: e.target.value })}
+                      required
+                    >
+                      <option value="">Select a Data Source...</option>
+                      {dataSources.filter(ds => ds.type === 'databricks').map(ds => (
+                        <option key={ds.id} value={ds.id}>{ds.name}</option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Notebook Path</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="/Users/me/my-notebook"
+                      value={formData.notebook_path}
+                      onChange={(e) => setFormData({ ...formData, notebook_path: e.target.value })}
+                      required
+                    />
+                  </Form.Group>
+                </>
+              ) : (
+                <Form.Group className="mb-3">
+                  <Form.Label>Agent Kit (Optional)</Form.Label>
+                  <Form.Select
+                    value={formData.agent_kit_id}
+                    onChange={(e) => setFormData({ ...formData, agent_kit_id: e.target.value })}
+                  >
+                    <option value="">Select an Agent Kit...</option>
+                    {(agentKits || []).map(kit => (
+                      <option key={kit.id} value={kit.id}>{kit.name}</option>
+                    ))}
+                  </Form.Select>
+                  <Form.Text className="text-muted">
+                    Select an Agent Kit to execute for this automation.
+                  </Form.Text>
+                </Form.Group>
+              )}
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={() => setShowModal(false)}>
