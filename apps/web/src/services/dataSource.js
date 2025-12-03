@@ -20,12 +20,17 @@ const remove = (id) => {
   return api.delete(`/data_sources/${id}`);
 };
 
+const executeQuery = (id, query) => {
+  return api.post(`/data_sources/${id}/query`, { query });
+};
+
 const dataSourceService = {
   getAll,
   get,
   create,
   update,
   remove,
+  executeQuery,
 };
 
 export default dataSourceService;

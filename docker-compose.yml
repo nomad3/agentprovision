@@ -88,3 +88,12 @@ services:
     depends_on:
       - api
     restart: unless-stopped
+
+  test-db:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=testuser
+      - POSTGRES_PASSWORD=testpass
+      - POSTGRES_DB=testdb
+    ports:
+      - "8004:5432"

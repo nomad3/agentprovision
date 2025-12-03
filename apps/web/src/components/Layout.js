@@ -11,6 +11,7 @@ import {
   GearFill,
   Grid3x3GapFill,
   HouseDoorFill,
+  JournalBookmarkFill,
   PersonCircle,
   PlugFill,
   Robot
@@ -50,6 +51,7 @@ const Layout = ({ children }) => {
       title: 'OVERVIEW',
       items: [
         { path: '/home', icon: HouseDoorFill, label: 'Home', description: 'Your personalized homepage' },
+        { path: '/notebooks', icon: JournalBookmarkFill, label: 'Reports', description: 'View and manage reports' }, // Added new item
         { path: '/dashboard', icon: BarChartFill, label: 'Dashboard', description: 'Platform analytics overview' },
       ]
     },

@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status, Header
+from fastapi import APIRouter, Depends, HTTPException, status, Header, Body
 from sqlalchemy.orm import Session
 
 from app import schemas
@@ -86,7 +86,28 @@ def delete_data_source(
     if not data_source or str(data_source.tenant_id) != str(current_user.tenant_id):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Data source not found")
     data_source_service.delete_data_source(db=db, data_source_id=data_source_id)
+    data_source_service.delete_data_source(db=db, data_source_id=data_source_id)
     return {"message": "Data source deleted successfully"}
+
+
+@router.post("/{data_source_id}/query", response_model=List[dict])
+def execute_data_source_query(
+    *,
+    db: Session = Depends(deps.get_db),
+    data_source_id: uuid.UUID,
+    query: str = Body(..., embed=True),
+    current_user: User = Depends(deps.get_current_active_user),
+):
+    """
+    Execute a SQL query on the data source.
+    """
+    try:
+        results = data_source_service.execute_query(db, data_source_id=data_source_id, query=query)
+        return results
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+    except NotImplementedError as e:
+        raise HTTPException(status_code=status.HTTP_501_NOT_IMPLEMENTED, detail=str(e))
 
 
 # ==================== Internal Endpoints (MCP Server) ====================
