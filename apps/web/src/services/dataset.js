@@ -19,6 +19,7 @@ const datasetService = {
   get,
   getPreview,
   getSummary,
+  sync: (id) => api.post(`/datasets/${id}/sync`),
 };
 
 export default datasetService;

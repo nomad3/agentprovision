@@ -307,7 +307,23 @@ const DatasetsPage = () => {
                     </td>
                     <td>{dataset.created_at ? new Date(dataset.created_at).toLocaleString() : '—'}</td>
                     <td>
-                      <Button variant="info" size="sm" onClick={() => openPreview(dataset)}>{t('table.actions.preview')}</Button>
+                      <Button variant="info" size="sm" onClick={() => openPreview(dataset)} className="me-2">{t('table.actions.preview')}</Button>
+                      <Button
+                        variant="outline-primary"
+                        size="sm"
+                        onClick={async () => {
+                          try {
+                            await datasetService.sync(dataset.id);
+                            refreshDatasets();
+                          } catch (e) {
+                            console.error("Sync failed", e);
+                            setDatasetsError("Failed to trigger sync");
+                          }
+                        }}
+                        disabled={dataset.metadata?.sync_status === 'syncing'}
+                      >
+                        {dataset.metadata?.sync_status === 'syncing' ? 'Syncing...' : 'Sync to Databricks'}
+                      </Button>
                     </td>
                   </tr>
                 ))}

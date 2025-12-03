@@ -207,3 +207,23 @@ def get_dataset_databricks_status(
         "row_count_local": dataset.row_count,
         "row_count_databricks": metadata.get("row_count_databricks")
     }
+
+
+@router.post("/{dataset_id}/sync", status_code=status.HTTP_202_ACCEPTED)
+def sync_dataset_to_databricks(
+    dataset_id: uuid.UUID,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_active_user),
+):
+    """
+    Manually trigger synchronization of a dataset to Databricks.
+    """
+    dataset = dataset_service.get_dataset(db, dataset_id=dataset_id, tenant_id=current_user.tenant_id)
+    if not dataset:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Dataset not found")
+
+    # Access the internal trigger function (or we could expose a public one)
+    # We'll use the protected one for now as it's available in the module
+    dataset_service._trigger_databricks_sync(db, dataset, current_user.tenant_id)
+
+    return {"message": "Sync triggered successfully", "status": "pending"}
