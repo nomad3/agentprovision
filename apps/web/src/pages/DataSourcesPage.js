@@ -145,6 +145,16 @@ const DataSourcesPage = () => {
                 onChange={(e) => handleConfigChange('http_path', e.target.value)}
               />
             </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Cluster ID (Optional)</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="0123-456789-abcdef12"
+                value={formData.config.cluster_id || ''}
+                onChange={(e) => handleConfigChange('cluster_id', e.target.value)}
+              />
+              <Form.Text className="text-muted">Required for running Notebook jobs.</Form.Text>
+            </Form.Group>
           </>
         );
       case 'postgres':
