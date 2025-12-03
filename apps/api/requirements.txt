@@ -20,3 +20,4 @@ openai
 pytest
 pytest-asyncio
 asyncpg
+databricks-sql-connector
