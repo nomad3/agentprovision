@@ -208,9 +208,7 @@ server {
 EOF
 
 # Enable the Nginx site
-if [ ! -L "/etc/nginx/sites-enabled/$DOMAIN" ]; then
-    sudo ln -s "$NGINX_CONF_PATH" "/etc/nginx/sites-enabled/$DOMAIN"
-fi
+sudo ln -sf "$NGINX_CONF_PATH" "/etc/nginx/sites-enabled/$DOMAIN"
 
 # Test Nginx configuration
 echo "Testing Nginx configuration..."
