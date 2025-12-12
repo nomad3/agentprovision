@@ -159,23 +159,28 @@ autoscaling:
 podDisruptionBudget:
   enabled: false
 
-# HTTPRoute for Gateway API - main entry point
+# Disable HTTPRoute - using Ingress instead
 httpRoute:
+  enabled: false
+
+# Ingress for external access
+ingress:
   enabled: true
-  parentRefs:
-    - name: agentprovision-gateway
-      namespace: gateway-system
-  hostnames:
-    - "agentprovision.com"
-    - "www.agentprovision.com"
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
-      backendRefs:
-        - name: agentprovision-web
-          port: 80
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: ""
+    networking.gke.io/managed-certificates: agentprovision-web-cert
+    kubernetes.io/ingress.class: "gce"
+  hosts:
+    - host: "agentprovision-web.agentprovision.com"
+      paths:
+        - path: /
+          pathType: Prefix
+
+# Managed Certificate for HTTPS
+managedCertificate:
+  enabled: true
+  domains:
+    - "agentprovision-web.agentprovision.com"
 
 # GKE Health Check Policy
 healthCheckPolicy:

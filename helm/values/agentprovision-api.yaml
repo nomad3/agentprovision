@@ -192,20 +192,25 @@ healthCheckPolicy:
       port: 8000
       requestPath: /api/v1/
 
-# HTTPRoute for Gateway API
+# Disable HTTPRoute - using Ingress instead
 httpRoute:
+  enabled: false
+
+# Ingress for external access
+ingress:
   enabled: true
-  parentRefs:
-    - name: agentprovision-gateway
-      namespace: gateway-system
-  hostnames:
-    - "api.agentprovision.com"
-    - "agentprovision.com"
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /api
-      backendRefs:
-        - name: agentprovision-api
-          port: 80
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: ""
+    networking.gke.io/managed-certificates: agentprovision-api-cert
+    kubernetes.io/ingress.class: "gce"
+  hosts:
+    - host: "agentprovision-api.agentprovision.com"
+      paths:
+        - path: /
+          pathType: Prefix
+
+# Managed Certificate for HTTPS
+managedCertificate:
+  enabled: true
+  domains:
+    - "agentprovision-api.agentprovision.com"
