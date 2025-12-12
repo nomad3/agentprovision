@@ -16,7 +16,7 @@ container:
 serviceAccount:
   create: true
   annotations:
-    iam.gke.io/gcp-service-account: workload-identity-sa@ai-agency-479516.iam.gserviceaccount.com
+    iam.gke.io/gcp-service-account: dev-backend-app@ai-agency-479516.iam.gserviceaccount.com
 
 # Pod security - Python app runs as non-root
 podSecurityContext:
@@ -167,9 +167,10 @@ extraContainers:
   - name: cloud-sql-proxy
     image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.8.0
     args:
-      - "--structured-logs"
       - "--private-ip"
+      - "--structured-logs"
       - "--port=5432"
+      - "--http-port=9090"
       - "ai-agency-479516:us-central1:dev-postgres-instance"
     securityContext:
       runAsNonRoot: true
