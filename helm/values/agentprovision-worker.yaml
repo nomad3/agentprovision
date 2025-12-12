@@ -1,4 +1,5 @@
 # AgentProvision Databricks Worker - Temporal Worker for Background Jobs
+# NOTE: Disabled until Temporal is deployed
 nameOverride: "agentprovision-worker"
 fullnameOverride: "agentprovision-worker"
 
@@ -7,8 +8,8 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
-# Single replica - Temporal handles scaling
-replicaCount: 1
+# Disabled until Temporal is deployed
+replicaCount: 0
 
 container:
   port: 8000
