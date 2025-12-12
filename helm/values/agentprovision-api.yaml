@@ -7,7 +7,7 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
-replicaCount: 2
+replicaCount: 1
 
 container:
   port: 8000
@@ -32,14 +32,14 @@ securityContext:
     drop:
       - ALL
 
-# Resource allocation
+# Resource allocation - minimal for cost savings
 resources:
   requests:
-    cpu: 200m
-    memory: 512Mi
+    cpu: 100m
+    memory: 256Mi
   limits:
-    cpu: 1000m
-    memory: 1Gi
+    cpu: 500m
+    memory: 512Mi
 
 # Health checks for FastAPI
 livenessProbe:
@@ -130,18 +130,13 @@ env:
   - name: MCP_SERVER_URL
     value: "http://mcp-server:8000"
 
-# Horizontal Pod Autoscaler
+# Horizontal Pod Autoscaler - disabled for cost savings
 autoscaling:
-  enabled: true
-  minReplicas: 2
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 70
-  targetMemoryUtilizationPercentage: 80
+  enabled: false
 
-# Pod Disruption Budget for high availability
+# Pod Disruption Budget - disabled with 1 replica
 podDisruptionBudget:
-  enabled: true
-  minAvailable: 1
+  enabled: false
 
 # Persistent storage for datasets
 persistence:
@@ -180,11 +175,11 @@ extraContainers:
       allowPrivilegeEscalation: false
     resources:
       requests:
-        cpu: 100m
-        memory: 256Mi
+        cpu: 50m
+        memory: 64Mi
       limits:
-        cpu: 200m
-        memory: 256Mi
+        cpu: 100m
+        memory: 128Mi
 
 # GKE Health Check Policy
 healthCheckPolicy:

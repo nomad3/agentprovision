@@ -7,7 +7,7 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
-replicaCount: 2
+replicaCount: 1
 
 container:
   port: 80
@@ -31,14 +31,14 @@ securityContext:
     drop:
       - ALL
 
-# Resource allocation - static serving is lightweight
+# Resource allocation - minimal for cost savings
 resources:
   requests:
-    cpu: 50m
-    memory: 128Mi
+    cpu: 25m
+    memory: 64Mi
   limits:
-    cpu: 200m
-    memory: 256Mi
+    cpu: 100m
+    memory: 128Mi
 
 # Health checks for Nginx
 livenessProbe:
@@ -151,18 +151,13 @@ volumes:
   - name: nginx-run
     emptyDir: {}
 
-# Horizontal Pod Autoscaler
+# Horizontal Pod Autoscaler - disabled for cost savings
 autoscaling:
-  enabled: true
-  minReplicas: 2
-  maxReplicas: 8
-  targetCPUUtilizationPercentage: 80
-  targetMemoryUtilizationPercentage: 85
+  enabled: false
 
-# Pod Disruption Budget
+# Pod Disruption Budget - disabled with 1 replica
 podDisruptionBudget:
-  enabled: true
-  minAvailable: 1
+  enabled: false
 
 # HTTPRoute for Gateway API - main entry point
 httpRoute:
