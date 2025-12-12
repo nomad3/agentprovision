@@ -159,28 +159,17 @@ autoscaling:
 podDisruptionBudget:
   enabled: false
 
-# Disable HTTPRoute - using Ingress instead
+# Disable HTTPRoute and individual Ingress - using shared Ingress
 httpRoute:
   enabled: false
 
-# Ingress for external access
+# Individual Ingress disabled - using shared kubernetes/ingress.yaml
 ingress:
-  enabled: true
-  annotations:
-    kubernetes.io/ingress.global-static-ip-name: ""
-    networking.gke.io/managed-certificates: agentprovision-web-cert
-    kubernetes.io/ingress.class: "gce"
-  hosts:
-    - host: "agentprovision-web.agentprovision.com"
-      paths:
-        - path: /
-          pathType: Prefix
+  enabled: false
 
-# Managed Certificate for HTTPS
+# Managed Certificate disabled - using shared certificate
 managedCertificate:
-  enabled: true
-  domains:
-    - "agentprovision-web.agentprovision.com"
+  enabled: false
 
 # GKE Health Check Policy
 healthCheckPolicy:

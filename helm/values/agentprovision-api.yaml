@@ -77,6 +77,8 @@ service:
   type: ClusterIP
   port: 80
   targetPort: 8000
+  annotations:
+    cloud.google.com/backend-config: '{"default": "agentprovision-api-backend"}'
 
 # ConfigMap with non-sensitive configuration
 configMap:
@@ -192,25 +194,14 @@ healthCheckPolicy:
       port: 8000
       requestPath: /api/v1/
 
-# Disable HTTPRoute - using Ingress instead
+# Disable HTTPRoute and individual Ingress - using shared Ingress
 httpRoute:
   enabled: false
 
-# Ingress for external access
+# Individual Ingress disabled - using shared kubernetes/ingress.yaml
 ingress:
-  enabled: true
-  annotations:
-    kubernetes.io/ingress.global-static-ip-name: ""
-    networking.gke.io/managed-certificates: agentprovision-api-cert
-    kubernetes.io/ingress.class: "gce"
-  hosts:
-    - host: "agentprovision-api.agentprovision.com"
-      paths:
-        - path: /
-          pathType: Prefix
+  enabled: false
 
-# Managed Certificate for HTTPS
+# Managed Certificate disabled - using shared certificate
 managedCertificate:
-  enabled: true
-  domains:
-    - "agentprovision-api.agentprovision.com"
+  enabled: false
