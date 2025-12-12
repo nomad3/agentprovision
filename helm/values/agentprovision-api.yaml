@@ -101,7 +101,7 @@ externalSecret:
   enabled: true
   refreshInterval: 1m
   secretStoreRef:
-    name: gcp-secret-store
+    name: gcpsm-secret-store
     kind: SecretStore
   target:
     name: agentprovision-api-secret
