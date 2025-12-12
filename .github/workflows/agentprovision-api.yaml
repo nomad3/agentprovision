@@ -164,13 +164,16 @@ jobs:
 
       - name: Deploy with Helm
         run: |
+          # Rollback any stuck pending releases
+          helm rollback agentprovision-api -n ${{ env.NAMESPACE }} 2>/dev/null || true
+          # Deploy with atomic to auto-rollback on failure
           helm upgrade --install agentprovision-api \
             ./helm/charts/microservice \
             --namespace ${{ env.NAMESPACE }} \
             --values ./helm/values/agentprovision-api.yaml \
             --set image.repository=${{ env.IMAGE_NAME }} \
             --set image.tag=${{ needs.build-push.outputs.image_tag }} \
-            --wait \
+            --atomic \
             --timeout 10m
 
       - name: Wait for rollout
