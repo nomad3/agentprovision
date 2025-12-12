@@ -225,7 +225,7 @@ async def update_databricks_notebook(
 
     # Update in Databricks if enabled
     if settings.MCP_ENABLED and db_obj.metadata_ and db_obj.metadata_.get("databricks_enabled"):
-        logger.info(f"Syncing notebook changes to Databricks")
+        logger.info("Syncing notebook changes to Databricks")
 
         try:
             mcp = get_mcp_client()
@@ -277,7 +277,7 @@ async def delete_databricks_notebook(
 
     # Delete from Databricks if it exists there
     if settings.MCP_ENABLED and notebook.metadata_ and notebook.metadata_.get("databricks_enabled"):
-        logger.info(f"Deleting notebook from Databricks")
+        logger.info("Deleting notebook from Databricks")
 
         try:
             mcp = get_mcp_client()

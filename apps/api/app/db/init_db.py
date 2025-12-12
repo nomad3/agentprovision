@@ -29,11 +29,9 @@ from app.models.tenant_branding import TenantBranding  # noqa: F401
 from app.models.tenant_features import TenantFeatures  # noqa: F401
 from app.models.tenant_analytics import TenantAnalytics  # noqa: F401
 from app.models.tool import Tool
-from app.models.connector import Connector
 from app.models.deployment import Deployment  # noqa: F401
 from app.models.vector_store import VectorStore  # noqa: F401
 from app.models.agent_kit import AgentKit  # noqa: F401
-from app.models.dataset import Dataset
 from app.models.chat import ChatSession, ChatMessage
 
 from app.core.security import get_password_hash

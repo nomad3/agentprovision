@@ -56,8 +56,8 @@ def seed_llm_models(db: Session):
     anthropic = db.query(LLMProvider).filter(LLMProvider.name == "anthropic").first()
     openai = db.query(LLMProvider).filter(LLMProvider.name == "openai").first()
     deepseek = db.query(LLMProvider).filter(LLMProvider.name == "deepseek").first()
-    google = db.query(LLMProvider).filter(LLMProvider.name == "google").first()
-    mistral = db.query(LLMProvider).filter(LLMProvider.name == "mistral").first()
+    db.query(LLMProvider).filter(LLMProvider.name == "google").first()
+    db.query(LLMProvider).filter(LLMProvider.name == "mistral").first()
 
     models = []
 

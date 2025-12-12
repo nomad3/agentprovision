@@ -52,7 +52,6 @@ def _trigger_databricks_sync(db: Session, dataset: Dataset, tenant_id: uuid.UUID
     # Start Temporal workflow (async, non-blocking)
     try:
         from app.services import workflows
-        from app.workflows.dataset_sync import DatasetSyncWorkflow
 
         # Start workflow asynchronously
         asyncio.create_task(

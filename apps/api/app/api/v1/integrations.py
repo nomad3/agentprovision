@@ -1,4 +1,3 @@
-from typing import Dict, Any
 from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, BackgroundTasks
 from sqlalchemy.orm import Session
 from temporalio.client import Client
@@ -8,7 +7,6 @@ from app.core.config import settings
 from app.models.user import User
 from app.services.chat_import import chat_import_service
 from app.models.chat import ChatSession, ChatMessage
-from app.schemas.chat import ChatSession as ChatSessionSchema
 from app.workflows.knowledge_extraction import KnowledgeExtractionWorkflow
 
 router = APIRouter()

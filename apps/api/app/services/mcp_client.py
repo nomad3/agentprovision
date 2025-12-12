@@ -155,7 +155,7 @@ class MCPClient:
 
         return await self._request(
             "POST",
-            f"/databricks/datasets/upload",
+            "/databricks/datasets/upload",
             params={
                 "tenant_id": tenant_id,
                 "dataset_name": dataset_name,

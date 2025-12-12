@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.models.data_pipeline import DataPipeline
-from app.schemas.data_pipeline import DataPipelineCreate, DataPipelineBase
+from app.schemas.data_pipeline import DataPipelineCreate
 from app.services.mcp_client import get_mcp_client, MCPClientError
 from app.utils.logger import get_logger
 from app.services import data_pipeline as base_pipeline
@@ -317,7 +317,7 @@ async def cancel_pipeline_run(
 
     try:
         mcp = get_mcp_client()
-        result = await mcp.cancel_job_run(run_id)
+        await mcp.cancel_job_run(run_id)
 
         return {
             "run_id": run_id,
@@ -350,7 +350,7 @@ async def delete_databricks_pipeline(
 
     # Delete from Databricks if it exists there
     if settings.MCP_ENABLED and pipeline.metadata_ and pipeline.metadata_.get("databricks_enabled"):
-        logger.info(f"Deleting pipeline job from Databricks")
+        logger.info("Deleting pipeline job from Databricks")
 
         try:
             mcp = get_mcp_client()

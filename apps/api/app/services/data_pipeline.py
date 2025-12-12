@@ -10,7 +10,6 @@ from app.core.config import settings
 from app.workflows.agent_kit_execution import AgentKitExecutionWorkflow
 from app.services import data_source as data_source_service
 import requests
-import json
 
 def get_data_pipeline(db: Session, data_pipeline_id: uuid.UUID) -> DataPipeline | None:
     return db.query(DataPipeline).filter(DataPipeline.id == data_pipeline_id).first()

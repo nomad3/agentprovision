@@ -1,14 +1,10 @@
 """Enhanced chat service integrating orchestration, memory, and multi-LLM."""
-from typing import Optional, Tuple, List, Dict, Any
+from typing import Optional, Tuple, Dict, Any
 import uuid
 
 from sqlalchemy.orm import Session
 
 from app.models.chat import ChatSession, ChatMessage
-from app.models.agent import Agent
-from app.models.agent_group import AgentGroup
-from app.models.agent_task import AgentTask
-from app.models.agent_memory import AgentMemory
 from app.services import chat as base_chat_service
 from app.services.memory.memory_service import MemoryService
 from app.services.llm.router import LLMRouter

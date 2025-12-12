@@ -38,7 +38,7 @@ class LLMRouter:
         else:
             config = self.db.query(LLMConfig).filter(
                 LLMConfig.tenant_id == tenant_id,
-                LLMConfig.is_tenant_default == True
+                LLMConfig.is_tenant_default
             ).first()
 
         if not config:

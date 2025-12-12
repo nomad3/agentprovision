@@ -1,7 +1,7 @@
 """Analytics service for dashboard metrics and insights."""
 from __future__ import annotations
 
-from typing import Dict, Any, List
+from typing import Dict, Any
 from sqlalchemy.orm import Session
 from sqlalchemy import func, desc
 from datetime import datetime, timedelta

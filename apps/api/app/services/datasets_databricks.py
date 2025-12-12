@@ -62,7 +62,7 @@ async def ingest_tabular_with_databricks(
 
     # Step 3: Upload to Databricks if enabled
     if settings.MCP_ENABLED:
-        logger.info(f"MCP enabled, uploading dataset to Databricks")
+        logger.info("MCP enabled, uploading dataset to Databricks")
 
         try:
             mcp = get_mcp_client()
@@ -153,7 +153,7 @@ async def query_dataset_databricks(
     has_databricks = dataset.metadata_ and dataset.metadata_.get("databricks_enabled")
 
     if has_databricks and settings.MCP_ENABLED:
-        logger.info(f"Querying dataset via Databricks")
+        logger.info("Querying dataset via Databricks")
 
         try:
             mcp = get_mcp_client()
@@ -179,7 +179,7 @@ async def query_dataset_databricks(
             # Fall through to local query
 
     # Fallback: Use local parquet file
-    logger.info(f"Querying dataset from local storage")
+    logger.info("Querying dataset from local storage")
     summary = base_datasets.run_summary_query(dataset)
 
     return {
@@ -279,7 +279,7 @@ async def delete_dataset_databricks(
 
     # Delete from Databricks if it exists there
     if dataset.metadata_ and dataset.metadata_.get("databricks_enabled") and settings.MCP_ENABLED:
-        logger.info(f"Deleting dataset from Databricks")
+        logger.info("Deleting dataset from Databricks")
 
         try:
             mcp = get_mcp_client()

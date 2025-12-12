@@ -14,7 +14,6 @@ from app.services import data_source as data_source_service
 from app.core.config import settings
 import requests
 import base64
-import os
 from databricks import sql
 
 logger = get_logger(__name__)

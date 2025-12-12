@@ -12,7 +12,6 @@ from app.schemas.agent_kit import (
     AgentKitCreate,
     AgentKitUpdate,
     AgentKitConfig,
-    AgentKit as AgentKitSchema,
     AgentKitSimulation,
     ResolvedToolBinding,
     ResolvedVectorBinding,

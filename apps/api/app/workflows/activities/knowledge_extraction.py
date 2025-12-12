@@ -2,8 +2,7 @@
 Temporal activities for knowledge extraction from chat sessions
 """
 from temporalio import activity
-from typing import Dict, Any, List
-import uuid
+from typing import Dict, Any
 import json
 
 from app.db.session import SessionLocal

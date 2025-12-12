@@ -38,7 +38,7 @@ async def run_databricks_worker():
 
     logger.info("Starting Databricks Temporal worker...")
     logger.info(f"Temporal address: {settings.TEMPORAL_ADDRESS}")
-    logger.info(f"Task queue: agentprovision-databricks")
+    logger.info("Task queue: agentprovision-databricks")
 
     # Create and run worker
     worker = Worker(

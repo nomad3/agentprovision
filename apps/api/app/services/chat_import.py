@@ -1,9 +1,7 @@
 import json
 import logging
-from typing import List, Dict, Any, Optional
-from datetime import datetime
+from typing import List, Dict, Any
 
-from app.schemas.chat import ChatSessionCreate, ChatMessageCreate
 
 logger = logging.getLogger(__name__)
 

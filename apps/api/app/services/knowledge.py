@@ -6,7 +6,7 @@ import uuid
 from app.models.knowledge_entity import KnowledgeEntity
 from app.models.knowledge_relation import KnowledgeRelation
 from app.schemas.knowledge_entity import KnowledgeEntityCreate, KnowledgeEntityUpdate
-from app.schemas.knowledge_relation import KnowledgeRelationCreate, KnowledgeRelationUpdate
+from app.schemas.knowledge_relation import KnowledgeRelationCreate
 
 
 # Entity operations

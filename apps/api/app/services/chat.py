@@ -370,7 +370,6 @@ def _generate_agentic_response(
         response_text = "\n".join(response_lines)
 
     # Save context (convert UUIDs to strings for JSON serialization)
-    import json
     import math
 
     def make_json_serializable(obj):

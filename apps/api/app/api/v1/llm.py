@@ -1,15 +1,14 @@
 """LLM configuration API routes."""
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from typing import List, Optional
-import uuid
 from pydantic import BaseModel
 
 from app.api.deps import get_db, get_current_user
 from app.models.user import User
 from app.schemas.llm_provider import LLMProvider
 from app.schemas.llm_model import LLMModel
-from app.schemas.llm_config import LLMConfig, LLMConfigCreate, LLMConfigUpdate
+from app.schemas.llm_config import LLMConfig, LLMConfigCreate
 from app.models import llm_provider, llm_model, llm_config
 
 router = APIRouter()
@@ -24,7 +23,7 @@ class ProviderKeyInput(BaseModel):
 def list_providers(db: Session = Depends(get_db)):
     """List all LLM providers."""
     return db.query(llm_provider.LLMProvider).filter(
-        llm_provider.LLMProvider.is_active == True
+        llm_provider.LLMProvider.is_active
     ).all()
 
 
@@ -34,7 +33,7 @@ def list_models(
     db: Session = Depends(get_db)
 ):
     """List available LLM models."""
-    query = db.query(llm_model.LLMModel).filter(llm_model.LLMModel.is_active == True)
+    query = db.query(llm_model.LLMModel).filter(llm_model.LLMModel.is_active)
 
     if provider_name:
         provider = db.query(llm_provider.LLMProvider).filter(
@@ -68,7 +67,7 @@ def create_config(
     if config_in.is_tenant_default:
         existing_default = db.query(llm_config.LLMConfig).filter(
             llm_config.LLMConfig.tenant_id == current_user.tenant_id,
-            llm_config.LLMConfig.is_tenant_default == True
+            llm_config.LLMConfig.is_tenant_default
         ).first()
         if existing_default:
             existing_default.is_tenant_default = False
@@ -103,13 +102,13 @@ def get_provider_status(
     """Get status of all LLM providers for current tenant."""
     # Get all active providers
     providers = db.query(llm_provider.LLMProvider).filter(
-        llm_provider.LLMProvider.is_active == True
+        llm_provider.LLMProvider.is_active
     ).all()
 
     # Get tenant's LLM config to check which providers have keys configured
     config = db.query(llm_config.LLMConfig).filter(
         llm_config.LLMConfig.tenant_id == current_user.tenant_id,
-        llm_config.LLMConfig.is_tenant_default == True
+        llm_config.LLMConfig.is_tenant_default
     ).first()
 
     configured_keys = config.provider_api_keys if config and config.provider_api_keys else {}
@@ -142,7 +141,7 @@ def set_provider_key(
     # Get or create tenant's default config
     config = db.query(llm_config.LLMConfig).filter(
         llm_config.LLMConfig.tenant_id == current_user.tenant_id,
-        llm_config.LLMConfig.is_tenant_default == True
+        llm_config.LLMConfig.is_tenant_default
     ).first()
 
     if not config:

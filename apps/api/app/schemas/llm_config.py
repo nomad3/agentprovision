@@ -1,7 +1,6 @@
 """Pydantic schemas for LLMConfig"""
 from pydantic import BaseModel
 from typing import Optional, Dict, Any
-from decimal import Decimal
 import uuid
 
 
