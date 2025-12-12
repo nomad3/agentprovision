@@ -164,8 +164,12 @@ jobs:
 
       - name: Deploy with Helm
         run: |
-          # Rollback any stuck pending releases
-          helm rollback agentprovision-api -n ${{ env.NAMESPACE }} 2>/dev/null || true
+          # Check if release exists and has a pending status
+          RELEASE_STATUS=$(helm status agentprovision-api -n ${{ env.NAMESPACE }} -o json 2>/dev/null | jq -r '.info.status' || echo "not-found")
+          if [[ "$RELEASE_STATUS" == "pending-install" || "$RELEASE_STATUS" == "pending-upgrade" || "$RELEASE_STATUS" == "pending-rollback" ]]; then
+            echo "Found stuck release in status: $RELEASE_STATUS. Uninstalling..."
+            helm uninstall agentprovision-api -n ${{ env.NAMESPACE }} --wait || true
+          fi
           # Deploy with atomic to auto-rollback on failure
           helm upgrade --install agentprovision-api \
             ./helm/charts/microservice \
