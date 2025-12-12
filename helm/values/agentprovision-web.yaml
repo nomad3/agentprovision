@@ -3,7 +3,7 @@ nameOverride: "agentprovision-web"
 fullnameOverride: "agentprovision-web"
 
 image:
-  repository: gcr.io/YOUR_GCP_PROJECT/agentprovision-web
+  repository: gcr.io/ai-agency-479516/agentprovision-web
   tag: latest
   pullPolicy: IfNotPresent
 

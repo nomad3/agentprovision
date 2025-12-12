@@ -3,7 +3,7 @@ nameOverride: "agentprovision-worker"
 fullnameOverride: "agentprovision-worker"
 
 image:
-  repository: gcr.io/YOUR_GCP_PROJECT/agentprovision-api
+  repository: gcr.io/ai-agency-479516/agentprovision-api
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -21,7 +21,7 @@ container:
 serviceAccount:
   create: true
   annotations:
-    iam.gke.io/gcp-service-account: agentprovision-worker@YOUR_GCP_PROJECT.iam.gserviceaccount.com
+    iam.gke.io/gcp-service-account: agentprovision-worker@ai-agency-479516.iam.gserviceaccount.com
 
 # Pod security
 podSecurityContext:

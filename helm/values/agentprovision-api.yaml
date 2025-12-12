@@ -3,7 +3,7 @@ nameOverride: "agentprovision-api"
 fullnameOverride: "agentprovision-api"
 
 image:
-  repository: gcr.io/YOUR_GCP_PROJECT/agentprovision-api
+  repository: gcr.io/ai-agency-479516/agentprovision-api
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -16,7 +16,7 @@ container:
 serviceAccount:
   create: true
   annotations:
-    iam.gke.io/gcp-service-account: agentprovision-api@YOUR_GCP_PROJECT.iam.gserviceaccount.com
+    iam.gke.io/gcp-service-account: workload-identity-sa@ai-agency-479516.iam.gserviceaccount.com
 
 # Pod security - Python app runs as non-root
 podSecurityContext:
@@ -167,21 +167,24 @@ initContainers:
         drop:
           - ALL
 
-# Cloud SQL Proxy sidecar (if using Cloud SQL)
-# extraContainers:
-#   - name: cloud-sql-proxy
-#     image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.8.0
-#     args:
-#       - "--structured-logs"
-#       - "--port=5432"
-#       - "YOUR_PROJECT:YOUR_REGION:YOUR_INSTANCE"
-#     securityContext:
-#       runAsNonRoot: true
-#       allowPrivilegeEscalation: false
-#     resources:
-#       requests:
-#         cpu: 100m
-#         memory: 256Mi
+# Cloud SQL Proxy sidecar for secure database connection
+extraContainers:
+  - name: cloud-sql-proxy
+    image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.8.0
+    args:
+      - "--structured-logs"
+      - "--port=5432"
+      - "ai-agency-479516:us-central1:dev-postgres-instance"
+    securityContext:
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
 
 # GKE Health Check Policy
 healthCheckPolicy:
