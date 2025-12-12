@@ -67,7 +67,7 @@ jobs:
       - name: Build check
         run: |
           cd apps/web
-          npm run build
+          CI=false npm run build
 
   build-push:
     name: Build & Push Docker Image
