@@ -134,13 +134,11 @@ nginxConfig:
         }
     }
 
-# Temporary directories for Nginx
+# Temporary directories for Nginx (only /tmp - cache and run are in volumeMounts)
 tmpDirs:
   - /tmp
-  - /var/cache/nginx
-  - /var/run
 
-# Extra volume mounts for Nginx
+# Extra volume mounts for Nginx writable directories
 volumeMounts:
   - name: nginx-cache
     mountPath: /var/cache/nginx
