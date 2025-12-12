@@ -168,6 +168,7 @@ extraContainers:
     image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.8.0
     args:
       - "--structured-logs"
+      - "--private-ip"
       - "--port=5432"
       - "ai-agency-479516:us-central1:dev-postgres-instance"
     securityContext:
