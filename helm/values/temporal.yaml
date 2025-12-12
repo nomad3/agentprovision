@@ -1,0 +1,105 @@
+# Temporal Server - Workflow Orchestration Engine
+# Note: For production, consider using Temporal Cloud or a managed Temporal deployment
+nameOverride: "temporal"
+fullnameOverride: "temporal"
+
+image:
+  repository: temporalio/auto-setup
+  tag: "1.22.2"
+  pullPolicy: IfNotPresent
+
+# Single replica for development, increase for production
+replicaCount: 1
+
+container:
+  port: 7233
+
+# Service account
+serviceAccount:
+  create: true
+  annotations: {}
+
+# Pod security - Temporal requires specific permissions
+podSecurityContext:
+  runAsNonRoot: false  # Temporal auto-setup needs root
+  fsGroup: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false  # Temporal writes to filesystem
+  capabilities:
+    drop:
+      - ALL
+
+# Resource allocation
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: 2000m
+    memory: 2Gi
+
+# Health checks - Temporal gRPC endpoint
+livenessProbe:
+  enabled: false  # Temporal doesn't have HTTP health endpoint
+
+readinessProbe:
+  enabled: false
+
+# Temporal services
+service:
+  type: ClusterIP
+  port: 7233
+  targetPort: 7233
+
+# ConfigMap with Temporal configuration
+configMap:
+  enabled: true
+  data:
+    DB: "postgresql"
+    DB_PORT: "5432"
+    POSTGRES_USER: "postgres"
+    POSTGRES_DB: "temporal"
+    DYNAMIC_CONFIG_FILE_PATH: "/etc/temporal/config/dynamicconfig/development-sql.yaml"
+
+# External Secrets for database connection
+externalSecret:
+  enabled: true
+  refreshInterval: 1h
+  secretStoreRef:
+    name: gcp-secret-store
+    kind: SecretStore
+  target:
+    name: temporal-secret
+    creationPolicy: Owner
+  data:
+    - secretKey: POSTGRES_PWD
+      remoteRef:
+        key: temporal-postgres-password
+    - secretKey: POSTGRES_SEEDS
+      remoteRef:
+        key: temporal-postgres-host
+
+# Environment variables
+env:
+  - name: SKIP_SCHEMA_SETUP
+    value: "false"
+  - name: SKIP_DEFAULT_NAMESPACE_CREATION
+    value: "false"
+
+# No autoscaling for Temporal
+autoscaling:
+  enabled: false
+
+# Persistent storage for Temporal
+persistence:
+  enabled: false  # Temporal stores state in PostgreSQL
+
+# Temporary directories
+tmpDirs:
+  - /tmp
+
+# No HTTPRoute - internal service only
+httpRoute:
+  enabled: false

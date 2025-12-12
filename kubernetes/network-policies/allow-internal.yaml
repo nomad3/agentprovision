@@ -1,0 +1,177 @@
+---
+# Allow traffic from Gateway to Web service
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-gateway-to-web
+  namespace: prod
+  labels:
+    app.kubernetes.io/name: agentprovision
+    app.kubernetes.io/component: network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: agentprovision-web
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: gateway-system
+      ports:
+        - protocol: TCP
+          port: 80
+---
+# Allow traffic from Gateway to API service
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-gateway-to-api
+  namespace: prod
+  labels:
+    app.kubernetes.io/name: agentprovision
+    app.kubernetes.io/component: network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: agentprovision-api
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: gateway-system
+      ports:
+        - protocol: TCP
+          port: 8000
+---
+# Allow traffic from Web to API (for Nginx proxy)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-web-to-api
+  namespace: prod
+  labels:
+    app.kubernetes.io/name: agentprovision
+    app.kubernetes.io/component: network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: agentprovision-api
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: agentprovision-web
+      ports:
+        - protocol: TCP
+          port: 8000
+---
+# Allow traffic from API to MCP Server
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-api-to-mcp
+  namespace: prod
+  labels:
+    app.kubernetes.io/name: agentprovision
+    app.kubernetes.io/component: network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: mcp-server
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: agentprovision-api
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: agentprovision-worker
+      ports:
+        - protocol: TCP
+          port: 8000
+---
+# Allow traffic from API/Worker to Temporal
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-to-temporal
+  namespace: prod
+  labels:
+    app.kubernetes.io/name: agentprovision
+    app.kubernetes.io/component: network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: temporal
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: agentprovision-api
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: agentprovision-worker
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: temporal-web
+      ports:
+        - protocol: TCP
+          port: 7233
+---
+# Allow all prod namespace pods to access PostgreSQL in database namespace
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-prod-to-postgresql
+  namespace: database
+  labels:
+    app.kubernetes.io/name: agentprovision
+    app.kubernetes.io/component: network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: postgresql
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: prod
+      ports:
+        - protocol: TCP
+          port: 5432
+---
+# Allow all prod namespace pods to access Redis
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-to-redis
+  namespace: prod
+  labels:
+    app.kubernetes.io/name: agentprovision
+    app.kubernetes.io/component: network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: redis
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: agentprovision-api
+      ports:
+        - protocol: TCP
+          port: 6379

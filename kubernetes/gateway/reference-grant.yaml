@@ -1,0 +1,33 @@
+---
+# Reference Grant - allows HTTPRoutes in prod namespace to reference Gateway
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-prod-routes
+  namespace: gateway-system
+  labels:
+    app.kubernetes.io/name: agentprovision
+    app.kubernetes.io/component: gateway
+spec:
+  from:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: prod
+  to:
+    - group: ""
+      kind: Service
+---
+# Reference Grant - allows HTTPRoutes in database namespace
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-database-routes
+  namespace: gateway-system
+spec:
+  from:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: database
+  to:
+    - group: ""
+      kind: Service

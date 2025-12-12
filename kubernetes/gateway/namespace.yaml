@@ -1,0 +1,10 @@
+---
+# Gateway system namespace for GKE Gateway API resources
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gateway-system
+  labels:
+    app.kubernetes.io/name: agentprovision
+    app.kubernetes.io/component: gateway
+    environment: production

@@ -1,0 +1,109 @@
+# PostgreSQL Database - Primary Data Store
+# Note: For production, consider using Cloud SQL or a managed PostgreSQL service
+nameOverride: "postgresql"
+fullnameOverride: "postgresql"
+
+image:
+  repository: postgres
+  tag: "15-alpine"
+  pullPolicy: IfNotPresent
+
+# Single replica - databases should not be scaled horizontally
+replicaCount: 1
+
+container:
+  port: 5432
+
+# Service account
+serviceAccount:
+  create: true
+  annotations: {}
+
+# Pod security - PostgreSQL runs as postgres user (UID 70 in Alpine)
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 70
+  runAsGroup: 70
+  fsGroup: 70
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false  # PostgreSQL writes to data directory
+  capabilities:
+    drop:
+      - ALL
+
+# Resource allocation
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 2Gi
+
+# Health checks - PostgreSQL readiness
+livenessProbe:
+  enabled: false  # Use TCP probe instead
+
+readinessProbe:
+  enabled: false  # Custom TCP probe below
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 5432
+  targetPort: 5432
+
+# ConfigMap with PostgreSQL configuration
+configMap:
+  enabled: true
+  data:
+    POSTGRES_DB: "agentprovision"
+    POSTGRES_USER: "postgres"
+
+# External Secrets for database password
+externalSecret:
+  enabled: true
+  refreshInterval: 1h
+  secretStoreRef:
+    name: gcp-secret-store
+    kind: SecretStore
+  target:
+    name: postgresql-secret
+    creationPolicy: Owner
+  data:
+    - secretKey: POSTGRES_PASSWORD
+      remoteRef:
+        key: agentprovision-postgres-password
+
+# Persistent storage for PostgreSQL data
+persistence:
+  enabled: true
+  storageClass: premium-rwo  # SSD for database performance
+  accessModes:
+    - ReadWriteOnce
+  size: 100Gi
+  annotations: {}
+
+# Custom volume mounts for PostgreSQL
+volumeMounts:
+  - name: data
+    mountPath: /var/lib/postgresql/data
+    subPath: pgdata
+
+# Temporary directories
+tmpDirs:
+  - /tmp
+
+# No autoscaling for databases
+autoscaling:
+  enabled: false
+
+# No HTTPRoute - internal service only
+httpRoute:
+  enabled: false
+
+# Database-specific pod annotations
+podAnnotations:
+  backup.velero.io/backup-volumes: data

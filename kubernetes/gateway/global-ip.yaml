@@ -1,0 +1,13 @@
+# Note: The global IP address should be created via gcloud or Terraform
+# This file documents the expected resource name
+#
+# Create the global IP address with:
+# gcloud compute addresses create agentprovision-gateway-ip --global --project=YOUR_PROJECT
+#
+# Then configure DNS A records for:
+# - agentprovision.com -> <IP_ADDRESS>
+# - www.agentprovision.com -> <IP_ADDRESS>
+# - api.agentprovision.com -> <IP_ADDRESS>
+#
+# Verify with:
+# gcloud compute addresses describe agentprovision-gateway-ip --global --project=YOUR_PROJECT

@@ -1,0 +1,211 @@
+# AgentProvision API Service - FastAPI Backend
+nameOverride: "agentprovision-api"
+fullnameOverride: "agentprovision-api"
+
+image:
+  repository: gcr.io/YOUR_GCP_PROJECT/agentprovision-api
+  tag: latest
+  pullPolicy: IfNotPresent
+
+replicaCount: 2
+
+container:
+  port: 8000
+
+# Service account with Workload Identity for GCP services
+serviceAccount:
+  create: true
+  annotations:
+    iam.gke.io/gcp-service-account: agentprovision-api@YOUR_GCP_PROJECT.iam.gserviceaccount.com
+
+# Pod security - Python app runs as non-root
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+# Resource allocation
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+# Health checks for FastAPI
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /api/v1/
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /api/v1/
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+startupProbe:
+  enabled: true
+  httpGet:
+    path: /api/v1/
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 30
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+# ConfigMap with non-sensitive configuration
+configMap:
+  enabled: true
+  data:
+    ALGORITHM: "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: "30"
+    TEMPORAL_NAMESPACE: "default"
+    DEFAULT_WORKFLOW_TIMEOUT_SECONDS: "600"
+    MCP_ENABLED: "true"
+    DATABRICKS_SYNC_ENABLED: "true"
+    DATABRICKS_AUTO_SYNC: "true"
+    DATABRICKS_RETRY_ATTEMPTS: "3"
+    DATABRICKS_RETRY_INTERVAL: "300"
+    LLM_MODEL: "claude-3-haiku-20240307"
+    LLM_MAX_TOKENS: "4096"
+    LLM_TEMPERATURE: "0.7"
+    DATA_STORAGE_PATH: "/app/storage"
+
+# External Secrets - pulls from GCP Secret Manager
+externalSecret:
+  enabled: true
+  refreshInterval: 1m
+  secretStoreRef:
+    name: gcp-secret-store
+    kind: SecretStore
+  target:
+    name: agentprovision-api-secret
+    creationPolicy: Owner
+  data:
+    - secretKey: SECRET_KEY
+      remoteRef:
+        key: agentprovision-secret-key
+    - secretKey: DATABASE_URL
+      remoteRef:
+        key: agentprovision-database-url
+    - secretKey: ANTHROPIC_API_KEY
+      remoteRef:
+        key: agentprovision-anthropic-api-key
+    - secretKey: MCP_API_KEY
+      remoteRef:
+        key: agentprovision-mcp-api-key
+    - secretKey: API_INTERNAL_KEY
+      remoteRef:
+        key: agentprovision-api-internal-key
+
+# Additional environment variables
+env:
+  - name: TEMPORAL_ADDRESS
+    value: "temporal:7233"
+  - name: MCP_SERVER_URL
+    value: "http://mcp-server:8000"
+
+# Horizontal Pod Autoscaler
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+# Pod Disruption Budget for high availability
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+# Persistent storage for datasets
+persistence:
+  enabled: true
+  storageClass: standard-rwo
+  accessModes:
+    - ReadWriteOnce
+  size: 50Gi
+
+# Temporary directories
+tmpDirs:
+  - /tmp
+
+# Init container to wait for dependencies
+initContainers:
+  - name: wait-for-db
+    image: busybox:1.36
+    command: ['sh', '-c', 'echo "Waiting for database..."; sleep 10']
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+          - ALL
+
+# Cloud SQL Proxy sidecar (if using Cloud SQL)
+# extraContainers:
+#   - name: cloud-sql-proxy
+#     image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.8.0
+#     args:
+#       - "--structured-logs"
+#       - "--port=5432"
+#       - "YOUR_PROJECT:YOUR_REGION:YOUR_INSTANCE"
+#     securityContext:
+#       runAsNonRoot: true
+#       allowPrivilegeEscalation: false
+#     resources:
+#       requests:
+#         cpu: 100m
+#         memory: 256Mi
+
+# GKE Health Check Policy
+healthCheckPolicy:
+  enabled: true
+  config:
+    type: HTTP
+    httpHealthCheck:
+      port: 8000
+      requestPath: /api/v1/
+
+# HTTPRoute for Gateway API
+httpRoute:
+  enabled: true
+  parentRefs:
+    - name: agentprovision-gateway
+      namespace: gateway-system
+  hostnames:
+    - "api.agentprovision.com"
+    - "agentprovision.com"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api
+      backendRefs:
+        - name: agentprovision-api
+          port: 80

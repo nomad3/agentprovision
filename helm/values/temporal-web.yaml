@@ -1,0 +1,104 @@
+# Temporal Web UI - Admin Dashboard for Workflows
+nameOverride: "temporal-web"
+fullnameOverride: "temporal-web"
+
+image:
+  repository: temporalio/ui
+  tag: "2.21.0"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+container:
+  port: 8080
+
+# Service account
+serviceAccount:
+  create: true
+  annotations: {}
+
+# Pod security
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+# Resource allocation - UI is lightweight
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+# Health checks
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+# ConfigMap with Temporal UI configuration
+configMap:
+  enabled: true
+  data:
+    TEMPORAL_ADDRESS: "temporal:7233"
+    TEMPORAL_CORS_ORIGINS: "http://localhost:3000"
+
+# No secrets needed for UI
+externalSecret:
+  enabled: false
+
+# Temporary directories
+tmpDirs:
+  - /tmp
+
+# No autoscaling
+autoscaling:
+  enabled: false
+
+# HTTPRoute for admin access (optional - only enable if needed)
+httpRoute:
+  enabled: false
+  # parentRefs:
+  #   - name: agentprovision-gateway
+  #     namespace: gateway-system
+  # hostnames:
+  #   - "temporal.agentprovision.com"
+  # rules:
+  #   - matches:
+  #       - path:
+  #           type: PathPrefix
+  #           value: /
+  #     backendRefs:
+  #       - name: temporal-web
+  #         port: 80

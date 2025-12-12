@@ -1,0 +1,132 @@
+# AgentProvision Databricks Worker - Temporal Worker for Background Jobs
+nameOverride: "agentprovision-worker"
+fullnameOverride: "agentprovision-worker"
+
+image:
+  repository: gcr.io/YOUR_GCP_PROJECT/agentprovision-api
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# Single replica - Temporal handles scaling
+replicaCount: 1
+
+container:
+  port: 8000
+  command:
+    - python
+    - -m
+    - app.workers.databricks_worker
+
+# Service account with Workload Identity
+serviceAccount:
+  create: true
+  annotations:
+    iam.gke.io/gcp-service-account: agentprovision-worker@YOUR_GCP_PROJECT.iam.gserviceaccount.com
+
+# Pod security
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+# Resource allocation
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# Disable HTTP probes - worker doesn't serve HTTP
+livenessProbe:
+  enabled: false
+
+readinessProbe:
+  enabled: false
+
+# Service not needed for worker
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+# ConfigMap with non-sensitive configuration
+configMap:
+  enabled: true
+  data:
+    TEMPORAL_NAMESPACE: "default"
+    DEFAULT_WORKFLOW_TIMEOUT_SECONDS: "600"
+    DATABRICKS_SYNC_ENABLED: "true"
+    DATABRICKS_AUTO_SYNC: "true"
+    DATABRICKS_RETRY_ATTEMPTS: "3"
+    DATABRICKS_RETRY_INTERVAL: "300"
+    DATA_STORAGE_PATH: "/app/storage"
+
+# External Secrets - same as API service
+externalSecret:
+  enabled: true
+  refreshInterval: 1m
+  secretStoreRef:
+    name: gcp-secret-store
+    kind: SecretStore
+  target:
+    name: agentprovision-worker-secret
+    creationPolicy: Owner
+  data:
+    - secretKey: DATABASE_URL
+      remoteRef:
+        key: agentprovision-database-url
+    - secretKey: MCP_API_KEY
+      remoteRef:
+        key: agentprovision-mcp-api-key
+    - secretKey: API_INTERNAL_KEY
+      remoteRef:
+        key: agentprovision-api-internal-key
+
+# Additional environment variables
+env:
+  - name: TEMPORAL_ADDRESS
+    value: "temporal:7233"
+  - name: MCP_SERVER_URL
+    value: "http://mcp-server:8000"
+
+# No autoscaling - single instance
+autoscaling:
+  enabled: false
+
+# Persistent storage for datasets (shared with API)
+persistence:
+  enabled: true
+  storageClass: standard-rwo
+  accessModes:
+    - ReadWriteOnce
+  size: 50Gi
+
+# Temporary directories
+tmpDirs:
+  - /tmp
+
+# Init container to wait for Temporal
+initContainers:
+  - name: wait-for-temporal
+    image: busybox:1.36
+    command: ['sh', '-c', 'echo "Waiting for Temporal..."; sleep 15']
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+          - ALL
+
+# No HTTPRoute - internal service only
+httpRoute:
+  enabled: false

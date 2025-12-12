@@ -1,0 +1,60 @@
+---
+# GKE Gateway - L7 Global External Managed Load Balancer
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: agentprovision-gateway
+  namespace: gateway-system
+  labels:
+    app.kubernetes.io/name: agentprovision
+    app.kubernetes.io/component: gateway
+  annotations:
+    # Link to GCP Managed Certificate
+    networking.gke.io/certmap: agentprovision-certmap
+spec:
+  # GKE L7 Global External Managed Gateway Class
+  gatewayClassName: gke-l7-global-external-managed
+  listeners:
+    # HTTPS listener (primary)
+    - name: https
+      protocol: HTTPS
+      port: 443
+      tls:
+        mode: Terminate
+        # Certificate handled by GCP Certificate Manager
+        options: {}
+      allowedRoutes:
+        namespaces:
+          from: All
+    # HTTP listener (redirect to HTTPS)
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: All
+  # IP address allocation
+  addresses:
+    - type: NamedAddress
+      value: agentprovision-gateway-ip
+---
+# HTTP to HTTPS redirect route
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: http-to-https-redirect
+  namespace: gateway-system
+  labels:
+    app.kubernetes.io/name: agentprovision
+    app.kubernetes.io/component: gateway
+spec:
+  parentRefs:
+    - name: agentprovision-gateway
+      namespace: gateway-system
+      sectionName: http
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301

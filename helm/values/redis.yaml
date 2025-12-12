@@ -1,0 +1,96 @@
+# Redis - Caching and Session Store
+nameOverride: "redis"
+fullnameOverride: "redis"
+
+image:
+  repository: redis
+  tag: "7-alpine"
+  pullPolicy: IfNotPresent
+
+# Single replica for now, can use Redis Cluster for HA
+replicaCount: 1
+
+container:
+  port: 6379
+  args:
+    - redis-server
+    - --appendonly
+    - "yes"
+    - --maxmemory
+    - 256mb
+    - --maxmemory-policy
+    - allkeys-lru
+
+# Service account
+serviceAccount:
+  create: true
+  annotations: {}
+
+# Pod security - Redis runs as redis user (UID 999)
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 999
+  runAsGroup: 999
+  fsGroup: 999
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+# Resource allocation
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 512Mi
+
+# Health checks - Redis PING command
+livenessProbe:
+  enabled: false  # TCP probe is sufficient
+
+readinessProbe:
+  enabled: false
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 6379
+  targetPort: 6379
+
+# No ConfigMap needed - using args
+configMap:
+  enabled: false
+
+# No secrets needed for basic Redis
+externalSecret:
+  enabled: false
+
+# Persistent storage for Redis data
+persistence:
+  enabled: true
+  storageClass: standard-rwo
+  accessModes:
+    - ReadWriteOnce
+  size: 10Gi
+
+# Temporary directories
+tmpDirs:
+  - /tmp
+
+# Volume mounts for Redis data
+volumeMounts:
+  - name: data
+    mountPath: /data
+
+# No autoscaling for Redis
+autoscaling:
+  enabled: false
+
+# No HTTPRoute - internal service only
+httpRoute:
+  enabled: false

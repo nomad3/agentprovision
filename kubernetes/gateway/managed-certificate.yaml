@@ -1,0 +1,16 @@
+---
+# GCP Certificate Manager Certificate Map
+# This links to certificates managed in GCP Certificate Manager
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: agentprovision-cert
+  namespace: gateway-system
+  labels:
+    app.kubernetes.io/name: agentprovision
+    app.kubernetes.io/component: gateway
+spec:
+  domains:
+    - agentprovision.com
+    - www.agentprovision.com
+    - api.agentprovision.com
