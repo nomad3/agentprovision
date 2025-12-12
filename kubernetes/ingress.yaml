@@ -21,12 +21,12 @@ metadata:
   name: agentprovision-ingress
   namespace: prod
   annotations:
+    kubernetes.io/ingress.class: gce
     networking.gke.io/managed-certificates: agentprovision-cert
   labels:
     app.kubernetes.io/name: agentprovision
     app.kubernetes.io/component: ingress
 spec:
-  ingressClassName: gce
   rules:
     # Main domain - Web frontend serves root, API serves /api
     - host: "agentprovision.com"
