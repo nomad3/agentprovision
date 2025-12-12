@@ -50,7 +50,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd apps/web
-          npm ci
+          npm install
 
       - name: Lint
         run: |
