@@ -61,8 +61,11 @@ jobs:
       - name: Get latest API image tag
         id: get-tag
         run: |
-          # Get the latest tag from the API deployment
-          TAG=$(kubectl get deployment agentprovision-api -n ${{ env.NAMESPACE }} -o jsonpath='{.spec.template.spec.containers[0].image}' | cut -d':' -f2)
+          # Get the latest tag from the API deployment, default to 'latest' if not found
+          TAG=$(kubectl get deployment agentprovision-api -n ${{ env.NAMESPACE }} -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null | cut -d':' -f2 || echo "latest")
+          if [ -z "$TAG" ] || [ "$TAG" = "" ]; then
+            TAG="latest"
+          fi
           echo "Using image tag: $TAG"
           echo "image_tag=$TAG" >> $GITHUB_OUTPUT
 
