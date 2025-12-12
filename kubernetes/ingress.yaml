@@ -6,13 +6,12 @@ metadata:
   namespace: prod
 spec:
   healthCheck:
-    checkIntervalSec: 30
+    checkIntervalSec: 15
     timeoutSec: 5
     healthyThreshold: 1
-    unhealthyThreshold: 3
+    unhealthyThreshold: 2
     type: HTTP
     requestPath: /api/v1/
-    port: 8000
 ---
 # Combined Ingress for AgentProvision
 # Routes traffic to both API and Web services using a single Load Balancer IP
