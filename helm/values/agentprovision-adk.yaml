@@ -1,0 +1,155 @@
+# AgentProvision ADK Service - Google ADK Agent Server
+nameOverride: "agentprovision-adk"
+fullnameOverride: "agentprovision-adk"
+
+image:
+  repository: gcr.io/ai-agency-479516/agentprovision-adk
+  tag: latest
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+container:
+  port: 8080
+  command: ["adk", "api_server", "--port", "8080", "--host", "0.0.0.0"]
+
+# Service account with Workload Identity for GCP services
+serviceAccount:
+  create: true
+  annotations:
+    iam.gke.io/gcp-service-account: dev-backend-app@ai-agency-479516.iam.gserviceaccount.com
+
+# Pod security - Python app runs as non-root
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false  # ADK needs write access
+  capabilities:
+    drop:
+      - ALL
+
+# Resource allocation
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+# Health checks for ADK API server
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /list-apps
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /list-apps
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+startupProbe:
+  enabled: true
+  httpGet:
+    path: /list-apps
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 30
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+# ConfigMap with non-sensitive configuration
+configMap:
+  enabled: true
+  data:
+    GOOGLE_GENAI_USE_VERTEXAI: "TRUE"
+    ADK_MODEL: "gemini-2.5-flash"
+    MCP_SERVER_URL: "http://mcp-server:8000"
+    DATABASE_HOST: "localhost"
+    DATABASE_PORT: "5432"
+    DATABASE_NAME: "agentprovision"
+    VERTEX_PROJECT: "ai-agency-479516"
+    VERTEX_LOCATION: "us-central1"
+    EMBEDDING_MODEL: "text-embedding-005"
+
+# External Secrets - pulls from GCP Secret Manager
+externalSecret:
+  enabled: true
+  refreshInterval: 1m
+  secretStoreRef:
+    name: gcpsm-secret-store
+    kind: SecretStore
+  target:
+    name: agentprovision-adk-secret
+    creationPolicy: Owner
+  data:
+    - secretKey: SECRET_KEY
+      remoteRef:
+        key: agentprovision-secret-key
+    - secretKey: DATABASE_URL
+      remoteRef:
+        key: agentprovision-database-url
+    - secretKey: GOOGLE_API_KEY
+      remoteRef:
+        key: agentprovision-google-api-key
+    - secretKey: MCP_API_KEY
+      remoteRef:
+        key: agentprovision-mcp-api-key
+
+# Cloud SQL Proxy sidecar for secure database connection
+extraContainers:
+  - name: cloud-sql-proxy
+    image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.8.0
+    args:
+      - "--private-ip"
+      - "--structured-logs"
+      - "--port=5432"
+      - "--http-port=9090"
+      - "ai-agency-479516:us-central1:dev-postgres-instance"
+    securityContext:
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+
+# Temporary directories
+tmpDirs:
+  - /tmp
+
+# Horizontal Pod Autoscaler - disabled for cost savings
+autoscaling:
+  enabled: false
+
+# Pod Disruption Budget - disabled with 1 replica
+podDisruptionBudget:
+  enabled: false
+
+# Disable individual Ingress - using shared kubernetes/ingress.yaml
+ingress:
+  enabled: false
