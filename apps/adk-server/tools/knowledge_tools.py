@@ -1,0 +1,387 @@
+"""Knowledge graph and memory tools.
+
+Manages entities, relationships, and semantic search.
+"""
+from google.adk.tools import tool
+from typing import Optional
+import uuid
+
+from services.knowledge_graph import get_knowledge_service
+
+
+@tool
+async def create_entity(
+    name: str,
+    entity_type: str,
+    tenant_id: str,
+    properties: Optional[dict] = None,
+    description: Optional[str] = None,
+    aliases: Optional[list[str]] = None,
+    confidence: float = 1.0,
+) -> dict:
+    """Create a new knowledge entity.
+
+    Args:
+        name: Entity name
+        entity_type: Type (customer, product, organization, person, etc.)
+        tenant_id: Tenant context
+        properties: Additional properties as JSON
+        description: Human-readable description
+        aliases: Alternative names
+        confidence: Confidence score 0-1
+
+    Returns:
+        Created entity with ID
+    """
+    kg = get_knowledge_service()
+    return await kg.create_entity(
+        name=name,
+        entity_type=entity_type,
+        tenant_id=tenant_id,
+        properties=properties or {},
+        description=description,
+        aliases=aliases or [],
+        confidence=confidence,
+    )
+
+
+@tool
+async def find_entities(
+    query: str,
+    tenant_id: str,
+    entity_types: Optional[list[str]] = None,
+    limit: int = 10,
+    min_confidence: float = 0.5,
+) -> list[dict]:
+    """Semantic search for entities by name, description, or properties.
+
+    Args:
+        query: Search query
+        tenant_id: Tenant context
+        entity_types: Filter by types
+        limit: Max results
+        min_confidence: Minimum confidence threshold
+
+    Returns:
+        Matching entities ranked by relevance
+    """
+    kg = get_knowledge_service()
+    return await kg.find_entities(
+        query=query,
+        tenant_id=tenant_id,
+        entity_types=entity_types,
+        limit=limit,
+        min_confidence=min_confidence,
+    )
+
+
+@tool
+async def get_entity(
+    entity_id: str,
+    include_relations: bool = True,
+) -> dict:
+    """Get entity with all its relationships.
+
+    Args:
+        entity_id: Entity UUID
+        include_relations: Whether to include relationships
+
+    Returns:
+        Entity with properties and optionally relationships
+    """
+    kg = get_knowledge_service()
+    return await kg.get_entity(
+        entity_id=entity_id,
+        include_relations=include_relations,
+    )
+
+
+@tool
+async def update_entity(
+    entity_id: str,
+    updates: dict,
+    reason: Optional[str] = None,
+) -> dict:
+    """Update entity properties (creates version history).
+
+    Args:
+        entity_id: Entity UUID
+        updates: Properties to update
+        reason: Reason for change (for audit)
+
+    Returns:
+        Updated entity
+    """
+    kg = get_knowledge_service()
+    return await kg.update_entity(
+        entity_id=entity_id,
+        updates=updates,
+        reason=reason,
+    )
+
+
+@tool
+async def merge_entities(
+    primary_entity_id: str,
+    duplicate_entity_ids: list[str],
+    reason: str,
+) -> dict:
+    """Merge duplicate entities, preserving relationships.
+
+    Args:
+        primary_entity_id: Entity to keep
+        duplicate_entity_ids: Entities to merge into primary
+        reason: Reason for merge
+
+    Returns:
+        Merged entity
+    """
+    kg = get_knowledge_service()
+    return await kg.merge_entities(
+        primary_entity_id=primary_entity_id,
+        duplicate_entity_ids=duplicate_entity_ids,
+        reason=reason,
+    )
+
+
+@tool
+async def create_relation(
+    source_entity_id: str,
+    target_entity_id: str,
+    relation_type: str,
+    tenant_id: str,
+    properties: Optional[dict] = None,
+    strength: float = 1.0,
+    evidence: Optional[str] = None,
+    bidirectional: bool = False,
+) -> dict:
+    """Create relationship between entities.
+
+    Args:
+        source_entity_id: Source entity UUID
+        target_entity_id: Target entity UUID
+        relation_type: Type (purchased, works_at, derived_from, etc.)
+        tenant_id: Tenant context
+        properties: Additional properties
+        strength: Relationship strength 0-1
+        evidence: Supporting context
+        bidirectional: If true, creates both directions
+
+    Returns:
+        Created relationship
+    """
+    kg = get_knowledge_service()
+    return await kg.create_relation(
+        source_entity_id=source_entity_id,
+        target_entity_id=target_entity_id,
+        relation_type=relation_type,
+        tenant_id=tenant_id,
+        properties=properties or {},
+        strength=strength,
+        evidence=evidence,
+        bidirectional=bidirectional,
+    )
+
+
+@tool
+async def find_relations(
+    tenant_id: str,
+    entity_id: Optional[str] = None,
+    relation_types: Optional[list[str]] = None,
+    direction: str = "both",
+    min_strength: float = 0.0,
+) -> list[dict]:
+    """Find relationships for an entity.
+
+    Args:
+        tenant_id: Tenant context
+        entity_id: Entity to find relations for (optional)
+        relation_types: Filter by types
+        direction: 'outgoing', 'incoming', or 'both'
+        min_strength: Minimum strength threshold
+
+    Returns:
+        List of relationships
+    """
+    kg = get_knowledge_service()
+    return await kg.find_relations(
+        tenant_id=tenant_id,
+        entity_id=entity_id,
+        relation_types=relation_types,
+        direction=direction,
+        min_strength=min_strength,
+    )
+
+
+@tool
+async def get_path(
+    source_entity_id: str,
+    target_entity_id: str,
+    max_depth: int = 4,
+    relation_types: Optional[list[str]] = None,
+) -> list[dict]:
+    """Find shortest path between two entities through relationships.
+
+    Args:
+        source_entity_id: Starting entity
+        target_entity_id: Ending entity
+        max_depth: Maximum hops
+        relation_types: Filter by relationship types
+
+    Returns:
+        Path as list of entities and relationships
+    """
+    kg = get_knowledge_service()
+    return await kg.get_path(
+        source_entity_id=source_entity_id,
+        target_entity_id=target_entity_id,
+        max_depth=max_depth,
+        relation_types=relation_types,
+    )
+
+
+@tool
+async def get_neighborhood(
+    entity_id: str,
+    depth: int = 2,
+    relation_types: Optional[list[str]] = None,
+    entity_types: Optional[list[str]] = None,
+) -> dict:
+    """Get entity neighborhood graph up to N hops.
+
+    Args:
+        entity_id: Center entity
+        depth: Number of hops
+        relation_types: Filter relationships
+        entity_types: Filter entities
+
+    Returns:
+        Subgraph with entities and relations
+    """
+    kg = get_knowledge_service()
+    return await kg.get_neighborhood(
+        entity_id=entity_id,
+        depth=depth,
+        relation_types=relation_types,
+        entity_types=entity_types,
+    )
+
+
+@tool
+async def search_knowledge(
+    query: str,
+    tenant_id: str,
+    top_k: int = 5,
+    filters: Optional[dict] = None,
+) -> list[dict]:
+    """Semantic search across knowledge base using Vertex AI Vector Search.
+
+    Args:
+        query: Natural language search query
+        tenant_id: Tenant context
+        top_k: Number of results
+        filters: Optional metadata filters
+
+    Returns:
+        Ranked results with relevance scores
+    """
+    kg = get_knowledge_service()
+    return await kg.search_knowledge(
+        query=query,
+        tenant_id=tenant_id,
+        top_k=top_k,
+        filters=filters,
+    )
+
+
+@tool
+async def store_knowledge(
+    content: str,
+    metadata: dict,
+    tenant_id: str,
+) -> str:
+    """Add new knowledge to vector store with text-embedding-005.
+
+    Args:
+        content: Text content to store
+        metadata: Associated metadata
+        tenant_id: Tenant context
+
+    Returns:
+        ID of stored knowledge
+    """
+    kg = get_knowledge_service()
+    return await kg.store_knowledge(
+        content=content,
+        metadata=metadata,
+        tenant_id=tenant_id,
+    )
+
+
+@tool
+async def record_observation(
+    observation_text: str,
+    tenant_id: str,
+    observation_type: str = "fact",
+    source_type: str = "conversation",
+) -> str:
+    """Record raw observation for later entity extraction.
+
+    Args:
+        observation_text: The observation to record
+        tenant_id: Tenant context
+        observation_type: Type (fact, opinion, question, hypothesis)
+        source_type: Source (conversation, dataset, document)
+
+    Returns:
+        Observation ID
+    """
+    kg = get_knowledge_service()
+    return await kg.record_observation(
+        observation_text=observation_text,
+        tenant_id=tenant_id,
+        observation_type=observation_type,
+        source_type=source_type,
+    )
+
+
+@tool
+async def ask_knowledge_graph(
+    natural_language_question: str,
+    tenant_id: str,
+) -> dict:
+    """Answer questions using knowledge graph traversal.
+
+    Args:
+        natural_language_question: Question to answer
+        tenant_id: Tenant context
+
+    Returns:
+        Answer with supporting entities and relations
+    """
+    kg = get_knowledge_service()
+    return await kg.ask_knowledge_graph(
+        question=natural_language_question,
+        tenant_id=tenant_id,
+    )
+
+
+@tool
+async def get_entity_timeline(
+    entity_id: str,
+    include_relations: bool = True,
+) -> list[dict]:
+    """Get chronological history of entity changes and interactions.
+
+    Args:
+        entity_id: Entity UUID
+        include_relations: Include relationship changes
+
+    Returns:
+        Timeline of events
+    """
+    kg = get_knowledge_service()
+    return await kg.get_entity_timeline(
+        entity_id=entity_id,
+        include_relations=include_relations,
+    )
