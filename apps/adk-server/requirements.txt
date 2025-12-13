@@ -1,9 +1,5 @@
-# Google ADK
+# Google ADK (includes google-cloud-aiplatform and vertexai as dependencies)
 google-adk>=1.21.0
-
-# Vertex AI for embeddings and vector search
-google-cloud-aiplatform>=1.50.0
-vertexai>=1.50.0
 
 # Pydantic for schemas
 pydantic>=2.0.0
