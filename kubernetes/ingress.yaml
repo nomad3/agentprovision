@@ -32,6 +32,14 @@ spec:
     - host: "agentprovision.com"
       http:
         paths:
+          # ADK handles all agent/chat operations
+          - path: /adk
+            pathType: Prefix
+            backend:
+              service:
+                name: agentprovision-adk
+                port:
+                  number: 80
           - path: /api
             pathType: Prefix
             backend:
