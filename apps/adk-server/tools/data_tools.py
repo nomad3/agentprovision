@@ -2,13 +2,11 @@
 
 All data operations route through MCP server to Databricks.
 """
-from google.adk.tools import tool
 from typing import Optional
 
 from services.databricks_client import get_databricks_client
 
 
-@tool
 async def discover_datasets(
     tenant_id: str,
     search_query: str = "",
@@ -35,7 +33,6 @@ async def discover_datasets(
     return tables
 
 
-@tool
 async def get_dataset_schema(dataset_id: str) -> dict:
     """Get detailed schema with column types, nullability, sample values.
 
@@ -54,7 +51,6 @@ async def get_dataset_schema(dataset_id: str) -> dict:
     return await client.describe_table(catalog=catalog, schema=schema, table=table)
 
 
-@tool
 async def get_dataset_statistics(dataset_id: str) -> dict:
     """Get statistical profile: distributions, correlations, anomalies.
 
@@ -80,7 +76,6 @@ async def get_dataset_statistics(dataset_id: str) -> dict:
     }
 
 
-@tool
 async def query_sql(
     sql: str,
     explanation: str = "",
@@ -114,7 +109,6 @@ async def query_sql(
     }
 
 
-@tool
 async def query_natural_language(
     question: str,
     dataset_ids: list[str],
@@ -137,7 +131,6 @@ async def query_natural_language(
     }
 
 
-@tool
 async def generate_insights(
     dataset_id: str,
     focus_areas: Optional[list[str]] = None,

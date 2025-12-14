@@ -2,12 +2,10 @@
 
 Handles report generation, visualizations, and exports.
 """
-from google.adk.tools import tool
 from typing import Optional
 import json
 
 
-@tool
 def generate_report(
     title: str,
     sections: list[dict],
@@ -58,7 +56,6 @@ def generate_report(
         return {"error": f"Unsupported format: {format}"}
 
 
-@tool
 def create_visualization(
     data: dict,
     chart_type: str,
@@ -102,7 +99,6 @@ def create_visualization(
     }
 
 
-@tool
 async def export_data(
     dataset_id: str,
     format: str,

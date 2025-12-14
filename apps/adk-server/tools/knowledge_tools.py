@@ -2,14 +2,12 @@
 
 Manages entities, relationships, and semantic search.
 """
-from google.adk.tools import tool
 from typing import Optional
 import uuid
 
 from services.knowledge_graph import get_knowledge_service
 
 
-@tool
 async def create_entity(
     name: str,
     entity_type: str,
@@ -45,7 +43,6 @@ async def create_entity(
     )
 
 
-@tool
 async def find_entities(
     query: str,
     tenant_id: str,
@@ -75,7 +72,6 @@ async def find_entities(
     )
 
 
-@tool
 async def get_entity(
     entity_id: str,
     include_relations: bool = True,
@@ -96,7 +92,6 @@ async def get_entity(
     )
 
 
-@tool
 async def update_entity(
     entity_id: str,
     updates: dict,
@@ -120,7 +115,6 @@ async def update_entity(
     )
 
 
-@tool
 async def merge_entities(
     primary_entity_id: str,
     duplicate_entity_ids: list[str],
@@ -144,7 +138,6 @@ async def merge_entities(
     )
 
 
-@tool
 async def create_relation(
     source_entity_id: str,
     target_entity_id: str,
@@ -183,7 +176,6 @@ async def create_relation(
     )
 
 
-@tool
 async def find_relations(
     tenant_id: str,
     entity_id: Optional[str] = None,
@@ -213,7 +205,6 @@ async def find_relations(
     )
 
 
-@tool
 async def get_path(
     source_entity_id: str,
     target_entity_id: str,
@@ -240,7 +231,6 @@ async def get_path(
     )
 
 
-@tool
 async def get_neighborhood(
     entity_id: str,
     depth: int = 2,
@@ -267,7 +257,6 @@ async def get_neighborhood(
     )
 
 
-@tool
 async def search_knowledge(
     query: str,
     tenant_id: str,
@@ -294,7 +283,6 @@ async def search_knowledge(
     )
 
 
-@tool
 async def store_knowledge(
     content: str,
     metadata: dict,
@@ -318,7 +306,6 @@ async def store_knowledge(
     )
 
 
-@tool
 async def record_observation(
     observation_text: str,
     tenant_id: str,
@@ -345,7 +332,6 @@ async def record_observation(
     )
 
 
-@tool
 async def ask_knowledge_graph(
     natural_language_question: str,
     tenant_id: str,
@@ -366,7 +352,6 @@ async def ask_knowledge_graph(
     )
 
 
-@tool
 async def get_entity_timeline(
     entity_id: str,
     include_relations: bool = True,

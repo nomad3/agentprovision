@@ -1,12 +1,10 @@
 """Analytics and calculation tools."""
-from google.adk.tools import tool
 from typing import Optional
 import re
 
 from services.databricks_client import get_databricks_client
 
 
-@tool
 def calculate(expression: str) -> dict:
     """Evaluate a mathematical expression safely.
 
@@ -31,7 +29,6 @@ def calculate(expression: str) -> dict:
         return {"error": f"Calculation error: {str(e)}"}
 
 
-@tool
 async def compare_periods(
     dataset_id: str,
     metric: str,
@@ -86,7 +83,6 @@ async def compare_periods(
     }
 
 
-@tool
 async def forecast(
     dataset_id: str,
     target_column: str,
