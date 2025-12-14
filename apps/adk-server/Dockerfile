@@ -22,5 +22,5 @@ USER adk
 # Expose ADK API server port
 EXPOSE 8080
 
-# Run ADK API server with /adk prefix for Ingress routing
-CMD ["adk", "api_server", "--port", "8080", "--host", "0.0.0.0", "--url_prefix", "/adk"]
+# Run custom ADK server with path prefix middleware
+CMD ["python", "server.py"]
