@@ -6,8 +6,7 @@ from typing import Optional
 class Settings(BaseSettings):
     """Environment configuration for ADK server."""
 
-    # Google AI
-    google_api_key: str = ""
+    # Google AI - Using Vertex AI with Workload Identity (no API key needed)
     google_genai_use_vertexai: bool = True
     adk_model: str = "gemini-2.5-flash"
 

@@ -110,9 +110,7 @@ externalSecret:
     - secretKey: DATABASE_URL
       remoteRef:
         key: agentprovision-database-url
-    - secretKey: GOOGLE_API_KEY
-      remoteRef:
-        key: agentprovision-google-api-key
+    # Note: GOOGLE_API_KEY not needed - using Vertex AI with Workload Identity
     - secretKey: MCP_API_KEY
       remoteRef:
         key: agentprovision-mcp-api-key
