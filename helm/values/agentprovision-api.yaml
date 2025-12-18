@@ -97,6 +97,7 @@ configMap:
     LLM_MAX_TOKENS: "4096"
     LLM_TEMPERATURE: "0.7"
     DATA_STORAGE_PATH: "/app/storage"
+    ADK_BASE_URL: "http://agentprovision-adk"
 
 # External Secrets - pulls from GCP Secret Manager
 externalSecret:
