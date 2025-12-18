@@ -59,7 +59,7 @@ configMap:
   data:
     DB: "postgresql"
     DB_PORT: "5432"
-    POSTGRES_USER: "postgres"
+    POSTGRES_USER: "dev-db-user"
     POSTGRES_DB: "temporal"
     POSTGRES_SEEDS: "localhost"  # Cloud SQL Proxy runs on localhost
 
@@ -76,7 +76,7 @@ externalSecret:
   data:
     - secretKey: POSTGRES_PWD
       remoteRef:
-        key: temporal-postgres-password
+        key: dev-database-password
 
 # Environment variables
 env:
