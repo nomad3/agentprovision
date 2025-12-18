@@ -61,7 +61,7 @@ configMap:
     DB_PORT: "5432"
     POSTGRES_USER: "postgres"
     POSTGRES_DB: "temporal"
-    DYNAMIC_CONFIG_FILE_PATH: "/etc/temporal/config/dynamicconfig/development-sql.yaml"
+    POSTGRES_SEEDS: "localhost"  # Cloud SQL Proxy runs on localhost
 
 # External Secrets for database connection
 externalSecret:
@@ -77,9 +77,6 @@ externalSecret:
     - secretKey: POSTGRES_PWD
       remoteRef:
         key: temporal-postgres-password
-    - secretKey: POSTGRES_SEEDS
-      remoteRef:
-        key: temporal-postgres-host
 
 # Environment variables
 env:
@@ -87,6 +84,32 @@ env:
     value: "false"
   - name: SKIP_DEFAULT_NAMESPACE_CREATION
     value: "false"
+
+# Cloud SQL Proxy sidecar for secure database connection
+extraContainers:
+  - name: cloud-sql-proxy
+    image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.8.0
+    args:
+      - "--private-ip"
+      - "--structured-logs"
+      - "--port=5432"
+      - "ai-agency-479516:us-central1:dev-postgres-instance"
+    securityContext:
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+
+# Service account with Workload Identity for Cloud SQL
+serviceAccount:
+  create: true
+  annotations:
+    iam.gke.io/gcp-service-account: dev-backend-app@ai-agency-479516.iam.gserviceaccount.com
 
 # No autoscaling for Temporal
 autoscaling:
