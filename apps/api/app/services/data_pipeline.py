@@ -8,7 +8,9 @@ from app.schemas.data_pipeline import DataPipelineCreate, DataPipelineBase
 from temporalio.client import Client
 from app.core.config import settings
 from app.workflows.agent_kit_execution import AgentKitExecutionWorkflow
+from app.workflows.data_source_sync import DataSourceSyncWorkflow
 from app.services import data_source as data_source_service
+from app.services import connectors as connector_service
 import requests
 
 def get_data_pipeline(db: Session, data_pipeline_id: uuid.UUID) -> DataPipeline | None:
@@ -49,26 +51,37 @@ def delete_data_pipeline(db: Session, *, data_pipeline_id: uuid.UUID) -> DataPip
 async def execute_pipeline(db: Session, data_pipeline_id: uuid.UUID) -> Dict[str, Any]:
     """
     Execute a data pipeline by triggering the associated Temporal workflow.
+
+    Supports pipeline types:
+    - databricks_job: Run a Databricks notebook
+    - connector_sync: Sync data from a connector to datalake
+    - schedule/sync/alert: Execute an agent kit workflow
     """
     pipeline = get_data_pipeline(db, data_pipeline_id)
     if not pipeline:
         raise ValueError("Data pipeline not found")
 
-    # Extract configuration
-    # Extract configuration
     config = pipeline.config or {}
     pipeline_type = config.get("type")
 
+    # Route to appropriate handler based on pipeline type
     if pipeline_type == "databricks_job":
         return await _execute_databricks_job(db, pipeline, config)
+    elif pipeline_type == "connector_sync":
+        return await _execute_connector_sync(db, pipeline, config)
+    else:
+        return await _execute_agent_kit_workflow(db, pipeline, config)
 
+
+async def _execute_agent_kit_workflow(db: Session, pipeline: DataPipeline, config: dict) -> Dict[str, Any]:
+    """Execute an agent kit workflow."""
     agent_kit_id = config.get("agent_kit_id")
 
     # Connect to Temporal
     client = await Client.connect(settings.TEMPORAL_ADDRESS)
 
     # Generate a unique workflow ID
-    workflow_id = f"pipeline-{data_pipeline_id}-{uuid.uuid4()}"
+    workflow_id = f"pipeline-{pipeline.id}-{uuid.uuid4()}"
 
     # Start the workflow
     handle = await client.start_workflow(
@@ -84,7 +97,53 @@ async def execute_pipeline(db: Session, data_pipeline_id: uuid.UUID) -> Dict[str
         "run_id": handle.result_run_id
     }
 
+
+async def _execute_connector_sync(db: Session, pipeline: DataPipeline, config: dict) -> Dict[str, Any]:
+    """Execute a connector sync workflow."""
+    connector_id = config.get("connector_id")
+
+    if not connector_id:
+        raise ValueError("Missing connector_id for connector sync")
+
+    # Get connector to retrieve type
+    connector = connector_service.get_connector(db, uuid.UUID(connector_id))
+    if not connector:
+        raise ValueError("Connector not found")
+
+    # Build sync configuration
+    sync_config = {
+        "mode": config.get("mode", "full"),
+        "table_name": config.get("table_name"),
+        "target_dataset": config.get("target_dataset", config.get("table_name")),
+        "watermark_column": config.get("watermark_column"),
+        "last_watermark": config.get("last_watermark"),
+    }
+
+    # Connect to Temporal
+    client = await Client.connect(settings.TEMPORAL_ADDRESS)
+
+    # Generate a unique workflow ID
+    workflow_id = f"sync-{connector_id}-{uuid.uuid4()}"
+
+    # Start the workflow
+    handle = await client.start_workflow(
+        DataSourceSyncWorkflow.run,
+        args=[str(connector_id), connector.type, str(pipeline.tenant_id), sync_config],
+        id=workflow_id,
+        task_queue="agentprovision-databricks",
+    )
+
+    return {
+        "status": "started",
+        "workflow_id": workflow_id,
+        "run_id": handle.result_run_id,
+        "connector_type": connector.type,
+        "table_name": sync_config.get("table_name")
+    }
+
+
 async def _execute_databricks_job(db: Session, pipeline: DataPipeline, config: dict) -> Dict[str, Any]:
+    """Execute a Databricks notebook job."""
     data_source_id = config.get("data_source_id")
     notebook_path = config.get("notebook_path")
 

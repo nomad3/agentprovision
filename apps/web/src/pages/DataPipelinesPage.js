@@ -3,6 +3,7 @@ import { Alert, Badge, Button, Card, Col, Form, Modal, Row, Spinner } from 'reac
 import { ArrowRepeat, BellFill, ClockFill, Gear, LightbulbFill, PlayCircleFill, PlayFill, Plus, PlusCircleFill, Trash } from 'react-bootstrap-icons';
 import Layout from '../components/Layout';
 import agentKitService from '../services/agentKit';
+import connectorService from '../services/connector';
 import dataPipelineService from '../services/dataPipeline';
 import dataSourceService from '../services/dataSource';
 import './DataPipelinesPage.css';
@@ -11,6 +12,7 @@ const DataPipelinesPage = () => {
   const [pipelines, setPipelines] = useState([]);
   const [agentKits, setAgentKits] = useState([]);
   const [dataSources, setDataSources] = useState([]);
+  const [connectors, setConnectors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
@@ -19,7 +21,10 @@ const DataPipelinesPage = () => {
     frequency: 'daily',
     agent_kit_id: '',
     data_source_id: '',
-    notebook_path: ''
+    notebook_path: '',
+    connector_id: '',
+    table_name: '',
+    sync_mode: 'full'
   });
   const [submitting, setSubmitting] = useState(false);
   const [executingId, setExecutingId] = useState(null);
@@ -51,16 +56,18 @@ const DataPipelinesPage = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [pipelinesRes, kitsRes, sourcesRes] = await Promise.all([
+      const [pipelinesRes, kitsRes, sourcesRes, connectorsRes] = await Promise.all([
         dataPipelineService.getAll(),
         agentKitService.getAll(),
-        dataSourceService.getAll()
+        dataSourceService.getAll(),
+        connectorService.getAll()
       ]);
       console.log('Pipelines Response:', pipelinesRes);
       console.log('Agent Kits Response:', kitsRes);
       setPipelines(pipelinesRes.data);
       setAgentKits(kitsRes.data);
       setDataSources(sourcesRes.data);
+      setConnectors(connectorsRes.data);
       setError(null);
     } catch (err) {
       console.error('Error fetching data:', err);
@@ -312,7 +319,8 @@ const DataPipelinesPage = () => {
                   onChange={(e) => setFormData({ ...formData, type: e.target.value })}
                 >
                   <option value="schedule">Scheduled Task</option>
-                  <option value="sync">Data Sync</option>
+                  <option value="connector_sync">Connector Sync</option>
+                  <option value="databricks_job">Databricks Notebook</option>
                   <option value="alert">Alert/Monitor</option>
                 </Form.Select>
               </Form.Group>
@@ -330,7 +338,46 @@ const DataPipelinesPage = () => {
                 </Form.Select>
               </Form.Group>
 
-              {formData.type === 'databricks_job' ? (
+              {formData.type === 'connector_sync' ? (
+                <>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Data Connector</Form.Label>
+                    <Form.Select
+                      value={formData.connector_id}
+                      onChange={(e) => setFormData({ ...formData, connector_id: e.target.value })}
+                      required
+                    >
+                      <option value="">Select a Connector...</option>
+                      {(connectors || []).filter(c => c.status === 'active').map(c => (
+                        <option key={c.id} value={c.id}>{c.name} ({c.type})</option>
+                      ))}
+                    </Form.Select>
+                    <Form.Text className="text-muted">
+                      Only active connectors are shown. Test your connector first.
+                    </Form.Text>
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Table/Query Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="e.g., customers, orders"
+                      value={formData.table_name}
+                      onChange={(e) => setFormData({ ...formData, table_name: e.target.value })}
+                      required
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Sync Mode</Form.Label>
+                    <Form.Select
+                      value={formData.sync_mode}
+                      onChange={(e) => setFormData({ ...formData, sync_mode: e.target.value })}
+                    >
+                      <option value="full">Full Refresh</option>
+                      <option value="incremental">Incremental</option>
+                    </Form.Select>
+                  </Form.Group>
+                </>
+              ) : formData.type === 'databricks_job' ? (
                 <>
                   <Form.Group className="mb-3">
                     <Form.Label>Databricks Data Source</Form.Label>
