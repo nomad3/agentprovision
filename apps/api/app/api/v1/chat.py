@@ -39,6 +39,7 @@ def create_session(
         session = chat_service.create_session(
             db,
             tenant_id=current_user.tenant_id,
+            user_id=current_user.id,
             dataset_id=payload.dataset_id,
             dataset_group_id=payload.dataset_group_id,
             agent_kit_id=payload.agent_kit_id,
@@ -100,6 +101,7 @@ def post_message(
     user_message, assistant_message = chat_service.post_user_message(
         db,
         session=session,
+        user_id=current_user.id,
         content=payload.content,
     )
     return chat_schema.ChatTurn(
@@ -122,6 +124,7 @@ def create_session_enhanced(
         dataset_id=session_in.dataset_id,
         agent_kit_id=session_in.agent_kit_id,
         agent_group_id=agent_group_id,
+        user_id=current_user.id,
         title=session_in.title,
     )
 
@@ -145,6 +148,7 @@ def post_message_enhanced(
     enhanced_service = get_enhanced_chat_service(db, current_user.tenant_id)
     user_msg, assistant_msg = enhanced_service.post_message_with_memory(
         session=session,
+        user_id=current_user.id,
         content=message_in.content,
         agent_id=agent_id,
     )

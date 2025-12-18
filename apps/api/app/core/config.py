@@ -31,6 +31,10 @@ class Settings(BaseSettings):
     LLM_MAX_TOKENS: int = 4096
     LLM_TEMPERATURE: float = 0.7
 
+    # ADK (Google Agent Development Kit)
+    ADK_BASE_URL: str | None = None
+    ADK_APP_NAME: str = "agentprovision_supervisor"
+
     class Config:
         env_file = ".env"
 

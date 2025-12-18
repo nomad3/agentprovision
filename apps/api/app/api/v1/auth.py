@@ -26,8 +26,14 @@ def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    claims = {"user_id": str(user.id)}
+    if user.tenant_id:
+        claims["tenant_id"] = str(user.tenant_id)
+
     access_token = security.create_access_token(
-        user.email, expires_delta=access_token_expires
+        user.email,
+        expires_delta=access_token_expires,
+        additional_claims=claims,
     )
     return {"access_token": access_token, "token_type": "bearer"}
 

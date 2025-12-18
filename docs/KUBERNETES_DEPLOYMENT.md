@@ -96,6 +96,34 @@ After deploying infrastructure, configure DNS A records:
 
 ## Deployment
 
+### Rapid Runbook (GitHub Actions + kubectl)
+
+1. **Push latest code**
+   ```bash
+   git push origin main
+   ```
+2. **Kick off the full stack deploy pipeline** (skips infra rebuild unless needed):
+   ```bash
+   gh workflow run deploy-all.yaml -f deploy_infrastructure=false -f environment=prod
+   ```
+3. **Publish the ADK server image + Helm release** when agent logic changes:
+   ```bash
+   gh workflow run adk-deploy.yaml -f deploy=true -f environment=prod
+   ```
+4. **Watch rollout status** directly from the cluster:
+   ```bash
+   kubectl get pods -n prod -w
+   kubectl rollout status deployment/agentprovision-api -n prod
+   kubectl rollout status deployment/agentprovision-adk -n prod
+   ```
+5. **Validate Helm releases** for all microservices:
+   ```bash
+   helm list -n prod | grep agentprovision
+   helm status agentprovision-adk -n prod
+   ```
+
+These commands ensure the same artifacts built in CI/CD are promoted to the cluster via the Helm chart definitions checked into `helm/`.
+
 ### Initial Infrastructure Deployment
 
 1. **Manual trigger via GitHub Actions:**

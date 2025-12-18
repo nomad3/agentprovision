@@ -446,33 +446,39 @@ cd apps/api && pytest tests/test_integrations.py
 
 ### Automated Deployment
 
-The `deploy.sh` script handles complete production deployment:
+We now deploy **exclusively via Kubernetes** using Helm charts and GitHub Actions (no more standalone GCP VM). The flow:
 
 ```bash
-# On production VM
-./deploy.sh
+# 1. Push latest changes
+git push origin main
+
+# 2. Trigger CI/CD from your terminal (or use the Actions tab)
+gh workflow run deploy-all.yaml \
+  -f deploy_infrastructure=false \
+  -f environment=prod
+
+# 3. Deploy the ADK service when agent logic changes
+gh workflow run adk-deploy.yaml -f environment=prod
+
+# 4. Watch rollouts directly from the cluster
+kubectl get pods -n prod -w
+kubectl rollout status deployment/agentprovision-api -n prod
+kubectl rollout status deployment/agentprovision-adk -n prod
 ```
 
-**What the script does:**
-
-1. ✅ Checks prerequisites (Docker, Compose, Nginx, Certbot)
-2. ✅ Stops existing services and builds new containers
-3. ✅ Starts services with fixed ports (API:8001, Web:8002, DB:8003)
-4. ✅ Configures Nginx reverse proxy with SSL termination
-5. ✅ Obtains/renews SSL certificate via Certbot
-6. ✅ Runs health checks and waits for API readiness
-7. ✅ Executes E2E test suite (fails deployment if tests fail)
-8. ✅ Reports deployment status
+Each workflow builds/pushes container images, then applies the corresponding Helm release from `helm/values/*.yaml` to the `prod` namespace in GKE. See `docs/KUBERNETES_DEPLOYMENT.md` for the full runbook.
 
 ### Production Architecture
 
 ```
-Internet → Nginx (SSL termination) → Docker Services
-                                        ├── API (Port 8001)
-                                        ├── Web (Port 8002)
-                                        ├── DB (Port 8003)
-                                        ├── Temporal (Ports 7233/8233)
-                                        └── MCP Server (Port 8085)
+GKE Gateway → prod namespace
+  ├── agentprovision-web (Helm microservice chart)
+  ├── agentprovision-api (FastAPI)
+  ├── agentprovision-worker (Temporal worker)
+  ├── agentprovision-adk (Google ADK service)
+  ├── temporal + temporal-web
+  ├── redis / postgres (via Cloud SQL + proxy)
+  └── mcp-server (Databricks integration)
 ```
 
 ### Environment Variables

@@ -21,6 +21,7 @@ class EnhancedChatService:
 
     def create_session_with_orchestration(
         self,
+        user_id: uuid.UUID,
         dataset_id: uuid.UUID,
         agent_kit_id: uuid.UUID,
         agent_group_id: Optional[uuid.UUID] = None,
@@ -30,6 +31,7 @@ class EnhancedChatService:
         session = base_chat_service.create_session(
             self.db,
             tenant_id=self.tenant_id,
+            user_id=user_id,
             dataset_id=dataset_id,
             agent_kit_id=agent_kit_id,
             title=title,
@@ -46,6 +48,7 @@ class EnhancedChatService:
     def post_message_with_memory(
         self,
         session: ChatSession,
+        user_id: uuid.UUID,
         content: str,
         agent_id: Optional[uuid.UUID] = None,
     ) -> Tuple[ChatMessage, ChatMessage]:
@@ -79,6 +82,7 @@ class EnhancedChatService:
         user_msg, assistant_msg = base_chat_service.post_user_message(
             self.db,
             session=session,
+            user_id=user_id,
             content=content,
         )
 

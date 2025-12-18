@@ -29,8 +29,11 @@ services:
     depends_on:
       - db
       - temporal
+      - adk-server
     environment:
       - MCP_SERVER_URL=http://mcp-server:8000
+      - ADK_BASE_URL=http://adk-server:8080
+      - ADK_APP_NAME=${ADK_APP_NAME:-agentprovision_supervisor}
 
   web:
     build:
@@ -87,6 +90,27 @@ services:
       - FASTMCP_PORT=8000
     depends_on:
       - api
+    restart: unless-stopped
+
+  adk-server:
+    build:
+      context: ./apps/adk-server
+      dockerfile: Dockerfile
+    ports:
+      - "${ADK_PORT:-8085}:8080"
+    environment:
+      - ADK_HOST=0.0.0.0
+      - ADK_PORT=8080
+      - MCP_SERVER_URL=http://mcp-server:8000
+      - MCP_API_KEY=${MCP_API_KEY:-dev_mcp_key}
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/agentprovision
+      - SECRET_KEY=${SECRET_KEY:-local_dev_secret_key}
+      - GOOGLE_GENAI_USE_VERTEXAI=${GOOGLE_GENAI_USE_VERTEXAI:-false}
+    volumes:
+      - ./apps/adk-server:/app
+    depends_on:
+      - db
+      - mcp-server
     restart: unless-stopped
 
   test-db:

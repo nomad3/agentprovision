@@ -45,12 +45,14 @@ async def start_workflow(
     client = await _get_temporal_client()
     workflow_arguments = arguments or {}
     resolved_workflow_id = workflow_id or f"{tenant_id}-{uuid.uuid4()}"
+    # Temporal stores memo as a dict of serializable values; always attach tenant_id
+    memo_payload: Dict[str, Any] = {**(memo or {}), "tenant_id": str(tenant_id)}
     handle = await client.start_workflow(
         workflow_type,
         workflow_arguments,
         id=resolved_workflow_id,
         task_queue=task_queue,
-        memo={(memo or {}) | {"tenant_id": str(tenant_id)}},
+        memo=memo_payload,
     )
     return handle
 
