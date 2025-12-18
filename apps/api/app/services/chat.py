@@ -155,6 +155,7 @@ def _generate_agentic_response(
     user_message: str,
 ) -> ChatMessage:
     if not settings.ADK_BASE_URL:
+        logger.error(f"ADK_BASE_URL is missing in settings: {settings.ADK_BASE_URL}")
         return _append_message(
             db,
             session=session,
@@ -165,7 +166,8 @@ def _generate_agentic_response(
 
     try:
         client = get_adk_client()
-    except ADKNotConfiguredError:
+    except ADKNotConfiguredError as e:
+        logger.error(f"get_adk_client raised ADKNotConfiguredError: {e}")
         return _append_message(
             db,
             session=session,
