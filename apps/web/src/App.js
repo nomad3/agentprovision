@@ -3,7 +3,7 @@ import { Route, BrowserRouter as Router, Routes, useNavigate } from 'react-route
 import { ToastProvider } from './components/common';
 import ProtectedRoute from './components/ProtectedRoute';
 import LandingPage from './LandingPage';
-import AgentKitsPage from './pages/AgentKitsPage';
+// Agent Kits removed - using ADK for agent configuration
 import AgentsPage from './pages/AgentsPage';
 import AgentWizardPage from './pages/AgentWizardPage';
 import BrandingPage from './pages/BrandingPage';
@@ -80,7 +80,7 @@ function App() {
             <Route path="/connectors" element={<ProtectedRoute><ConnectorsPage /></ProtectedRoute>} />
             <Route path="/deployments" element={<ProtectedRoute><DeploymentsPage /></ProtectedRoute>} />
             <Route path="/vector-stores" element={<ProtectedRoute><VectorStoresPage /></ProtectedRoute>} />
-            <Route path="/agent-kits" element={<ProtectedRoute><AgentKitsPage /></ProtectedRoute>} />
+            {/* Agent Kits route removed - using ADK for agent configuration */}
             <Route path="/tenants" element={<ProtectedRoute><TenantsPage /></ProtectedRoute>} />
             <Route path="/teams" element={<ProtectedRoute><TeamsPage /></ProtectedRoute>} />
             <Route path="/memory" element={<ProtectedRoute><MemoryPage /></ProtectedRoute>} />

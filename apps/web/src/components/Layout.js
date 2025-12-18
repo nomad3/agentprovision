@@ -9,7 +9,6 @@ import {
   DatabaseFill,
   FileTextFill,
   GearFill,
-  Grid3x3GapFill,
   HouseDoorFill,
   JournalBookmarkFill,
   PersonCircle,
@@ -60,7 +59,6 @@ const Layout = ({ children }) => {
       items: [
         { path: '/chat', icon: ChatDotsFill, label: 'Chat', description: 'Chat with AI agents' },
         { path: '/agents', icon: Robot, label: 'Agents', description: 'Manage AI agents' },
-        { path: '/agent-kits', icon: Grid3x3GapFill, label: 'Agent Kits', description: 'Reusable agent templates' },
       ]
     },
     {
