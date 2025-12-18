@@ -3,6 +3,9 @@ from __future__ import annotations
 import os
 import uuid
 import asyncio
+import csv
+import io
+from collections import Counter
 from pathlib import Path
 from typing import List, Sequence, Dict, Any
 
@@ -84,11 +87,6 @@ def _tenant_storage_path(tenant_id: uuid.UUID) -> Path:
     tenant_path = root / str(tenant_id)
     tenant_path.mkdir(parents=True, exist_ok=True)
     return tenant_path
-
-
-import csv
-import io
-
 def _load_dataframe(file: UploadFile) -> pd.DataFrame:
     suffix = (Path(file.filename).suffix or "").lower() if file.filename else ""
     content_type = (file.content_type or "").lower()
@@ -152,7 +150,8 @@ def _load_dataframe(file: UploadFile) -> pd.DataFrame:
             except csv.Error:
                 # Fallback to naive split if csv.reader fails
                 for i, line in enumerate(lines[:50]):
-                    if not line.strip(): continue
+                    if not line.strip():
+                        continue
                     cols = len(line.split(delimiter))
                     if cols > 1:
                         candidate_rows.append((i, cols))
@@ -161,7 +160,6 @@ def _load_dataframe(file: UploadFile) -> pd.DataFrame:
             # We look for stability: a row with N columns followed by other rows with N columns
             if candidate_rows:
                 # Group by column count
-                from collections import Counter
                 col_counts = Counter([c[1] for c in candidate_rows])
                 # Filter out counts that only appear once (noise), unless it's the only one
                 if len(col_counts) > 1:
@@ -488,7 +486,7 @@ def get_schema_info(dataset: Dataset) -> Dict[str, Any]:
                     f"SELECT DISTINCT {col} FROM dataset LIMIT 5"
                 ).fetchdf()[col].tolist()
                 sample_values[col] = values
-            except:
+            except Exception:  # pragma: no cover - defensive; best effort sampling
                 sample_values[col] = []
 
         conn.close()
