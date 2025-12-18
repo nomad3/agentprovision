@@ -1,0 +1,205 @@
+.integrations-page {
+  padding: 0;
+}
+
+.integrations-page .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.integrations-page .page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a1a2e);
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.integrations-page .page-subtitle {
+  margin-bottom: 0;
+}
+
+/* Stats Cards */
+.stat-card {
+  border: none;
+  border-radius: 12px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card .card-body {
+  display: flex;
+  align-items: center;
+  padding: 1.25rem;
+}
+
+.stat-card .stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+}
+
+.stat-card .stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stat-card .stat-label {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.stat-total .stat-icon {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+}
+
+.stat-active .stat-icon {
+  background: linear-gradient(135deg, #10b981, #34d399);
+  color: white;
+}
+
+.stat-syncs .stat-icon {
+  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+  color: white;
+}
+
+.stat-error .stat-icon {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  color: white;
+}
+
+/* Activity Card */
+.activity-card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+}
+
+.activity-card .card-header {
+  background: transparent;
+  border-bottom: 1px solid #e9ecef;
+  padding: 1rem 1.25rem;
+}
+
+.activity-card .card-header h5 {
+  display: flex;
+  align-items: center;
+}
+
+/* Connectors Table */
+.connectors-table thead th {
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6c757d;
+  border-bottom: 2px solid #e9ecef;
+  padding: 1rem 1.25rem;
+}
+
+.connectors-table tbody td {
+  padding: 1rem 1.25rem;
+  vertical-align: middle;
+}
+
+.connectors-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.connector-icon {
+  font-size: 1.5rem;
+}
+
+/* Syncs Card */
+.syncs-card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+  height: 100%;
+}
+
+.syncs-card .card-header {
+  background: transparent;
+  border-bottom: 1px solid #e9ecef;
+  padding: 1rem 1.25rem;
+}
+
+.syncs-card .card-header h5 {
+  display: flex;
+  align-items: center;
+}
+
+.syncs-list {
+  padding: 0;
+}
+
+.sync-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.sync-item:last-child {
+  border-bottom: none;
+}
+
+.sync-item:hover {
+  background: #f8f9fa;
+}
+
+.sync-name {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.sync-info small {
+  display: block;
+  margin-top: 0.125rem;
+}
+
+/* Button styles */
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Modal improvements */
+.modal-header {
+  border-bottom: 1px solid #e9ecef;
+}
+
+.modal-footer {
+  border-top: 1px solid #e9ecef;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .integrations-page .page-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+
+  .header-actions .btn {
+    flex: 1;
+  }
+}

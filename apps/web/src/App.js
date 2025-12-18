@@ -8,13 +8,12 @@ import AgentsPage from './pages/AgentsPage';
 import AgentWizardPage from './pages/AgentWizardPage';
 import BrandingPage from './pages/BrandingPage';
 import ChatPage from './pages/ChatPage';
-import ConnectorsPage from './pages/ConnectorsPage';
 import DashboardPage from './pages/DashboardPage';
-import DataPipelinesPage from './pages/DataPipelinesPage';
 import DatasetsPage from './pages/DatasetsPage';
 import DataSourcesPage from './pages/DataSourcesPage';
 import DeploymentsPage from './pages/DeploymentsPage';
 import HomePage from './pages/HomePage';
+import IntegrationsPage from './pages/IntegrationsPage';
 import LLMSettingsPage from './pages/LLMSettingsPage';
 import LoginPage from './pages/LoginPage';
 import MemoryPage from './pages/MemoryPage';
@@ -70,7 +69,7 @@ function App() {
             <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
             <Route path="/data-sources" element={<ProtectedRoute><DataSourcesPage /></ProtectedRoute>} />
-            <Route path="/data-pipelines" element={<ProtectedRoute><DataPipelinesPage /></ProtectedRoute>} />
+            <Route path="/integrations" element={<ProtectedRoute><IntegrationsPage /></ProtectedRoute>} />
             <Route path="/notebooks" element={<ProtectedRoute><NotebooksPage /></ProtectedRoute>} />
             <Route path="/agents" element={<ProtectedRoute><AgentsPage /></ProtectedRoute>} />
             <Route path="/agents/wizard" element={<ProtectedRoute><AgentWizardPage /></ProtectedRoute>} />

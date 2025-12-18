@@ -64,9 +64,9 @@ const Layout = ({ children }) => {
     {
       title: 'DATA PLATFORM',
       items: [
-        { path: '/data-sources', icon: PlugFill, label: 'Data Sources', description: 'Connect external data' },
+        { path: '/integrations', icon: PlugFill, label: 'Integrations', description: 'Connectors & data syncs' },
         { path: '/datasets', icon: FileTextFill, label: 'Datasets', description: 'Manage data files' },
-        { path: '/data-pipelines', icon: DatabaseFill, label: 'Automations', description: 'Data pipelines & workflows' },
+        { path: '/data-sources', icon: DatabaseFill, label: 'Data Sources', description: 'Query data lakehouse' },
       ]
     },
     {
