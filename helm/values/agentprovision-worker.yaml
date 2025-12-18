@@ -8,8 +8,8 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
-# Disabled until Temporal is deployed
-replicaCount: 0
+# Temporal is now deployed, enable worker
+replicaCount: 1
 
 container:
   port: 8000
