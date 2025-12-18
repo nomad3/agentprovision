@@ -313,9 +313,37 @@ const ChatPage = () => {
                       <ListGroup variant="flush">
                         {messages.map((message) => renderMessage(message))}
                         {messages.length === 0 && (
-                          <ListGroup.Item className="text-muted text-center">
-                            No messages yet. Ask the agent something about the dataset.
-                          </ListGroup.Item>
+                          <div className="py-4">
+                            <div className="text-center text-muted mb-4">
+                              <h5 className="text-dark">💡 Get Started</h5>
+                              <p>Ask your AI assistant about your data. Try one of these:</p>
+                            </div>
+                            <div className="row g-2 px-3">
+                              {[
+                                { icon: '📊', text: 'What was our revenue last month?' },
+                                { icon: '📈', text: 'Show me the top trends in our data' },
+                                { icon: '🎯', text: 'What are the key insights from this dataset?' },
+                                { icon: '📋', text: 'Generate a summary report' },
+                                { icon: '🔮', text: 'What is the forecast for next quarter?' },
+                                { icon: '⚡', text: 'What anomalies or issues should I know about?' },
+                              ].map((prompt, idx) => (
+                                <div key={idx} className="col-md-6">
+                                  <Button
+                                    variant="outline-secondary"
+                                    className="w-100 text-start py-2 px-3"
+                                    style={{ borderRadius: '12px', fontSize: '0.9rem' }}
+                                    onClick={() => {
+                                      setMessageDraft(prompt.text);
+                                      document.getElementById('chatMessage')?.focus();
+                                    }}
+                                  >
+                                    <span className="me-2">{prompt.icon}</span>
+                                    {prompt.text}
+                                  </Button>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
                         )}
                       </ListGroup>
                     )}
