@@ -12,8 +12,6 @@ class ConnectorBase(BaseModel):
     description: Optional[str] = None
     type: ConnectorType
     config: dict
-    n8n_workflow_id: Optional[str] = None
-    schema_: Optional[dict] = Field(None, alias="schema")
 
 class ConnectorCreate(ConnectorBase):
     pass
@@ -22,7 +20,6 @@ class ConnectorUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     config: Optional[dict] = None
-    n8n_workflow_id: Optional[str] = None
 
 class ConnectorTestRequest(BaseModel):
     type: ConnectorType
