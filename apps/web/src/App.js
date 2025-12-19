@@ -76,7 +76,6 @@ function App() {
             <Route path="/datasets" element={<ProtectedRoute><DatasetsPage /></ProtectedRoute>} />
             <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
             <Route path="/tools" element={<ProtectedRoute><ToolsPage /></ProtectedRoute>} />
-            <Route path="/connectors" element={<ProtectedRoute><ConnectorsPage /></ProtectedRoute>} />
             <Route path="/deployments" element={<ProtectedRoute><DeploymentsPage /></ProtectedRoute>} />
             <Route path="/vector-stores" element={<ProtectedRoute><VectorStoresPage /></ProtectedRoute>} />
             {/* Agent Kits route removed - using ADK for agent configuration */}

@@ -90,7 +90,6 @@ const IntegrationsPage = () => {
   const [connectors, setConnectors] = useState([]);
   const [syncs, setSyncs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('overview');
 
   // Modal states
   const [showConnectorModal, setShowConnectorModal] = useState(false);
@@ -432,7 +431,8 @@ const IntegrationsPage = () => {
               ) : (
                 <div className="syncs-list">
                   {syncs.slice(0, 5).map(sync => {
-                    const connector = connectors.find(c => c.id === sync.config?.connector_id);
+                    // Find connector for display purposes (currently unused but kept for future)
+                    const connectorForSync = connectors.find(c => c.id === sync.config?.connector_id);
                     return (
                       <div key={sync.id} className="sync-item">
                         <div className="sync-info">
