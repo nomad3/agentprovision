@@ -89,7 +89,7 @@ services:
       - FASTMCP_HOST=0.0.0.0
       - FASTMCP_PORT=8000
     depends_on:
-      - api
+      - db
     restart: unless-stopped
 
   adk-server:
