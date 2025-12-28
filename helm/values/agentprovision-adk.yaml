@@ -85,7 +85,7 @@ configMap:
   data:
     GOOGLE_GENAI_USE_VERTEXAI: "TRUE"
     ADK_MODEL: "gemini-2.5-flash"
-    MCP_SERVER_URL: "http://mcp-server:8000"
+    MCP_SERVER_URL: "http://mcp-server-microservice"
     DATABASE_HOST: "localhost"
     DATABASE_PORT: "5432"
     DATABASE_NAME: "agentprovision"
