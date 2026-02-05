@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 import uuid
 
 from app.models.data_pipeline import DataPipeline
+from app.models.pipeline_run import PipelineRun
 from app.schemas.data_pipeline import DataPipelineCreate, DataPipelineBase
 from temporalio.client import Client
 from app.core.config import settings
@@ -64,13 +65,44 @@ async def execute_pipeline(db: Session, data_pipeline_id: uuid.UUID) -> Dict[str
     config = pipeline.config or {}
     pipeline_type = config.get("type")
 
-    # Route to appropriate handler based on pipeline type
-    if pipeline_type == "databricks_job":
-        return await _execute_databricks_job(db, pipeline, config)
-    elif pipeline_type == "connector_sync":
-        return await _execute_connector_sync(db, pipeline, config)
-    else:
-        return await _execute_agent_kit_workflow(db, pipeline, config)
+    # Create PipelineRun record
+    from app.models.pipeline_run import PipelineRun
+    from datetime import datetime
+
+    run_id = uuid.uuid4()
+    pipeline_run = PipelineRun(
+        id=run_id,
+        pipeline_id=pipeline.id,
+        status="running",
+        started_at=datetime.utcnow()
+    )
+    db.add(pipeline_run)
+    db.commit()
+
+    try:
+        result = {}
+        # Route to appropriate handler based on pipeline type
+        if pipeline_type == "databricks_job":
+            result = await _execute_databricks_job(db, pipeline, config)
+        elif pipeline_type == "connector_sync":
+            result = await _execute_connector_sync(db, pipeline, config)
+        else:
+            result = await _execute_agent_kit_workflow(db, pipeline, config)
+
+        # Update PipelineRun with success
+        pipeline_run.workflow_id = result.get("workflow_id")
+        pipeline_run.output = result
+        db.commit()
+
+        return result
+
+    except Exception as e:
+        # Update PipelineRun with failure
+        pipeline_run.status = "failed"
+        pipeline_run.error = str(e)
+        pipeline_run.completed_at = datetime.utcnow()
+        db.commit()
+        raise e
 
 
 async def _execute_agent_kit_workflow(db: Session, pipeline: DataPipeline, config: dict) -> Dict[str, Any]:

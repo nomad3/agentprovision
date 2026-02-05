@@ -89,6 +89,19 @@ const DataPipelinesPage = () => {
         notebook_path: formData.notebook_path
       };
 
+      if (formData.type === 'connector_sync') {
+        const connector = connectors.find(c => c.id === formData.connector_id);
+        if (connector) {
+          config.connector_id = formData.connector_id;
+          config.connector_type = connector.type;
+          config.tables = [{
+            table_name: formData.table_name,
+            sync_mode: formData.sync_mode,
+            target_dataset: formData.table_name // Default to same name
+          }];
+        }
+      }
+
       await dataPipelineService.create({
         name: formData.name,
         config: config
