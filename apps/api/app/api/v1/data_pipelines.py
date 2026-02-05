@@ -96,13 +96,55 @@ async def execute_data_pipeline(
 ):
     """
     Execute a data pipeline manually.
+    Returns execution details including workflow ID for tracking.
     """
     data_pipeline = data_pipeline_service.get_data_pipeline(db, data_pipeline_id=data_pipeline_id)
     if not data_pipeline or str(data_pipeline.tenant_id) != str(current_user.tenant_id):
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Data pipeline not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="Data pipeline not found or not accessible"
+        )
+
+    # Check if pipeline is already running
+    if data_pipeline.last_run_status == "running":
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Pipeline is already running. Please wait for it to complete."
+        )
 
     try:
         result = await data_pipeline_service.execute_pipeline(db, data_pipeline_id=data_pipeline_id)
-        return result
+        return {
+            "message": "Pipeline execution started successfully",
+            "pipeline_id": str(data_pipeline_id),
+            "pipeline_name": data_pipeline.name,
+            "workflow_id": result.get("workflow_id"),
+            "status": "started",
+            "started_at": result.get("started_at")
+        }
+    except ValueError as e:
+        # Handle configuration errors
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Pipeline configuration error: {str(e)}"
+        )
+    except ConnectionError as e:
+        # Handle connection/network errors
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Service temporarily unavailable: {str(e)}"
+        )
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        # Handle all other errors
+        import traceback
+        error_details = str(e)
+        if len(error_details) > 200:
+            error_details = error_details[:200] + "..."
+        
+        # Log the full error for debugging
+        print(f"Pipeline execution error: {traceback.format_exc()}")
+        
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Pipeline execution failed: {error_details}"
+        )

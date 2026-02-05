@@ -1,12 +1,16 @@
-import React from 'react';
-import { Card, Button } from 'react-bootstrap';
-import { ExclamationTriangleFill } from 'react-bootstrap-icons';
-import './ErrorBoundary.css';
+import { Component } from 'react';
+import { Alert, Button, Card, Container } from 'react-bootstrap';
+import { ArrowClockwise, BugFill } from 'react-bootstrap-icons';
 
-class ErrorBoundary extends React.Component {
+class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false, error: null, errorInfo: null };
+    this.state = { 
+      hasError: false, 
+      error: null, 
+      errorInfo: null,
+      retryCount: 0 
+    };
   }
 
   static getDerivedStateFromError(error) {
@@ -16,57 +20,74 @@ class ErrorBoundary extends React.Component {
   componentDidCatch(error, errorInfo) {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
     this.setState({
-      error,
-      errorInfo,
+      error: error,
+      errorInfo: errorInfo
     });
   }
 
-  handleReset = () => {
-    this.setState({ hasError: false, error: null, errorInfo: null });
-    if (this.props.onReset) {
-      this.props.onReset();
-    } else {
-      window.location.reload();
-    }
+  handleRetry = () => {
+    this.setState({
+      hasError: false,
+      error: null,
+      errorInfo: null,
+      retryCount: this.state.retryCount + 1
+    });
   };
 
   render() {
     if (this.state.hasError) {
       return (
-        <div className="error-boundary-container">
-          <Card className="error-boundary-card">
-            <Card.Body className="text-center p-5">
-              <div className="error-boundary-icon mb-4">
-                <ExclamationTriangleFill size={64} />
-              </div>
-              <h2 className="error-boundary-title mb-3">Something went wrong</h2>
-              <p className="error-boundary-description mb-4">
-                We apologize for the inconvenience. An unexpected error has occurred.
-              </p>
+        <Container className="py-5">
+          <Card className="border-danger">
+            <Card.Header className="bg-danger text-white">
+              <BugFill className="me-2" />
+              Something went wrong
+            </Card.Header>
+            <Card.Body>
+              <Alert variant="danger" className="mb-4">
+                <Alert.Heading>Oops! Something unexpected happened</Alert.Heading>
+                <p>
+                  We encountered an error while loading this page. This has been logged 
+                  and our team will investigate. Please try refreshing the page.
+                </p>
+                <hr />
+                <div className="d-flex justify-content-between align-items-center">
+                  <small className="text-muted">
+                    Error ID: {Date.now().toString(36).toUpperCase()}
+                  </small>
+                  <Button 
+                    variant="outline-danger" 
+                    size="sm" 
+                    onClick={this.handleRetry}
+                  >
+                    <ArrowClockwise className="me-1" />
+                    Try Again
+                  </Button>
+                </div>
+              </Alert>
+              
               {process.env.NODE_ENV === 'development' && this.state.error && (
-                <details className="error-boundary-details mb-4">
-                  <summary className="error-boundary-summary">Error Details</summary>
-                  <pre className="error-boundary-stack">
-                    {this.state.error.toString()}
-                    {this.state.errorInfo?.componentStack}
-                  </pre>
+                <details className="mt-4">
+                  <summary className="text-muted mb-2" style={{cursor: 'pointer'}}>
+                    Developer Details (Development Mode)
+                  </summary>
+                  <Card className="bg-light">
+                    <Card.Body>
+                      <h6>Error:</h6>
+                      <pre className="small text-danger">
+                        {this.state.error && this.state.error.toString()}
+                      </pre>
+                      <h6>Stack Trace:</h6>
+                      <pre className="small" style={{fontSize: '0.7rem'}}>
+                        {this.state.errorInfo.componentStack}
+                      </pre>
+                    </Card.Body>
+                  </Card>
                 </details>
               )}
-              <div className="error-boundary-actions">
-                <Button variant="primary" onClick={this.handleReset}>
-                  Reload Page
-                </Button>
-                <Button
-                  variant="outline-secondary"
-                  onClick={() => (window.location.href = '/')}
-                  className="ms-2"
-                >
-                  Go Home
-                </Button>
-              </div>
             </Card.Body>
           </Card>
-        </div>
+        </Container>
       );
     }
 

@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Alert, Badge, Button, Card, Col, Form, Modal, Row, Spinner } from 'react-bootstrap';
-import { ArrowRepeat, BellFill, ClockFill, Gear, LightbulbFill, PlayCircleFill, PlayFill, Plus, PlusCircleFill, Trash } from 'react-bootstrap-icons';
+import { Badge, Button, Card, Col, Form, Modal, Row, Spinner } from 'react-bootstrap';
+import { ArrowRepeat, BellFill, ClockFill, ExclamationCircleFill, Gear, LightbulbFill, PlayCircleFill, PlayFill, Plus, PlusCircleFill, Trash, CheckCircleFill } from 'react-bootstrap-icons';
 import Layout from '../components/Layout';
+import EnhancedErrorAlert from '../components/common/EnhancedErrorAlert';
+import PipelineCardSkeleton from '../components/common/PipelineCardSkeleton';
+import useErrorHandler from '../hooks/useErrorHandler';
 import agentKitService from '../services/agentKit';
 import connectorService from '../services/connector';
 import dataPipelineService from '../services/dataPipeline';
@@ -28,8 +31,8 @@ const DataPipelinesPage = () => {
   });
   const [submitting, setSubmitting] = useState(false);
   const [executingId, setExecutingId] = useState(null);
-  const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const { error, handleError, clearError, retry, isRetrying } = useErrorHandler();
 
   const useCases = [
     {
@@ -56,6 +59,7 @@ const DataPipelinesPage = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
+      clearError();
       const [pipelinesRes, kitsRes, sourcesRes, connectorsRes] = await Promise.all([
         dataPipelineService.getAll(),
         agentKitService.getAll(),
@@ -64,14 +68,12 @@ const DataPipelinesPage = () => {
       ]);
       console.log('Pipelines Response:', pipelinesRes);
       console.log('Agent Kits Response:', kitsRes);
-      setPipelines(pipelinesRes.data);
-      setAgentKits(kitsRes.data);
-      setDataSources(sourcesRes.data);
-      setConnectors(connectorsRes.data);
-      setError(null);
+      setPipelines(pipelinesRes.data || []);
+      setAgentKits(kitsRes.data || []);
+      setDataSources(sourcesRes.data || []);
+      setConnectors(connectorsRes.data || []);
     } catch (err) {
-      console.error('Error fetching data:', err);
-      setError('Failed to load automations');
+      handleError(err, 'Failed to load automations data');
     } finally {
       setLoading(false);
     }
@@ -81,6 +83,7 @@ const DataPipelinesPage = () => {
     e.preventDefault();
     try {
       setSubmitting(true);
+      clearError();
       const config = {
         type: formData.type,
         frequency: formData.frequency,
@@ -114,14 +117,16 @@ const DataPipelinesPage = () => {
         frequency: 'daily',
         agent_kit_id: '',
         data_source_id: '',
-        notebook_path: ''
+        notebook_path: '',
+        connector_id: '',
+        table_name: '',
+        sync_mode: 'full'
       });
       fetchData();
       setSuccess('Automation created successfully');
-      setTimeout(() => setSuccess(null), 3000);
+      setTimeout(() => setSuccess(null), 5000);
     } catch (err) {
-      console.error('Error creating pipeline:', err);
-      setError('Failed to create automation');
+      handleError(err, 'Failed to create automation');
     } finally {
       setSubmitting(false);
     }
@@ -132,9 +137,10 @@ const DataPipelinesPage = () => {
       try {
         await dataPipelineService.delete(id);
         fetchData();
+        setSuccess('Automation deleted successfully');
+        setTimeout(() => setSuccess(null), 3000);
       } catch (err) {
-        console.error('Error deleting pipeline:', err);
-        setError('Failed to delete automation');
+        handleError(err, 'Failed to delete automation');
       }
     }
   };
@@ -142,12 +148,14 @@ const DataPipelinesPage = () => {
   const handleExecute = async (id) => {
     try {
       setExecutingId(id);
-      await dataPipelineService.execute(id);
-      setSuccess('Automation triggered successfully');
-      setTimeout(() => setSuccess(null), 3000);
+      clearError();
+      const result = await dataPipelineService.execute(id);
+      setSuccess(`Automation triggered successfully${result?.workflow_id ? ` (ID: ${result.workflow_id.slice(0, 8)}...)` : ''}`);
+      setTimeout(() => setSuccess(null), 5000);
+      // Optionally refresh data to show updated status
+      fetchData();
     } catch (err) {
-      console.error('Error executing pipeline:', err);
-      setError('Failed to trigger automation');
+      handleError(err, 'Failed to trigger automation');
     } finally {
       setExecutingId(null);
     }
@@ -219,6 +227,39 @@ const DataPipelinesPage = () => {
     </Card>
   );
 
+  const getStatusBadge = (pipeline) => {
+    const status = pipeline.last_run_status;
+    if (!status) return <Badge bg="light" text="dark">Never run</Badge>;
+    
+    switch (status.toLowerCase()) {
+      case 'completed':
+      case 'success':
+        return <Badge bg="success"><CheckCircleFill className="me-1" />Success</Badge>;
+      case 'failed':
+      case 'error':
+        return <Badge bg="danger"><ExclamationCircleFill className="me-1" />Failed</Badge>;
+      case 'running':
+        return <Badge bg="primary"><Spinner size="sm" animation="border" className="me-1" />Running</Badge>;
+      default:
+        return <Badge bg="secondary">{status}</Badge>;
+    }
+  };
+
+  const formatLastRun = (lastRunAt) => {
+    if (!lastRunAt) return 'Never';
+    const date = new Date(lastRunAt);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins} min ago`;
+    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+  };
+
   const renderPipelinesList = () => (
     <div className="pipelines-list">
       <div className="d-flex justify-content-between align-items-center mb-4">
@@ -230,57 +271,64 @@ const DataPipelinesPage = () => {
       </div>
 
       <Row xs={1} md={2} lg={3} className="g-4">
-        {pipelines.map((pipeline) => {
-          const kit = (agentKits || []).find(k => k.id === pipeline.config?.agent_kit_id);
-          return (
-            <Col key={pipeline.id}>
-              <Card className="h-100 pipeline-card">
-                <Card.Body>
-                  <div className="d-flex justify-content-between align-items-start mb-3">
-                    <div className="pipeline-icon-wrapper">
-                      <ArrowRepeat size={24} />
+        {loading ? (
+          <PipelineCardSkeleton count={6} />
+        ) : (
+          pipelines.map((pipeline) => {
+            const kit = (agentKits || []).find(k => k.id === pipeline.config?.agent_kit_id);
+            return (
+              <Col key={pipeline.id}>
+                <Card className="h-100 pipeline-card">
+                  <Card.Body>
+                    <div className="d-flex justify-content-between align-items-start mb-3">
+                      <div className="pipeline-icon-wrapper">
+                        <ArrowRepeat size={24} />
+                      </div>
+                      <div className="pipeline-actions">
+                        <Button variant="link" className="text-danger p-0" onClick={() => handleDelete(pipeline.id)}>
+                          <Trash size={16} />
+                        </Button>
+                      </div>
                     </div>
-                    <div className="pipeline-actions">
-                      <Button variant="link" className="text-danger p-0" onClick={() => handleDelete(pipeline.id)}>
-                        <Trash size={16} />
-                      </Button>
+                    <Card.Title>{pipeline.name}</Card.Title>
+                    <Card.Text className="text-muted small mb-3">
+                      Type: {pipeline.config?.type || 'Custom'}
+                      <br />
+                      Frequency: {pipeline.config?.frequency || 'Manual'}
+                      <br />
+                      Agent Kit: {kit ? kit.name : 'None'}
+                    </Card.Text>
+                    <div className="d-flex gap-2 mb-3 flex-wrap">
+                      <Badge bg="success">Active</Badge>
+                      {getStatusBadge(pipeline)}
+                      <Badge bg="light" text="dark">
+                        Last: {formatLastRun(pipeline.last_run_at)}
+                      </Badge>
                     </div>
-                  </div>
-                  <Card.Title>{pipeline.name}</Card.Title>
-                  <Card.Text className="text-muted small mb-3">
-                    Type: {pipeline.config?.type || 'Custom'}
-                    <br />
-                    Frequency: {pipeline.config?.frequency || 'Manual'}
-                    <br />
-                    Agent Kit: {kit ? kit.name : 'None'}
-                  </Card.Text>
-                  <div className="d-flex gap-2 mb-3">
-                    <Badge bg="success">Active</Badge>
-                    <Badge bg="light" text="dark">Last run: Never</Badge>
-                  </div>
-                  <Button
-                    variant="outline-success"
-                    size="sm"
-                    className="w-100"
-                    onClick={() => handleExecute(pipeline.id)}
-                    disabled={executingId === pipeline.id}
-                  >
-                    {executingId === pipeline.id ? (
-                      <><Spinner size="sm" animation="border" className="me-2" /> Running...</>
-                    ) : (
-                      <><PlayFill className="me-2" /> Run Now</>
-                    )}
-                  </Button>
-                </Card.Body>
-                <Card.Footer className="bg-transparent border-0">
-                  <Button variant="outline-primary" size="sm" className="w-100">
-                    <Gear className="me-2" /> Configure
-                  </Button>
-                </Card.Footer>
-              </Card>
-            </Col>
-          );
-        })}
+                    <Button
+                      variant="outline-success"
+                      size="sm"
+                      className="w-100"
+                      onClick={() => handleExecute(pipeline.id)}
+                      disabled={executingId === pipeline.id}
+                    >
+                      {executingId === pipeline.id ? (
+                        <><Spinner size="sm" animation="border" className="me-2" /> Running...</>
+                      ) : (
+                        <><PlayFill className="me-2" /> Run Now</>
+                      )}
+                    </Button>
+                  </Card.Body>
+                  <Card.Footer className="bg-transparent border-0">
+                    <Button variant="outline-primary" size="sm" className="w-100">
+                      <Gear className="me-2" /> Configure
+                    </Button>
+                  </Card.Footer>
+                </Card>
+              </Col>
+            );
+          })
+        )}
       </Row>
     </div>
   );
@@ -296,10 +344,22 @@ const DataPipelinesPage = () => {
           <p className="page-subtitle">Set up automated workflows to save time on repetitive tasks</p>
         </div>
 
-        {error && <Alert variant="danger" onClose={() => setError(null)} dismissible>{error}</Alert>}
-        {success && <Alert variant="success" onClose={() => setSuccess(null)} dismissible>{success}</Alert>}
+        <EnhancedErrorAlert 
+          error={error} 
+          onRetry={() => retry(fetchData)}
+          onDismiss={clearError}
+          retrying={isRetrying}
+          className="mb-4"
+        />
+        {success && (
+          <div className="alert alert-success alert-dismissible fade show mb-4" role="alert">
+            <CheckCircleFill className="me-2" />
+            {success}
+            <button type="button" className="btn-close" onClick={() => setSuccess(null)}></button>
+          </div>
+        )}
 
-        {loading ? (
+        {loading && !error ? (
           <div className="text-center py-5">
             <Spinner animation="border" variant="primary" />
           </div>
