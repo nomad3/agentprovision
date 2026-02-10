@@ -1,15 +1,15 @@
-# AgentProvision — Enterprise AI Lakehouse Platform
+# ServiceTsunami — Enterprise AI Lakehouse Platform
 
-[![Production](https://img.shields.io/badge/production-agentprovision.com-green)](https://agentprovision.com)
+[![Production](https://img.shields.io/badge/production-servicetsunami.com-green)](https://servicetsunami.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 [![GKE](https://img.shields.io/badge/GKE-Kubernetes-4285F4)](https://cloud.google.com/kubernetes-engine)
 [![Turborepo](https://img.shields.io/badge/Turborepo-Monorepo-EF4444)](https://turbo.build)
 
 Enterprise-grade unified data & AI lakehouse platform. Orchestrates AI agents, data pipelines, and analytics workloads with full multi-tenant isolation. Built as a **Turborepo monorepo** deploying to GKE via Helm and GitHub Actions.
 
-**Production:** [agentprovision.com](https://agentprovision.com)
+**Production:** [servicetsunami.com](https://servicetsunami.com)
 
-**Sub-platforms:** [DentalERP](https://scdp-front-prod.agentprovision.com) · Into the Space
+**Sub-platforms:** [DentalERP](https://scdp-front-prod.servicetsunami.com) · Into the Space
 
 ---
 
@@ -181,7 +181,7 @@ BASE_URL=http://localhost:8001 ./scripts/e2e_test_production.sh
 ## Repository Structure
 
 ```
-agentprovision/
+servicetsunami/
 ├── apps/
 │   ├── api/                  # FastAPI backend (Python 3.11)
 │   │   ├── app/
@@ -196,7 +196,7 @@ agentprovision/
 │   │       ├── components/   # Layout (glassmorphic sidebar), Wizard
 │   │       └── services/     # API clients
 │   ├── adk-server/           # Google ADK multi-agent server
-│   │   ├── agentprovision_supervisor/  # Supervisor + sub-agents
+│   │   ├── servicetsunami_supervisor/  # Supervisor + sub-agents
 │   │   ├── tools/            # Agent tools (data, analytics, knowledge)
 │   │   └── server.py
 │   └── mcp-server/           # MCP server for Databricks integration
@@ -228,17 +228,17 @@ gh workflow run adk-deploy.yaml -f environment=prod
 
 # Watch rollout
 kubectl get pods -n prod -w
-kubectl rollout status deployment/agentprovision-api -n prod
+kubectl rollout status deployment/servicetsunami-api -n prod
 ```
 
 ### Production Architecture
 
 ```
 GKE Gateway → prod namespace
-  ├── agentprovision-web     (React SPA)
-  ├── agentprovision-api     (FastAPI)
-  ├── agentprovision-worker  (Temporal worker)
-  ├── agentprovision-adk     (Google ADK agents)
+  ├── servicetsunami-web     (React SPA)
+  ├── servicetsunami-api     (FastAPI)
+  ├── servicetsunami-worker  (Temporal worker)
+  ├── servicetsunami-adk     (Google ADK agents)
   ├── mcp-server             (Databricks integration)
   ├── temporal + temporal-web
   └── redis / postgresql (Cloud SQL proxy)
@@ -247,9 +247,9 @@ GKE Gateway → prod namespace
 ### GitHub Actions Workflows
 - `deploy-all.yaml` — Full stack deployment
 - `adk-deploy.yaml` — ADK server only
-- `agentprovision-api.yaml` — API service
-- `agentprovision-web.yaml` — Web frontend
-- `agentprovision-worker.yaml` — Temporal worker
+- `servicetsunami-api.yaml` — API service
+- `servicetsunami-web.yaml` — Web frontend
+- `servicetsunami-worker.yaml` — Temporal worker
 - `kubernetes-infrastructure.yaml` — Initial infra setup
 
 See `docs/KUBERNETES_DEPLOYMENT.md` for the full runbook.

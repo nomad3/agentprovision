@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'apps/adk-server/**'
-      - 'helm/values/agentprovision-adk.yaml'
+      - 'helm/values/servicetsunami-adk.yaml'
       - '.github/workflows/adk-deploy.yaml'
   workflow_dispatch:
 
@@ -14,9 +14,9 @@ env:
   GCP_PROJECT: ${{ vars.GCP_PROJECT }}
   GKE_CLUSTER: ${{ vars.GKE_CLUSTER }}
   GKE_ZONE: ${{ vars.GKE_ZONE }}
-  IMAGE_NAME: gcr.io/${{ vars.GCP_PROJECT }}/agentprovision-adk
+  IMAGE_NAME: gcr.io/${{ vars.GCP_PROJECT }}/servicetsunami-adk
   NAMESPACE: prod
-  HELM_RELEASE: agentprovision-adk
+  HELM_RELEASE: servicetsunami-adk
   HELM_CHART: ./helm/charts/microservice
 
 jobs:
@@ -62,7 +62,7 @@ jobs:
         run: |
           helm upgrade --install ${{ env.HELM_RELEASE }} ${{ env.HELM_CHART }} \
             --namespace ${{ env.NAMESPACE }} \
-            --values helm/values/agentprovision-adk.yaml \
+            --values helm/values/servicetsunami-adk.yaml \
             --set image.tag=${{ github.sha }} \
             --wait \
             --timeout 10m
@@ -70,4 +70,4 @@ jobs:
       - name: Verify deployment
         run: |
           kubectl rollout status deployment/${{ env.HELM_RELEASE }} -n ${{ env.NAMESPACE }}
-          kubectl get pods -n ${{ env.NAMESPACE }} -l app.kubernetes.io/name=agentprovision-adk
+          kubectl get pods -n ${{ env.NAMESPACE }} -l app.kubernetes.io/name=servicetsunami-adk

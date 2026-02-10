@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
-# Automated deploy of AgentProvision on a GCP VM (Debian/Ubuntu)
+# Automated deploy of ServiceTsunami on a GCP VM (Debian/Ubuntu)
 
 set -euo pipefail
 
 # --- customize these values ---
-REPO_URL="https://github.com/nomad3/agentprovision.git"
-REPO_DIR="/opt/agentprovision"
+REPO_URL="https://github.com/nomad3/servicetsunami.git"
+REPO_DIR="/opt/servicetsunami"
 GIT_REF="main"                       # branch or tag to deploy
 ENV_FILE="$REPO_DIR/.env.production"
 
-PRIMARY_DOMAIN="agentprovision.com"
-ALT_DOMAIN="www.agentprovision.com"
+PRIMARY_DOMAIN="servicetsunami.com"
+ALT_DOMAIN="www.servicetsunami.com"
 LETSENCRYPT_EMAIL="admin@example.com"  # required for certbot; use a real address
 # --- end customization ---
 
@@ -67,12 +67,12 @@ prepare_env() {
     log "Creating $ENV_FILE (edit values before continuing)."
     cat > "$ENV_FILE" <<'EOF'
 APP_ENV=production
-DATABASE_URL=postgresql+asyncpg://postgres:CHANGEME@db:5432/agentprovision
+DATABASE_URL=postgresql+asyncpg://postgres:CHANGEME@db:5432/servicetsunami
 REDIS_URL=redis://redis:6379/0
 SECRET_KEY=REPLACE_ME
 ACCESS_TOKEN_EXPIRE_MINUTES=30
-CORS_ORIGINS=https://agentprovision.com,https://www.agentprovision.com
-NEXT_PUBLIC_API_BASE_URL=https://agentprovision.com
+CORS_ORIGINS=https://servicetsunami.com,https://www.servicetsunami.com
+NEXT_PUBLIC_API_BASE_URL=https://servicetsunami.com
 EOF
     chmod 600 "$ENV_FILE"
     log "IMPORTANT: edit $ENV_FILE with real secrets (DB password, SECRET_KEY, etc.) and rerun the script."

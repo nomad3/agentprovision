@@ -1,4 +1,4 @@
-"""Root agent definition for AgentProvision ADK server.
+"""Root agent definition for ServiceTsunami ADK server.
 
 This is the main entry point for the ADK API server.
 The root_agent coordinates specialist sub-agents for different tasks.
@@ -13,9 +13,9 @@ from config.settings import settings
 
 # Root supervisor agent - coordinates specialist agents
 root_agent = Agent(
-    name="agentprovision_supervisor",
+    name="servicetsunami_supervisor",
     model=settings.adk_model,
-    instruction="""You are the AgentProvision AI supervisor - an intelligent orchestrator for data analysis and insights.
+    instruction="""You are the ServiceTsunami AI supervisor - an intelligent orchestrator for data analysis and insights.
 
 You coordinate a team of specialist agents:
 - data_analyst: For data queries, SQL execution, statistical analysis, and generating insights from datasets

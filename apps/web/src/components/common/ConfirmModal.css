@@ -1,5 +1,5 @@
 .confirm-modal .modal-content {
-  background: linear-gradient(180deg, rgba(14, 22, 40, 0.98) 0%, rgba(12, 20, 36, 0.95) 100%);
+  background: linear-gradient(180deg, rgba(34, 39, 46, 0.98) 0%, rgba(30, 34, 40, 0.95) 100%);
   border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 16px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
@@ -53,9 +53,9 @@
 }
 
 .confirm-modal-icon-info {
-  background: rgba(14, 165, 233, 0.15);
-  color: #0ea5e9;
-  border: 2px solid rgba(14, 165, 233, 0.3);
+  background: rgba(42, 77, 117, 0.15);
+  color: #2a4d75;
+  border: 2px solid rgba(42, 77, 117, 0.3);
 }
 
 .confirm-modal-icon-success {

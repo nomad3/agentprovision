@@ -1,10 +1,10 @@
-# AgentProvision Databricks Worker - Temporal Worker for Background Jobs
+# ServiceTsunami Databricks Worker - Temporal Worker for Background Jobs
 # NOTE: Disabled until Temporal is deployed
-nameOverride: "agentprovision-worker"
-fullnameOverride: "agentprovision-worker"
+nameOverride: "servicetsunami-worker"
+fullnameOverride: "servicetsunami-worker"
 
 image:
-  repository: gcr.io/ai-agency-479516/agentprovision-api
+  repository: gcr.io/ai-agency-479516/servicetsunami-api
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -22,7 +22,7 @@ container:
 serviceAccount:
   create: true
   annotations:
-    iam.gke.io/gcp-service-account: agentprovision-worker@ai-agency-479516.iam.gserviceaccount.com
+    iam.gke.io/gcp-service-account: servicetsunami-worker@ai-agency-479516.iam.gserviceaccount.com
 
 # Pod security
 podSecurityContext:
@@ -80,18 +80,18 @@ externalSecret:
     name: gcpsm-secret-store
     kind: SecretStore
   target:
-    name: agentprovision-worker-secret
+    name: servicetsunami-worker-secret
     creationPolicy: Owner
   data:
     - secretKey: DATABASE_URL
       remoteRef:
-        key: agentprovision-database-url
+        key: servicetsunami-database-url
     - secretKey: MCP_API_KEY
       remoteRef:
-        key: agentprovision-mcp-api-key
+        key: servicetsunami-mcp-api-key
     - secretKey: API_INTERNAL_KEY
       remoteRef:
-        key: agentprovision-api-internal-key
+        key: servicetsunami-api-internal-key
 
 # Additional environment variables
 env:

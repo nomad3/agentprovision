@@ -78,7 +78,7 @@ async def import_chatgpt_history(
                 KnowledgeExtractionWorkflow.run,
                 args=[str(session_id), str(current_user.tenant_id)],
                 id=f"knowledge-extraction-{session_id}",
-                task_queue="agentprovision-databricks",
+                task_queue="servicetsunami-databricks",
             )
     except Exception as e:
         print(f"Failed to start Temporal workflow: {e}")
@@ -151,7 +151,7 @@ async def import_claude_history(
                 KnowledgeExtractionWorkflow.run,
                 args=[str(session_id), str(current_user.tenant_id)],
                 id=f"knowledge-extraction-{session_id}",
-                task_queue="agentprovision-databricks", # Using the existing worker queue
+                task_queue="servicetsunami-databricks", # Using the existing worker queue
             )
     except Exception as e:
         # Log error but don't fail the import response

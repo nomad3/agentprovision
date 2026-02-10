@@ -1,5 +1,5 @@
 {
-  "brand": "AgentProvision",
+  "brand": "ServiceTsunami",
   "nav": {
     "platform": "Plataforma",
     "architecture": "Arquitectura",
@@ -39,6 +39,6 @@
     "trustedBy": "Equipos que confían en nosotros"
   },
   "footer": {
-    "copyright": "© {{year}} AgentProvision. Todos los derechos reservados."
+    "copyright": "© {{year}} ServiceTsunami. Todos los derechos reservados."
   }
 }

@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../gke-k8s-autopilot-agents"
+		}
+	],
+	"settings": {}
+}

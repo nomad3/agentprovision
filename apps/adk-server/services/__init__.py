@@ -1,4 +1,4 @@
-"""Service layer for AgentProvision ADK server."""
+"""Service layer for ServiceTsunami ADK server."""
 from services.auth import (
     decode_token,
     validate_request,

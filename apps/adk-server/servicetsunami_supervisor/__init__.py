@@ -1,4 +1,4 @@
-"""Agent definitions for AgentProvision ADK server."""
+"""Agent definitions for ServiceTsunami ADK server."""
 from .data_analyst import data_analyst
 from .report_generator import report_generator
 from .knowledge_manager import knowledge_manager

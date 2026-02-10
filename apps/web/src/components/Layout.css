@@ -1,15 +1,15 @@
 .layout-container {
   display: flex;
   min-height: 100vh;
-  background: radial-gradient(circle at 20% -10%, rgba(99, 102, 241, 0.12), transparent 45%),
-    radial-gradient(circle at 80% -15%, rgba(14, 165, 233, 0.12), transparent 50%),
-    #050b1a;
+  background: radial-gradient(circle at 20% -10%, rgba(12, 209, 142, 0.12), transparent 45%),
+    radial-gradient(circle at 80% -15%, rgba(42, 77, 117, 0.12), transparent 50%),
+    #1a1e24;
 }
 
 .sidebar-glass {
   width: 280px;
   min-height: 100vh;
-  background: linear-gradient(180deg, rgba(11, 19, 36, 0.92) 0%, rgba(9, 14, 26, 0.95) 100%);
+  background: linear-gradient(180deg, rgba(34, 39, 46, 0.92) 0%, rgba(26, 30, 36, 0.95) 100%);
   backdrop-filter: blur(20px);
   border-right: 1px solid rgba(148, 163, 184, 0.15);
   display: flex;
@@ -44,12 +44,12 @@
   width: 42px;
   height: 42px;
   border-radius: 12px;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(14, 165, 233, 0.2));
+  background: linear-gradient(135deg, rgba(12, 209, 142, 0.2), rgba(42, 77, 117, 0.2));
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #c7d2fe;
-  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #a7f3d0;
+  border: 1px solid rgba(12, 209, 142, 0.3);
 }
 
 .brand-text {
@@ -165,17 +165,17 @@
 }
 
 .sidebar-nav-link:hover {
-  background: rgba(99, 102, 241, 0.1);
-  border-color: rgba(99, 102, 241, 0.2);
+  background: rgba(12, 209, 142, 0.1);
+  border-color: rgba(12, 209, 142, 0.2);
   color: #f8fafc !important;
   transform: translateX(4px);
 }
 
 .sidebar-nav-link.active {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(14, 165, 233, 0.1));
-  border-color: rgba(99, 102, 241, 0.3);
+  background: linear-gradient(135deg, rgba(12, 209, 142, 0.15), rgba(42, 77, 117, 0.1));
+  border-color: rgba(12, 209, 142, 0.3);
   color: #f8fafc !important;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 4px 12px rgba(12, 209, 142, 0.2);
 }
 
 .sidebar-nav-link.active::before {
@@ -200,13 +200,13 @@
 .sidebar-footer {
   padding: 1rem;
   border-top: 1px solid rgba(148, 163, 184, 0.12);
-  background: rgba(5, 11, 26, 0.5);
+  background: rgba(26, 30, 36, 0.5);
   flex-shrink: 0;
 }
 
 .user-dropdown-toggle {
-  background: rgba(99, 102, 241, 0.08);
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  background: rgba(12, 209, 142, 0.08);
+  border: 1px solid rgba(12, 209, 142, 0.2);
   border-radius: 10px;
   padding: 0.75rem;
   color: #f8fafc;
@@ -216,8 +216,8 @@
 }
 
 .user-dropdown-toggle:hover {
-  background: rgba(99, 102, 241, 0.15);
-  border-color: rgba(99, 102, 241, 0.3);
+  background: rgba(12, 209, 142, 0.15);
+  border-color: rgba(12, 209, 142, 0.3);
   color: #f8fafc;
 }
 
@@ -243,7 +243,7 @@
   flex: 1;
   margin-left: 280px;
   min-height: 100vh;
-  background: linear-gradient(180deg, rgba(5, 11, 26, 0.6) 0%, rgba(8, 13, 26, 0.8) 100%);
+  background: linear-gradient(180deg, rgba(26, 30, 36, 0.6) 0%, rgba(26, 30, 36, 0.8) 100%);
 }
 
 .content-wrapper {

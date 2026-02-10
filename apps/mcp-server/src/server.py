@@ -1,7 +1,7 @@
 """
-AgentProvision MCP Server (REST API + MCP)
+ServiceTsunami MCP Server (REST API + MCP)
 
-This server exposes REST endpoints for the AgentProvision API to consume,
+This server exposes REST endpoints for the ServiceTsunami API to consume,
 acting as a bridge to Databricks and other integrations.
 """
 import os
@@ -14,7 +14,7 @@ from src.config import settings
 from src.clients.databricks_client import DatabricksClient
 from src.tools import databricks_tools, ingestion
 
-app = FastAPI(title="AgentProvision MCP Server", docs_url="/docs", openapi_url="/openapi.json")
+app = FastAPI(title="ServiceTsunami MCP Server", docs_url="/docs", openapi_url="/openapi.json")
 databricks = DatabricksClient()
 
 # ==================== Models ====================
@@ -41,7 +41,7 @@ class TransformSilverRequest(BaseModel):
 
 # ==================== Routes ====================
 
-@app.get("/agentprovision/v1/health")
+@app.get("/servicetsunami/v1/health")
 async def health_check():
     """Health check endpoint"""
     try:
@@ -65,7 +65,7 @@ async def health_check():
 
 # --- Databricks Catalogs ---
 
-@app.post("/agentprovision/v1/databricks/catalogs")
+@app.post("/servicetsunami/v1/databricks/catalogs")
 async def create_catalog(request: CreateCatalogRequest):
     try:
         # Logic to create catalog
@@ -80,12 +80,12 @@ async def create_catalog(request: CreateCatalogRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/agentprovision/v1/databricks/catalogs/{tenant_id}")
+@app.get("/servicetsunami/v1/databricks/catalogs/{tenant_id}")
 async def get_catalog_status(tenant_id: str):
     try:
         # Check if catalog exists
         # Mocking for now to pass the connection check
-        catalog_name = f"agentprovision_{tenant_id.replace('-', '_')}"
+        catalog_name = f"servicetsunami_{tenant_id.replace('-', '_')}"
         return {
             "exists": True, # Simulate it exists for now, or implement real check
             "catalog_name": catalog_name,
@@ -96,12 +96,12 @@ async def get_catalog_status(tenant_id: str):
 
 # --- Databricks Datasets ---
 
-@app.post("/agentprovision/v1/databricks/datasets")
+@app.post("/servicetsunami/v1/databricks/datasets")
 async def create_dataset(request: CreateDatasetRequest):
     # Implement logic
     return {"status": "created", "table": f"{request.name}"}
 
-@app.post("/agentprovision/v1/databricks/datasets/upload")
+@app.post("/servicetsunami/v1/databricks/datasets/upload")
 async def upload_dataset(
     tenant_id: str,
     dataset_name: str,
@@ -113,7 +113,7 @@ async def upload_dataset(
     # await ingestion.upload_file(...)
     return {"status": "uploaded", "size": len(content)}
 
-@app.post("/agentprovision/v1/databricks/datasets/query")
+@app.post("/servicetsunami/v1/databricks/datasets/query")
 async def query_dataset(request: QueryDatasetRequest):
     try:
         result = await databricks_tools.query_sql(request.sql, request.tenant_id)
@@ -121,7 +121,7 @@ async def query_dataset(request: QueryDatasetRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/agentprovision/v1/databricks/datasets/{tenant_id}/{dataset_name}")
+@app.get("/servicetsunami/v1/databricks/datasets/{tenant_id}/{dataset_name}")
 async def get_dataset(tenant_id: str, dataset_name: str):
     try:
         result = await databricks_tools.describe_table(dataset_name, tenant_id)
@@ -129,7 +129,7 @@ async def get_dataset(tenant_id: str, dataset_name: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/agentprovision/v1/databricks/transformations/silver")
+@app.post("/servicetsunami/v1/databricks/transformations/silver")
 async def transform_silver(request: TransformSilverRequest):
     try:
         result = await databricks_tools.transform_to_silver(request.bronze_table, request.tenant_id)

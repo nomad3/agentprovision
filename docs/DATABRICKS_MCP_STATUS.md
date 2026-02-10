@@ -10,9 +10,9 @@ The Databricks integration via MCP (Model Context Protocol) server has been succ
 - **URL**: `http://mcp-server:8000`
 - **Type**: FastAPI REST server
 - **Endpoints**:
-  - `/agentprovision/v1/health` - Health check
-  - `/agentprovision/v1/databricks/catalogs` - Catalog management
-  - `/agentprovision/v1/databricks/datasets` - Dataset operations
+  - `/servicetsunami/v1/health` - Health check
+  - `/servicetsunami/v1/databricks/catalogs` - Catalog management
+  - `/servicetsunami/v1/databricks/datasets` - Dataset operations
 
 ### Configuration Changes Made
 
@@ -38,7 +38,7 @@ The Databricks integration via MCP (Model Context Protocol) server has been succ
 - **Location**: `apps/api/app/workflows/knowledge_extraction.py`
 - **Activity**: `apps/api/app/workflows/activities/knowledge_extraction.py`
 - **Purpose**: Extract knowledge entities from imported chat sessions using LLM
-- **Task Queue**: `agentprovision-databricks`
+- **Task Queue**: `servicetsunami-databricks`
 - **Registered in**: `databricks_worker.py`
 
 #### Dataset Sync Workflow
@@ -48,7 +48,7 @@ The Databricks integration via MCP (Model Context Protocol) server has been succ
   - `sync_to_bronze` - Create Bronze table in Databricks
   - `transform_to_silver` - Transform to Silver layer
   - `update_dataset_metadata` - Update dataset metadata
-- **Task Queue**: `agentprovision-databricks`
+- **Task Queue**: `servicetsunami-databricks`
 
 ### Integration Points
 
@@ -150,6 +150,6 @@ The Settings page (`/settings`) shows:
 
 ## Deployment
 
-All changes have been deployed to the GCP VM at `https://agentprovision.com`.
+All changes have been deployed to the GCP VM at `https://servicetsunami.com`.
 
 **Last Updated**: 2025-12-01 09:23 UTC

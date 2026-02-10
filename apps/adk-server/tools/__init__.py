@@ -1,4 +1,4 @@
-"""Tool definitions for AgentProvision ADK server."""
+"""Tool definitions for ServiceTsunami ADK server."""
 from tools.data_tools import (
     discover_datasets,
     get_dataset_schema,

@@ -23,9 +23,9 @@ const NeuralCanvas = ({ className = "" }) => {
     mouseDistance: 300,
     electricDistance: 200,
     colors: {
-      primary: "#6366f1", // Indigo (matches AgentProvision theme)
-      secondary: "#0ea5e9", // Sky blue
-      accent: "#f97316", // Orange accent
+      primary: "#0cd18e", // Green (Maestro primary)
+      secondary: "#2a4d75", // Dark blue
+      accent: "#0cd18e", // Green accent
     },
   };
 

@@ -4,7 +4,7 @@ Automatic synchronization of uploaded datasets to Databricks Unity Catalog with 
 
 ## Overview
 
-AgentProvision automatically syncs uploaded datasets to Databricks Unity Catalog using a durable Temporal workflow orchestration pattern. This integration provides:
+ServiceTsunami automatically syncs uploaded datasets to Databricks Unity Catalog using a durable Temporal workflow orchestration pattern. This integration provides:
 
 - **Instant Local Access**: Datasets stored as Parquet files with DuckDB querying (< 2 seconds)
 - **Background Sync**: Asynchronous Temporal workflows sync to Databricks without blocking uploads
@@ -17,7 +17,7 @@ AgentProvision automatically syncs uploaded datasets to Databricks Unity Catalog
 ### Components
 
 ```
-Dataset Upload → AgentProvision API → Local Parquet Storage
+Dataset Upload → ServiceTsunami API → Local Parquet Storage
                          ↓
                  Temporal Workflow (async)
                          ↓
@@ -31,7 +31,7 @@ Dataset Upload → AgentProvision API → Local Parquet Storage
 ### Data Flow
 
 1. **Upload**: User uploads CSV/Excel via `/api/v1/datasets/ingest`
-2. **Local Storage**: AgentProvision converts to Parquet and stores locally
+2. **Local Storage**: ServiceTsunami converts to Parquet and stores locally
 3. **Workflow Trigger**: If `DATABRICKS_AUTO_SYNC=true`, Temporal workflow starts
 4. **Bronze Creation**: MCP server downloads Parquet, uploads to DBFS, creates external table
 5. **Silver Transformation**: MCP server applies type inference and cleaning, creates managed table
@@ -195,7 +195,7 @@ The workflow executes three activities in sequence:
 #### Activity 1: sync_to_bronze
 - Duration: ~30-60 seconds
 - Creates external table pointing to uploaded Parquet file
-- MCP server downloads file from AgentProvision
+- MCP server downloads file from ServiceTsunami
 - Uploads to Databricks DBFS Volume
 - Creates Bronze table with schema inference
 
@@ -439,7 +439,7 @@ The `/internal/storage/datasets/{file_name}` endpoint is protected by:
 Ensure Nginx configuration does NOT proxy `/internal/*` paths:
 
 ```nginx
-# In /etc/nginx/sites-available/agentprovision.com
+# In /etc/nginx/sites-available/servicetsunami.com
 location /api/ {
     proxy_pass http://localhost:8001/api/;
     # ... other directives
@@ -453,7 +453,7 @@ location /api/ {
 
 ### MCP API Key Management
 
-The `MCP_API_KEY` is a shared secret between AgentProvision and MCP server:
+The `MCP_API_KEY` is a shared secret between ServiceTsunami and MCP server:
 
 ```bash
 # Generate secure random key
@@ -658,7 +658,7 @@ docker-compose logs databricks-worker | grep "started successfully"
 2. **File Format**: Only Parquet files supported (CSV/Excel converted on upload)
 3. **Schema Evolution**: Changing dataset schema requires re-upload
 4. **Concurrent Uploads**: No batching; each dataset triggers separate workflow
-5. **Delete Sync**: Deleting dataset from AgentProvision doesn't delete Databricks tables
+5. **Delete Sync**: Deleting dataset from ServiceTsunami doesn't delete Databricks tables
 
 ### Future Enhancements
 
@@ -706,7 +706,7 @@ A: Set `DATABRICKS_SYNC_ENABLED=false` or `MCP_ENABLED=false`. All features work
 ## Additional Resources
 
 - **Implementation Plan**: `docs/plans/2025-11-06-databricks-dataset-sync-implementation.md`
-- **MCP Integration Architecture**: `AGENTPROVISION_MCP_INTEGRATION.md`
+- **MCP Integration Architecture**: `SERVICETSUNAMI_MCP_INTEGRATION.md`
 - **Temporal Workflows Guide**: `apps/api/app/workflows/README.md` (if exists)
 - **Databricks Unity Catalog Docs**: https://docs.databricks.com/data-governance/unity-catalog/
 

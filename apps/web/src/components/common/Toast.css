@@ -6,7 +6,7 @@
 }
 
 .toast-custom {
-  background: linear-gradient(180deg, rgba(14, 22, 40, 0.98) 0%, rgba(12, 20, 36, 0.95) 100%);
+  background: linear-gradient(180deg, rgba(34, 39, 46, 0.98) 0%, rgba(30, 34, 40, 0.95) 100%);
   border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 12px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
@@ -42,7 +42,7 @@
 }
 
 .toast-header-custom {
-  background: rgba(99, 102, 241, 0.05);
+  background: rgba(12, 209, 142, 0.05);
   border-bottom: 1px solid rgba(148, 163, 184, 0.15);
   color: #f8fafc;
   font-weight: 600;
@@ -93,11 +93,11 @@
 }
 
 .toast-info {
-  border-left: 4px solid #0ea5e9;
+  border-left: 4px solid #2a4d75;
 }
 
 .toast-info .toast-icon {
-  color: #0ea5e9;
+  color: #2a4d75;
 }
 
 @media (max-width: 576px) {

@@ -7,7 +7,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """MCP Server settings loaded from environment"""
 
-    # AgentProvision API
+    # ServiceTsunami API
     API_BASE_URL: str = "http://localhost:8001"
     API_INTERNAL_KEY: str = "internal-service-key"
 

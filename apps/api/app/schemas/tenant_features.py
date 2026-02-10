@@ -23,7 +23,7 @@ class TenantFeaturesBase(BaseModel):
     monthly_token_limit: int = 1000000
     storage_limit_gb: float = 10.0
     # UI
-    hide_agentprovision_branding: bool = False
+    hide_servicetsunami_branding: bool = False
     plan_type: str = "starter"
 
 
@@ -45,7 +45,7 @@ class TenantFeaturesUpdate(BaseModel):
     max_agent_groups: Optional[int] = None
     monthly_token_limit: Optional[int] = None
     storage_limit_gb: Optional[float] = None
-    hide_agentprovision_branding: Optional[bool] = None
+    hide_servicetsunami_branding: Optional[bool] = None
     plan_type: Optional[str] = None
 
 

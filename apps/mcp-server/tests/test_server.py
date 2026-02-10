@@ -26,4 +26,4 @@ def test_server_has_tools():
 
 def test_server_name():
     """Test server has correct name"""
-    assert mcp.name == "AgentProvision"
+    assert mcp.name == "ServiceTsunami"

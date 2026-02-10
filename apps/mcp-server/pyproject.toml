@@ -1,7 +1,7 @@
 [project]
-name = "agentprovision-mcp-server"
+name = "servicetsunami-mcp-server"
 version = "0.1.0"
-description = "MCP Integration Server for AgentProvision - connects data sources to Databricks"
+description = "MCP Integration Server for ServiceTsunami - connects data sources to Databricks"
 requires-python = ">=3.11"
 dependencies = [
     "mcp>=1.0.0",

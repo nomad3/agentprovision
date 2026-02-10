@@ -13,7 +13,7 @@
 ## Prerequisites
 
 Before starting, ensure:
-1. Working in worktree: `/Users/nomade/Documents/GitHub/agentprovision/.worktrees/mcp-server`
+1. Working in worktree: `/Users/nomade/Documents/GitHub/servicetsunami/.worktrees/mcp-server`
 2. Branch: `feature/mcp-integration-server`
 3. Docker services available for integration testing
 
@@ -44,9 +44,9 @@ Create: `apps/mcp-server/pyproject.toml`
 
 ```toml
 [project]
-name = "agentprovision-mcp-server"
+name = "servicetsunami-mcp-server"
 version = "0.1.0"
-description = "MCP Integration Server for AgentProvision - connects data sources to Databricks"
+description = "MCP Integration Server for ServiceTsunami - connects data sources to Databricks"
 requires-python = ">=3.11"
 dependencies = [
     "mcp>=1.0.0",
@@ -89,7 +89,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """MCP Server settings loaded from environment"""
 
-    # AgentProvision API
+    # ServiceTsunami API
     API_BASE_URL: str = "http://localhost:8001"
     API_INTERNAL_KEY: str = "internal-service-key"
 
@@ -116,7 +116,7 @@ settings = Settings()
 Create: `apps/mcp-server/.env.example`
 
 ```bash
-# AgentProvision API
+# ServiceTsunami API
 API_BASE_URL=http://localhost:8001
 API_INTERNAL_KEY=your-internal-service-key
 
@@ -135,7 +135,7 @@ MCP_TRANSPORT=streamable-http
 Create: `apps/mcp-server/src/__init__.py`
 
 ```python
-"""AgentProvision MCP Server"""
+"""ServiceTsunami MCP Server"""
 ```
 
 Create: `apps/mcp-server/src/tools/__init__.py`
@@ -219,22 +219,22 @@ git commit -m "feat(mcp): initialize MCP server package structure
 Create: `apps/mcp-server/tests/test_api_client.py`
 
 ```python
-"""Tests for AgentProvision API client"""
+"""Tests for ServiceTsunami API client"""
 import pytest
 from unittest.mock import AsyncMock, patch
 
-from src.clients.api_client import AgentProvisionAPI
+from src.clients.api_client import ServiceTsunamiAPI
 
 
 @pytest.fixture
 def api():
-    return AgentProvisionAPI()
+    return ServiceTsunamiAPI()
 
 
 @pytest.mark.asyncio
 async def test_api_client_creates_data_source():
     """Test creating a data source via API"""
-    api = AgentProvisionAPI()
+    api = ServiceTsunamiAPI()
 
     with patch.object(api, '_request', new_callable=AsyncMock) as mock_request:
         mock_request.return_value = {
@@ -259,7 +259,7 @@ async def test_api_client_creates_data_source():
 @pytest.mark.asyncio
 async def test_api_client_gets_data_source():
     """Test fetching a data source with decrypted credentials"""
-    api = AgentProvisionAPI()
+    api = ServiceTsunamiAPI()
 
     with patch.object(api, '_request', new_callable=AsyncMock) as mock_request:
         mock_request.return_value = {
@@ -278,7 +278,7 @@ async def test_api_client_gets_data_source():
 @pytest.mark.asyncio
 async def test_api_client_creates_dataset():
     """Test creating dataset metadata"""
-    api = AgentProvisionAPI()
+    api = ServiceTsunamiAPI()
 
     with patch.object(api, '_request', new_callable=AsyncMock) as mock_request:
         mock_request.return_value = {"id": "dataset-789", "name": "customers"}
@@ -310,7 +310,7 @@ Create: `apps/mcp-server/src/clients/api_client.py`
 
 ```python
 """
-AgentProvision API Client
+ServiceTsunami API Client
 
 Handles communication with the main API for:
 - Credential storage and retrieval
@@ -328,9 +328,9 @@ class APIClientError(Exception):
     pass
 
 
-class AgentProvisionAPI:
+class ServiceTsunamiAPI:
     """
-    Client for AgentProvision API.
+    Client for ServiceTsunami API.
 
     Used by MCP server to:
     - Store/retrieve encrypted credentials
@@ -501,7 +501,7 @@ Expected: PASS (3 tests)
 
 ```bash
 git add apps/mcp-server/src/clients/api_client.py apps/mcp-server/tests/test_api_client.py
-git commit -m "feat(mcp): add AgentProvision API client
+git commit -m "feat(mcp): add ServiceTsunami API client
 
 - Create/get data sources with encrypted credentials
 - Create/update dataset metadata
@@ -999,9 +999,9 @@ Tools for connecting to and extracting data from PostgreSQL databases.
 import asyncpg
 from typing import Dict, Any
 
-from src.clients.api_client import AgentProvisionAPI
+from src.clients.api_client import ServiceTsunamiAPI
 
-api = AgentProvisionAPI()
+api = ServiceTsunamiAPI()
 
 
 async def connect_postgres(
@@ -1320,11 +1320,11 @@ import io
 import pandas as pd
 from typing import Dict, Any
 
-from src.clients.api_client import AgentProvisionAPI
+from src.clients.api_client import ServiceTsunamiAPI
 from src.clients.databricks_client import DatabricksClient
 from src.utils.parquet import dataframe_to_parquet
 
-api = AgentProvisionAPI()
+api = ServiceTsunamiAPI()
 databricks = DatabricksClient()
 
 
@@ -1760,7 +1760,7 @@ def test_server_has_tools():
 
 def test_server_name():
     """Test server has correct name"""
-    assert mcp.name == "AgentProvision"
+    assert mcp.name == "ServiceTsunami"
 ```
 
 **Step 2: Run test to verify it fails**
@@ -1778,7 +1778,7 @@ Create: `apps/mcp-server/src/server.py`
 
 ```python
 """
-AgentProvision MCP Server
+ServiceTsunami MCP Server
 
 MCP-compliant server following Anthropic's Model Context Protocol.
 Provides tools for data source connections, Databricks operations,
@@ -1793,7 +1793,7 @@ from src.config import settings
 
 # Initialize MCP Server
 mcp = FastMCP(
-    name="AgentProvision",
+    name="ServiceTsunami",
     description="Data lakehouse integration server - connect sources, sync to Databricks, query with AI"
 )
 
@@ -2055,7 +2055,7 @@ Add to `docker-compose.yml` after the `databricks-worker` service:
 
 ```bash
 cd apps/mcp-server
-docker build -t agentprovision-mcp-server .
+docker build -t servicetsunami-mcp-server .
 ```
 
 Expected: Build succeeds
@@ -2163,10 +2163,10 @@ git commit -m "feat(api): add internal endpoint for MCP credential access
 Add to the "Architecture" section after "Databricks Integration":
 
 ```markdown
-**MCP Integration Server**: AgentProvision includes an MCP-compliant server following Anthropic's Model Context Protocol:
+**MCP Integration Server**: ServiceTsunami includes an MCP-compliant server following Anthropic's Model Context Protocol:
 - Located in `apps/mcp-server/`
 - Provides tools for: PostgreSQL connections, data ingestion, Databricks queries
-- Works with Claude Desktop, Claude Code, and AgentProvision Chat
+- Works with Claude Desktop, Claude Code, and ServiceTsunami Chat
 - See `docs/plans/2025-11-24-mcp-integration-server-design.md` for architecture details
 ```
 
@@ -2206,7 +2206,7 @@ After implementing all tasks, verify:
 
 - [ ] All tests pass: `cd apps/mcp-server && pytest tests/ -v`
 - [ ] Server starts: `python -m src.server`
-- [ ] Docker builds: `docker build -t agentprovision-mcp-server apps/mcp-server/`
+- [ ] Docker builds: `docker build -t servicetsunami-mcp-server apps/mcp-server/`
 - [ ] Full docker-compose works: `docker-compose up -d`
 
 ---

@@ -8,7 +8,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'https://agentprovision.com',
+    baseURL: 'https://servicetsunami.com',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },

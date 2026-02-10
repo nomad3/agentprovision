@@ -437,7 +437,7 @@ async def load_to_bronze(
     # For now, just return the expected table name
     # In production, this would upload to DBFS and create the table
     table_name = f"bronze_{dataset_name.replace('-', '_').replace(' ', '_').lower()}"
-    catalog = f"agentprovision_{tenant_id.replace('-', '_')}"
+    catalog = f"servicetsunami_{tenant_id.replace('-', '_')}"
 
     bronze_table = f"{catalog}.default.{table_name}"
 

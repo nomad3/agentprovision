@@ -398,7 +398,7 @@ Add after existing methods (around line 100+):
         Create dataset in Databricks Unity Catalog (Bronze + Silver)
 
         This triggers the MCP server to:
-        1. Download parquet file from AgentProvision
+        1. Download parquet file from ServiceTsunami
         2. Upload to Databricks DBFS/Volume
         3. Create Bronze external table
         4. Create Silver managed table with transformations
@@ -414,8 +414,8 @@ Add after existing methods (around line 100+):
             Dict with bronze_table, silver_table, row_count
         """
         # Build internal file URL for MCP server to download
-        # MCP server will call: GET http://agentprovision-api:8001/internal/storage/datasets/{file_name}
-        parquet_url = f"http://agentprovision-api:8001/internal/storage/datasets/{parquet_file_name}"
+        # MCP server will call: GET http://servicetsunami-api:8001/internal/storage/datasets/{file_name}
+        parquet_url = f"http://servicetsunami-api:8001/internal/storage/datasets/{parquet_file_name}"
 
         return await self._request(
             "POST",
@@ -597,7 +597,7 @@ Create: `apps/api/app/workflows/__init__.py`
 
 ```python
 """
-Temporal workflows for AgentProvision
+Temporal workflows for ServiceTsunami
 """
 ```
 
@@ -702,7 +702,7 @@ Create: `apps/api/app/workflows/activities/__init__.py`
 
 ```python
 """
-Temporal activities for AgentProvision workflows
+Temporal activities for ServiceTsunami workflows
 """
 ```
 
@@ -731,7 +731,7 @@ async def sync_to_bronze(dataset_id: str, tenant_id: str) -> Dict[str, Any]:
     Create Bronze external table in Databricks Unity Catalog
 
     Calls MCP server to:
-    1. Download parquet from AgentProvision
+    1. Download parquet from ServiceTsunami
     2. Upload to Databricks DBFS/Volume
     3. Create external table in Bronze schema
 
@@ -1025,7 +1025,7 @@ def ingest_records(
                 workflows.start_workflow(
                     workflow_type=DatasetSyncWorkflow,
                     workflow_id=f"dataset-sync-{dataset.id}",
-                    task_queue="agentprovision-databricks",
+                    task_queue="servicetsunami-databricks",
                     arguments=[str(dataset.id), str(tenant_id)]
                 )
             )
@@ -1246,19 +1246,19 @@ async def run_databricks_worker():
     - DatasetSyncWorkflow
     - Related activities
 
-    Task queue: agentprovision-databricks
+    Task queue: servicetsunami-databricks
     """
     # Connect to Temporal server
     client = await Client.connect(settings.TEMPORAL_ADDRESS)
 
     logger.info("Starting Databricks Temporal worker...")
     logger.info(f"Temporal address: {settings.TEMPORAL_ADDRESS}")
-    logger.info(f"Task queue: agentprovision-databricks")
+    logger.info(f"Task queue: servicetsunami-databricks")
 
     # Create and run worker
     worker = Worker(
         client,
-        task_queue="agentprovision-databricks",
+        task_queue="servicetsunami-databricks",
         workflows=[DatasetSyncWorkflow],
         activities=[
             sync_to_bronze,
@@ -1699,7 +1699,7 @@ Automatic synchronization of datasets to Databricks Unity Catalog.
 
 ## How It Works
 
-1. **Upload Dataset** → AgentProvision ingests to local Parquet (instant)
+1. **Upload Dataset** → ServiceTsunami ingests to local Parquet (instant)
 2. **Trigger Workflow** → Temporal workflow starts in background (async)
 3. **Sync to Bronze** → MCP server creates external table pointing to parquet
 4. **Transform to Silver** → MCP server creates managed table with type inference
@@ -1796,7 +1796,7 @@ docker-compose logs databricks-worker
 
 **File not found error from MCP:**
 - Verify internal endpoint accessible: `GET /internal/storage/datasets/{file}`
-- Check MCP_API_KEY matches between AgentProvision and MCP server
+- Check MCP_API_KEY matches between ServiceTsunami and MCP server
 ```
 
 **Step 2: Update CLAUDE.md**

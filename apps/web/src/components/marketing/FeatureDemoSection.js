@@ -39,7 +39,7 @@ const FeatureDemoSection = () => {
               Platform Tour
             </h2>
             <p className="section-subtitle">
-              See how AgentProvision empowers your workflow
+              See how ServiceTsunami empowers your workflow
             </p>
           </div>
         </AnimatedSection>
@@ -88,7 +88,7 @@ const FeatureDemoSection = () => {
                             <div className="rounded-circle bg-success" style={{ width: '10px', height: '10px' }}></div>
                           </div>
                           <div className="mx-auto bg-dark bg-opacity-50 px-4 py-1 rounded-pill text-muted small font-monospace" style={{ fontSize: '10px' }}>
-                            app.agentprovision.com/{feature.key}
+                            app.servicetsunami.com/{feature.key}
                           </div>
                         </div>
 

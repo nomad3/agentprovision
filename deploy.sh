@@ -1,13 +1,13 @@
 #!/bin/bash
 set -e
 
-DOMAIN="agentprovision.com"
+DOMAIN="servicetsunami.com"
 WWW_DOMAIN="www.$DOMAIN"
 EMAIL="saguilera1608@gmail.com"
 PROJECT_ROOT="$(dirname "$0")" # This should be the absolute path to your project root
 ENV_FILE="$PROJECT_ROOT/.env"
 
-echo "Starting AgentProvision deployment script..."
+echo "Starting ServiceTsunami deployment script..."
 
 echo "Loading environment configuration..."
 if [ -f "$ENV_FILE" ]; then

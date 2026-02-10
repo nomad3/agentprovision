@@ -40,19 +40,19 @@ async def run_databricks_worker():
     - ScheduledSyncWorkflow
     - Related activities
 
-    Task queue: agentprovision-databricks
+    Task queue: servicetsunami-databricks
     """
     # Connect to Temporal server
     client = await Client.connect(settings.TEMPORAL_ADDRESS)
 
     logger.info("Starting Databricks Temporal worker...")
     logger.info(f"Temporal address: {settings.TEMPORAL_ADDRESS}")
-    logger.info("Task queue: agentprovision-databricks")
+    logger.info("Task queue: servicetsunami-databricks")
 
     # Create and run worker
     worker = Worker(
         client,
-        task_queue="agentprovision-databricks",
+        task_queue="servicetsunami-databricks",
         workflows=[
             DatasetSyncWorkflow,
             KnowledgeExtractionWorkflow,

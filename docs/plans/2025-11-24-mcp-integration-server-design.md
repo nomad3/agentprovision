@@ -2,14 +2,14 @@
 
 ## Overview
 
-Build an MCP-compliant server that serves as the "Integration Brain" for AgentProvision. The server follows Anthropic's Model Context Protocol specification, enabling Claude Desktop, Claude Code, and AgentProvision Chat to connect data sources and query Databricks through standardized tools.
+Build an MCP-compliant server that serves as the "Integration Brain" for ServiceTsunami. The server follows Anthropic's Model Context Protocol specification, enabling Claude Desktop, Claude Code, and ServiceTsunami Chat to connect data sources and query Databricks through standardized tools.
 
 ## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                        MCP HOSTS                                │
-│  (Claude Desktop, Claude Code, AgentProvision Chat)             │
+│  (Claude Desktop, Claude Code, ServiceTsunami Chat)             │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               │ JSON-RPC 2.0 (stdio or HTTP+SSE)
@@ -151,7 +151,7 @@ apps/mcp-server/
 │   │
 │   ├── clients/
 │   │   ├── __init__.py
-│   │   ├── api_client.py       # AgentProvision API client
+│   │   ├── api_client.py       # ServiceTsunami API client
 │   │   └── databricks_client.py # Databricks SDK wrapper
 │   │
 │   └── utils/
@@ -168,7 +168,7 @@ apps/mcp-server/
 
 ```toml
 [project]
-name = "agentprovision-mcp-server"
+name = "servicetsunami-mcp-server"
 version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = [
@@ -194,7 +194,7 @@ User (via Claude): "Connect to my postgres at db.example.com"
 MCP Server: connect_postgres(...)
                               │
                               ▼
-AgentProvision API: Store encrypted credentials
+ServiceTsunami API: Store encrypted credentials
                               │
                               ▼
 MCP Server: test_connection(connection_id)
@@ -242,7 +242,7 @@ Returns: { result: 247, execution_time: "0.8s" }
 ### Environment Variables
 
 ```bash
-# AgentProvision API
+# ServiceTsunami API
 API_BASE_URL=http://localhost:8001
 API_INTERNAL_KEY=internal-service-key
 

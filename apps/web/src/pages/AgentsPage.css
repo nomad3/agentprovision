@@ -23,7 +23,7 @@
 }
 
 .data-card {
-  background: linear-gradient(180deg, rgba(14, 22, 40, 0.92) 0%, rgba(12, 20, 36, 0.9) 100%);
+  background: linear-gradient(180deg, rgba(34, 39, 46, 0.92) 0%, rgba(30, 34, 40, 0.9) 100%);
   border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 14px;
   box-shadow: 0 18px 40px rgba(9, 14, 30, 0.3);
@@ -31,13 +31,13 @@
 }
 
 .data-card:hover {
-  border-color: rgba(99, 102, 241, 0.3);
+  border-color: rgba(12, 209, 142, 0.3);
   box-shadow: 0 20px 50px rgba(9, 14, 30, 0.4);
 }
 
 .search-icon-wrapper {
-  background: rgba(99, 102, 241, 0.1);
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  background: rgba(12, 209, 142, 0.1);
+  border: 1px solid rgba(12, 209, 142, 0.2);
   border-right: none;
   color: rgba(226, 232, 240, 0.7);
 }
@@ -45,7 +45,7 @@
 .search-input {
   background: transparent;
   border-left: none;
-  border-color: rgba(99, 102, 241, 0.2);
+  border-color: rgba(12, 209, 142, 0.2);
   color: #f8fafc;
   font-size: 1rem;
 }
@@ -56,7 +56,7 @@
 
 .search-input:focus {
   background: transparent;
-  border-color: rgba(99, 102, 241, 0.4);
+  border-color: rgba(12, 209, 142, 0.4);
   color: #f8fafc;
   box-shadow: none;
 }
@@ -66,8 +66,8 @@
 }
 
 .agents-table thead th {
-  background: rgba(99, 102, 241, 0.08);
-  border-bottom: 2px solid rgba(99, 102, 241, 0.3);
+  background: rgba(12, 209, 142, 0.08);
+  border-bottom: 2px solid rgba(12, 209, 142, 0.3);
   color: rgba(226, 232, 240, 0.9);
   font-weight: 600;
   font-size: 0.875rem;
@@ -82,7 +82,7 @@
 }
 
 .agents-table tbody tr:hover {
-  background: rgba(99, 102, 241, 0.05);
+  background: rgba(12, 209, 142, 0.05);
 }
 
 .agents-table tbody td {
@@ -94,16 +94,16 @@
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(14, 165, 233, 0.2));
+  background: linear-gradient(135deg, rgba(12, 209, 142, 0.2), rgba(42, 77, 117, 0.2));
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #c7d2fe;
-  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #a7f3d0;
+  border: 1px solid rgba(12, 209, 142, 0.3);
 }
 
 .agent-modal .modal-content {
-  background: linear-gradient(180deg, rgba(14, 22, 40, 0.98) 0%, rgba(12, 20, 36, 0.95) 100%);
+  background: linear-gradient(180deg, rgba(34, 39, 46, 0.98) 0%, rgba(30, 34, 40, 0.95) 100%);
   border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 16px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
@@ -111,7 +111,7 @@
 
 .agent-modal .modal-header {
   border-bottom: 1px solid rgba(148, 163, 184, 0.15);
-  background: rgba(99, 102, 241, 0.05);
+  background: rgba(12, 209, 142, 0.05);
 }
 
 .agent-modal .modal-title {
@@ -125,7 +125,7 @@
 
 .agent-modal .modal-footer {
   border-top: 1px solid rgba(148, 163, 184, 0.15);
-  background: rgba(5, 11, 26, 0.3);
+  background: rgba(26, 30, 36, 0.3);
 }
 
 .agent-modal .form-label {
@@ -137,17 +137,17 @@
 
 .agent-modal .form-control,
 .agent-modal .form-select {
-  background: rgba(5, 11, 26, 0.5);
+  background: rgba(26, 30, 36, 0.5);
   border: 1px solid rgba(148, 163, 184, 0.2);
   color: #f8fafc;
 }
 
 .agent-modal .form-control:focus,
 .agent-modal .form-select:focus {
-  background: rgba(5, 11, 26, 0.7);
-  border-color: rgba(99, 102, 241, 0.5);
+  background: rgba(26, 30, 36, 0.7);
+  border-color: rgba(12, 209, 142, 0.5);
   color: #f8fafc;
-  box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 0 0.25rem rgba(12, 209, 142, 0.1);
 }
 
 .agent-modal .form-control::placeholder {
@@ -160,7 +160,7 @@
 }
 
 .agent-modal .form-range {
-  --bs-form-range-thumb-bg: #6366f1;
+  --bs-form-range-thumb-bg: #0cd18e;
 }
 
 .agent-modal .btn-close {

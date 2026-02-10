@@ -262,7 +262,7 @@ const LandingPage = () => {
         </section>
 
         <section
-          className="section-wrapper section-ink metrics-section"
+          className="section-wrapper section-ink metrics-section section-separator"
           id="metrics"
         >
           <Container>
@@ -296,7 +296,7 @@ const LandingPage = () => {
           </Container>
         </section>
 
-        <section id="features" className="section-wrapper section-dark">
+        <section id="features" className="section-wrapper section-dark section-separator">
           <Container>
             <AnimatedSection animation="fade-in">
               <div className="text-center mb-5">
@@ -330,7 +330,7 @@ const LandingPage = () => {
           </Container>
         </section>
 
-        <section id="lakehouse" className="section-wrapper section-with-bg bg-data">
+        <section id="lakehouse" className="section-wrapper section-with-bg bg-data section-separator">
           <Container>
             <Row className="g-5 align-items-center">
               <Col lg={6}>

@@ -238,7 +238,7 @@ const TenantsPage = () => {
             <div>
               <h6 className="text-white mb-3">What is a Tenant?</h6>
               <p className="text-muted mb-0">
-                A tenant represents your organization in AgentProvision. All users in your organization
+                A tenant represents your organization in ServiceTsunami. All users in your organization
                 share access to the same AI agents, datasets, and configurations. Data is completely
                 isolated between tenants for security and privacy.
               </p>

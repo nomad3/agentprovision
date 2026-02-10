@@ -1,178 +1,178 @@
 {
   "hero": {
-    "badge": "Plataforma de Datos con IA",
-    "title": "Dale superpoderes de datos a todo tu equipo",
-    "lead": "Tu equipo de marketing puede analizar rendimiento de campañas. Tu equipo de ventas puede rastrear métricas del pipeline. Tu equipo de finanzas puede consultar datos de ingresos. Todo sin saber SQL ni esperar a ingenieros de datos.",
-    "subtext": "Carga tus datos una vez. Crea agentes IA que entienden tu negocio. Cada miembro del equipo obtiene respuestas instantáneas a sus preguntas de datos a través de conversación simple.",
-    "subHighlight": "Transforma el acceso a datos de cuello de botella a superpoder.",
+    "badge": "El Sistema Operativo con IA para Roll-Ups",
+    "title": "Adquiere. Integra. Escala. Repite.",
+    "lead": "ServiceTsunami es el centro de comando unificado para operadores de roll-ups. Consolida ERP, finanzas, RRHH, cumplimiento e IA en cada empresa del portafolio desde el primer dia.",
+    "subtext": "Deja de unir hojas de calculo y sistemas legados despues de cada adquisicion. Una plataforma para operar todo tu roll-up — desde el pipeline de M&A hasta la salida.",
+    "subHighlight": "El sistema operativo que escala con cada adquisicion.",
     "spotlight": {
-      "heading": "Qué se vuelve posible",
-      "badge": "Aumentación de equipos"
+      "heading": "Construido para Operadores de Roll-Ups",
+      "badge": "Listo desde el Dia Uno"
     },
     "highlights": {
       "governedDataProducts": {
-        "title": "Cada equipo se vuelve data-driven",
-        "description": "Marketing mide ROI de campañas en tiempo real. Ventas pronostica negocios con precisión. Finanzas cierra libros más rápido. Operaciones optimiza procesos. No se requiere conocimiento de SQL."
+        "title": "Back Office Unificado entre Entidades",
+        "description": "Consolida ERP, finanzas, banca y gestion de gastos en cada empresa del portafolio. Un plan de cuentas, una fuente de verdad, un panel para todo el roll-up."
       },
       "unifiedLakehouseFabric": {
-        "title": "Decisiones en minutos, no en días",
-        "description": "Haz una pregunta, obtén una respuesta. Sin tickets. Sin esperas. Sin emails de ida y vuelta. Tus equipos se mueven a la velocidad del pensamiento en lugar de la velocidad del backlog de tu equipo de datos."
+        "title": "Agentes IA que Conocen tu Negocio",
+        "description": "Despliega agentes IA autonomos para campanas publicitarias hiperlocales, automatizacion de RCM de seguros, cumplimiento de RRHH y reportes financieros. Los agentes aprenden el contexto de cada entidad y operan 24/7."
       },
       "agenticAutomation": {
-        "title": "Ingenieros de datos se enfocan en lo importante",
-        "description": "Deja de escribir consultas repetitivas. Construye infraestructura. Diseña sistemas. Resuelve problemas difíciles. Los agentes IA manejan las solicitudes rutinarias de datos que consumen tu día."
+        "title": "Del Pipeline de M&A al Plan de Salida",
+        "description": "Rastrea deals, ejecuta due diligence, modela planes de integracion y gestiona preparacion para salida — todo en un solo lugar. Construido para operadores que manejan de 5 a 500 entidades."
       }
     }
   },
   "logos": {
-    "heading": "Desarrollado con",
+    "heading": "Impulsado por Infraestructura Moderna",
     "items": ["Claude AI", "React", "PostgreSQL", "DuckDB", "Temporal", "FastAPI"]
   },
   "metrics": {
     "items": [
       {
-        "label": "Equipos de marketing",
-        "value": "Responden preguntas de campañas al instante",
-        "description": "¿Qué canales generan conversiones? ¿Cuál es nuestro CAC por segmento? ¿Cómo se comparan las campañas mes a mes? Obtén respuestas en segundos en lugar de esperar días por soporte del equipo de datos."
+        "label": "ERP y Finanzas",
+        "value": "Un Back Office, Muchas Entidades",
+        "description": "Consolida libro mayor, cuentas por pagar/cobrar, nomina y banca en cada adquisicion. Elimina sistemas duplicados, reduce costos de personal y cierra libros en dias en vez de semanas."
       },
       {
-        "label": "Equipos de ventas",
-        "value": "Rastrean pipeline sin hojas de cálculo",
-        "description": "Pregunta sobre velocidad de negocios, tasas de ganancia, cumplimiento de cuota. Pronostica ingresos. Identifica oportunidades en riesgo. Los representantes de ventas se vuelven expertos en datos sin aprender herramientas de BI."
+        "label": "Publicidad con IA",
+        "value": "Campanas Hiperlocales a Escala",
+        "description": "Despliega campanas publicitarias impulsadas por IA adaptadas al mercado local de cada entidad. Optimiza automaticamente creativos, segmentacion y asignacion de presupuesto en cientos de ubicaciones."
       },
       {
-        "label": "Finanzas y operaciones",
-        "value": "Cierran más rápido con reportes instantáneos",
-        "description": "Consulta gastos, tendencias de ingresos, métricas operacionales a demanda. No más generación manual de reportes. Finanzas cierra libros más rápido. Operaciones identifica cuellos de botella en tiempo real."
+        "label": "Cumplimiento y RRHH",
+        "value": "Estandariza desde el Dia Uno",
+        "description": "Incorpora nuevas adquisiciones a politicas unificadas de RRHH, beneficios y marcos de cumplimiento al instante. Automatiza el seguimiento regulatorio por estado y reduce los tiempos de integracion en un 80%."
       }
     ]
   },
   "features": {
-    "heading": "Tres formas en que aumentamos tus equipos",
-    "subtitle": "Carga datos, crea agentes, empodera a todos. Configuración simple, resultados transformadores.",
+    "heading": "Cada Modulo que un Roll-Up Necesita",
+    "subtitle": "Desde la busqueda de deals hasta la salida — una plataforma, cero dolores de cabeza de integracion.",
     "items": {
       "connectEverySource": {
-        "title": "Haz todos tus datos accesibles",
-        "description": "Carga hojas de cálculo, conecta bases de datos, centraliza datasets. Todos ven los datos que están autorizados a acceder. No más mensajes de Slack pidiendo 'Alguien puede sacar esto para mí?'"
+        "title": "Pipeline de M&A y Due Diligence",
+        "description": "Rastrea objetivos de adquisicion, gestiona LOIs, ejecuta checklists automatizados de due diligence y modela planes de integracion post-cierre. Nunca mas pierdas un deal por desorganizacion."
       },
       "semanticControlPlane": {
-        "title": "Mantén seguridad sin sacrificar velocidad",
-        "description": "IT controla quién ve qué. Los registros de auditoría rastrean todo. Los equipos obtienen acceso instantáneo a sus datos sin comprometer seguridad o cumplimiento. Lo mejor de ambos mundos."
+        "title": "Banca y Gestion de Gastos",
+        "description": "Tesoreria centralizada, banca por entidad, politicas de gastos automatizadas y visibilidad de gastos en tiempo real. Controla el flujo de caja de todo tu portafolio desde un solo panel."
       },
       "agentAutomationStudio": {
-        "title": "Convierte preguntas en insights automáticamente",
-        "description": "Los agentes IA entienden el contexto de tu negocio. Pregunta en lenguaje natural, obtén respuestas precisas. Tu equipo pasa tiempo actuando sobre insights en lugar de solicitar reportes."
+        "title": "Seguros y Automatizacion de RCM",
+        "description": "Automatiza la gestion del ciclo de ingresos, procesamiento de reclamos y flujos de trabajo de seguros con agentes IA. Reduce tasas de denegacion, acelera cobros y elimina seguimientos manuales."
       }
     }
   },
   "lakehouse": {
-    "heading": "Construido para equipos de negocio, confiado por IT",
-    "description": "Tus equipos obtienen libertad para explorar datos. Tu equipo de IT mantiene control y visibilidad. Todos ganan.",
+    "heading": "Construido para Operadores que se Mueven Rapido",
+    "description": "Los roll-ups fallan cuando la integracion se estanca. ServiceTsunami asegura que cada adquisicion sea operativa desde el dia uno.",
     "highlights": {
       "unifiedGovernance": {
-        "title": "Seguridad y cumplimiento integrados",
-        "description": "Define permisos de acceso una vez. Rastrea cada consulta automáticamente. Cumple requisitos de cumplimiento sin bloquear usuarios de negocio. IT mantiene control mientras los equipos se mantienen productivos."
+        "title": "El Problema de Integracion",
+        "description": "La mayoria de los roll-ups pasan 12-18 meses integrando cada adquisicion en sistemas legados. ServiceTsunami reduce eso a semanas con playbooks pre-construidos y automatizacion impulsada por IA."
       },
       "programmablePipelines": {
-        "title": "Datos se mantienen frescos automáticamente",
-        "description": "Carga datos una vez o conecta fuentes en vivo. Programa refrescos. Configura actualizaciones automáticas. Tus equipos siempre trabajan con datos actuales sin sincronización manual."
+        "title": "El Problema de Visibilidad",
+        "description": "Operar 50+ entidades en diferentes sistemas significa que nadie tiene la imagen completa. Nuestra plataforma unificada te da P&L en tiempo real, flujo de caja y KPIs de cada entidad."
       },
       "compliantCollaboration": {
-        "title": "Rastro de auditoría completo para cada pregunta",
-        "description": "Quién preguntó qué, cuándo, y qué datos accedieron. Visibilidad completa para revisiones de cumplimiento, auditorías de seguridad y resolución de problemas. Tranquilidad para líderes de IT."
+        "title": "El Problema de Escala",
+        "description": "Agregar personal por cada adquisicion mata tus margenes. Los agentes IA manejan tareas rutinarias de finanzas, RRHH y cumplimiento para que puedas escalar entidades sin escalar costos."
       }
     },
     "secondary": {
-      "heading": "Escenarios reales de equipos reales",
-      "description": "Mira cómo diferentes equipos usan agentes IA para multiplicar su impacto.",
+      "heading": "Valor Entregado",
+      "description": "Resultados tangibles para operadores de roll-ups.",
       "items": {
         "adaptiveGuardrails": {
-          "title": "Marketing: Optimiza gasto a mitad de campaña",
-          "description": "Gerente de marketing pregunta '¿Qué campañas tienen CPA sobre $50?' Identifica canales de bajo rendimiento. Reasigna presupuesto el mismo día. Mejora ROI sin esperar al equipo de analítica."
+          "title": "Integracion mas Rapida",
+          "description": "Reduce la integracion post-adquisicion de meses a semanas. Playbooks pre-construidos para migracion de ERP, incorporacion de RRHH y consolidacion financiera."
         },
         "explainableDecisions": {
-          "title": "Ventas: Pronostica con precisión sin hojas de cálculo",
-          "description": "Director de ventas pregunta '¿Cuál es nuestro pronóstico para Q4 basado en el pipeline actual?' Obtiene proyección instantánea. Identifica brechas de cobertura. Ajusta planes de contratación y territorio proactivamente."
+          "title": "Menor Overhead",
+          "description": "Los agentes IA reemplazan procesos manuales en finanzas, RRHH y cumplimiento. Escala de 10 a 100 entidades sin crecimiento proporcional de personal."
         },
         "lakehouseSignals": {
-          "title": "Finanzas: Cierra libros en la mitad del tiempo",
-          "description": "Analista de finanzas consulta ingresos por segmento, gastos por categoría, variaciones del presupuesto. Genera reportes instantáneamente en lugar de pasar días sacando datos. Cierra mensualmente más rápido."
+          "title": "Preparacion para la Salida",
+          "description": "Finanzas limpias, sistemas unificados y datos auditables desde el dia uno. Cuando llegue el momento de salir, tu casa ya esta en orden."
         }
       }
     }
   },
   "architecture": {
-    "heading": "Simple para usuarios, poderoso para IT",
-    "description": "Equipos de negocio hablan con agentes IA. IT gestiona gobernanza de datos. La plataforma maneja todo en el medio.",
+    "heading": "Arquitectura de la Plataforma",
+    "description": "Infraestructura de grado empresarial para operaciones multi-entidad.",
     "layers": {
       "dataIntegrationLayer": {
-        "title": "Usuarios: Solo carga y pregunta",
-        "description": "Carga una hoja de cálculo. Haz una pregunta en lenguaje natural. Obtén una respuesta explicada en términos de negocio. No se requiere entrenamiento. No SQL. No herramientas de BI complejas."
+        "title": "Capa de Datos e Integracion",
+        "description": "Conecta ERPs, bancos, sistemas de nomina y CRMs. Ingesta datos de cada entidad en un data lake unificado con reconciliacion automatizada."
       },
       "semanticGovernanceLayer": {
-        "title": "IT: Define permisos una vez",
-        "description": "Define quién accede qué datos. La plataforma aplica reglas automáticamente. Los registros de auditoría capturan todo. Cambia permisos en cualquier momento. Seguridad sin intervención manual."
+        "title": "Capa de Orquestacion",
+        "description": "Flujos de trabajo impulsados por Temporal manejan procesos entre entidades: consolidacion financiera, verificaciones de cumplimiento, playbooks de integracion de M&A y reportes programados."
       },
       "agenticExecutionLayer": {
-        "title": "IA: Entiende contexto, genera insights",
-        "description": "Los agentes aprenden tus datasets y terminología de negocio. Convierten preguntas a consultas. Validan calidad de datos. Explican resultados claramente. Mejoran con cada interacción."
+        "title": "Capa de Agentes IA",
+        "description": "Agentes autonomos para optimizacion de publicidad, automatizacion de RCM, analisis financiero, cumplimiento de RRHH y mas. Cada agente entiende el contexto a nivel de entidad y opera continuamente."
       }
     }
   },
   "ai": {
-    "heading": "Qué pueden hacer tus equipos con agentes IA",
-    "description": "Capacidades reales que transforman cómo los equipos trabajan con datos.",
+    "heading": "Agentes IA para Cada Funcion",
+    "description": "Despliega agentes especializados en todo tu roll-up.",
     "items": {
       "insightCopilots": {
-        "title": "Haz preguntas en lenguaje natural",
-        "description": "Sin SQL. Sin fórmulas. Solo pregunta como si hablaras con un colega: 'Muéstrame ingresos Q3 por línea de producto' o '¿Qué clientes están en riesgo de abandono?' Los agentes entienden lenguaje de negocio."
+        "title": "Agentes de Inteligencia Financiera",
+        "description": "Consolida P&L entre entidades, detecta anomalias, pronostica flujo de caja y genera reportes listos para el directorio. Como tener un equipo de CFO que nunca duerme."
       },
       "composableSkills": {
-        "title": "Obtén análisis, no solo números",
-        "description": "Los agentes no solo devuelven datos. Calculan tendencias, identifican anomalías, comparan períodos de tiempo y explican qué cambió. Convierten datos en insights accionables automáticamente."
+        "title": "Agentes de Operaciones y Cumplimiento",
+        "description": "Monitorea cambios regulatorios, automatiza presentaciones de cumplimiento, gestiona incorporacion de RRHH y rastrea reclamos de seguros. Reduce riesgo mientras escalas mas rapido."
       },
       "closedLoopActuators": {
-        "title": "Programa reportes, automatiza workflows",
-        "description": "Crea reportes permanentes: 'Envía resumen de ventas semanal cada lunes.' Configura alertas: 'Notifícame si la tasa de abandono excede 5%.' Los agentes trabajan continuamente, no solo cuando se les pregunta."
+        "title": "Agentes de Crecimiento e Ingresos",
+        "description": "Ejecuta campanas publicitarias hiperlocales, optimiza precios, gestiona adquisicion de clientes y automatiza la gestion del ciclo de ingresos en cada entidad."
       }
     }
   },
   "roadmap": {
-    "heading": "Qué estamos construyendo después",
-    "subtitle": "Funciones diseñadas para dar aún más poder a tus equipos.",
+    "heading": "Lo que Estamos Construyendo",
+    "subtitle": "Funciones construidas a proposito para operadores de roll-ups.",
     "items": {
       "marketplaceConnectors": {
-        "title": "Conecta más fuentes de datos",
-        "description": "Más allá de hojas de cálculo: Conexiones directas a tu CRM, plataformas de marketing, sistemas financieros. Extrae datos automáticamente en lugar de exportaciones manuales. Mantén todo sincronizado."
+        "title": "Credito Privado y Prestamos",
+        "description": "Gestion integrada de deuda, seguimiento de covenants y reportes para prestamistas. Gestiona la estructura de capital en todo tu portafolio."
       },
       "adaptiveGovernanceAi": {
-        "title": "Seguridad de datos más inteligente",
-        "description": "Detección automática de datos sensibles. Enmascaramiento inteligente de PII. Políticas dinámicas que se adaptan al contexto. Menos configuración manual, mejor protección."
+        "title": "Hub de Salida y Liquidez",
+        "description": "Preparacion automatizada de sell-side, generacion de data room, soporte de calidad de ganancias y gestion de compradores. Estate listo para la salida en todo momento."
       },
       "autonomousFinopsSuites": {
-        "title": "Maneja datasets más grandes más rápido",
-        "description": "Optimización de consultas para big data. Caché inteligente. Mejor rendimiento a medida que tus datos crecen. Escala de gigabytes a terabytes sin ralentizaciones."
+        "title": "Playbooks por Industria",
+        "description": "Plantillas de integracion pre-construidas para salud, servicios del hogar, servicios profesionales y otras verticales de roll-up de alta frecuencia."
       }
     }
   },
   "testimonials": {
-    "heading": "Cómo los equipos multiplican su impacto",
-    "subtitle": "Escenarios reales que hemos visto de organizaciones usando esta plataforma",
+    "heading": "Construido para Operadores de Roll-Ups",
+    "subtitle": "Como operadores multi-entidad estan escalando con ServiceTsunami",
     "items": [
       {
-        "quote": "Antes: Equipo de marketing enviaba solicitudes al equipo de datos, esperaba 2-3 días, obtenía reportes estáticos que generaban más preguntas. Ahora: Marketing pregunta directamente a agentes IA, obtiene respuestas en segundos, itera en análisis en tiempo real. La optimización de campañas ocurre diariamente en lugar de mensualmente.",
-        "author": "Equipo de Marketing",
-        "role": "De optimización reactiva a proactiva"
+        "quote": "Nos estabamos ahogando en hojas de calculo tratando de consolidar finanzas de 30 entidades en 4 ERPs diferentes. ServiceTsunami nos dio una unica fuente de verdad y redujo nuestro cierre mensual de 3 semanas a 5 dias.",
+        "author": "CFO",
+        "role": "Roll-Up de Servicios Multi-Ubicacion"
       },
       {
-        "quote": "Antes: Finanzas pasaba las primeras dos semanas de cada mes recopilando datos, reconciliando hojas de cálculo, generando reportes. Ahora: Los agentes IA manejan la recopilación de datos automáticamente. Finanzas pasa tiempo en análisis y planificación estratégica. El cierre mensual ocurre en días, no en semanas.",
-        "author": "Equipo de Finanzas",
-        "role": "De conserje de datos a asesor estratégico"
+        "quote": "Cada adquisicion significaba contratar 2-3 personas mas solo para manejar la integracion. Ahora nuestros agentes IA manejan el 80% de la incorporacion automaticamente. Estamos escalando mas rapido con un equipo mas liviano.",
+        "author": "COO",
+        "role": "Plataforma de Servicios de Salud"
       }
     ]
   },
   "cta": {
-    "heading": "Mira qué puede hacer tu equipo",
-    "description": "Pruébalo con tus propios datos. Carga una hoja de cálculo, crea un agente, haz algunas preguntas. Mira si esto le da superpoderes a tu equipo. La mayoría de los equipos saben en una hora si esto cambia cómo trabajan."
+    "heading": "Listo para Escalar tu Roll-Up?",
+    "description": "Mira como ServiceTsunami consolida operaciones en cada entidad de tu portafolio. Agenda una demo y te mostraremos como se ve la integracion desde el dia uno."
   }
 }

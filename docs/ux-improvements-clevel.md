@@ -1,8 +1,8 @@
-# AgentProvision UX Improvements for C-Level Executives
+# ServiceTsunami UX Improvements for C-Level Executives
 
 ## Executive Summary
 
-This document outlines UX improvements to make AgentProvision more intuitive and valuable for CEOs and C-level executives. The focus is on **simplification, visual clarity, and business-relevant insights**.
+This document outlines UX improvements to make ServiceTsunami more intuitive and valuable for CEOs and C-level executives. The focus is on **simplification, visual clarity, and business-relevant insights**.
 
 ---
 

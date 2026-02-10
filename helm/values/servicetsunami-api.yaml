@@ -1,9 +1,9 @@
-# AgentProvision API Service - FastAPI Backend
-nameOverride: "agentprovision-api"
-fullnameOverride: "agentprovision-api"
+# ServiceTsunami API Service - FastAPI Backend
+nameOverride: "servicetsunami-api"
+fullnameOverride: "servicetsunami-api"
 
 image:
-  repository: gcr.io/ai-agency-479516/agentprovision-api
+  repository: gcr.io/ai-agency-479516/servicetsunami-api
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -78,7 +78,7 @@ service:
   port: 80
   targetPort: 8000
   annotations:
-    cloud.google.com/backend-config: '{"default": "agentprovision-api-backend"}'
+    cloud.google.com/backend-config: '{"default": "servicetsunami-api-backend"}'
 
 # ConfigMap with non-sensitive configuration
 configMap:
@@ -97,7 +97,7 @@ configMap:
     LLM_MAX_TOKENS: "4096"
     LLM_TEMPERATURE: "0.7"
     DATA_STORAGE_PATH: "/app/storage"
-    ADK_BASE_URL: "http://agentprovision-adk"
+    ADK_BASE_URL: "http://servicetsunami-adk"
 
 # External Secrets - pulls from GCP Secret Manager
 externalSecret:
@@ -107,24 +107,24 @@ externalSecret:
     name: gcpsm-secret-store
     kind: SecretStore
   target:
-    name: agentprovision-api-secret
+    name: servicetsunami-api-secret
     creationPolicy: Owner
   data:
     - secretKey: SECRET_KEY
       remoteRef:
-        key: agentprovision-secret-key
+        key: servicetsunami-secret-key
     - secretKey: DATABASE_URL
       remoteRef:
-        key: agentprovision-database-url
+        key: servicetsunami-database-url
     - secretKey: ANTHROPIC_API_KEY
       remoteRef:
-        key: agentprovision-anthropic-api-key
+        key: servicetsunami-anthropic-api-key
     - secretKey: MCP_API_KEY
       remoteRef:
-        key: agentprovision-mcp-api-key
+        key: servicetsunami-mcp-api-key
     - secretKey: API_INTERNAL_KEY
       remoteRef:
-        key: agentprovision-api-internal-key
+        key: servicetsunami-api-internal-key
 
 # Additional environment variables
 env:

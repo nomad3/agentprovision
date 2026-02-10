@@ -184,7 +184,7 @@ class ScheduledSyncWorkflow:
                     DataSourceSyncWorkflow.run,
                     args=[connector_id, connector_type, tenant_id, table_config],
                     id=f"sync-{connector_id}-{table_config.get('table_name')}-{workflow.now().timestamp()}",
-                    task_queue="agentprovision-databricks"
+                    task_queue="servicetsunami-databricks"
                 )
                 results.append({
                     "table": table_config.get("table_name"),

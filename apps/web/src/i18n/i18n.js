@@ -37,7 +37,7 @@ i18n
     detection: {
       order: ['localStorage', 'navigator', 'htmlTag'],
       caches: ['localStorage'],
-      lookupLocalStorage: 'agentprovision.lang',
+      lookupLocalStorage: 'servicetsunami.lang',
     },
   });
 

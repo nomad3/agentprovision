@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-AgentProvision is an enterprise-grade unified data & AI lakehouse platform built as a monorepo. It provides multi-tenant control plane capabilities for managing AI agents, data pipelines, and deployments. The platform deploys exclusively via Kubernetes (GKE) using Helm charts and GitHub Actions.
+ServiceTsunami is an enterprise-grade unified data & AI lakehouse platform built as a monorepo. It provides multi-tenant control plane capabilities for managing AI agents, data pipelines, and deployments. The platform deploys exclusively via Kubernetes (GKE) using Helm charts and GitHub Actions.
 
 ## Architecture
 
@@ -47,7 +47,7 @@ This is a **Turborepo monorepo** managed with `pnpm` workspaces:
 
 ### Key Architectural Patterns
 
-**Multi-tenancy**: All data models include a `tenant_id` foreign key. The API enforces tenant isolation via JWT token validation. Users belong to tenants; all operations are scoped to the authenticated user's tenant.
+**Multi-tenancy**: All data models include a `tenant_id` foreign key. The API enforces tenant isolation via JWT token validation. Users belong to tenants; all operations are scoped to the authenticated user's tenant. Tenants have associated branding (`tenant_branding.py`), feature flags/usage limits (`tenant_features.py`), and analytics (`tenant_analytics.py`).
 
 **Authentication flow**:
 1. `POST /api/v1/auth/register` creates tenant + admin user
@@ -57,11 +57,21 @@ This is a **Turborepo monorepo** managed with `pnpm` workspaces:
 
 **Database initialization**: On API startup, `apps/api/app/main.py` calls `init_db()` which creates tables and seeds demo data.
 
-**LLM Integration**: Chat uses Claude AI (`/api/v1/chat`) with context management, tool execution, and fallback to static templates if `ANTHROPIC_API_KEY` is not set.
+**Multi-LLM Router**: Supports multiple LLM providers (Anthropic, OpenAI, DeepSeek, etc.) with per-tenant configuration and cost-based routing. Models: `llm_provider.py`, `llm_model.py`, `llm_config.py`. Chat falls back to static templates if no API key is set.
 
-**Temporal workflows**: Durable workflow execution at `apps/api/app/services/workflows.py`. Databricks worker uses Temporal for async dataset sync jobs.
+**Multi-Agent Orchestration**: Agent groups (`agent_group.py`) organize agents into teams. Agents have relationships (`agent_relationship.py`: supervises, delegates_to, collaborates_with), assigned tasks (`agent_task.py`), inter-agent messaging (`agent_message.py`), learnable skills (`agent_skill.py`), and semantic memory (`agent_memory.py`).
 
-**Databricks Integration**: Datasets sync to Unity Catalog via MCP server (Bronze/Silver layers). Status tracked in dataset metadata (`sync_status`: pending/syncing/synced/failed).
+**Knowledge Graph**: Entities (`knowledge_entity.py`) and relations (`knowledge_relation.py`) form a knowledge graph. Knowledge is extracted from chat and content via `knowledge_extraction.py`.
+
+**Temporal workflows**: Durable workflow execution at `apps/api/app/services/workflows.py`. Workers in `apps/api/app/workers/`:
+- `databricks_worker.py`: Async dataset sync to Databricks Unity Catalog
+- `scheduler_worker.py`: Pipeline scheduling (cron/interval-based)
+
+**Pipeline Run Tracking**: `pipeline_run.py` model tracks pipeline execution history with status, duration, and error details. The scheduler worker handles automated pipeline execution.
+
+**Databricks Integration**: Datasets sync to Unity Catalog via MCP server (Bronze/Silver/Gold layers). Status tracked in dataset metadata (`sync_status`: pending/syncing/synced/failed).
+
+**Database Migrations**: Manual SQL scripts in `apps/api/migrations/` (not Alembic). See `migrations/README.md` for instructions.
 
 ## Development Commands
 
@@ -78,7 +88,7 @@ docker-compose logs -f api
 docker-compose logs -f web
 
 # Connect to PostgreSQL
-docker-compose exec db psql -U postgres agentprovision
+docker-compose exec db psql -U postgres servicetsunami
 ```
 
 ### API Development
@@ -139,12 +149,19 @@ pnpm install && pnpm build && pnpm lint
 
 Core domain models (all inherit from SQLAlchemy Base, include `tenant_id` ForeignKey):
 - `tenant.py`, `user.py`: Multi-tenancy and users
+- `tenant_branding.py`, `tenant_features.py`, `tenant_analytics.py`: Whitelabel, feature flags, usage analytics
 - `agent.py`, `agent_kit.py`: AI agent definitions and kits
+- `agent_group.py`, `agent_relationship.py`, `agent_task.py`: Multi-agent teams and orchestration
+- `agent_message.py`, `agent_skill.py`, `agent_memory.py`: Agent communication, skills, and memory
 - `deployment.py`: Agent deployment tracking
-- `data_source.py`, `data_pipeline.py`: Data engineering entities
-- `dataset.py`: Dataset management with DuckDB/Parquet support
+- `data_source.py`, `data_pipeline.py`, `pipeline_run.py`: Data engineering and execution tracking
+- `dataset.py`, `dataset_group.py`: Dataset management with DuckDB/Parquet support
 - `tool.py`, `connector.py`: Tool and integration definitions
 - `chat.py`: Chat sessions and messages
+- `notebook.py`: Jupyter-style SQL notebooks
+- `vector_store.py`: Vector store management
+- `knowledge_entity.py`, `knowledge_relation.py`: Knowledge graph
+- `llm_provider.py`, `llm_model.py`, `llm_config.py`: Multi-LLM provider configuration
 
 ### Services (`apps/api/app/services/`)
 
@@ -153,8 +170,17 @@ Business logic layer (one service per model):
 - `llm.py`: Claude AI integration with fallback handling
 - `context_manager.py`: Token counting, conversation summarization
 - `tool_executor.py`: Tool execution framework (SQL Query, Calculator, Data Summary)
-- `chat.py`: LLM-powered chat with tool integration
-- Pattern: `{resource}s.py` (e.g., `agents.py`, `datasets.py`)
+- `chat.py`, `enhanced_chat.py`: LLM-powered chat with tool and multi-agent support
+- `adk_client.py`, `mcp_client.py`: Google ADK and MCP server clients
+- `knowledge.py`, `knowledge_extraction.py`: Knowledge graph operations and extraction
+- `branding.py`, `features.py`, `tenant_analytics.py`: Tenant customization services
+- Pattern: `{resource}s.py` (e.g., `agents.py`, `datasets.py`, `agent_groups.py`, `vector_stores.py`)
+
+### Workers (`apps/api/app/workers/`)
+
+Temporal workers for async processing:
+- `databricks_worker.py`: Dataset sync to Databricks Unity Catalog
+- `scheduler_worker.py`: Automated pipeline execution (cron/interval scheduling)
 
 ### Routes (`apps/api/app/api/v1/`)
 
@@ -166,8 +192,10 @@ FastAPI routers mounted at `/api/v1`. All routes use dependency injection via `d
 
 Organized in 3-section navigation:
 - **INSIGHTS**: `DashboardPage.js`, `DatasetsPage.js`
-- **AI ASSISTANT**: `ChatPage.js`, `AgentsPage.js`, `AgentKitsPage.js`
-- **WORKSPACE**: `DataSourcesPage.js`, `DataPipelinesPage.js`, `SettingsPage.js`
+- **AI ASSISTANT**: `ChatPage.js`, `AgentsPage.js`, `AgentKitsPage.js`, `TeamsPage.js`, `MemoryPage.js`
+- **WORKSPACE**: `DataSourcesPage.js`, `DataPipelinesPage.js`, `NotebooksPage.js`, `VectorStoresPage.js`, `ConnectorsPage.js`, `IntegrationsPage.js`, `ToolsPage.js`
+- **SETTINGS**: `SettingsPage.js`, `LLMSettingsPage.js`, `BrandingPage.js`
+- **AUTH**: `RegisterPage.js`, `AgentWizardPage.js`
 
 ### Components (`apps/web/src/components/`)
 
@@ -193,7 +221,7 @@ Loaded via pydantic-settings. See `apps/api/app/core/config.py`:
 ```bash
 # Required
 ANTHROPIC_API_KEY=sk-ant-api03-xxxxxxxxxxxxx
-DATABASE_URL=postgresql://postgres:postgres@db:5432/agentprovision
+DATABASE_URL=postgresql://postgres:postgres@db:5432/servicetsunami
 SECRET_KEY=your-jwt-secret
 
 # Temporal
@@ -205,7 +233,7 @@ DATABRICKS_SYNC_ENABLED=true
 
 # ADK
 ADK_BASE_URL=http://adk-server:8080
-ADK_APP_NAME=agentprovision_supervisor
+ADK_APP_NAME=servicetsunami_supervisor
 ```
 
 ### Web Configuration (`apps/web/.env.local`)
@@ -231,28 +259,29 @@ gh workflow run adk-deploy.yaml -f deploy=true -f environment=prod
 
 # Watch rollout status
 kubectl get pods -n prod -w
-kubectl rollout status deployment/agentprovision-api -n prod
-kubectl rollout status deployment/agentprovision-adk -n prod
+kubectl rollout status deployment/servicetsunami-api -n prod
+kubectl rollout status deployment/servicetsunami-adk -n prod
 
 # Validate Helm releases
-helm list -n prod | grep agentprovision
-helm status agentprovision-adk -n prod
+helm list -n prod | grep servicetsunami
+helm status servicetsunami-adk -n prod
 
 # Rollback if needed
-helm rollback agentprovision-api -n prod
+helm rollback servicetsunami-api -n prod
 ```
 
 **GitHub Actions Workflows** (`.github/workflows/`):
 - `deploy-all.yaml`: Full stack deployment
 - `adk-deploy.yaml`: ADK server only
-- `agentprovision-api.yaml`: API service
-- `agentprovision-web.yaml`: Web frontend
-- `agentprovision-worker.yaml`: Temporal worker
+- `servicetsunami-api.yaml`: API service
+- `servicetsunami-web.yaml`: Web frontend
+- `servicetsunami-worker.yaml`: Temporal worker
 - `kubernetes-infrastructure.yaml`: Initial infra setup
+- `kubernetes-shared.yaml`: Shared resources (Ingress, ManagedCertificates)
 
 **Required GCP Secrets** (Secret Manager):
-- `agentprovision-secret-key`, `agentprovision-database-url`
-- `agentprovision-anthropic-api-key`, `agentprovision-mcp-api-key`
+- `servicetsunami-secret-key`, `servicetsunami-database-url`
+- `servicetsunami-anthropic-api-key`, `servicetsunami-mcp-api-key`
 
 See `docs/KUBERNETES_DEPLOYMENT.md` for full runbook.
 
@@ -261,7 +290,7 @@ See `docs/KUBERNETES_DEPLOYMENT.md` for full runbook.
 ```bash
 # Test against any environment
 BASE_URL=http://localhost:8001 ./scripts/e2e_test_production.sh
-BASE_URL=https://agentprovision.com ./scripts/e2e_test_production.sh
+BASE_URL=https://servicetsunami.com ./scripts/e2e_test_production.sh
 ```
 
 

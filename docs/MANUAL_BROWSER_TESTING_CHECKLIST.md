@@ -1,7 +1,7 @@
 # Manual Browser Testing Checklist
 
 ## Test Environment
-- **URL**: https://agentprovision.com
+- **URL**: https://servicetsunami.com
 - **Credentials**: test@example.com / password
 - **Date**: 2025-11-28
 

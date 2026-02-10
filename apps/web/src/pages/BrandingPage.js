@@ -111,7 +111,7 @@ function BrandingPage() {
                       <Form.Label className="text-soft">Primary Color</Form.Label>
                       <Form.Control
                         type="color"
-                        value={branding?.primary_color || '#6366f1'}
+                        value={branding?.primary_color || '#0cd18e'}
                         onChange={(e) => updateField('primary_color', e.target.value)}
                         className="bg-dark border-secondary border-opacity-50"
                         style={{ minHeight: '40px' }}
@@ -123,7 +123,7 @@ function BrandingPage() {
                       <Form.Label className="text-soft">Secondary Color</Form.Label>
                       <Form.Control
                         type="color"
-                        value={branding?.secondary_color || '#8b5cf6'}
+                        value={branding?.secondary_color || '#2a4d75'}
                         onChange={(e) => updateField('secondary_color', e.target.value)}
                         className="bg-dark border-secondary border-opacity-50"
                         style={{ minHeight: '40px' }}
@@ -137,7 +137,7 @@ function BrandingPage() {
                       <Form.Label className="text-soft">Accent Color</Form.Label>
                       <Form.Control
                         type="color"
-                        value={branding?.accent_color || '#06b6d4'}
+                        value={branding?.accent_color || '#0cd18e'}
                         onChange={(e) => updateField('accent_color', e.target.value)}
                         className="bg-dark border-secondary border-opacity-50"
                         style={{ minHeight: '40px' }}

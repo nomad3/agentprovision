@@ -1,4 +1,4 @@
-# AgentProvision API - Production Dockerfile
+# ServiceTsunami API - Production Dockerfile
 # Multi-stage build for optimal image size
 
 # ===== Build Stage =====
@@ -25,9 +25,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
 FROM python:3.11-slim
 
 # Labels
-LABEL maintainer="AgentProvision Team" \
+LABEL maintainer="ServiceTsunami Team" \
       version="1.0.0" \
-      description="AgentProvision API - FastAPI Backend"
+      description="ServiceTsunami API - FastAPI Backend"
 
 # Create non-root user for security
 RUN groupadd --gid 1000 appgroup && \

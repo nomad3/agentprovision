@@ -6,15 +6,15 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     environment:
       APP_ENV: production
-      PROJECT_NAME: AgentProvision API
+      PROJECT_NAME: ServiceTsunami API
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: ${REDIS_URL}
       SECRET_KEY: ${SECRET_KEY}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-30}
       SEED_DEMO_DATA: ${SEED_DEMO_DATA:-false}
-      CORS_ORIGINS: ${CORS_ORIGINS:-https://agentprovision.com,https://www.agentprovision.com}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://servicetsunami.com,https://www.servicetsunami.com}
       ADK_BASE_URL: ${ADK_BASE_URL:-http://adk-server:8080}
-      ADK_APP_NAME: ${ADK_APP_NAME:-agentprovision_supervisor}
+      ADK_APP_NAME: ${ADK_APP_NAME:-servicetsunami_supervisor}
     depends_on:
       - db
       - redis
@@ -23,7 +23,7 @@ services:
       - "18000:8000"
 
   web:
-    image: agentprovision_web:ci
+    image: servicetsunami_web:ci
     command: npm run start
     environment:
       NODE_ENV: production
@@ -42,7 +42,7 @@ services:
       N8N_BASIC_AUTH_ACTIVE: ${N8N_BASIC_AUTH_ACTIVE:-true}
       N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER:-admin}
       N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD:-changeme}
-      WEBHOOK_URL: ${N8N_WEBHOOK_URL:-https://n8n.agentprovision.com/}
+      WEBHOOK_URL: ${N8N_WEBHOOK_URL:-https://n8n.servicetsunami.com/}
       GENERIC_TIMEZONE: ${N8N_GENERIC_TIMEZONE:-Etc/UTC}
     deploy:
       replicas: 1
@@ -58,7 +58,7 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-agentprovision}
+      POSTGRES_DB: ${POSTGRES_DB:-servicetsunami}
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:

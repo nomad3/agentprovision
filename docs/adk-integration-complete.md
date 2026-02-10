@@ -2,7 +2,7 @@
 
 ## Overview
 
-AgentProvision now uses **Google Agent Development Kit (ADK)** with **Gemini 2.5 Flash** as the core AI engine, replacing the previous Claude/Anthropic integration.
+ServiceTsunami now uses **Google Agent Development Kit (ADK)** with **Gemini 2.5 Flash** as the core AI engine, replacing the previous Claude/Anthropic integration.
 
 ## Architecture
 
@@ -23,9 +23,9 @@ AgentProvision now uses **Google Agent Development Kit (ADK)** with **Gemini 2.5
 
 | Service | Purpose | Port |
 |---------|---------|------|
-| `agentprovision-web` | React frontend | 80 |
-| `agentprovision-api` | FastAPI backend, auth, data | 80 → 8000 |
-| `agentprovision-adk` | Google ADK agent server | 80 → 8080 |
+| `servicetsunami-web` | React frontend | 80 |
+| `servicetsunami-api` | FastAPI backend, auth, data | 80 → 8000 |
+| `servicetsunami-adk` | Google ADK agent server | 80 → 8080 |
 | `mcp-server` | Databricks MCP connector | 80 → 8000 |
 
 ## Agent Structure
@@ -33,7 +33,7 @@ AgentProvision now uses **Google Agent Development Kit (ADK)** with **Gemini 2.5
 The ADK service uses a **supervisor pattern** with specialist sub-agents:
 
 ```
-agentprovision_supervisor (root)
+servicetsunami_supervisor (root)
 ├── data_analyst
 │   ├── discover_datasets
 │   ├── query_sql
@@ -55,8 +55,8 @@ agentprovision_supervisor (root)
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `ADK_BASE_URL` | ADK service URL | `http://agentprovision-adk` |
-| `ADK_APP_NAME` | ADK app name | `agentprovision_supervisor` |
+| `ADK_BASE_URL` | ADK service URL | `http://servicetsunami-adk` |
+| `ADK_APP_NAME` | ADK app name | `servicetsunami_supervisor` |
 
 ### Environment Variables (ADK Service)
 
@@ -88,24 +88,24 @@ The ADK service uses **Workload Identity** for GCP authentication:
 
 ### CI/CD Workflows
 
-- `.github/workflows/agentprovision-api.yaml` - API service
+- `.github/workflows/servicetsunami-api.yaml` - API service
 - `.github/workflows/adk-deploy.yaml` - ADK service
 
 ### Helm Values
 
-- `helm/values/agentprovision-api.yaml`
-- `helm/values/agentprovision-adk.yaml`
+- `helm/values/servicetsunami-api.yaml`
+- `helm/values/servicetsunami-adk.yaml`
 
 ## Monitoring
 
 Check ADK logs:
 ```bash
-kubectl logs -n prod -l app.kubernetes.io/name=agentprovision-adk --tail=100
+kubectl logs -n prod -l app.kubernetes.io/name=servicetsunami-adk --tail=100
 ```
 
 Verify ADK health:
 ```bash
-kubectl exec -n prod $(kubectl get pods -n prod -l app.kubernetes.io/name=agentprovision-adk -o name) -- curl http://localhost:8080/list-apps
+kubectl exec -n prod $(kubectl get pods -n prod -l app.kubernetes.io/name=servicetsunami-adk -o name) -- curl http://localhost:8080/list-apps
 ```
 
 ## Date Completed

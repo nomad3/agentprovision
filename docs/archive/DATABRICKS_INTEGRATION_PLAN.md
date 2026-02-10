@@ -1,4 +1,4 @@
-# Databricks Integration Plan for AgentProvision
+# Databricks Integration Plan for ServiceTsunami
 
 **Version:** 1.0
 **Date:** October 30, 2025
@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-This document outlines the comprehensive plan to integrate Databricks as the primary data processing and AI workload engine for AgentProvision. Databricks will handle all heavy lifting for data jobs, AI model serving, and analytics, while leveraging the existing dentalERP MCP server for external system integrations.
+This document outlines the comprehensive plan to integrate Databricks as the primary data processing and AI workload engine for ServiceTsunami. Databricks will handle all heavy lifting for data jobs, AI model serving, and analytics, while leveraging the existing dentalERP MCP server for external system integrations.
 
 ## Table of Contents
 
@@ -27,7 +27,7 @@ This document outlines the comprehensive plan to integrate Databricks as the pri
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                     AgentProvision Platform                      │
+│                     ServiceTsunami Platform                      │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                   │
 │  ┌──────────────┐      ┌──────────────┐      ┌──────────────┐  │
@@ -59,7 +59,7 @@ This document outlines the comprehensive plan to integrate Databricks as the pri
 2. **MCP as Integration Hub**: External system integrations remain in MCP server (proven, battle-tested)
 3. **Unity Catalog as Source of Truth**: Centralized data governance and metadata management
 4. **API-First Design**: All interactions via REST APIs for flexibility and scalability
-5. **Multi-Tenancy**: Tenant isolation at both AgentProvision and Databricks Unity Catalog levels
+5. **Multi-Tenancy**: Tenant isolation at both ServiceTsunami and Databricks Unity Catalog levels
 
 ---
 
@@ -72,7 +72,7 @@ This document outlines the comprehensive plan to integrate Databricks as the pri
 **Deliverables**:
 - Databricks workspace setup with Unity Catalog
 - Authentication mechanism (OAuth 2.0 or Personal Access Tokens)
-- Basic connector service in AgentProvision API
+- Basic connector service in ServiceTsunami API
 - Health check endpoints
 - Configuration management
 
@@ -139,19 +139,19 @@ apps/api/app/services/databricks/
 
 ### 2. Data Pipeline Orchestrator
 
-**Purpose**: Coordinate data flows between MCP server, AgentProvision DB, and Databricks
+**Purpose**: Coordinate data flows between MCP server, ServiceTsunami DB, and Databricks
 
 **Architecture**:
 ```python
 # Workflow Example
 1. Trigger: User creates a data source
-2. AgentProvision API → Create Unity Catalog external table
-3. AgentProvision API → Submit Databricks Job (ingestion)
+2. ServiceTsunami API → Create Unity Catalog external table
+3. ServiceTsunami API → Submit Databricks Job (ingestion)
 4. Databricks → Fetch data from MCP server endpoint
 5. Databricks → Transform and load to Bronze layer
 6. Databricks → Trigger Silver layer transformations
-7. Databricks → Update metadata in AgentProvision DB
-8. AgentProvision API → Notify user of completion
+7. Databricks → Update metadata in ServiceTsunami DB
+8. ServiceTsunami API → Notify user of completion
 ```
 
 **Technologies**:
@@ -165,7 +165,7 @@ apps/api/app/services/databricks/
 ```
 unity_catalog/
 ├── catalogs/
-│   └── agentprovision_{tenant_id}/    # Tenant-isolated catalogs
+│   └── servicetsunami_{tenant_id}/    # Tenant-isolated catalogs
 │       ├── bronze/                     # Raw ingested data
 │       │   ├── mcp_adp_employees
 │       │   ├── mcp_netsuite_transactions
@@ -204,8 +204,8 @@ unity_catalog/
 
 **Example Agent Workflow**:
 ```python
-# 1. User creates agent in AgentProvision UI
-# 2. AgentProvision API creates MLflow experiment
+# 1. User creates agent in ServiceTsunami UI
+# 2. ServiceTsunami API creates MLflow experiment
 # 3. Agent code packaged as Python wheel
 # 4. Wheel uploaded to Unity Catalog
 # 5. Databricks job created for agent execution
@@ -272,7 +272,7 @@ GET /api/v1/databricks/jobs/{job_id}/runs?limit=25
 # Create tenant catalog
 POST /api/v1/databricks/catalogs
 {
-  "name": "agentprovision_tenant_abc123",
+  "name": "servicetsunami_tenant_abc123",
   "comment": "Tenant ABC123 data catalog"
 }
 
@@ -287,7 +287,7 @@ POST /api/v1/databricks/catalogs/{catalog_name}/schemas
 POST /api/v1/databricks/sql/query
 {
   "warehouse_id": "abc123",
-  "catalog": "agentprovision_tenant_abc123",
+  "catalog": "servicetsunami_tenant_abc123",
   "schema": "gold",
   "statement": "SELECT * FROM monthly_kpis WHERE month = '2025-10'"
 }
@@ -333,9 +333,9 @@ POST /api/v1/agents/{agent_id}/invoke
 
 **Flow**:
 ```
-User adds data source in AgentProvision UI
+User adds data source in ServiceTsunami UI
     ↓
-AgentProvision creates connector config
+ServiceTsunami creates connector config
     ↓
 MCP Server registers external system credentials
     ↓
@@ -355,7 +355,7 @@ LakeFlow Connect pulls data via MCP REST API
 
 **Flow**:
 ```
-Agent query → AgentProvision API → Databricks endpoint
+Agent query → ServiceTsunami API → Databricks endpoint
     ↓
 Databricks checks cache (Unity Catalog)
     ↓
@@ -409,7 +409,7 @@ Calls MCP server /api/v1/integrations/adp/update
     ↓
 MCP updates ADP system
     ↓
-Logs success in AgentProvision database
+Logs success in ServiceTsunami database
 ```
 
 ---
@@ -424,7 +424,7 @@ Logs success in AgentProvision database
 - Service Principal for production workloads
 
 **MCP Server**:
-- JWT tokens issued by AgentProvision
+- JWT tokens issued by ServiceTsunami
 - Rotate credentials every 90 days
 - Stored in Databricks Secrets
 
@@ -433,11 +433,11 @@ Logs success in AgentProvision database
 **Unity Catalog Permissions**:
 ```sql
 -- Tenant isolation
-GRANT USE CATALOG ON CATALOG agentprovision_tenant_abc123 TO `tenant_abc123_role`;
-GRANT SELECT ON CATALOG agentprovision_tenant_abc123 TO `tenant_abc123_analysts`;
+GRANT USE CATALOG ON CATALOG servicetsunami_tenant_abc123 TO `tenant_abc123_role`;
+GRANT SELECT ON CATALOG servicetsunami_tenant_abc123 TO `tenant_abc123_analysts`;
 
 -- Cross-tenant analytics (admins only)
-GRANT SELECT ON ALL CATALOGS TO `agentprovision_admins`;
+GRANT SELECT ON ALL CATALOGS TO `servicetsunami_admins`;
 ```
 
 **Role-Based Access Control (RBAC)**:
@@ -489,7 +489,7 @@ GRANT SELECT ON ALL CATALOGS TO `agentprovision_admins`;
 - Databricks System Tables (usage monitoring)
 - Prometheus + Grafana (custom metrics)
 - DataDog or New Relic (APM)
-- AgentProvision audit logs (user actions)
+- ServiceTsunami audit logs (user actions)
 
 **Alerting Rules**:
 ```yaml
@@ -518,7 +518,7 @@ GRANT SELECT ON ALL CATALOGS TO `agentprovision_admins`;
 - [ ] Set up Databricks workspace (AWS/Azure/GCP)
 - [ ] Configure Unity Catalog metastore
 - [ ] Create tenant catalog structure
-- [ ] Implement Databricks client service in AgentProvision API
+- [ ] Implement Databricks client service in ServiceTsunami API
 - [ ] Add environment variables for Databricks credentials
 - [ ] Create health check endpoints
 - [ ] Write integration tests
@@ -694,6 +694,6 @@ GRANT SELECT ON ALL CATALOGS TO `agentprovision_admins`;
 
 ---
 
-**Document Owner**: AgentProvision Platform Team
+**Document Owner**: ServiceTsunami Platform Team
 **Last Updated**: October 30, 2025
 **Review Cycle**: Monthly during implementation, quarterly post-launch

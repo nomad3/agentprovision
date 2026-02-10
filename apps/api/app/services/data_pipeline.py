@@ -120,7 +120,7 @@ async def _execute_agent_kit_workflow(db: Session, pipeline: DataPipeline, confi
         AgentKitExecutionWorkflow.run,
         args=[str(agent_kit_id) if agent_kit_id else "default-kit", str(pipeline.tenant_id), config],
         id=workflow_id,
-        task_queue="agentprovision-databricks",
+        task_queue="servicetsunami-databricks",
     )
 
     return {
@@ -162,7 +162,7 @@ async def _execute_connector_sync(db: Session, pipeline: DataPipeline, config: d
         DataSourceSyncWorkflow.run,
         args=[str(connector_id), connector.type, str(pipeline.tenant_id), sync_config],
         id=workflow_id,
-        task_queue="agentprovision-databricks",
+        task_queue="servicetsunami-databricks",
     )
 
     return {

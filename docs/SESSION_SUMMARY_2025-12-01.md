@@ -61,12 +61,12 @@ Generated professional mockups for:
 
 ### Services Running
 ```
-✅ agentprovision_web_1                 Up 3 minutes
-✅ agentprovision_mcp-server_1          Up 3 minutes
-✅ agentprovision_api_1                 Up 3 minutes
-✅ agentprovision_databricks-worker_1   Up 3 minutes
-✅ agentprovision_temporal_1            Up 3 minutes
-✅ agentprovision_db_1                  Up 3 minutes
+✅ servicetsunami_web_1                 Up 3 minutes
+✅ servicetsunami_mcp-server_1          Up 3 minutes
+✅ servicetsunami_api_1                 Up 3 minutes
+✅ servicetsunami_databricks-worker_1   Up 3 minutes
+✅ servicetsunami_temporal_1            Up 3 minutes
+✅ servicetsunami_db_1                  Up 3 minutes
 ```
 
 ### Health Check Results
@@ -147,7 +147,7 @@ Generated professional mockups for:
 
 ## 🔄 Deployment Status
 
-**Production URL**: https://agentprovision.com
+**Production URL**: https://servicetsunami.com
 
 **Deployment Method**: Git push → VM pull → Docker Compose rebuild
 
@@ -211,7 +211,7 @@ Generated professional mockups for:
 - **Main README**: [README.md](../README.md)
 - **MCP Status**: [DATABRICKS_MCP_STATUS.md](DATABRICKS_MCP_STATUS.md)
 - **Testing Checklist**: [MANUAL_BROWSER_TESTING_CHECKLIST.md](MANUAL_BROWSER_TESTING_CHECKLIST.md)
-- **Temporal UI**: http://localhost:8233 (local) or https://agentprovision.com:8233 (production)
+- **Temporal UI**: http://localhost:8233 (local) or https://servicetsunami.com:8233 (production)
 
 ---
 

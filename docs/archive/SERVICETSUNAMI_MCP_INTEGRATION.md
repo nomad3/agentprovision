@@ -1,8 +1,8 @@
-# AgentProvision + MCP Databricks Integration Guide
+# ServiceTsunami + MCP Databricks Integration Guide
 
-**Purpose**: This document outlines the AgentProvision-side integration with the MCP Server's Databricks connector.
+**Purpose**: This document outlines the ServiceTsunami-side integration with the MCP Server's Databricks connector.
 
-**Context**: The Databricks connector is being built in `../dentalerp/mcp-server`. This document focuses on what needs to change in AgentProvision to use it.
+**Context**: The Databricks connector is being built in `../dentalerp/mcp-server`. This document focuses on what needs to change in ServiceTsunami to use it.
 
 ---
 
@@ -10,7 +10,7 @@
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│                  AgentProvision                              │
+│                  ServiceTsunami                              │
 │  ┌────────────────────────────────────────────────────┐     │
 │  │ Frontend (React)                                   │     │
 │  │  • DatasetsPage                                    │     │
@@ -44,8 +44,8 @@
                     ┌────────────────────────────────────▼─────┐
                     │         MCP Server (Port 8085)           │
                     │  ┌────────────────────────────────────┐  │
-                    │  │ AgentProvision Module               │  │
-                    │  │  /agentprovision/v1/*              │  │
+                    │  │ ServiceTsunami Module               │  │
+                    │  │  /servicetsunami/v1/*              │  │
                     │  │  ├─ /databricks/datasets            │  │
                     │  │  ├─ /databricks/notebooks           │  │
                     │  │  ├─ /databricks/jobs                │  │
@@ -73,7 +73,7 @@
 
 ---
 
-## What's Been Created (AgentProvision Side)
+## What's Been Created (ServiceTsunami Side)
 
 ### ✅ Completed
 
@@ -542,7 +542,7 @@ async def initialize_databricks_for_tenant(
     """Initialize Databricks resources for tenant"""
     mcp = get_mcp_client()
 
-    catalog_name = f"agentprovision_{current_user.tenant_id}"
+    catalog_name = f"servicetsunami_{current_user.tenant_id}"
     result = await mcp.create_tenant_catalog(
         tenant_id=str(current_user.tenant_id),
         catalog_name=catalog_name
@@ -594,7 +594,7 @@ async def test_create_dataset():
 @pytest.mark.integration
 async def test_end_to_end_dataset_flow():
     """Test full dataset ingestion to Databricks"""
-    # 1. Upload file to AgentProvision
+    # 1. Upload file to ServiceTsunami
     # 2. Verify it's pushed to Databricks via MCP
     # 3. Query the data
     # 4. Verify results match
@@ -609,7 +609,7 @@ async def test_end_to_end_dataset_flow():
 - [ ] Databricks workspace configured
 - [ ] MCP_SERVER_URL and MCP_API_KEY set in `.env`
 - [ ] Database migration executed (add `metadata_` columns)
-- [ ] AgentProvision API restarted
+- [ ] ServiceTsunami API restarted
 - [ ] Frontend updated with new features
 - [ ] Integration tests passing
 - [ ] Health check endpoint returns healthy status
@@ -697,6 +697,6 @@ All MCP interactions should be logged:
 
 ---
 
-**Document Owner**: AgentProvision Platform Team
+**Document Owner**: ServiceTsunami Platform Team
 **Last Updated**: October 30, 2025
 **Status**: Integration in Progress

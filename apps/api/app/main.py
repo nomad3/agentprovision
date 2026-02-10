@@ -10,7 +10,7 @@ app = FastAPI()
 
 # Set up CORS middleware
 origins = [
-    "https://agentprovision.com",
+    "https://servicetsunami.com",
     "http://localhost:3000", # For local development
     "http://127.0.0.1:3000", # For local development
     "http://localhost:8002", # Docker web service

@@ -1,6 +1,6 @@
 # Database Migrations
 
-This directory contains SQL migration scripts for the AgentProvision database.
+This directory contains SQL migration scripts for the ServiceTsunami database.
 
 ## Running Migrations
 
@@ -8,10 +8,10 @@ This directory contains SQL migration scripts for the AgentProvision database.
 
 ```bash
 # Connect to database
-docker exec -i agentprovision-db-1 psql -U postgres -d agentprovision < migrations/001_add_databricks_metadata.sql
+docker exec -i servicetsunami-db-1 psql -U postgres -d servicetsunami < migrations/001_add_databricks_metadata.sql
 
 # Verify
-docker exec agentprovision-db-1 psql -U postgres -d agentprovision -c "\d datasets"
+docker exec servicetsunami-db-1 psql -U postgres -d servicetsunami -c "\d datasets"
 ```
 
 ### Via Python Script

@@ -1,5 +1,5 @@
 """
-AgentProvision API Client
+ServiceTsunami API Client
 
 Handles communication with the main API for:
 - Credential storage and retrieval
@@ -17,9 +17,9 @@ class APIClientError(Exception):
     pass
 
 
-class AgentProvisionAPI:
+class ServiceTsunamiAPI:
     """
-    Client for AgentProvision API.
+    Client for ServiceTsunami API.
 
     Used by MCP server to:
     - Store/retrieve encrypted credentials

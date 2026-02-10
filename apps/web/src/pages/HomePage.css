@@ -53,7 +53,7 @@
 }
 
 .section-icon {
-  color: #6366f1;
+  color: #0cd18e;
 }
 
 /* Quick Actions Section */
@@ -62,7 +62,7 @@
 }
 
 .quick-action-card {
-  background: linear-gradient(135deg, rgba(11, 19, 36, 0.9), rgba(9, 14, 26, 0.95));
+  background: linear-gradient(135deg, rgba(34, 39, 46, 0.9), rgba(26, 30, 36, 0.95));
   border: 1px solid rgba(148, 163, 184, 0.15);
   border-radius: 16px;
   cursor: pointer;
@@ -79,15 +79,15 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #6366f1, #0ea5e9);
+  background: linear-gradient(90deg, #0cd18e, #2a4d75);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
 .quick-action-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(99, 102, 241, 0.4);
-  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.2);
+  border-color: rgba(12, 209, 142, 0.4);
+  box-shadow: 0 8px 32px rgba(12, 209, 142, 0.2);
 }
 
 .quick-action-card:hover::before {
@@ -98,16 +98,16 @@
   width: 64px;
   height: 64px;
   border-radius: 16px;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(14, 165, 233, 0.15));
+  background: linear-gradient(135deg, rgba(12, 209, 142, 0.15), rgba(42, 77, 117, 0.15));
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1.25rem;
-  border: 1px solid rgba(99, 102, 241, 0.3);
+  border: 1px solid rgba(12, 209, 142, 0.3);
 }
 
 .action-icon {
-  color: #c7d2fe;
+  color: #a7f3d0;
 }
 
 .action-title {
@@ -137,7 +137,7 @@
 }
 
 .activity-card {
-  background: linear-gradient(135deg, rgba(11, 19, 36, 0.9), rgba(9, 14, 26, 0.95));
+  background: linear-gradient(135deg, rgba(34, 39, 46, 0.9), rgba(26, 30, 36, 0.95));
   border: 1px solid rgba(148, 163, 184, 0.15);
   border-radius: 16px;
 }
@@ -154,14 +154,14 @@
   gap: 1rem;
   padding: 1rem;
   border-radius: 10px;
-  background: rgba(99, 102, 241, 0.05);
+  background: rgba(12, 209, 142, 0.05);
   border: 1px solid rgba(148, 163, 184, 0.1);
   transition: all 0.25s ease;
 }
 
 .activity-item:hover {
-  background: rgba(99, 102, 241, 0.1);
-  border-color: rgba(99, 102, 241, 0.3);
+  background: rgba(12, 209, 142, 0.1);
+  border-color: rgba(12, 209, 142, 0.3);
   transform: translateX(4px);
 }
 
@@ -169,10 +169,10 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1, #0ea5e9);
+  background: linear-gradient(135deg, #0cd18e, #2a4d75);
   flex-shrink: 0;
   margin-top: 6px;
-  box-shadow: 0 0 12px rgba(99, 102, 241, 0.6);
+  box-shadow: 0 0 12px rgba(12, 209, 142, 0.6);
 }
 
 .activity-content {
@@ -224,8 +224,8 @@
 }
 
 .tips-card {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(14, 165, 233, 0.05));
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  background: linear-gradient(135deg, rgba(12, 209, 142, 0.08), rgba(42, 77, 117, 0.05));
+  border: 1px solid rgba(12, 209, 142, 0.2);
   border-radius: 16px;
 }
 

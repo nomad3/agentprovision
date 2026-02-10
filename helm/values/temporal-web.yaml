@@ -90,10 +90,10 @@ autoscaling:
 httpRoute:
   enabled: false
   # parentRefs:
-  #   - name: agentprovision-gateway
+  #   - name: servicetsunami-gateway
   #     namespace: gateway-system
   # hostnames:
-  #   - "temporal.agentprovision.com"
+  #   - "temporal.servicetsunami.com"
   # rules:
   #   - matches:
   #       - path:

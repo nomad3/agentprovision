@@ -68,7 +68,7 @@ async def sync_to_bronze(dataset_id: str, tenant_id: str) -> Dict[str, Any]:
     Create Bronze external table in Databricks Unity Catalog
 
     Calls MCP server to:
-    1. Download parquet from AgentProvision
+    1. Download parquet from ServiceTsunami
     2. Upload to Databricks DBFS/Volume
     3. Create external table in Bronze schema
 
@@ -129,13 +129,13 @@ async def sync_to_bronze(dataset_id: str, tenant_id: str) -> Dict[str, Any]:
         http_path = creds.get('http_path')
 
         # Upload file
-        remote_path = f"/FileStore/agentprovision/{tenant_id}/{dataset.file_name}"
+        remote_path = f"/FileStore/servicetsunami/{tenant_id}/{dataset.file_name}"
         _upload_to_dbfs(host, token, dataset.storage_uri, remote_path)
 
         # Create table
-        table_name = f"agentprovision_{str(tenant_id).replace('-', '_')}.default.bronze_{dataset_id.replace('-', '_')}"
+        table_name = f"servicetsunami_{str(tenant_id).replace('-', '_')}.default.bronze_{dataset_id.replace('-', '_')}"
         # Ensure catalog exists (optional, might fail if permissions missing)
-        # _run_sql(host, token, http_path, f"CREATE CATALOG IF NOT EXISTS agentprovision_{str(tenant_id).replace('-', '_')}")
+        # _run_sql(host, token, http_path, f"CREATE CATALOG IF NOT EXISTS servicetsunami_{str(tenant_id).replace('-', '_')}")
 
         # Create table using parquet
         # Note: We use dbfs:/ path schema

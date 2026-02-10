@@ -32,7 +32,7 @@ router = APIRouter()
 
 @router.get("/")
 def read_root():
-    return {"message": "AgentProvision API"}
+    return {"message": "ServiceTsunami API"}
 
 router.include_router(auth.router, prefix="/auth", tags=["auth"])
 router.include_router(users.router, prefix="/users", tags=["users"])

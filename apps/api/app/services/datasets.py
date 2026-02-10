@@ -61,7 +61,7 @@ def _trigger_databricks_sync(db: Session, dataset: Dataset, tenant_id: uuid.UUID
             workflows.start_workflow(
                 workflow_type='DatasetSyncWorkflow',
                 workflow_id=f"dataset-sync-{dataset.id}",
-                task_queue="agentprovision-databricks",
+                task_queue="servicetsunami-databricks",
                 tenant_id=tenant_id,
                 arguments=[str(dataset.id), str(tenant_id)]
             )

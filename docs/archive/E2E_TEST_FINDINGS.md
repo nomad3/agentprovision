@@ -1,14 +1,14 @@
-# AgentProvision Production End-to-End Test Findings
+# ServiceTsunami Production End-to-End Test Findings
 
 **Date**: October 31, 2025
-**Environment**: Production (https://agentprovision.com)
+**Environment**: Production (https://servicetsunami.com)
 **Test Suite**: `scripts/e2e_test_production.sh`
 
 ## Executive Summary
 
 **Test Results**: 21/22 tests passing (95.5% pass rate)
 
-The AgentProvision production environment is largely functional with all core features working correctly. One critical bug was identified in the chat message endpoint that causes a 500 Internal Server Error.
+The ServiceTsunami production environment is largely functional with all core features working correctly. One critical bug was identified in the chat message endpoint that causes a 500 Internal Server Error.
 
 ---
 
@@ -65,7 +65,7 @@ The AgentProvision production environment is largely functional with all core fe
 
 **Reproduction**:
 ```bash
-curl -X POST "https://agentprovision.com/api/v1/chat/sessions/{session_id}/messages" \
+curl -X POST "https://servicetsunami.com/api/v1/chat/sessions/{session_id}/messages" \
   -H "Authorization: Bearer {token}" \
   -H "Content-Type: application/json" \
   -d '{"content": "Hello"}'
@@ -326,7 +326,7 @@ All resource collection endpoints require trailing slashes:
 ./scripts/e2e_test_production.sh
 
 # Run against custom environment
-BASE_URL=https://staging.agentprovision.com ./scripts/e2e_test_production.sh
+BASE_URL=https://staging.servicetsunami.com ./scripts/e2e_test_production.sh
 
 # Run against local development
 BASE_URL=http://localhost:8001 ./scripts/e2e_test_production.sh
@@ -367,7 +367,7 @@ jobs:
 
 ## Conclusion
 
-The AgentProvision platform is production-ready with 95.5% of tested functionality working correctly. The critical chat message bug should be addressed immediately, but overall the platform demonstrates:
+The ServiceTsunami platform is production-ready with 95.5% of tested functionality working correctly. The critical chat message bug should be addressed immediately, but overall the platform demonstrates:
 
 - ✅ Robust authentication and authorization
 - ✅ Complete multi-tenant resource management

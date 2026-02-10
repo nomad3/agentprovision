@@ -11,7 +11,7 @@ import { getDashboardStats } from '../services/analytics';
 
 const DashboardPage = () => {
   const { user } = useAuth();
-  const viewerEmail = user?.email ?? 'demo@agentprovision.ai';
+  const viewerEmail = user?.email ?? 'demo@servicetsunami.com';
 
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);

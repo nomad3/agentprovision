@@ -8,7 +8,7 @@
 
 ## Goal
 
-Automatically sync uploaded datasets from AgentProvision to Databricks Unity Catalog (Bronze + Silver layers) using Temporal workflows, with graceful degradation and retry logic.
+Automatically sync uploaded datasets from ServiceTsunami to Databricks Unity Catalog (Bronze + Silver layers) using Temporal workflows, with graceful degradation and retry logic.
 
 ## Architecture Overview
 
@@ -17,7 +17,7 @@ Automatically sync uploaded datasets from AgentProvision to Databricks Unity Cat
 ```
 User Uploads Dataset
        ↓
-[AgentProvision API]
+[ServiceTsunami API]
        ↓
 1. Ingest to local Parquet (DuckDB) ← Always succeeds
        ↓
@@ -26,7 +26,7 @@ User Uploads Dataset
 [Temporal Worker]
        ↓
 3. Activity: Call MCP Server
-   POST /agentprovision/v1/databricks/datasets
+   POST /servicetsunami/v1/databricks/datasets
        ↓
 [MCP Server]
        ↓
@@ -45,7 +45,7 @@ User Uploads Dataset
        ↓
 9. Activity: Update dataset.metadata in PostgreSQL
        ↓
-[AgentProvision Database]
+[ServiceTsunami Database]
        ↓
 Dataset marked as synced with table names
 ```
@@ -65,7 +65,7 @@ Dataset marked as synced with table names
 - Can always fall back to local DuckDB queries
 
 **3. Via MCP Server (Not Direct)**
-- AgentProvision → MCP Server → Databricks
+- ServiceTsunami → MCP Server → Databricks
 - MCP handles Databricks auth, table creation, schema inference
 - Clean separation of concerns
 
@@ -75,7 +75,7 @@ Dataset marked as synced with table names
 
 **5. HTTP File Transfer**
 - Both services in Docker containers (separate)
-- AgentProvision exposes internal endpoint for parquet downloads
+- ServiceTsunami exposes internal endpoint for parquet downloads
 - Secured with shared MCP_API_KEY
 - No volume mounting complexity
 
@@ -239,7 +239,7 @@ async def create_dataset_in_databricks(
     Create Bronze external table and Silver managed table
 
     MCP server will:
-    1. Download parquet from AgentProvision
+    1. Download parquet from ServiceTsunami
     2. Upload to Databricks DBFS/Volume
     3. CREATE EXTERNAL TABLE in Bronze
     4. CREATE TABLE in Silver with transformations
@@ -251,7 +251,7 @@ async def create_dataset_in_databricks(
             "tenant_id": tenant_id,
             "dataset_id": dataset_id,
             "dataset_name": dataset_name,
-            "parquet_url": f"http://agentprovision-api:8001/internal/storage/datasets/{parquet_file_name}",
+            "parquet_url": f"http://servicetsunami-api:8001/internal/storage/datasets/{parquet_file_name}",
             "schema": schema
         }
     )
@@ -294,7 +294,7 @@ def ingest_records(...):
         await workflows.start_workflow(
             workflow_type=DatasetSyncWorkflow,
             workflow_id=f"dataset-sync-{dataset.id}",
-            task_queue="agentprovision-databricks",
+            task_queue="servicetsunami-databricks",
             arguments=[str(dataset.id), str(tenant_id)]
         )
 

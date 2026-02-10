@@ -4,7 +4,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "secret"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
-    DATABASE_URL: str = "postgresql://postgres:postgres@db:5432/agentprovision"
+    DATABASE_URL: str = "postgresql://postgres:postgres@db:5432/servicetsunami"
     DATA_STORAGE_PATH: str = "/app/storage"
     TEMPORAL_ADDRESS: str | None = "localhost:7233"
     TEMPORAL_NAMESPACE: str = "default"
@@ -33,7 +33,7 @@ class Settings(BaseSettings):
 
     # ADK (Google Agent Development Kit)
     ADK_BASE_URL: str | None = None
-    ADK_APP_NAME: str = "agentprovision_supervisor"
+    ADK_APP_NAME: str = "servicetsunami_supervisor"
 
     class Config:
         env_file = ".env"

@@ -105,7 +105,7 @@ ingress:
 httpRoute:
   enabled: false
   parentRefs:
-    - name: agentprovision-gateway
+    - name: servicetsunami-gateway
       namespace: gateway-system
   hostnames: []
   rules: []
@@ -128,7 +128,7 @@ externalSecret:
   data: []
   # - secretKey: DATABASE_URL
   #   remoteRef:
-  #     key: agentprovision-database-url
+  #     key: servicetsunami-database-url
 
 # Environment variables from ConfigMap
 envFrom:

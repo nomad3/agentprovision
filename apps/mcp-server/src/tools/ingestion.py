@@ -9,11 +9,11 @@ import io
 import pandas as pd
 from typing import Dict, Any
 
-from src.clients.api_client import AgentProvisionAPI
+from src.clients.api_client import ServiceTsunamiAPI
 from src.clients.databricks_client import DatabricksClient
 from src.utils.parquet import dataframe_to_parquet
 
-api = AgentProvisionAPI()
+api = ServiceTsunamiAPI()
 databricks = DatabricksClient()
 
 

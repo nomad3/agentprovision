@@ -1,9 +1,9 @@
-# AgentProvision ADK Service - Google ADK Agent Server
-nameOverride: "agentprovision-adk"
-fullnameOverride: "agentprovision-adk"
+# ServiceTsunami ADK Service - Google ADK Agent Server
+nameOverride: "servicetsunami-adk"
+fullnameOverride: "servicetsunami-adk"
 
 image:
-  repository: gcr.io/ai-agency-479516/agentprovision-adk
+  repository: gcr.io/ai-agency-479516/servicetsunami-adk
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -88,7 +88,7 @@ configMap:
     MCP_SERVER_URL: "http://mcp-server-microservice"
     DATABASE_HOST: "localhost"
     DATABASE_PORT: "5432"
-    DATABASE_NAME: "agentprovision"
+    DATABASE_NAME: "servicetsunami"
     VERTEX_PROJECT: "ai-agency-479516"
     VERTEX_LOCATION: "us-central1"
     EMBEDDING_MODEL: "text-embedding-005"
@@ -101,19 +101,19 @@ externalSecret:
     name: gcpsm-secret-store
     kind: SecretStore
   target:
-    name: agentprovision-adk-secret
+    name: servicetsunami-adk-secret
     creationPolicy: Owner
   data:
     - secretKey: SECRET_KEY
       remoteRef:
-        key: agentprovision-secret-key
+        key: servicetsunami-secret-key
     - secretKey: DATABASE_URL
       remoteRef:
-        key: agentprovision-database-url
+        key: servicetsunami-database-url
     # Note: GOOGLE_API_KEY not needed - using Vertex AI with Workload Identity
     - secretKey: MCP_API_KEY
       remoteRef:
-        key: agentprovision-mcp-api-key
+        key: servicetsunami-mcp-api-key
 
 # Cloud SQL Proxy sidecar for secure database connection
 extraContainers:

@@ -1,4 +1,4 @@
-# AgentProvision Enterprise AI Platform Design
+# ServiceTsunami Enterprise AI Platform Design
 
 **Date:** 2025-11-25
 **Status:** Approved
@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-Transform AgentProvision from a single-agent data platform into a full-featured enterprise AI orchestration platform with:
+Transform ServiceTsunami from a single-agent data platform into a full-featured enterprise AI orchestration platform with:
 
 - **Agent Orchestration**: Hybrid hierarchy (supervisor-worker + peer collaboration)
 - **Agent Memory**: Three-tier system (Redis → Vector Store → Knowledge Graph)
@@ -369,7 +369,7 @@ TenantFeatures:
   - storage_limit_gb: float = 10.0
 
   # UI
-  - hide_agentprovision_branding: bool = False
+  - hide_servicetsunami_branding: bool = False
 ```
 
 #### TenantAnalytics (NEW)

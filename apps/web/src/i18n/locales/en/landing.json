@@ -1,31 +1,31 @@
 {
   "hero": {
-    "badge": "Enterprise AI Data Platform",
-    "title": "Your Data Lake. Your AI Workforce.",
-    "lead": "Empower your organization with autonomous AI agents that understand your data. Secure, multi-tenant, and built for enterprise scale.",
-    "subtext": "Transform raw data into actionable intelligence. Solve complex problems with AI agents that work 24/7.",
-    "subHighlight": "The modern operating system for data-driven organizations.",
+    "badge": "The AI-Powered Operating System for Roll-Ups",
+    "title": "Acquire. Integrate. Scale. Repeat.",
+    "lead": "ServiceTsunami is the unified command center for roll-up operators. Consolidate ERP, finance, HR, compliance, and AI across every portfolio company from day one.",
+    "subtext": "Stop stitching together spreadsheets and legacy systems after every acquisition. One platform to run your entire roll-up — from M&A pipeline to exit.",
+    "subHighlight": "The operating system that scales with every acquisition.",
     "spotlight": {
-      "heading": "Core Capabilities",
-      "badge": "Enterprise Ready"
+      "heading": "Built for Roll-Up Operators",
+      "badge": "Day-One Ready"
     },
     "highlights": {
       "governedDataProducts": {
-        "title": "Unified Data Lake",
-        "description": "Centralize all your data in a secure, governed lakehouse. Support for structured and unstructured data with enterprise-grade security."
+        "title": "Unified Back Office Across Entities",
+        "description": "Consolidate ERP, finance, banking, and spend management across every portfolio company. One chart of accounts, one source of truth, one dashboard for the entire roll-up."
       },
       "unifiedLakehouseFabric": {
-        "title": "Autonomous AI Agents",
-        "description": "Deploy specialized agents that understand your business context. From data analysis to complex workflow automation, agents handle the heavy lifting."
+        "title": "AI Agents That Know Your Business",
+        "description": "Deploy autonomous AI agents for hyper-local ad campaigns, insurance RCM automation, HR compliance, and financial reporting. Agents learn each entity's context and operate 24/7."
       },
       "agenticAutomation": {
-        "title": "Multi-Tenant Organizations",
-        "description": "Built for scale. Manage multiple teams, departments, or clients with strict data isolation and granular access controls."
+        "title": "M&A Pipeline to Exit Playbook",
+        "description": "Track deals, run due diligence, model integration plans, and manage exit readiness — all in one place. Purpose-built for operators running 5 to 500 entities."
       }
     }
   },
   "logos": {
-    "heading": "Powered by Modern Tech Stack",
+    "heading": "Powered by Modern Infrastructure",
     "items": [
       "Claude AI",
       "React",
@@ -38,148 +38,148 @@
   "metrics": {
     "items": [
       {
-        "label": "Data Teams",
-        "value": "Eliminate Ad-Hoc Requests",
-        "description": "Free your data engineers from endless SQL queries. Let AI agents handle routine data retrieval and analysis, allowing your team to focus on infrastructure and strategy."
+        "label": "ERP & Finance",
+        "value": "One Back Office, Many Entities",
+        "description": "Consolidate general ledger, AP/AR, payroll, and banking across every acquisition. Eliminate duplicate systems, reduce headcount overhead, and close books in days instead of weeks."
       },
       {
-        "label": "Business Users",
-        "value": "Self-Service Intelligence",
-        "description": "Empower non-technical users to get answers instantly. Ask questions in plain English and get visualized results without waiting for a ticket to be resolved."
+        "label": "AI-Powered Ads",
+        "value": "Hyper-Local Campaigns at Scale",
+        "description": "Deploy AI-driven ad campaigns tailored to each entity's local market. Automatically optimize creative, targeting, and budget allocation across hundreds of locations."
       },
       {
-        "label": "Enterprise IT",
-        "value": "Secure & Compliant",
-        "description": "Maintain full control with role-based access, audit logs, and tenant isolation. Deploy with confidence knowing your data is secure and compliant."
+        "label": "Compliance & HR",
+        "value": "Standardize from Day One",
+        "description": "Onboard new acquisitions to unified HR policies, benefits, and compliance frameworks instantly. Automate state-by-state regulatory tracking and reduce integration timelines by 80%."
       }
     ]
   },
   "features": {
-    "heading": "Core Platform Features",
-    "subtitle": "Everything you need to build a data-driven organization.",
+    "heading": "Every Module a Roll-Up Needs",
+    "subtitle": "From deal sourcing to exit — one platform, zero integration headaches.",
     "items": {
       "connectEverySource": {
-        "title": "Data Ingestion & Management",
-        "description": "Seamlessly ingest data from various sources. Manage datasets, schemas, and metadata in a centralized catalog."
+        "title": "M&A Pipeline & Due Diligence",
+        "description": "Track acquisition targets, manage LOIs, run automated due diligence checklists, and model post-close integration plans. Never lose a deal to disorganization again."
       },
       "semanticControlPlane": {
-        "title": "Agentic Workflows",
-        "description": "Design and deploy complex workflows using Temporal. Orchestrate multiple agents to solve intricate business problems reliably."
+        "title": "Banking & Spend Management",
+        "description": "Centralized treasury, entity-level banking, automated expense policies, and real-time spend visibility. Control cash flow across your entire portfolio from one dashboard."
       },
       "agentAutomationStudio": {
-        "title": "Organization Management",
-        "description": "Create and manage tenants for different departments or clients. Ensure data isolation and customize settings for each organization."
+        "title": "Insurance & RCM Automation",
+        "description": "Automate revenue cycle management, claims processing, and insurance workflows with AI agents. Reduce denial rates, accelerate collections, and eliminate manual follow-ups."
       }
     }
   },
   "lakehouse": {
-    "heading": "Solving Real Business Problems",
-    "description": "Move beyond dashboards. Implement solutions that drive action.",
+    "heading": "Built for Operators Who Move Fast",
+    "description": "Roll-ups fail when integration stalls. ServiceTsunami ensures every acquisition is operational from day one.",
     "highlights": {
       "unifiedGovernance": {
-        "title": "The Bottleneck Problem",
-        "description": "Traditional data teams are overwhelmed with requests. AgentProvision removes this bottleneck by enabling self-service through AI agents."
+        "title": "The Integration Problem",
+        "description": "Most roll-ups spend 12-18 months integrating each acquisition onto legacy systems. ServiceTsunami cuts that to weeks with pre-built playbooks and AI-powered automation."
       },
       "programmablePipelines": {
-        "title": "The Context Gap",
-        "description": "Generic AI doesn't know your business. Our Agent Kits are tailored to your specific data and domain, providing accurate and relevant insights."
+        "title": "The Visibility Problem",
+        "description": "Operating 50+ entities on different systems means no one has the full picture. Our unified platform gives you real-time P&L, cash flow, and KPIs across every entity."
       },
       "compliantCollaboration": {
-        "title": "The Trust Issue",
-        "description": "Black-box AI is risky. We provide full visibility, citations, and audit trails so you can trust the decisions made by your AI agents."
+        "title": "The Scale Problem",
+        "description": "Adding headcount for every acquisition kills your margins. AI agents handle routine finance, HR, and compliance tasks so you can scale entities without scaling overhead."
       }
     },
     "secondary": {
       "heading": "Value Delivered",
-      "description": "Tangible benefits for your organization.",
+      "description": "Tangible results for roll-up operators.",
       "items": {
         "adaptiveGuardrails": {
-          "title": "Speed to Insight",
-          "description": "Reduce time-to-answer from days to seconds. Accelerate decision-making across the entire organization."
+          "title": "Faster Integration",
+          "description": "Reduce post-acquisition integration from months to weeks. Pre-built playbooks for ERP migration, HR onboarding, and financial consolidation."
         },
         "explainableDecisions": {
-          "title": "Operational Efficiency",
-          "description": "Automate repetitive tasks and workflows. Free up human capital for high-value strategic work."
+          "title": "Lower Overhead",
+          "description": "AI agents replace manual processes across finance, HR, and compliance. Scale from 10 to 100 entities without proportional headcount growth."
         },
         "lakehouseSignals": {
-          "title": "Scalable Governance",
-          "description": "Grow your data initiatives without losing control. Manage access and security at scale across multiple tenants."
+          "title": "Exit Readiness",
+          "description": "Clean financials, unified systems, and auditable data from day one. When it's time to exit, your house is already in order."
         }
       }
     }
   },
   "architecture": {
-    "heading": "Enterprise Architecture",
-    "description": "Built on a robust, scalable foundation.",
+    "heading": "Platform Architecture",
+    "description": "Enterprise-grade infrastructure for multi-entity operations.",
     "layers": {
       "dataIntegrationLayer": {
-        "title": "Data Layer",
-        "description": "Secure storage, efficient processing (DuckDB), and seamless integration with your existing data sources."
+        "title": "Data & Integration Layer",
+        "description": "Connect ERPs, banks, payroll systems, and CRMs. Ingest data from every entity into a unified data lake with automated reconciliation."
       },
       "semanticGovernanceLayer": {
         "title": "Orchestration Layer",
-        "description": "Temporal-powered workflows ensure reliability, retries, and state management for long-running processes."
+        "description": "Temporal-powered workflows handle cross-entity processes: financial consolidation, compliance checks, M&A integration playbooks, and scheduled reporting."
       },
       "agenticExecutionLayer": {
-        "title": "Intelligence Layer",
-        "description": "Advanced LLM integration (Claude, GPT) with context-aware agents that can reason, plan, and execute tasks."
+        "title": "AI Agent Layer",
+        "description": "Autonomous agents for ad optimization, RCM automation, financial analysis, HR compliance, and more. Each agent understands entity-level context and operates continuously."
       }
     }
   },
   "ai": {
-    "heading": "Agent Capabilities",
-    "description": "What your AI workforce can do.",
+    "heading": "AI Agents for Every Function",
+    "description": "Deploy specialized agents across your roll-up.",
     "items": {
       "insightCopilots": {
-        "title": "Data Analysis Agents",
-        "description": "Analyze trends, generate reports, and visualize data on command. Like having a dedicated data analyst available 24/7."
+        "title": "Financial Intelligence Agents",
+        "description": "Consolidate P&L across entities, flag anomalies, forecast cash flow, and generate board-ready reports. Like having a CFO team that never sleeps."
       },
       "composableSkills": {
-        "title": "Operational Agents",
-        "description": "Trigger workflows, update records, and send notifications based on data insights. Close the loop from insight to action."
+        "title": "Operations & Compliance Agents",
+        "description": "Monitor regulatory changes, automate compliance filings, manage HR onboarding, and track insurance claims. Reduce risk while scaling faster."
       },
       "closedLoopActuators": {
-        "title": "Custom Agent Kits",
-        "description": "Build and deploy specialized agent kits tailored to your unique business needs and workflows."
+        "title": "Growth & Revenue Agents",
+        "description": "Run hyper-local ad campaigns, optimize pricing, manage customer acquisition, and automate revenue cycle management across every entity."
       }
     }
   },
   "roadmap": {
-    "heading": "Future Innovation",
-    "subtitle": "Continuously evolving to meet your needs.",
+    "heading": "What We're Building Next",
+    "subtitle": "Purpose-built features for roll-up operators.",
     "items": {
       "marketplaceConnectors": {
-        "title": "Expanded Integrations",
-        "description": "More native connectors for CRM, ERP, and Marketing platforms."
+        "title": "Private Credit & Lending",
+        "description": "Integrated debt management, covenant tracking, and lender reporting. Manage capital structure across your entire portfolio."
       },
       "adaptiveGovernanceAi": {
-        "title": "Advanced Reasoning",
-        "description": "Next-generation agents with enhanced planning and problem-solving capabilities."
+        "title": "Exit & Liquidity Hub",
+        "description": "Automated sell-side prep, data room generation, quality of earnings support, and buyer management. Be exit-ready at all times."
       },
       "autonomousFinopsSuites": {
-        "title": "Global Scale",
-        "description": "Multi-region deployment options and enhanced enterprise compliance features."
+        "title": "Industry-Specific Playbooks",
+        "description": "Pre-built integration templates for healthcare, home services, professional services, and other high-frequency roll-up verticals."
       }
     }
   },
   "testimonials": {
-    "heading": "Trusted by Innovators",
-    "subtitle": "See how organizations are transforming with AgentProvision",
+    "heading": "Built for Roll-Up Operators",
+    "subtitle": "How multi-entity operators are scaling with ServiceTsunami",
     "items": [
       {
-        "quote": "AgentProvision allowed us to scale our data operations without hiring more staff. The multi-tenant features are perfect for managing our diverse client base.",
-        "author": "CTO",
-        "role": "Enterprise SaaS Provider"
+        "quote": "We were drowning in spreadsheets trying to consolidate financials across 30 entities on 4 different ERPs. ServiceTsunami gave us a single source of truth and cut our monthly close from 3 weeks to 5 days.",
+        "author": "CFO",
+        "role": "Multi-Location Services Roll-Up"
       },
       {
-        "quote": "The ability to automate complex workflows with Temporal and AI agents has been a game-changer. We've reduced manual reporting time by 90%.",
-        "author": "Head of Operations",
-        "role": "FinTech Company"
+        "quote": "Every acquisition used to mean hiring 2-3 more people just to handle integration. Now our AI agents handle 80% of the onboarding automatically. We're scaling faster with a leaner team.",
+        "author": "COO",
+        "role": "Healthcare Services Platform"
       }
     ]
   },
   "cta": {
-    "heading": "Ready to Transform Your Organization?",
-    "description": "Experience the power of autonomous AI agents. Start your journey towards a more efficient, data-driven future today."
+    "heading": "Ready to Scale Your Roll-Up?",
+    "description": "See how ServiceTsunami consolidates operations across every entity in your portfolio. Book a demo and we'll show you what day-one integration looks like."
   }
 }

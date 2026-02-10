@@ -1,4 +1,4 @@
-# AgentProvision MCP Databricks Integration - COMPLETE ✅
+# ServiceTsunami MCP Databricks Integration - COMPLETE ✅
 
 **Date**: October 30, 2025
 **Status**: Ready for MCP Connector Testing
@@ -145,7 +145,7 @@ apps/api/
 └── .env                            ✅ Updated - MCP configuration
 
 Root:
-├── AGENTPROVISION_MCP_INTEGRATION.md ✨ NEW - Integration guide (500+ lines)
+├── SERVICETSUNAMI_MCP_INTEGRATION.md ✨ NEW - Integration guide (500+ lines)
 ├── DATABRICKS_INTEGRATION_PLAN.md    ✨ NEW - Architecture plan (400+ lines)
 └── INTEGRATION_COMPLETE.md           ✨ NEW - This file
 ```
@@ -399,9 +399,9 @@ curl http://localhost:8001/api/v1/databricks/status \
 ### 1. **Wait for MCP Databricks Connector** (Other Session)
 
 The connector endpoints need to be implemented:
-- `POST /agentprovision/v1/databricks/datasets`
-- `POST /agentprovision/v1/databricks/notebooks`
-- `POST /agentprovision/v1/databricks/jobs`
+- `POST /servicetsunami/v1/databricks/datasets`
+- `POST /servicetsunami/v1/databricks/notebooks`
+- `POST /servicetsunami/v1/databricks/jobs`
 - etc.
 
 ### 2. **Integration Testing**
@@ -431,7 +431,7 @@ Update UI components:
 
 ## 📚 Documentation
 
-- **Integration Guide**: `AGENTPROVISION_MCP_INTEGRATION.md`
+- **Integration Guide**: `SERVICETSUNAMI_MCP_INTEGRATION.md`
 - **Architecture Plan**: `DATABRICKS_INTEGRATION_PLAN.md`
 - **Migration Guide**: `apps/api/migrations/README.md`
 
@@ -498,4 +498,4 @@ Update UI components:
 
 **Next Action**: Test with MCP server once Databricks connector endpoints are implemented.
 
-**Questions?** See `AGENTPROVISION_MCP_INTEGRATION.md` for detailed integration guide.
+**Questions?** See `SERVICETSUNAMI_MCP_INTEGRATION.md` for detailed integration guide.

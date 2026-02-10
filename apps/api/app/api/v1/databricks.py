@@ -107,7 +107,7 @@ async def initialize_databricks_for_tenant(
     try:
         mcp = get_mcp_client()
 
-        catalog_name = f"agentprovision_{str(current_user.tenant_id).replace('-', '_')}"
+        catalog_name = f"servicetsunami_{str(current_user.tenant_id).replace('-', '_')}"
 
         logger.info(f"Initializing Databricks catalog for tenant {current_user.tenant_id}")
 

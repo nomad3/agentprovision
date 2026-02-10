@@ -56,8 +56,8 @@ const InteractivePreview = () => {
   };
 
   return (
-    <section className="py-5 position-relative overflow-hidden" style={{ background: 'radial-gradient(circle at 50% 50%, #1a1f3a 0%, #030508 100%)' }}>
-      <div className="position-absolute top-0 start-0 w-100 h-100" style={{ opacity: 0.1, backgroundImage: 'radial-gradient(#6366f1 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
+    <section className="py-5 position-relative overflow-hidden" style={{ background: 'radial-gradient(circle at 50% 50%, #1e2228 0%, #13171c 100%)' }}>
+      <div className="position-absolute top-0 start-0 w-100 h-100" style={{ opacity: 0.1, backgroundImage: 'radial-gradient(#0cd18e 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
 
       <Container className="position-relative z-2">
         <div className="text-center mb-5">
@@ -65,7 +65,7 @@ const InteractivePreview = () => {
             LIVE PREVIEW
           </Badge>
           <h2 className="display-5 fw-bold text-white mb-3">
-            See <span className="gradient-text">AgentProvision</span> in Action
+            See <span className="gradient-text">ServiceTsunami</span> in Action
           </h2>
           <p className="text-soft lead mx-auto" style={{ maxWidth: '600px' }}>
             Orchestrate complex multi-agent workflows with a powerful, intuitive interface.

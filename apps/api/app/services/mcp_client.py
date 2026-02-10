@@ -1,5 +1,5 @@
 """
-MCP Server Client for AgentProvision
+MCP Server Client for ServiceTsunami
 
 This service handles communication with the MCP server,
 which provides the Databricks connector and other external integrations.
@@ -60,7 +60,7 @@ class MCPClient:
     ) -> Dict[str, Any]:
         """Make HTTP request to MCP server"""
         client = await self._get_client()
-        url = f"/agentprovision/v1{endpoint}"
+        url = f"/servicetsunami/v1{endpoint}"
 
         logger.info(f"MCP request: {method} {url}")
 
@@ -549,7 +549,7 @@ class MCPClient:
         Create dataset in Databricks Unity Catalog (Bronze + Silver)
 
         This triggers the MCP server to:
-        1. Download parquet file from AgentProvision
+        1. Download parquet file from ServiceTsunami
         2. Upload to Databricks DBFS/Volume
         3. Create Bronze external table
         4. Create Silver managed table with transformations
@@ -565,8 +565,8 @@ class MCPClient:
             Dict with bronze_table, silver_table, row_count
         """
         # Build internal file URL for MCP server to download
-        # MCP server will call: GET http://agentprovision-api:8001/internal/storage/datasets/{file_name}
-        parquet_url = f"http://agentprovision-api:8001/internal/storage/datasets/{parquet_file_name}"
+        # MCP server will call: GET http://servicetsunami-api:8001/internal/storage/datasets/{file_name}
+        parquet_url = f"http://servicetsunami-api:8001/internal/storage/datasets/{parquet_file_name}"
 
         return await self._request(
             "POST",

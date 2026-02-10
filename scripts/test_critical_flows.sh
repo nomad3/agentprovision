@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# AgentProvision Critical Flows Test Script
+# ServiceTsunami Critical Flows Test Script
 # Tests all major user flows via API endpoints
 
 set -e
 
-BASE_URL="https://agentprovision.com/api/v1"
+BASE_URL="https://servicetsunami.com/api/v1"
 TEST_EMAIL="test@example.com"
 TEST_PASSWORD="password"
 
-echo "🧪 Testing AgentProvision Critical Flows"
+echo "🧪 Testing ServiceTsunami Critical Flows"
 echo "=========================================="
 echo ""
 

@@ -11,10 +11,10 @@ class Settings(BaseSettings):
     adk_model: str = "gemini-2.5-flash"
 
     # Database (shared with FastAPI)
-    database_url: str = "postgresql://postgres:postgres@localhost:5432/agentprovision"
+    database_url: str = "postgresql://postgres:postgres@localhost:5432/servicetsunami"
     database_host: str = "localhost"
     database_port: int = 5432
-    database_name: str = "agentprovision"
+    database_name: str = "servicetsunami"
     database_user: str = "postgres"
     database_password: str = "postgres"
 
