@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'animate.css/animate.min.css'; // Import animate.css
+import 'animate.css/animate.min.css';
+import './index.css';
 import './i18n/i18n';
 import App from './App';
 
