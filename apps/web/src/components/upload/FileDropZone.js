@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { CloudUploadFill, FiletypeXlsx, FiletypeCsv, XCircleFill } from 'react-bootstrap-icons';
+import { FaCloudUploadAlt as CloudUploadFill, FaFileExcel as FiletypeXlsx, FaFileCsv as FiletypeCsv, FaTimesCircle as XCircleFill } from 'react-icons/fa';
 import { Alert } from 'react-bootstrap';
 import './FileDropZone.css';
 

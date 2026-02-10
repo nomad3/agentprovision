@@ -12,19 +12,19 @@ import {
   Table
 } from 'react-bootstrap';
 import {
-  ArrowRepeat,
-  Calendar3,
-  CheckCircleFill,
-  CloudArrowUp,
-  Database,
-  ExclamationTriangleFill,
-  Lightning,
-  Pencil,
-  PlayFill,
-  Plus,
-  Trash,
-  XCircleFill
-} from 'react-bootstrap-icons';
+  FaSyncAlt,
+  FaCalendarAlt,
+  FaCheckCircle,
+  FaCloudUploadAlt,
+  FaDatabase,
+  FaExclamationTriangle,
+  FaBolt,
+  FaPen,
+  FaPlay,
+  FaPlus,
+  FaTrash,
+  FaTimesCircle
+} from 'react-icons/fa';
 import Layout from '../components/Layout';
 import connectorService from '../services/connector';
 import dataPipelineService from '../services/dataPipeline';
@@ -263,9 +263,9 @@ const IntegrationsPage = () => {
 
   const getStatusBadge = (status) => {
     const configs = {
-      active: { bg: 'success', icon: CheckCircleFill, text: 'Active' },
-      error: { bg: 'danger', icon: XCircleFill, text: 'Error' },
-      pending: { bg: 'warning', icon: ExclamationTriangleFill, text: 'Pending' }
+      active: { bg: 'success', icon: FaCheckCircle, text: 'Active' },
+      error: { bg: 'danger', icon: FaTimesCircle, text: 'Error' },
+      pending: { bg: 'warning', icon: FaExclamationTriangle, text: 'Pending' }
     };
     const config = configs[status] || configs.pending;
     return <Badge bg={config.bg}><config.icon className="me-1" size={10} />{config.text}</Badge>;
@@ -278,7 +278,7 @@ const IntegrationsPage = () => {
         <Col md={3}>
           <Card className="stat-card stat-total">
             <Card.Body>
-              <div className="stat-icon"><Database size={24} /></div>
+              <div className="stat-icon"><FaDatabase size={24} /></div>
               <div className="stat-content">
                 <div className="stat-value">{stats.total}</div>
                 <div className="stat-label">Total Connectors</div>
@@ -289,7 +289,7 @@ const IntegrationsPage = () => {
         <Col md={3}>
           <Card className="stat-card stat-active">
             <Card.Body>
-              <div className="stat-icon"><CheckCircleFill size={24} /></div>
+              <div className="stat-icon"><FaCheckCircle size={24} /></div>
               <div className="stat-content">
                 <div className="stat-value">{stats.active}</div>
                 <div className="stat-label">Active</div>
@@ -300,7 +300,7 @@ const IntegrationsPage = () => {
         <Col md={3}>
           <Card className="stat-card stat-syncs">
             <Card.Body>
-              <div className="stat-icon"><ArrowRepeat size={24} /></div>
+              <div className="stat-icon"><FaSyncAlt size={24} /></div>
               <div className="stat-content">
                 <div className="stat-value">{stats.syncsActive}</div>
                 <div className="stat-label">Active Syncs</div>
@@ -311,7 +311,7 @@ const IntegrationsPage = () => {
         <Col md={3}>
           <Card className="stat-card stat-error">
             <Card.Body>
-              <div className="stat-icon"><ExclamationTriangleFill size={24} /></div>
+              <div className="stat-icon"><FaExclamationTriangle size={24} /></div>
               <div className="stat-content">
                 <div className="stat-value">{stats.error}</div>
                 <div className="stat-label">Need Attention</div>
@@ -326,19 +326,19 @@ const IntegrationsPage = () => {
         <Col lg={8}>
           <Card className="activity-card">
             <Card.Header className="d-flex justify-content-between align-items-center">
-              <h5 className="mb-0"><Lightning className="me-2" />Connected Data Sources</h5>
+              <h5 className="mb-0"><FaBolt className="me-2" />Connected Data Sources</h5>
               <Button variant="primary" size="sm" onClick={() => handleOpenConnectorModal()}>
-                <Plus className="me-2" />Add Connector
+                <FaPlus className="me-2" />Add Connector
               </Button>
             </Card.Header>
             <Card.Body className="p-0">
               {connectors.length === 0 ? (
                 <div className="text-center py-5">
-                  <CloudArrowUp size={48} className="text-muted mb-3" />
+                  <FaCloudUploadAlt size={48} className="text-muted mb-3" />
                   <h5>No connectors yet</h5>
                   <p className="text-muted">Connect your first data source to start syncing</p>
                   <Button variant="primary" onClick={() => handleOpenConnectorModal()}>
-                    <Plus className="me-2" />Add Your First Connector
+                    <FaPlus className="me-2" />Add Your First Connector
                   </Button>
                 </div>
               ) : (
@@ -381,7 +381,7 @@ const IntegrationsPage = () => {
                             onClick={() => handleTestConnector(connector.id)}
                             disabled={testing === connector.id}
                           >
-                            {testing === connector.id ? <Spinner size="sm" /> : <PlayFill />}
+                            {testing === connector.id ? <Spinner size="sm" /> : <FaPlay />}
                           </Button>
                           <Button
                             variant="outline-primary"
@@ -390,7 +390,7 @@ const IntegrationsPage = () => {
                             onClick={() => handleOpenSyncModal(connector)}
                             disabled={connector.status !== 'active'}
                           >
-                            <ArrowRepeat />
+                            <FaSyncAlt />
                           </Button>
                           <Button
                             variant="outline-secondary"
@@ -398,14 +398,14 @@ const IntegrationsPage = () => {
                             className="me-1"
                             onClick={() => handleOpenConnectorModal(connector)}
                           >
-                            <Pencil />
+                            <FaPen />
                           </Button>
                           <Button
                             variant="outline-danger"
                             size="sm"
                             onClick={() => handleDeleteConnector(connector.id)}
                           >
-                            <Trash />
+                            <FaTrash />
                           </Button>
                         </td>
                       </tr>
@@ -420,12 +420,12 @@ const IntegrationsPage = () => {
         <Col lg={4}>
           <Card className="syncs-card">
             <Card.Header>
-              <h5 className="mb-0"><Calendar3 className="me-2" />Scheduled Syncs</h5>
+              <h5 className="mb-0"><FaCalendarAlt className="me-2" />Scheduled Syncs</h5>
             </Card.Header>
             <Card.Body className="p-0">
               {syncs.length === 0 ? (
                 <div className="text-center py-4">
-                  <ArrowRepeat size={32} className="text-muted mb-2" />
+                  <FaSyncAlt size={32} className="text-muted mb-2" />
                   <p className="text-muted mb-0 small">No syncs scheduled</p>
                 </div>
               ) : (
@@ -447,7 +447,7 @@ const IntegrationsPage = () => {
                           onClick={() => handleRunSync(sync.id)}
                           disabled={syncing === sync.id}
                         >
-                          {syncing === sync.id ? <Spinner size="sm" /> : <PlayFill />}
+                          {syncing === sync.id ? <Spinner size="sm" /> : <FaPlay />}
                         </Button>
                       </div>
                     );
@@ -499,7 +499,7 @@ const IntegrationsPage = () => {
         <div className="page-header mb-4">
           <div>
             <h1 className="page-title">
-              <Database className="me-2" />
+              <FaDatabase className="me-2" />
               Integrations Hub
             </h1>
             <p className="page-subtitle text-muted">
@@ -508,10 +508,10 @@ const IntegrationsPage = () => {
           </div>
           <div className="header-actions">
             <Button variant="outline-primary" className="me-2" onClick={() => handleOpenSyncModal()}>
-              <ArrowRepeat className="me-2" />New Sync
+              <FaSyncAlt className="me-2" />New Sync
             </Button>
             <Button variant="primary" onClick={() => handleOpenConnectorModal()}>
-              <Plus className="me-2" />Add Connector
+              <FaPlus className="me-2" />Add Connector
             </Button>
           </div>
         </div>
@@ -578,7 +578,7 @@ const IntegrationsPage = () => {
               {renderConnectorForm()}
               {testResult && (
                 <Alert variant={testResult.success ? 'success' : 'danger'} className="mt-3">
-                  {testResult.success ? <CheckCircleFill className="me-2" /> : <XCircleFill className="me-2" />}
+                  {testResult.success ? <FaCheckCircle className="me-2" /> : <FaTimesCircle className="me-2" />}
                   {testResult.message}
                 </Alert>
               )}
@@ -586,7 +586,7 @@ const IntegrationsPage = () => {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="outline-secondary" onClick={() => handleTestConnector()} disabled={testing}>
-              {testing ? <Spinner size="sm" className="me-2" /> : <PlayFill className="me-2" />}
+              {testing ? <Spinner size="sm" className="me-2" /> : <FaPlay className="me-2" />}
               Test Connection
             </Button>
             <Button variant="secondary" onClick={() => setShowConnectorModal(false)}>Cancel</Button>

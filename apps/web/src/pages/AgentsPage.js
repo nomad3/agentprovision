@@ -11,12 +11,12 @@ import {
   Table
 } from 'react-bootstrap';
 import {
-  Pencil,
-  Plus,
-  Robot,
-  Search,
-  Trash
-} from 'react-bootstrap-icons';
+  FaPen,
+  FaPlus,
+  FaRobot,
+  FaSearch,
+  FaTrash
+} from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { ConfirmModal, EmptyState, LoadingSpinner } from '../components/common';
@@ -174,7 +174,7 @@ const AgentsPage = () => {
       <div className="page-header mb-4">
         <div>
           <h2 className="page-title">
-            <Robot className="me-2" size={32} />
+            <FaRobot className="me-2" size={32} />
             AI Agents
           </h2>
           <p className="page-subtitle">
@@ -187,7 +187,7 @@ const AgentsPage = () => {
           onClick={() => navigate('/agents/wizard')}
           className="d-flex align-items-center gap-2"
         >
-          <Plus size={20} />
+          <FaPlus size={20} />
           Create Agent
         </Button>
       </div>
@@ -207,7 +207,7 @@ const AgentsPage = () => {
         <Card.Body>
           <InputGroup>
             <InputGroup.Text className="search-icon-wrapper">
-              <Search />
+              <FaSearch />
             </InputGroup.Text>
             <Form.Control
               type="text"
@@ -224,7 +224,7 @@ const AgentsPage = () => {
         <LoadingSpinner text="Loading agents..." />
       ) : filteredAgents.length === 0 ? (
         <EmptyState
-          icon={Robot}
+          icon={FaRobot}
           title={searchTerm ? 'No agents found' : 'No agents yet'}
           description={
             searchTerm
@@ -237,7 +237,7 @@ const AgentsPage = () => {
                 variant="primary"
                 onClick={() => navigate('/agents/wizard')}
               >
-                <Plus className="me-2" />
+                <FaPlus className="me-2" />
                 Create Your First Agent
               </Button>
             )
@@ -262,7 +262,7 @@ const AgentsPage = () => {
                   <td>
                     <div className="d-flex align-items-center gap-2">
                       <div className="agent-icon">
-                        <Robot size={20} />
+                        <FaRobot size={20} />
                       </div>
                       <strong>{agent.name}</strong>
                     </div>
@@ -284,14 +284,14 @@ const AgentsPage = () => {
                         size="sm"
                         onClick={() => openEditModal(agent)}
                       >
-                        <Pencil size={14} />
+                        <FaPen size={14} />
                       </Button>
                       <Button
                         variant="outline-danger"
                         size="sm"
                         onClick={() => openDeleteModal(agent)}
                       >
-                        <Trash size={14} />
+                        <FaTrash size={14} />
                       </Button>
                     </div>
                   </td>

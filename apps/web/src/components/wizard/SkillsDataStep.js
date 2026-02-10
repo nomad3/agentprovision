@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Form, Row, Col, Alert } from 'react-bootstrap';
-import { Database, Calculator as CalcIcon, BarChart } from 'react-bootstrap-icons';
+import { FaDatabase as Database, FaCalculator as CalcIcon, FaChartBar as BarChart } from 'react-icons/fa';
 import datasetService from '../../services/dataset';
 import { LoadingSpinner } from '../common';
 
@@ -36,7 +36,7 @@ const ToolCard = ({ tool, isChecked, onToggle }) => {
   const IconComponent = tool.icon;
 
   return (
-    <Card key={tool.id} className="mb-2" style={{ border: '1px solid #dee2e6' }}>
+    <Card key={tool.id} className="mb-2">
       <Card.Body className="py-3">
         <div className="d-flex align-items-start justify-content-between">
           <div className="d-flex align-items-start gap-3 flex-grow-1">

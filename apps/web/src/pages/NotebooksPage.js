@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Alert, Button, Card, Col, Form, Row, Spinner, Table } from 'react-bootstrap';
-import { CodeSquare, Database, PlayFill, Table as TableIcon } from 'react-bootstrap-icons';
+import { FaCode, FaDatabase, FaPlay, FaTable } from 'react-icons/fa';
 import Layout from '../components/Layout';
 import dataSourceService from '../services/dataSource';
 import './NotebooksPage.css';
@@ -91,7 +91,7 @@ const NotebooksPage = () => {
       <div className="notebooks-page h-100 d-flex flex-column">
         <div className="page-header mb-4">
           <h1 className="page-title">
-            <CodeSquare className="title-icon" />
+            <FaCode className="title-icon" />
             Data Explorer
           </h1>
           <p className="page-subtitle">Query your data sources directly and analyze results.</p>
@@ -103,7 +103,7 @@ const NotebooksPage = () => {
           <Col md={3} className="h-100">
             <Card className="h-100">
               <Card.Header>
-                <Database className="me-2" />
+                <FaDatabase className="me-2" />
                 Data Sources
               </Card.Header>
               <Card.Body>
@@ -126,7 +126,7 @@ const NotebooksPage = () => {
                   </Form.Group>
                 )}
                 <div className="mt-4 text-muted small">
-                  <p><TableIcon className="me-1" /> <strong>Tables</strong></p>
+                  <p><FaTable className="me-1" /> <strong>Tables</strong></p>
                   <p>Select a source to view tables (Schema browser coming soon).</p>
                 </div>
               </Card.Body>
@@ -143,7 +143,7 @@ const NotebooksPage = () => {
                   onClick={handleExecute}
                   disabled={executing || !selectedDataSource}
                 >
-                  {executing ? <Spinner size="sm" animation="border" /> : <><PlayFill className="me-1" /> Run Query</>}
+                  {executing ? <Spinner size="sm" animation="border" /> : <><FaPlay className="me-1" /> Run Query</>}
                 </Button>
               </Card.Header>
               <Card.Body className="p-0">

@@ -203,7 +203,7 @@ const ChatPage = () => {
     const queryResults = message.context?.query_results || [];
 
     return (
-      <ListGroup.Item key={message.id} className={message.role === 'assistant' ? 'bg-light' : ''}>
+      <ListGroup.Item key={message.id} style={message.role === 'assistant' ? { background: 'var(--surface-contrast)' } : {}}>
         <div className="d-flex justify-content-between align-items-start">
           <div>
             <Badge bg={message.role === 'assistant' ? 'primary' : 'secondary'} className="me-2 text-uppercase">
@@ -225,7 +225,7 @@ const ChatPage = () => {
         {message.context && message.context.summary && (
           <details className="mt-2">
             <summary>View agent context</summary>
-            <pre className="bg-white border rounded p-2 mt-2" style={{ whiteSpace: 'pre-wrap' }}>
+            <pre className="rounded p-2 mt-2" style={{ whiteSpace: 'pre-wrap', background: 'var(--surface-page)', color: 'var(--color-soft)', border: '1px solid var(--color-border)' }}>
               {JSON.stringify(message.context, null, 2)}
             </pre>
           </details>
@@ -315,7 +315,7 @@ const ChatPage = () => {
                         {messages.length === 0 && (
                           <div className="py-4">
                             <div className="text-center text-muted mb-4">
-                              <h5 className="text-dark">💡 Get Started</h5>
+                              <h5>Get Started</h5>
                               <p>Ask your AI assistant about your data. Try one of these:</p>
                             </div>
                             <div className="row g-2 px-3">

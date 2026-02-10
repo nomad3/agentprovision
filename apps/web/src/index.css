@@ -17,6 +17,12 @@
   --color-highlight: #0cd18e;
   --color-border: rgba(148, 163, 184, 0.16);
   --color-border-strong: rgba(12, 209, 142, 0.45);
+  --color-action: #0d6efd;
+  --color-action-rgb: 13, 110, 253;
+  --color-success: #198754;
+  --color-success-rgb: 25, 135, 84;
+  --color-warning: #f59e0b;
+  --color-disabled: #6c757d;
   --shadow-lg: 0 35px 70px rgba(26, 30, 36, 0.55);
   --shadow-md: 0 18px 40px rgba(26, 30, 36, 0.5);
   --radius-lg: 20px;
@@ -364,4 +370,121 @@ code {
   color: var(--color-primary);
   background: transparent;
   border-bottom: 2px solid var(--color-primary);
+}
+
+/* ── Global Bootstrap Dark Mode Overrides ── */
+
+.card {
+  background: var(--surface-elevated);
+  border-color: var(--color-border);
+  color: var(--color-foreground);
+}
+
+.card-header {
+  background: transparent;
+  border-color: var(--color-border);
+  color: var(--color-foreground);
+}
+
+.list-group-item {
+  background: transparent;
+  border-color: var(--color-border);
+  color: var(--color-soft);
+}
+
+.list-group-item.active {
+  background: rgba(12, 209, 142, 0.15);
+  border-color: var(--color-border-strong);
+  color: var(--color-foreground);
+}
+
+.list-group-item-action:hover,
+.list-group-item-action:focus {
+  background: var(--surface-contrast);
+  color: var(--color-foreground);
+}
+
+.modal-content {
+  background: var(--surface-elevated);
+  border: 1px solid var(--color-border);
+  color: var(--color-foreground);
+}
+
+.modal-header {
+  border-color: var(--color-border);
+}
+
+.modal-footer {
+  border-color: var(--color-border);
+}
+
+.modal-header .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.form-control,
+.form-select {
+  background: var(--surface-contrast);
+  border-color: var(--color-border);
+  color: var(--color-foreground);
+}
+
+.form-control:focus,
+.form-select:focus {
+  background: var(--surface-contrast);
+  border-color: var(--color-border-strong);
+  color: var(--color-foreground);
+  box-shadow: 0 0 0 0.25rem rgba(12, 209, 142, 0.15);
+}
+
+.form-control::placeholder {
+  color: var(--color-muted);
+}
+
+.form-label {
+  color: var(--color-soft);
+  font-weight: 500;
+}
+
+.form-text {
+  color: var(--color-muted);
+}
+
+.table {
+  color: var(--color-soft);
+  border-color: var(--color-border);
+}
+
+.table > thead {
+  color: var(--color-muted);
+  border-color: var(--color-border);
+}
+
+.table-hover > tbody > tr:hover {
+  background: var(--surface-contrast);
+  color: var(--color-foreground);
+}
+
+.nav-tabs {
+  border-color: var(--color-border);
+}
+
+.nav-tabs .nav-link {
+  color: var(--color-muted);
+}
+
+.nav-tabs .nav-link:hover {
+  border-color: var(--color-border) var(--color-border) transparent;
+  color: var(--color-foreground);
+}
+
+.nav-tabs .nav-link.active {
+  background: var(--surface-elevated);
+  border-color: var(--color-border) var(--color-border) var(--surface-elevated);
+  color: var(--color-foreground);
+}
+
+hr {
+  border-color: var(--color-border);
+  opacity: 1;
 }

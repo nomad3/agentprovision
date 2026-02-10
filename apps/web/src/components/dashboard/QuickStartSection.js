@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import {
-  ChatDotsFill,
-  CloudUploadFill,
-  Robot
-} from 'react-bootstrap-icons';
+  FaComments as ChatDotsFill,
+  FaCloudUploadAlt as CloudUploadFill,
+  FaRobot as Robot
+} from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import agentService from '../../services/agent';
 import chatService from '../../services/chat';

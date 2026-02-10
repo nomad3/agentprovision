@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check } from 'react-bootstrap-icons';
+import { FaCheck as Check } from 'react-icons/fa';
 import './AgentWizard.css';
 
 const WizardStepper = ({ currentStep, steps }) => {

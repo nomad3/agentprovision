@@ -11,16 +11,16 @@ import {
   Spinner
 } from 'react-bootstrap';
 import {
-  CheckCircleFill,
-  CloudArrowUp,
-  Database,
-  ExclamationTriangleFill,
-  Pencil,
-  PlayFill,
-  Plus,
-  Trash,
-  XCircleFill
-} from 'react-bootstrap-icons';
+  FaCheckCircle,
+  FaCloudUploadAlt,
+  FaDatabase,
+  FaExclamationTriangle,
+  FaPen,
+  FaPlay,
+  FaPlus,
+  FaTrash,
+  FaTimesCircle
+} from 'react-icons/fa';
 import Layout from '../components/Layout';
 import connectorService from '../services/connector';
 
@@ -227,11 +227,11 @@ const ConnectorsPage = () => {
   const getStatusBadge = (status) => {
     switch (status) {
       case 'active':
-        return <Badge bg="success"><CheckCircleFill className="me-1" /> Active</Badge>;
+        return <Badge bg="success"><FaCheckCircle className="me-1" /> Active</Badge>;
       case 'error':
-        return <Badge bg="danger"><XCircleFill className="me-1" /> Error</Badge>;
+        return <Badge bg="danger"><FaTimesCircle className="me-1" /> Error</Badge>;
       default:
-        return <Badge bg="secondary"><ExclamationTriangleFill className="me-1" /> Pending</Badge>;
+        return <Badge bg="secondary"><FaExclamationTriangle className="me-1" /> Pending</Badge>;
     }
   };
 
@@ -273,11 +273,11 @@ const ConnectorsPage = () => {
     <Layout>
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h2><Database className="me-2" />Data Connectors</h2>
+          <h2><FaDatabase className="me-2" />Data Connectors</h2>
           <p className="text-muted mb-0">Connect to your data sources to sync and analyze data</p>
         </div>
         <Button variant="primary" onClick={() => handleOpenModal()}>
-          <Plus className="me-2" />Add Connector
+          <FaPlus className="me-2" />Add Connector
         </Button>
       </div>
 
@@ -291,11 +291,11 @@ const ConnectorsPage = () => {
       ) : connectors.length === 0 ? (
         <Card className="text-center py-5">
           <Card.Body>
-            <CloudArrowUp size={64} className="text-muted mb-3" />
+            <FaCloudUploadAlt size={64} className="text-muted mb-3" />
             <h4>No connectors yet</h4>
             <p className="text-muted">Connect your first data source to start syncing data</p>
             <Button variant="primary" onClick={() => handleOpenModal()}>
-              <Plus className="me-2" />Add Your First Connector
+              <FaPlus className="me-2" />Add Your First Connector
             </Button>
           </Card.Body>
         </Card>
@@ -335,14 +335,14 @@ const ConnectorsPage = () => {
                       onClick={() => handleTestExisting(connector.id)}
                       disabled={testing === connector.id}
                     >
-                      {testing === connector.id ? <Spinner size="sm" animation="border" /> : <PlayFill />}
+                      {testing === connector.id ? <Spinner size="sm" animation="border" /> : <FaPlay />}
                       {' '}Test
                     </Button>
                     <Button variant="outline-secondary" size="sm" onClick={() => handleOpenModal(connector)}>
-                      <Pencil /> Edit
+                      <FaPen /> Edit
                     </Button>
                     <Button variant="outline-danger" size="sm" onClick={() => handleDelete(connector.id)}>
-                      <Trash />
+                      <FaTrash />
                     </Button>
                   </div>
                 </Card.Footer>
@@ -400,7 +400,7 @@ const ConnectorsPage = () => {
 
             {testResult && (
               <Alert variant={testResult.success ? 'success' : 'danger'} className="mt-3">
-                {testResult.success ? <CheckCircleFill className="me-2" /> : <XCircleFill className="me-2" />}
+                {testResult.success ? <FaCheckCircle className="me-2" /> : <FaTimesCircle className="me-2" />}
                 {testResult.message}
               </Alert>
             )}
@@ -408,7 +408,7 @@ const ConnectorsPage = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="outline-secondary" onClick={handleTestConnection} disabled={testing}>
-            {testing ? <Spinner size="sm" animation="border" className="me-2" /> : <PlayFill className="me-2" />}
+            {testing ? <Spinner size="sm" animation="border" className="me-2" /> : <FaPlay className="me-2" />}
             Test Connection
           </Button>
           <Button variant="secondary" onClick={handleCloseModal}>Cancel</Button>

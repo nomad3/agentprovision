@@ -11,13 +11,13 @@ import {
   InputGroup,
 } from 'react-bootstrap';
 import {
-  Tools,
-  Plus,
-  Search,
-  Pencil,
-  Trash,
-  PlayCircle,
-} from 'react-bootstrap-icons';
+  FaTools,
+  FaPlus,
+  FaSearch,
+  FaPen,
+  FaTrash,
+  FaPlayCircle,
+} from 'react-icons/fa';
 import Layout from '../components/Layout';
 import { EmptyState, LoadingSpinner, ConfirmModal, useToast } from '../components/common';
 import toolService from '../services/tool';
@@ -177,7 +177,7 @@ const ToolsPage = () => {
       <div className="page-header mb-4">
         <div>
           <h2 className="page-title">
-            <Tools className="me-2" size={32} />
+            <FaTools className="me-2" size={32} />
             Tools
           </h2>
           <p className="page-subtitle">
@@ -190,7 +190,7 @@ const ToolsPage = () => {
           onClick={() => setShowCreateModal(true)}
           className="d-flex align-items-center gap-2"
         >
-          <Plus size={20} />
+          <FaPlus size={20} />
           Create Tool
         </Button>
       </div>
@@ -199,7 +199,7 @@ const ToolsPage = () => {
         <Card.Body>
           <InputGroup>
             <InputGroup.Text className="search-icon-wrapper">
-              <Search />
+              <FaSearch />
             </InputGroup.Text>
             <Form.Control
               type="text"
@@ -216,7 +216,7 @@ const ToolsPage = () => {
         <LoadingSpinner text="Loading tools..." />
       ) : filteredTools.length === 0 ? (
         <EmptyState
-          icon={Tools}
+          icon={FaTools}
           title={searchTerm ? 'No tools found' : 'No tools yet'}
           description={
             searchTerm
@@ -229,7 +229,7 @@ const ToolsPage = () => {
                 variant="primary"
                 onClick={() => setShowCreateModal(true)}
               >
-                <Plus className="me-2" />
+                <FaPlus className="me-2" />
                 Create Your First Tool
               </Button>
             )
@@ -254,7 +254,7 @@ const ToolsPage = () => {
                   <td>
                     <div className="d-flex align-items-center gap-2">
                       <div className="agent-icon">
-                        <Tools size={20} />
+                        <FaTools size={20} />
                       </div>
                       <strong>{tool.name}</strong>
                     </div>
@@ -281,21 +281,21 @@ const ToolsPage = () => {
                         onClick={() => handleTestTool(tool)}
                         title="Test tool"
                       >
-                        <PlayCircle size={14} />
+                        <FaPlayCircle size={14} />
                       </Button>
                       <Button
                         variant="outline-primary"
                         size="sm"
                         onClick={() => openEditModal(tool)}
                       >
-                        <Pencil size={14} />
+                        <FaPen size={14} />
                       </Button>
                       <Button
                         variant="outline-danger"
                         size="sm"
                         onClick={() => openDeleteModal(tool)}
                       >
-                        <Trash size={14} />
+                        <FaTrash size={14} />
                       </Button>
                     </div>
                   </td>

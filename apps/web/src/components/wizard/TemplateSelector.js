@@ -1,6 +1,6 @@
 import React from 'react';
 import { Row, Col, Card, Button } from 'react-bootstrap';
-import { Headset, BarChart, Briefcase, Robot, PencilSquare } from 'react-bootstrap-icons';
+import { FaHeadset as Headset, FaChartBar as BarChart, FaBriefcase as Briefcase, FaRobot as Robot, FaEdit as PencilSquare } from 'react-icons/fa';
 
 const TEMPLATES = [
   {

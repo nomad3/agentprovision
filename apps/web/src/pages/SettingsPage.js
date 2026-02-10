@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Form, Button, Row, Col, Badge, Spinner, Alert } from 'react-bootstrap';
-import { GearFill, PersonFill, BellFill, ShieldLockFill, CreditCardFill, CloudFill } from 'react-bootstrap-icons';
+import { FaCog, FaUser, FaBell, FaShieldAlt, FaCreditCard, FaCloud } from 'react-icons/fa';
 import Layout from '../components/Layout';
 import api from '../services/api';
 import './SettingsPage.css';
@@ -49,7 +49,7 @@ const SettingsPage = () => {
       <div className="settings-page">
         <div className="page-header">
           <h1 className="page-title">
-            <GearFill className="title-icon" />
+            <FaCog className="title-icon" />
             Settings
           </h1>
           <p className="page-subtitle">Manage your account and application preferences</p>
@@ -61,7 +61,7 @@ const SettingsPage = () => {
             <Card className="settings-card">
               <Card.Body>
                 <div className="settings-section-header">
-                  <PersonFill className="section-icon" />
+                  <FaUser className="section-icon" />
                   <h3 className="section-title">Profile Settings</h3>
                 </div>
                 <Form>
@@ -98,7 +98,7 @@ const SettingsPage = () => {
             <Card className="settings-card">
               <Card.Body>
                 <div className="settings-section-header">
-                  <BellFill className="section-icon" />
+                  <FaBell className="section-icon" />
                   <h3 className="section-title">Notification Preferences</h3>
                 </div>
                 <Form>
@@ -139,7 +139,7 @@ const SettingsPage = () => {
             <Card className="settings-card">
               <Card.Body>
                 <div className="settings-section-header">
-                  <ShieldLockFill className="section-icon" />
+                  <FaShieldAlt className="section-icon" />
                   <h3 className="section-title">Security</h3>
                 </div>
                 <div className="security-item">
@@ -167,7 +167,7 @@ const SettingsPage = () => {
             <Card className="settings-card">
               <Card.Body>
                 <div className="settings-section-header">
-                  <CloudFill className="section-icon" />
+                  <FaCloud className="section-icon" />
                   <h3 className="section-title">Databricks Integration</h3>
                 </div>
 
@@ -282,7 +282,7 @@ const SettingsPage = () => {
             <Card className="settings-card">
               <Card.Body>
                 <div className="settings-section-header">
-                  <CreditCardFill className="section-icon" />
+                  <FaCreditCard className="section-icon" />
                   <h3 className="section-title">Plan & Billing</h3>
                 </div>
                 <div className="plan-info">

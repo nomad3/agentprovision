@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, ProgressBar, Alert } from 'react-bootstrap';
-import { CheckCircleFill } from 'react-bootstrap-icons';
+import { FaCheckCircle as CheckCircleFill } from 'react-icons/fa';
 import FileDropZone from './FileDropZone';
 import FilePreview from './FilePreview';
 import { useToast } from '../common/Toast';

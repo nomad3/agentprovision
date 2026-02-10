@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Row, Col, Badge, Button } from 'react-bootstrap';
-import { Pencil } from 'react-bootstrap-icons';
+import { FaPen as Pencil } from 'react-icons/fa';
 
 const ReviewStep = ({ wizardData, datasets, onEdit }) => {
   const { template, basicInfo, personality, skills, datasets: datasetIds } = wizardData;

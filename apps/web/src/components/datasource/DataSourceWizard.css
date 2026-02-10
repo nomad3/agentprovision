@@ -9,15 +9,15 @@
 }
 
 .connector-card.selected {
-  border-color: #0d6efd;
-  background-color: #f8f9ff;
+  border-color: var(--color-action);
+  background-color: rgba(var(--color-action-rgb), 0.08);
 }
 
 .connector-icon {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-action), var(--color-primary));
   display: flex;
   align-items: center;
   justify-content: center;

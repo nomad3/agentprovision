@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Alert, Badge, Button, Card, Col, Form, Modal, Row, Spinner } from 'react-bootstrap';
 import {
-  CheckCircleFill,
-  Cloud,
-  Database,
-  HddNetwork,
-  PencilSquare,
-  PlusCircleFill,
-  Server,
-  Trash
-} from 'react-bootstrap-icons';
+  FaCheckCircle,
+  FaCloud,
+  FaDatabase,
+  FaNetworkWired,
+  FaEdit,
+  FaPlusCircle,
+  FaServer,
+  FaTrash
+} from 'react-icons/fa';
 import Layout from '../components/Layout';
 import dataSourceService from '../services/dataSource';
 import './DataSourcesPage.css'; // We'll create this next
@@ -245,9 +245,9 @@ const DataSourcesPage = () => {
 
   const getTypeIcon = (type) => {
     switch (type) {
-      case 'databricks': return <Cloud size={24} className="text-info" />;
-      case 'postgres': return <Database size={24} className="text-primary" />;
-      default: return <Server size={24} className="text-secondary" />;
+      case 'databricks': return <FaCloud size={24} className="text-info" />;
+      case 'postgres': return <FaDatabase size={24} className="text-primary" />;
+      default: return <FaServer size={24} className="text-secondary" />;
     }
   };
 
@@ -256,7 +256,7 @@ const DataSourcesPage = () => {
       <div className="datasources-page">
         <div className="page-header">
           <h1 className="page-title">
-            <HddNetwork className="title-icon" />
+            <FaNetworkWired className="title-icon" />
             Data Sources
           </h1>
           <p className="page-subtitle">Connect and manage your external data sources</p>
@@ -267,7 +267,7 @@ const DataSourcesPage = () => {
 
         <div className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={() => handleShowModal()}>
-            <PlusCircleFill className="me-2" />
+            <FaPlusCircle className="me-2" />
             Add Data Source
           </Button>
         </div>
@@ -288,16 +288,16 @@ const DataSourcesPage = () => {
                       </div>
                       <div className="datasource-actions">
                         <Button variant="link" className="text-primary p-0 me-2" onClick={() => handleShowModal(ds)}>
-                          <PencilSquare size={16} />
+                          <FaEdit size={16} />
                         </Button>
                         <Button variant="link" className="text-danger p-0" onClick={() => handleDelete(ds.id)}>
-                          <Trash size={16} />
+                          <FaTrash size={16} />
                         </Button>
                       </div>
                     </div>
                     <Card.Title>{ds.name}</Card.Title>
                     <div className="mb-2">
-                      <Badge bg="light" text="dark" className="border">
+                      <Badge className="border" style={{ background: 'var(--surface-contrast)', color: 'var(--color-soft)', borderColor: 'var(--color-border)' }}>
                         {ds.type}
                       </Badge>
                     </div>
@@ -312,7 +312,7 @@ const DataSourcesPage = () => {
                     </Card.Text>
                     <div className="mt-3 pt-3 border-top">
                       <div className="d-flex align-items-center text-success small">
-                        <CheckCircleFill className="me-1" />
+                        <FaCheckCircle className="me-1" />
                         Connected
                       </div>
                     </div>
@@ -323,7 +323,7 @@ const DataSourcesPage = () => {
             {dataSources.length === 0 && (
               <Col xs={12}>
                 <div className="text-center py-5 text-muted">
-                  <Database size={48} className="mb-3 opacity-50" />
+                  <FaDatabase size={48} className="mb-3 opacity-50" />
                   <h5>No data sources yet</h5>
                   <p>Connect your first data source to get started.</p>
                 </div>
@@ -367,7 +367,7 @@ const DataSourcesPage = () => {
                 </Col>
               </Row>
 
-              <div className="config-section p-3 bg-light rounded mb-3">
+              <div className="config-section p-3 rounded mb-3" style={{ background: 'var(--surface-contrast)', border: '1px solid var(--color-border)' }}>
                 <h6 className="mb-3 text-muted">Connection Details</h6>
                 {renderConfigFields()}
               </div>

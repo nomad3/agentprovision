@@ -1,20 +1,20 @@
 import { useMemo } from 'react';
 import { Badge, Dropdown, Nav, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import {
-  BarChartFill,
-  BoxArrowRight,
-  BuildingFill,
-  ChatDotsFill,
-  CpuFill,
-  DatabaseFill,
-  FileTextFill,
-  GearFill,
-  HouseDoorFill,
-  JournalBookmarkFill,
-  PersonCircle,
-  PlugFill,
-  Robot
-} from 'react-bootstrap-icons';
+  FaChartBar as BarChartFill,
+  FaSignOutAlt as BoxArrowRight,
+  FaBuilding as BuildingFill,
+  FaComments as ChatDotsFill,
+  FaMicrochip as CpuFill,
+  FaDatabase as DatabaseFill,
+  FaFileAlt as FileTextFill,
+  FaCog as GearFill,
+  FaHome as HouseDoorFill,
+  FaBookmark as JournalBookmarkFill,
+  FaUserCircle as PersonCircle,
+  FaPlug as PlugFill,
+  FaRobot as Robot
+} from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../App';

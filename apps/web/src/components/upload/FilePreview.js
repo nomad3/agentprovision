@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Table, Form, Badge, Alert } from 'react-bootstrap';
-import { FiletypeCsv, FiletypeXlsx, CheckCircleFill } from 'react-bootstrap-icons';
+import { FaFileCsv as FiletypeCsv, FaFileExcel as FiletypeXlsx, FaCheckCircle as CheckCircleFill } from 'react-icons/fa';
 import Papa from 'papaparse';
 import './FilePreview.css';
 

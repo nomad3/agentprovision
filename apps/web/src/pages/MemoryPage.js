@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Alert, Badge, Button, Col, Container, Form, InputGroup, Row, Spinner, Tab, Table, Tabs } from 'react-bootstrap';
-import { CloudUploadFill, FileEarmarkTextFill } from 'react-bootstrap-icons';
+import { FaCloudUploadAlt, FaFileAlt } from 'react-icons/fa';
 import PremiumCard from '../components/common/PremiumCard';
 import Layout from '../components/Layout';
 import api from '../services/api';
@@ -198,7 +198,7 @@ function MemoryPage() {
                 <Col md={6}>
                   <div className="p-4 border border-secondary border-opacity-25 rounded bg-dark bg-opacity-25 text-center h-100">
                     <div className="mb-3">
-                      <FileEarmarkTextFill size={48} className="text-success" />
+                      <FaFileAlt size={48} className="text-success" />
                     </div>
                     <h5 className="text-white">ChatGPT Export</h5>
                     <p className="text-soft small mb-4">Upload your <code>conversations.json</code> file from OpenAI export.</p>
@@ -217,7 +217,7 @@ function MemoryPage() {
                         onClick={() => document.getElementById('chatgpt-upload').click()}
                         disabled={importing}
                       >
-                        {importing ? <Spinner animation="border" size="sm" /> : <><CloudUploadFill className="me-2" /> Upload ChatGPT JSON</>}
+                        {importing ? <Spinner animation="border" size="sm" /> : <><FaCloudUploadAlt className="me-2" /> Upload ChatGPT JSON</>}
                       </Button>
                     </div>
                   </div>
@@ -226,7 +226,7 @@ function MemoryPage() {
                 <Col md={6}>
                   <div className="p-4 border border-secondary border-opacity-25 rounded bg-dark bg-opacity-25 text-center h-100">
                     <div className="mb-3">
-                      <FileEarmarkTextFill size={48} className="text-warning" />
+                      <FaFileAlt size={48} className="text-warning" />
                     </div>
                     <h5 className="text-white">Claude Export</h5>
                     <p className="text-soft small mb-4">Upload your <code>conversations.json</code> file from Anthropic export.</p>
@@ -245,7 +245,7 @@ function MemoryPage() {
                         onClick={() => document.getElementById('claude-upload').click()}
                         disabled={importing}
                       >
-                        {importing ? <Spinner animation="border" size="sm" /> : <><CloudUploadFill className="me-2" /> Upload Claude JSON</>}
+                        {importing ? <Spinner animation="border" size="sm" /> : <><FaCloudUploadAlt className="me-2" /> Upload Claude JSON</>}
                       </Button>
                     </div>
                   </div>

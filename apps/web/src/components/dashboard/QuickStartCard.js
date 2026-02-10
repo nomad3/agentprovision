@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
-import { CheckCircleFill, LockFill } from 'react-bootstrap-icons';
+import { FaCheckCircle as CheckCircleFill, FaLock as LockFill } from 'react-icons/fa';
 import './QuickStartCard.css';
 
 const QuickStartCard = ({

@@ -1,5 +1,5 @@
 import { Alert, Button } from 'react-bootstrap';
-import { ArrowClockwise, ExclamationTriangleFill, InfoCircleFill } from 'react-bootstrap-icons';
+import { FaRedo as ArrowClockwise, FaExclamationTriangle as ExclamationTriangleFill, FaInfoCircle as InfoCircleFill } from 'react-icons/fa';
 
 const EnhancedErrorAlert = ({ 
   error, 

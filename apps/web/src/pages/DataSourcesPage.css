@@ -9,7 +9,7 @@
 .page-title {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--bs-body-color);
+  color: var(--color-foreground);
   margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
@@ -17,35 +17,38 @@
 }
 
 .title-icon {
-  color: var(--bs-primary);
+  color: var(--color-primary);
 }
 
 .page-subtitle {
-  color: var(--bs-secondary-color);
+  color: var(--color-muted);
   font-size: 1.1rem;
 }
 
 .datasource-card {
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--color-border);
+  background: var(--surface-elevated);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .datasource-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  border-color: var(--color-border-strong);
 }
 
 .datasource-icon-wrapper {
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background-color: var(--bs-light);
+  background: var(--surface-contrast);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .config-section {
-  border: 1px solid var(--bs-border-color);
+  border: 1px solid var(--color-border);
+  background: var(--surface-contrast);
 }

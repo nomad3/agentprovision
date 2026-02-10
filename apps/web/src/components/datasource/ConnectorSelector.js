@@ -1,12 +1,12 @@
 import React from 'react';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 import {
-  DatabaseFill,
-  FileEarmarkSpreadsheetFill,
-  CloudFill,
-  PlugFill,
-  FileEarmarkArrowUpFill
-} from 'react-bootstrap-icons';
+  FaDatabase as DatabaseFill,
+  FaFileExcel as FileEarmarkSpreadsheetFill,
+  FaCloud as CloudFill,
+  FaPlug as PlugFill,
+  FaFileUpload as FileEarmarkArrowUpFill
+} from 'react-icons/fa';
 
 const CONNECTORS = [
   {

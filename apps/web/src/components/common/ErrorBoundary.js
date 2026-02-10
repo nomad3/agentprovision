@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { Alert, Button, Card, Container } from 'react-bootstrap';
-import { ArrowClockwise, BugFill } from 'react-bootstrap-icons';
+import { FaRedo as ArrowClockwise, FaBug as BugFill } from 'react-icons/fa';
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -71,7 +71,7 @@ class ErrorBoundary extends Component {
                   <summary className="text-muted mb-2" style={{cursor: 'pointer'}}>
                     Developer Details (Development Mode)
                   </summary>
-                  <Card className="bg-light">
+                  <Card style={{ background: 'var(--surface-contrast)' }}>
                     <Card.Body>
                       <h6>Error:</h6>
                       <pre className="small text-danger">

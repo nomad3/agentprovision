@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Alert, Badge, Button, Col, Container, Form, InputGroup, Row, Spinner } from 'react-bootstrap';
-import { CheckCircleFill, CpuFill, EyeFill, EyeSlashFill, KeyFill, XCircleFill } from 'react-bootstrap-icons';
+import { FaCheckCircle, FaMicrochip, FaEye, FaEyeSlash, FaKey, FaTimesCircle } from 'react-icons/fa';
 import PremiumCard from '../components/common/PremiumCard';
 import Layout from '../components/Layout';
 import llmService from '../services/llm';
@@ -83,7 +83,7 @@ const LLMSettingsPage = () => {
       <Container fluid className="py-2">
         <div className="d-flex align-items-center mb-4">
           <div className="icon-pill-sm me-3">
-            <CpuFill size={24} />
+            <FaMicrochip size={24} />
           </div>
           <div>
             <h2 className="mb-1 fw-bold text-white">LLM Providers</h2>
@@ -110,18 +110,18 @@ const LLMSettingsPage = () => {
                   </div>
                   {provider.configured ? (
                     <Badge bg="success" className="d-flex align-items-center bg-opacity-25 text-success border border-success">
-                      <CheckCircleFill className="me-1" /> Connected
+                      <FaCheckCircle className="me-1" /> Connected
                     </Badge>
                   ) : (
                     <Badge bg="secondary" className="d-flex align-items-center bg-opacity-25 text-secondary border border-secondary">
-                      <XCircleFill className="me-1" /> Not configured
+                      <FaTimesCircle className="me-1" /> Not configured
                     </Badge>
                   )}
                 </div>
 
                 <div className="mb-3">
                   <Form.Label className="small text-soft">
-                    <KeyFill className="me-1" />
+                    <FaKey className="me-1" />
                     API Key
                   </Form.Label>
                   <InputGroup>
@@ -138,14 +138,14 @@ const LLMSettingsPage = () => {
                       className="border-secondary border-opacity-50 text-soft"
                       onClick={() => toggleShowKey(provider.name)}
                     >
-                      {showKeys[provider.name] ? <EyeSlashFill /> : <EyeFill />}
+                      {showKeys[provider.name] ? <FaEyeSlash /> : <FaEye />}
                     </Button>
                   </InputGroup>
                 </div>
 
                 {saveSuccess[provider.name] && (
                   <small className="text-success mb-3 d-block">
-                    <CheckCircleFill className="me-1" /> Key saved successfully
+                    <FaCheckCircle className="me-1" /> Key saved successfully
                   </small>
                 )}
 

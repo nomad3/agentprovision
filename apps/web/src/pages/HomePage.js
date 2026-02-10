@@ -2,13 +2,13 @@ import React from 'react';
 import { Card, Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import {
-  BarChartFill,
-  ChatDotsFill,
-  FileTextFill,
-  RocketTakeoffFill,
-  LightbulbFill,
-  ClockHistory
-} from 'react-bootstrap-icons';
+  FaChartBar,
+  FaComments,
+  FaFileAlt,
+  FaRocket,
+  FaLightbulb,
+  FaHistory
+} from 'react-icons/fa';
 import Layout from '../components/Layout';
 import './HomePage.css';
 
@@ -17,21 +17,21 @@ const HomePage = () => {
 
   const quickActions = [
     {
-      icon: FileTextFill,
+      icon: FaFileAlt,
       title: 'Analyze Data',
       description: 'Upload a file or connect a data source',
       action: () => navigate('/datasets'),
       color: 'primary'
     },
     {
-      icon: ChatDotsFill,
+      icon: FaComments,
       title: 'Ask AI',
       description: 'Get instant answers to your questions',
       action: () => navigate('/chat'),
       color: 'success'
     },
     {
-      icon: BarChartFill,
+      icon: FaChartBar,
       title: 'View Dashboard',
       description: 'See your key metrics and insights',
       action: () => navigate('/dashboard'),
@@ -63,7 +63,7 @@ const HomePage = () => {
         {/* Quick Actions */}
         <div className="quick-actions-section">
           <h2 className="section-title">
-            <RocketTakeoffFill className="section-icon" />
+            <FaRocket className="section-icon" />
             Quick Actions
           </h2>
           <Row className="g-4">
@@ -89,7 +89,7 @@ const HomePage = () => {
         {/* Recent Activity */}
         <div className="recent-activity-section">
           <h2 className="section-title">
-            <ClockHistory className="section-icon" />
+            <FaHistory className="section-icon" />
             Recent Activity
           </h2>
           <Card className="activity-card">
@@ -111,7 +111,7 @@ const HomePage = () => {
                 </div>
               ) : (
                 <div className="empty-activity">
-                  <LightbulbFill size={48} className="empty-icon" />
+                  <FaLightbulb size={48} className="empty-icon" />
                   <p className="empty-text">
                     No activity yet. Start by analyzing data or asking AI a question!
                   </p>
@@ -126,7 +126,7 @@ const HomePage = () => {
           <Card className="tips-card">
             <Card.Body>
               <h3 className="tips-title">
-                <LightbulbFill className="tips-icon" />
+                <FaLightbulb className="tips-icon" />
                 Getting Started Tips
               </h3>
               <ul className="tips-list">

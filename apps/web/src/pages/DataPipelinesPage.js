@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Badge, Button, Card, Col, Form, Modal, Row, Spinner } from 'react-bootstrap';
-import { ArrowRepeat, BellFill, ClockFill, ExclamationCircleFill, Gear, LightbulbFill, PlayCircleFill, PlayFill, Plus, PlusCircleFill, Trash, CheckCircleFill } from 'react-bootstrap-icons';
+import { FaSyncAlt, FaBell, FaClock, FaExclamationCircle, FaCog, FaLightbulb, FaPlayCircle, FaPlay, FaPlus, FaPlusCircle, FaTrash, FaCheckCircle } from 'react-icons/fa';
 import Layout from '../components/Layout';
 import EnhancedErrorAlert from '../components/common/EnhancedErrorAlert';
 import PipelineCardSkeleton from '../components/common/PipelineCardSkeleton';
@@ -36,17 +36,17 @@ const DataPipelinesPage = () => {
 
   const useCases = [
     {
-      icon: ClockFill,
+      icon: FaClock,
       title: 'Scheduled Reports',
       description: 'Automatically generate and send reports daily, weekly, or monthly'
     },
     {
-      icon: ArrowRepeat,
+      icon: FaSyncAlt,
       title: 'Data Sync',
       description: 'Keep your data up-to-date by syncing between systems automatically'
     },
     {
-      icon: BellFill,
+      icon: FaBell,
       title: 'Smart Alerts',
       description: 'Get notified when important metrics cross specific thresholds'
     }
@@ -165,7 +165,7 @@ const DataPipelinesPage = () => {
     <Card className="empty-state-card">
       <Card.Body className="text-center">
         <div className="empty-icon-wrapper">
-          <ArrowRepeat size={64} className="empty-icon" />
+          <FaSyncAlt size={64} className="empty-icon" />
         </div>
         <h3 className="empty-title">No automations yet</h3>
         <p className="empty-description">
@@ -174,7 +174,7 @@ const DataPipelinesPage = () => {
         </p>
 
         <Button variant="primary" size="lg" className="create-button" onClick={() => setShowModal(true)}>
-          <PlusCircleFill className="me-2" />
+          <FaPlusCircle className="me-2" />
           Create Automation
         </Button>
 
@@ -195,7 +195,7 @@ const DataPipelinesPage = () => {
         </div>
 
         <div className="empty-help">
-          <LightbulbFill className="help-icon" />
+          <FaLightbulb className="help-icon" />
           <div className="help-content">
             <strong>How do automations work?</strong>
             <p>
@@ -210,15 +210,15 @@ const DataPipelinesPage = () => {
           <h5 className="quick-start-title">Quick Start Examples:</h5>
           <div className="examples-list">
             <div className="example-item">
-              <PlayCircleFill className="example-icon" />
+              <FaPlayCircle className="example-icon" />
               <span>Send weekly sales report every Monday at 9 AM</span>
             </div>
             <div className="example-item">
-              <PlayCircleFill className="example-icon" />
+              <FaPlayCircle className="example-icon" />
               <span>Update customer data from CRM every night at midnight</span>
             </div>
             <div className="example-item">
-              <PlayCircleFill className="example-icon" />
+              <FaPlayCircle className="example-icon" />
               <span>Alert me when revenue exceeds daily target</span>
             </div>
           </div>
@@ -234,10 +234,10 @@ const DataPipelinesPage = () => {
     switch (status.toLowerCase()) {
       case 'completed':
       case 'success':
-        return <Badge bg="success"><CheckCircleFill className="me-1" />Success</Badge>;
+        return <Badge bg="success"><FaCheckCircle className="me-1" />Success</Badge>;
       case 'failed':
       case 'error':
-        return <Badge bg="danger"><ExclamationCircleFill className="me-1" />Failed</Badge>;
+        return <Badge bg="danger"><FaExclamationCircle className="me-1" />Failed</Badge>;
       case 'running':
         return <Badge bg="primary"><Spinner size="sm" animation="border" className="me-1" />Running</Badge>;
       default:
@@ -265,7 +265,7 @@ const DataPipelinesPage = () => {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h1>Data Pipelines</h1>
         <Button variant="primary" onClick={() => setShowModal(true)}>
-          <Plus className="me-2" />
+          <FaPlus className="me-2" />
           New Automation
         </Button>
       </div>
@@ -282,11 +282,11 @@ const DataPipelinesPage = () => {
                   <Card.Body>
                     <div className="d-flex justify-content-between align-items-start mb-3">
                       <div className="pipeline-icon-wrapper">
-                        <ArrowRepeat size={24} />
+                        <FaSyncAlt size={24} />
                       </div>
                       <div className="pipeline-actions">
                         <Button variant="link" className="text-danger p-0" onClick={() => handleDelete(pipeline.id)}>
-                          <Trash size={16} />
+                          <FaTrash size={16} />
                         </Button>
                       </div>
                     </div>
@@ -315,13 +315,13 @@ const DataPipelinesPage = () => {
                       {executingId === pipeline.id ? (
                         <><Spinner size="sm" animation="border" className="me-2" /> Running...</>
                       ) : (
-                        <><PlayFill className="me-2" /> Run Now</>
+                        <><FaPlay className="me-2" /> Run Now</>
                       )}
                     </Button>
                   </Card.Body>
                   <Card.Footer className="bg-transparent border-0">
                     <Button variant="outline-primary" size="sm" className="w-100">
-                      <Gear className="me-2" /> Configure
+                      <FaCog className="me-2" /> Configure
                     </Button>
                   </Card.Footer>
                 </Card>
@@ -338,7 +338,7 @@ const DataPipelinesPage = () => {
       <div className="pipelines-page">
         <div className="page-header">
           <h1 className="page-title">
-            <ArrowRepeat className="title-icon" />
+            <FaSyncAlt className="title-icon" />
             Automations
           </h1>
           <p className="page-subtitle">Set up automated workflows to save time on repetitive tasks</p>
@@ -353,7 +353,7 @@ const DataPipelinesPage = () => {
         />
         {success && (
           <div className="alert alert-success alert-dismissible fade show mb-4" role="alert">
-            <CheckCircleFill className="me-2" />
+            <FaCheckCircle className="me-2" />
             {success}
             <button type="button" className="btn-close" onClick={() => setSuccess(null)}></button>
           </div>

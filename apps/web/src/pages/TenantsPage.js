@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
 import { Alert, Badge, Card, Col, Row, Spinner } from 'react-bootstrap';
 import {
-  BoxSeam,
-  Building,
-  CalendarCheck,
-  ChatDots,
-  ChatText,
-  CloudCheck,
-  Database,
-  Diagram3,
-  HddNetwork,
-  Layers,
-  Person,
-  Robot,
-  Tools
-} from 'react-bootstrap-icons';
+  FaBox,
+  FaBuilding,
+  FaCalendarCheck,
+  FaCommentDots,
+  FaComments,
+  FaCloudUploadAlt,
+  FaDatabase,
+  FaProjectDiagram,
+  FaNetworkWired,
+  FaLayerGroup,
+  FaUser,
+  FaRobot,
+  FaTools
+} from 'react-icons/fa';
 import { useAuth } from '../App';
 import Layout from '../components/Layout';
 import api from '../services/api';
@@ -92,7 +92,7 @@ const TenantsPage = () => {
       <div className="tenants-page">
         <div className="page-header">
           <h1 className="page-title">
-            <Building className="text-primary" />
+            <FaBuilding className="text-primary" />
             Organization
           </h1>
           <p className="page-subtitle">
@@ -107,7 +107,7 @@ const TenantsPage = () => {
               <Card.Body className="card-body-custom">
                 <div className="d-flex align-items-center justify-content-between mb-3">
                   <div className="icon-pill-sm">
-                    <Building size={20} />
+                    <FaBuilding size={20} />
                   </div>
                   <Badge bg="primary" className="px-3 py-2">Tenant</Badge>
                 </div>
@@ -123,7 +123,7 @@ const TenantsPage = () => {
               <Card.Body className="card-body-custom">
                 <div className="d-flex align-items-center justify-content-between mb-3">
                   <div className="icon-pill-sm">
-                    <Person size={20} />
+                    <FaUser size={20} />
                   </div>
                   <Badge bg="success" className="px-3 py-2">Active User</Badge>
                 </div>
@@ -139,7 +139,7 @@ const TenantsPage = () => {
               <Card.Body className="card-body-custom">
                 <div className="d-flex align-items-center justify-content-between mb-3">
                   <div className="icon-pill-sm">
-                    <CalendarCheck size={20} />
+                    <FaCalendarCheck size={20} />
                   </div>
                   <Badge bg="info" className="px-3 py-2">Status</Badge>
                 </div>
@@ -160,61 +160,61 @@ const TenantsPage = () => {
             <Card.Body className="card-body-custom">
               <Row className="g-3">
                 <StatItem
-                  icon={Robot}
+                  icon={FaRobot}
                   label="AI Agents"
                   value={stats.overview.total_agents}
                   color="primary"
                 />
                 <StatItem
-                  icon={CloudCheck}
+                  icon={FaCloudUploadAlt}
                   label="Deployments"
                   value={stats.overview.total_deployments}
                   color="success"
                 />
                 <StatItem
-                  icon={Database}
+                  icon={FaDatabase}
                   label="Datasets"
                   value={stats.overview.total_datasets}
                   color="info"
                 />
                 <StatItem
-                  icon={BoxSeam}
+                  icon={FaBox}
                   label="Agent Kits"
                   value={stats.overview.total_agent_kits}
                   color="warning"
                 />
                 <StatItem
-                  icon={Layers}
+                  icon={FaLayerGroup}
                   label="Vector Stores"
                   value={stats.overview.total_vector_stores}
                   color="danger"
                 />
                 <StatItem
-                  icon={ChatDots}
+                  icon={FaCommentDots}
                   label="Chat Sessions"
                   value={stats.overview.total_chat_sessions}
                   color="primary"
                 />
                 <StatItem
-                  icon={ChatText}
+                  icon={FaComments}
                   label="Total Messages"
                   value={stats.activity.total_messages}
                   color="info"
                 />
                 <StatItem
-                  icon={HddNetwork}
+                  icon={FaNetworkWired}
                   label="Data Sources"
                   value={stats.overview.total_data_sources}
                   color="success"
                 />
                 <StatItem
-                  icon={Diagram3}
+                  icon={FaProjectDiagram}
                   label="Pipelines"
                   value={stats.overview.total_pipelines}
                   color="warning"
                 />
                 <StatItem
-                  icon={Tools}
+                  icon={FaTools}
                   label="Tools"
                   value={stats.overview.total_tools}
                   color="secondary"

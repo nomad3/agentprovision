@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { Toast as BSToast, ToastContainer } from 'react-bootstrap';
 import {
-  CheckCircleFill,
-  ExclamationTriangleFill,
-  InfoCircleFill,
-  XCircleFill,
-} from 'react-bootstrap-icons';
+  FaCheckCircle as CheckCircleFill,
+  FaExclamationTriangle as ExclamationTriangleFill,
+  FaInfoCircle as InfoCircleFill,
+  FaTimesCircle as XCircleFill,
+} from 'react-icons/fa';
 import './Toast.css';
 
 const ToastContext = createContext(null);

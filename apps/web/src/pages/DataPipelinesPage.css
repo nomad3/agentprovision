@@ -10,7 +10,7 @@
 .use-cases-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #f8fafc;
+  color: var(--color-foreground);
   margin-bottom: 1.5rem;
 }
 
@@ -30,14 +30,14 @@
 }
 
 .use-case-icon {
-  color: #0cd18e;
+  color: var(--color-primary);
   margin-bottom: 1rem;
 }
 
 .use-case-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #f8fafc;
+  color: var(--color-foreground);
   margin-bottom: 0.75rem;
 }
 
@@ -61,7 +61,7 @@
 .quick-start-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #f8fafc;
+  color: var(--color-foreground);
   margin-bottom: 1rem;
 }
 
@@ -81,7 +81,7 @@
 }
 
 .example-icon {
-  color: #10b981;
+  color: var(--color-primary);
   flex-shrink: 0;
   margin-top: 0.125rem;
 }

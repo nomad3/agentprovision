@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { ExclamationTriangleFill, InfoCircleFill, CheckCircleFill } from 'react-bootstrap-icons';
+import { FaExclamationTriangle as ExclamationTriangleFill, FaInfoCircle as InfoCircleFill, FaCheckCircle as CheckCircleFill } from 'react-icons/fa';
 import './ConfirmModal.css';
 
 const ConfirmModal = ({
