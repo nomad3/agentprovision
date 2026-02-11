@@ -22,18 +22,18 @@
     "logout": "Logout"
   },
   "sidebar": {
-    "dashboard": "Dashboard",
-    "dataSources": "Data Sources",
+    "dashboard": "Portfolio Overview",
+    "dataSources": "ERP & Systems",
     "dataPipelines": "Data Pipelines",
-    "notebooks": "Notebooks",
-    "agents": "Agents",
-    "datasets": "Datasets",
-    "chat": "Chat",
+    "notebooks": "Financial Reports",
+    "agents": "Agent Fleet",
+    "datasets": "Entity Data",
+    "chat": "AI Command",
     "tools": "Tools",
-    "connectors": "Connectors",
+    "connectors": "System Connectors",
     "deployments": "Deployments",
-    "vectorStores": "Vector Stores",
-    "agentKits": "Agent Kits"
+    "vectorStores": "Knowledge Bases",
+    "agentKits": "Agent Playbooks"
   },
   "landing": {
     "trustedBy": "Trusted by teams at"

@@ -18,31 +18,31 @@ const HomePage = () => {
   const quickActions = [
     {
       icon: FaFileAlt,
-      title: 'Analyze Data',
-      description: 'Upload a file or connect a data source',
+      title: 'Import Entity Data',
+      description: 'Upload files or connect an ERP system',
       action: () => navigate('/datasets'),
       color: 'primary'
     },
     {
       icon: FaComments,
-      title: 'Ask AI',
-      description: 'Get instant answers to your questions',
+      title: 'AI Command',
+      description: 'Command your agent fleet with natural language',
       action: () => navigate('/chat'),
       color: 'success'
     },
     {
       icon: FaChartBar,
-      title: 'View Dashboard',
-      description: 'See your key metrics and insights',
+      title: 'Portfolio Overview',
+      description: 'Cross-entity metrics and KPIs',
       action: () => navigate('/dashboard'),
       color: 'info'
     }
   ];
 
   const recentActivity = [
-    { label: 'Sales Data Q4', status: 'Ready to analyze', time: '2 hours ago', type: 'dataset' },
-    { label: 'Customer Analysis', status: 'Completed', time: 'Yesterday', type: 'report' },
-    { label: 'Monthly KPIs', status: 'Auto-updated', time: '3 days ago', type: 'dashboard' }
+    { label: 'Entity P&L - Q4', status: 'Ready for consolidation', time: '2 hours ago', type: 'dataset' },
+    { label: 'Due Diligence Report', status: 'Completed', time: 'Yesterday', type: 'report' },
+    { label: 'Portfolio KPIs', status: 'Auto-updated', time: '3 days ago', type: 'dashboard' }
   ];
 
   return (
@@ -113,7 +113,7 @@ const HomePage = () => {
                 <div className="empty-activity">
                   <FaLightbulb size={48} className="empty-icon" />
                   <p className="empty-text">
-                    No activity yet. Start by analyzing data or asking AI a question!
+                    No activity yet. Start by importing entity data or commanding your AI fleet!
                   </p>
                 </div>
               )}
@@ -130,10 +130,10 @@ const HomePage = () => {
                 Getting Started Tips
               </h3>
               <ul className="tips-list">
-                <li>Upload your first dataset to get AI-powered insights</li>
-                <li>Ask AI questions in plain English - no technical knowledge needed</li>
-                <li>Create dashboards to monitor your key metrics automatically</li>
-                <li>Set up automations to save time on repetitive tasks</li>
+                <li>Import your first entity dataset to consolidate portfolio data</li>
+                <li>Ask your AI agent fleet questions in plain English about any entity</li>
+                <li>Monitor cross-entity KPIs from the Portfolio Overview</li>
+                <li>Deploy agents to automate finance, compliance, and operations tasks</li>
               </ul>
             </Card.Body>
           </Card>

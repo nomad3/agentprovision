@@ -281,7 +281,7 @@ const IntegrationsPage = () => {
               <div className="stat-icon"><FaDatabase size={24} /></div>
               <div className="stat-content">
                 <div className="stat-value">{stats.total}</div>
-                <div className="stat-label">Total Connectors</div>
+                <div className="stat-label">Entity Connectors</div>
               </div>
             </Card.Body>
           </Card>
@@ -326,7 +326,7 @@ const IntegrationsPage = () => {
         <Col lg={8}>
           <Card className="activity-card">
             <Card.Header className="d-flex justify-content-between align-items-center">
-              <h5 className="mb-0"><FaBolt className="me-2" />Connected Data Sources</h5>
+              <h5 className="mb-0"><FaBolt className="me-2" />Connected Entity Systems</h5>
               <Button variant="primary" size="sm" onClick={() => handleOpenConnectorModal()}>
                 <FaPlus className="me-2" />Add Connector
               </Button>
@@ -336,9 +336,9 @@ const IntegrationsPage = () => {
                 <div className="text-center py-5">
                   <FaCloudUploadAlt size={48} className="text-muted mb-3" />
                   <h5>No connectors yet</h5>
-                  <p className="text-muted">Connect your first data source to start syncing</p>
+                  <p className="text-muted">Connect your first ERP or system to start syncing entity data</p>
                   <Button variant="primary" onClick={() => handleOpenConnectorModal()}>
-                    <FaPlus className="me-2" />Add Your First Connector
+                    <FaPlus className="me-2" />Connect Your First System
                   </Button>
                 </div>
               ) : (
@@ -420,13 +420,13 @@ const IntegrationsPage = () => {
         <Col lg={4}>
           <Card className="syncs-card">
             <Card.Header>
-              <h5 className="mb-0"><FaCalendarAlt className="me-2" />Scheduled Syncs</h5>
+              <h5 className="mb-0"><FaCalendarAlt className="me-2" />Entity Data Syncs</h5>
             </Card.Header>
             <Card.Body className="p-0">
               {syncs.length === 0 ? (
                 <div className="text-center py-4">
                   <FaSyncAlt size={32} className="text-muted mb-2" />
-                  <p className="text-muted mb-0 small">No syncs scheduled</p>
+                  <p className="text-muted mb-0 small">No entity syncs scheduled</p>
                 </div>
               ) : (
                 <div className="syncs-list">
@@ -500,18 +500,18 @@ const IntegrationsPage = () => {
           <div>
             <h1 className="page-title">
               <FaDatabase className="me-2" />
-              Integrations Hub
+              Entity Integrations
             </h1>
             <p className="page-subtitle text-muted">
-              Connect your data sources and keep everything in sync
+              Connect ERPs, banks, and systems across your portfolio entities
             </p>
           </div>
           <div className="header-actions">
             <Button variant="outline-primary" className="me-2" onClick={() => handleOpenSyncModal()}>
-              <FaSyncAlt className="me-2" />New Sync
+              <FaSyncAlt className="me-2" />New Entity Sync
             </Button>
             <Button variant="primary" onClick={() => handleOpenConnectorModal()}>
-              <FaPlus className="me-2" />Add Connector
+              <FaPlus className="me-2" />Add System
             </Button>
           </div>
         </div>
@@ -599,7 +599,7 @@ const IntegrationsPage = () => {
         {/* Sync Modal */}
         <Modal show={showSyncModal} onHide={() => setShowSyncModal(false)}>
           <Modal.Header closeButton>
-            <Modal.Title>Schedule Data Sync</Modal.Title>
+            <Modal.Title>Schedule Entity Data Sync</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form>

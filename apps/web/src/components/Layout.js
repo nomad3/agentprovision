@@ -47,33 +47,33 @@ const Layout = ({ children }) => {
   // Simplified navigation structure
   const navSections = [
     {
-      title: 'OVERVIEW',
+      title: 'COMMAND CENTER',
       items: [
         { path: '/home', icon: HouseDoorFill, label: 'Home', description: 'Your personalized homepage' },
-        { path: '/notebooks', icon: JournalBookmarkFill, label: 'Reports', description: 'View and manage reports' }, // Added new item
-        { path: '/dashboard', icon: BarChartFill, label: 'Dashboard', description: 'Platform analytics overview' },
+        { path: '/notebooks', icon: JournalBookmarkFill, label: 'Financial Reports', description: 'Financial reports & SQL notebooks' },
+        { path: '/dashboard', icon: BarChartFill, label: 'Portfolio Overview', description: 'Cross-entity metrics and KPIs' },
       ]
     },
     {
-      title: 'AI STUDIO',
+      title: 'AI OPERATIONS',
       items: [
-        { path: '/chat', icon: ChatDotsFill, label: 'Chat', description: 'Chat with AI agents' },
-        { path: '/agents', icon: Robot, label: 'Agents', description: 'Manage AI agents' },
+        { path: '/chat', icon: ChatDotsFill, label: 'AI Command', description: 'Command your AI agent fleet' },
+        { path: '/agents', icon: Robot, label: 'Agent Fleet', description: 'Manage your AI agent fleet' },
       ]
     },
     {
-      title: 'DATA PLATFORM',
+      title: 'ENTITY DATA',
       items: [
-        { path: '/integrations', icon: PlugFill, label: 'Integrations', description: 'Connectors & data syncs' },
-        { path: '/datasets', icon: FileTextFill, label: 'Datasets', description: 'Manage data files' },
-        { path: '/data-sources', icon: DatabaseFill, label: 'Data Sources', description: 'Query data lakehouse' },
+        { path: '/integrations', icon: PlugFill, label: 'Entity Integrations', description: 'ERP connectors & entity data syncs' },
+        { path: '/datasets', icon: FileTextFill, label: 'Entity Data', description: 'Manage entity datasets & files' },
+        { path: '/data-sources', icon: DatabaseFill, label: 'ERP & Systems', description: 'Connect ERPs, banks & systems' },
       ]
     },
     {
-      title: 'CONFIGURATION',
+      title: 'PORTFOLIO ADMIN',
       items: [
-        { path: '/tenants', icon: BuildingFill, label: 'Organization', description: 'Manage organization' },
-        { path: '/settings/llm', icon: CpuFill, label: 'LLM Models', description: 'Configure AI models' },
+        { path: '/tenants', icon: BuildingFill, label: 'Portfolio Entities', description: 'Manage portfolio companies & entities' },
+        { path: '/settings/llm', icon: CpuFill, label: 'AI Models', description: 'Configure AI model providers' },
         { path: '/settings', icon: GearFill, label: 'Settings', description: 'Platform settings' },
       ]
     }

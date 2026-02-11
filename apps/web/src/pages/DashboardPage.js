@@ -77,9 +77,9 @@ const DashboardPage = () => {
 
       <div className="d-flex flex-wrap align-items-center justify-content-between mb-4">
         <div>
-          <h2 className="mb-1 fw-bold text-white">Analytics Command Center</h2>
+          <h2 className="mb-1 fw-bold text-white">Portfolio Command Center</h2>
           <p className="text-soft mb-0">
-            Real-time platform metrics and intelligence from your data & AI operations.
+            Real-time cross-entity metrics and intelligence across your portfolio.
           </p>
         </div>
         <div className="d-flex align-items-center gap-2">
@@ -97,9 +97,9 @@ const DashboardPage = () => {
               <div className="icon-pill-sm">
                 <FaRobot size={20} />
               </div>
-              <Badge bg="primary" className="bg-opacity-25 text-primary border border-primary">AI Agents</Badge>
+              <Badge bg="primary" className="bg-opacity-25 text-primary border border-primary">Agent Fleet</Badge>
             </div>
-            <h6 className="text-soft mb-1">Active AI Agents</h6>
+            <h6 className="text-soft mb-1">Active Agent Fleet</h6>
             <div className="display-6 fw-bold text-white">{overview.total_agents}</div>
             <div className="mt-2 small text-info">{overview.total_deployments} deployments</div>
           </PremiumCard>
@@ -111,9 +111,9 @@ const DashboardPage = () => {
               <div className="icon-pill-sm">
                 <FaComments size={20} />
               </div>
-              <Badge bg="success" className="bg-opacity-25 text-success border border-success">Chat Activity</Badge>
+              <Badge bg="success" className="bg-opacity-25 text-success border border-success">AI Commands</Badge>
             </div>
-            <h6 className="text-soft mb-1">Total Chat Messages</h6>
+            <h6 className="text-soft mb-1">Total AI Commands</h6>
             <div className="display-6 fw-bold text-white">{activity.total_messages}</div>
             <div className="mt-2 small text-success">{activity.recent_messages_7d} last 7 days</div>
           </PremiumCard>
@@ -125,9 +125,9 @@ const DashboardPage = () => {
               <div className="icon-pill-sm">
                 <FaDatabase size={20} />
               </div>
-              <Badge bg="info" className="bg-opacity-25 text-info border border-info">Data Platform</Badge>
+              <Badge bg="info" className="bg-opacity-25 text-info border border-info">Entity Data</Badge>
             </div>
-            <h6 className="text-soft mb-1">Active Datasets</h6>
+            <h6 className="text-soft mb-1">Entity Datasets</h6>
             <div className="display-6 fw-bold text-white">{overview.total_datasets}</div>
             <div className="mt-2 small text-info">{activity.dataset_rows_total.toLocaleString()} total rows</div>
           </PremiumCard>
@@ -139,11 +139,35 @@ const DashboardPage = () => {
               <div className="icon-pill-sm">
                 <FaChartBar size={20} />
               </div>
-              <Badge bg="warning" className="bg-opacity-25 text-warning border border-warning">Integrations</Badge>
+              <Badge bg="warning" className="bg-opacity-25 text-warning border border-warning">ERP & Systems</Badge>
             </div>
-            <h6 className="text-soft mb-1">Data Sources & Pipelines</h6>
+            <h6 className="text-soft mb-1">ERP Connections & Pipelines</h6>
             <div className="display-6 fw-bold text-white">{overview.total_data_sources}</div>
             <div className="mt-2 small text-warning">{overview.total_pipelines} active pipelines</div>
+          </PremiumCard>
+        </Col>
+      </Row>
+
+      <Row className="g-4 mt-1">
+        <Col md={4}>
+          <PremiumCard className="h-100">
+            <h6 className="text-soft mb-1">Entities Integrated</h6>
+            <div className="display-6 fw-bold text-white">{overview.total_data_sources + overview.total_pipelines}</div>
+            <div className="mt-2 small text-info">{overview.total_data_sources} sources + {overview.total_pipelines} pipelines</div>
+          </PremiumCard>
+        </Col>
+        <Col md={4}>
+          <PremiumCard className="h-100">
+            <h6 className="text-soft mb-1">Data Points Consolidated</h6>
+            <div className="display-6 fw-bold text-white">{activity.dataset_rows_total.toLocaleString()}</div>
+            <div className="mt-2 small text-success">{overview.total_datasets} datasets</div>
+          </PremiumCard>
+        </Col>
+        <Col md={4}>
+          <PremiumCard className="h-100">
+            <h6 className="text-soft mb-1">Automation Coverage</h6>
+            <div className="display-6 fw-bold text-white">{overview.total_agents + overview.total_tools}</div>
+            <div className="mt-2 small text-warning">{overview.total_agents} agents + {overview.total_tools} tools</div>
           </PremiumCard>
         </Col>
       </Row>
@@ -152,15 +176,15 @@ const DashboardPage = () => {
         <Col lg={6}>
           <PremiumCard className="h-100">
             <div className="d-flex align-items-center justify-content-between mb-4">
-              <span className="fw-semibold text-white fs-5">Platform Overview</span>
-              <Badge bg="secondary" className="bg-opacity-25 text-light border border-secondary">Metrics</Badge>
+              <span className="fw-semibold text-white fs-5">Operations Overview</span>
+              <Badge bg="secondary" className="bg-opacity-25 text-light border border-secondary">Portfolio Metrics</Badge>
             </div>
             <ListGroup variant="flush">
               <ListGroup.Item className="bg-transparent px-0 py-3 border-secondary border-opacity-25">
                 <div className="d-flex justify-content-between align-items-start">
                   <div>
-                    <h6 className="mb-1 text-white">Agent Kits Available</h6>
-                    <p className="text-muted mb-0 small">Pre-configured AI agent templates ready for deployment</p>
+                    <h6 className="mb-1 text-white">Agent Playbooks</h6>
+                    <p className="text-muted mb-0 small">Pre-built agent playbooks for roll-up operations</p>
                   </div>
                   <Badge bg="primary" pill>{overview.total_agent_kits}</Badge>
                 </div>
@@ -168,8 +192,8 @@ const DashboardPage = () => {
               <ListGroup.Item className="bg-transparent px-0 py-3 border-secondary border-opacity-25">
                 <div className="d-flex justify-content-between align-items-start">
                   <div>
-                    <h6 className="mb-1 text-white">Vector Stores</h6>
-                    <p className="text-muted mb-0 small">RAG-enabled knowledge bases for semantic search</p>
+                    <h6 className="mb-1 text-white">Knowledge Bases</h6>
+                    <p className="text-muted mb-0 small">Entity knowledge bases for context-aware AI</p>
                   </div>
                   <Badge bg="info" pill>{overview.total_vector_stores}</Badge>
                 </div>
@@ -177,8 +201,8 @@ const DashboardPage = () => {
               <ListGroup.Item className="bg-transparent px-0 py-3 border-0">
                 <div className="d-flex justify-content-between align-items-start">
                   <div>
-                    <h6 className="mb-1 text-white">Tools & Integrations</h6>
-                    <p className="text-muted mb-0 small">Connected tools available for agent workflows</p>
+                    <h6 className="mb-1 text-white">Tools & Entity Integrations</h6>
+                    <p className="text-muted mb-0 small">Connected tools across portfolio entities</p>
                   </div>
                   <Badge bg="success" pill>{overview.total_tools}</Badge>
                 </div>
@@ -190,8 +214,8 @@ const DashboardPage = () => {
         <Col lg={6}>
           <PremiumCard className="h-100">
             <div className="d-flex align-items-center justify-content-between mb-4">
-              <span className="fw-semibold text-white fs-5">Recent Chat Activity</span>
-              <Badge bg="secondary" className="bg-opacity-25 text-light border border-secondary">Sessions</Badge>
+              <span className="fw-semibold text-white fs-5">Recent AI Commands</span>
+              <Badge bg="secondary" className="bg-opacity-25 text-light border border-secondary">Commands</Badge>
             </div>
             {recent_sessions && recent_sessions.length > 0 ? (
               <ListGroup variant="flush">
@@ -223,8 +247,8 @@ const DashboardPage = () => {
         <Col lg={7}>
           <PremiumCard>
             <div className="d-flex align-items-center justify-content-between mb-4">
-              <span className="fw-semibold text-white fs-5">AI Agents & Deployments</span>
-              <Badge bg="secondary" className="bg-opacity-25 text-light border border-secondary">Agents</Badge>
+              <span className="fw-semibold text-white fs-5">Agent Fleet & Deployments</span>
+              <Badge bg="secondary" className="bg-opacity-25 text-light border border-secondary">Fleet</Badge>
             </div>
             {agents && agents.length > 0 ? (
               <Table hover responsive borderless className="mb-0 align-middle text-soft">
@@ -260,8 +284,8 @@ const DashboardPage = () => {
         <Col lg={5}>
           <PremiumCard>
             <div className="d-flex align-items-center justify-content-between mb-4">
-              <span className="fw-semibold text-white fs-5">Datasets</span>
-              <Badge bg="secondary" className="bg-opacity-25 text-light border border-secondary">Data</Badge>
+              <span className="fw-semibold text-white fs-5">Entity Data</span>
+              <Badge bg="secondary" className="bg-opacity-25 text-light border border-secondary">Entities</Badge>
             </div>
             {datasets && datasets.length > 0 ? (
               <ListGroup variant="flush">

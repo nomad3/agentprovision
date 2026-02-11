@@ -22,18 +22,18 @@
     "logout": "Cerrar sesión"
   },
   "sidebar": {
-    "dashboard": "Panel",
-    "dataSources": "Fuentes de datos",
-    "dataPipelines": "Pipelines de datos",
-    "notebooks": "Notebooks",
-    "agents": "Agentes",
-    "datasets": "Datasets",
-    "chat": "Chat",
+    "dashboard": "Vista del Portafolio",
+    "dataSources": "ERP y Sistemas",
+    "dataPipelines": "Pipelines de Datos",
+    "notebooks": "Reportes Financieros",
+    "agents": "Flota de Agentes",
+    "datasets": "Datos de Entidades",
+    "chat": "Comando IA",
     "tools": "Herramientas",
-    "connectors": "Conectores",
+    "connectors": "Conectores de Sistemas",
     "deployments": "Implementaciones",
-    "vectorStores": "Vectores",
-    "agentKits": "Kits de agentes"
+    "vectorStores": "Bases de Conocimiento",
+    "agentKits": "Playbooks de Agentes"
   },
   "landing": {
     "trustedBy": "Equipos que confían en nosotros"

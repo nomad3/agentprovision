@@ -70,7 +70,7 @@ const QuickStartSection = ({ onUploadClick, onConnectClick }) => {
       <div className="text-center mb-4">
         <h3>Quick Start Guide</h3>
         <p className="text-muted">
-          Get started in 3 simple steps
+          Get your portfolio operational in 3 steps
         </p>
       </div>
 
@@ -79,8 +79,8 @@ const QuickStartSection = ({ onUploadClick, onConnectClick }) => {
         <Col md={4}>
           <QuickStartCard
             step={1}
-            title="Connect Your Data"
-            description="Upload a file or connect to your data sources"
+            title="Connect Entity Data"
+            description="Upload files or connect to your ERPs & systems"
             icon={CloudUploadFill}
             completed={progress.hasData}
             locked={false}
@@ -95,7 +95,7 @@ const QuickStartSection = ({ onUploadClick, onConnectClick }) => {
               onClick: onUploadClick,
             }}
             secondaryAction={{
-              label: 'Connect Data Source',
+              label: 'Connect ERP / System',
               onClick: onConnectClick,
             }}
           />
@@ -105,8 +105,8 @@ const QuickStartSection = ({ onUploadClick, onConnectClick }) => {
         <Col md={4}>
           <QuickStartCard
             step={2}
-            title="Create an AI Agent"
-            description="Build an intelligent assistant to analyze your data"
+            title="Deploy an Agent"
+            description="Build an AI agent for your roll-up operations"
             icon={Robot}
             completed={progress.hasAgents}
             locked={!progress.hasData}
@@ -132,8 +132,8 @@ const QuickStartSection = ({ onUploadClick, onConnectClick }) => {
         <Col md={4}>
           <QuickStartCard
             step={3}
-            title="Start Chatting"
-            description="Ask your AI agent questions about your data"
+            title="Command Your Fleet"
+            description="Use AI commands to analyze entity data"
             icon={ChatDotsFill}
             completed={progress.hasChats}
             locked={!progress.hasAgents}
@@ -147,7 +147,7 @@ const QuickStartSection = ({ onUploadClick, onConnectClick }) => {
             primaryAction={
               progress.hasAgents
                 ? {
-                  label: 'Start Chatting',
+                  label: 'Start Commanding',
                   onClick: () => navigate('/chat'),
                 }
                 : null

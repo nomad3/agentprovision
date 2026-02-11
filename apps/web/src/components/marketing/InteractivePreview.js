@@ -14,13 +14,13 @@ import PremiumCard from '../common/PremiumCard';
 const screenshots = [
   {
     key: 'dashboard',
-    label: 'Analytics Dashboard',
+    label: 'Portfolio Overview',
     icon: FaChartBar,
     image: '/images/product/dashboard.jpg',
   },
   {
     key: 'chat',
-    label: 'AI Chat',
+    label: 'AI Command',
     icon: FaComments,
     image: '/images/product/chat.jpg',
   },
@@ -32,25 +32,25 @@ const screenshots = [
   },
   {
     key: 'data-sources',
-    label: 'Data Sources',
+    label: 'ERP & Systems',
     icon: FaDatabase,
     image: '/images/product/data-sources.jpg',
   },
   {
     key: 'integrations',
-    label: 'Integrations Hub',
+    label: 'Entity Integrations',
     icon: FaPlug,
     image: '/images/product/integrations.jpg',
   },
   {
     key: 'llm-providers',
-    label: 'LLM Providers',
+    label: 'AI Models',
     icon: FaRobot,
     image: '/images/product/llm-providers.jpg',
   },
   {
     key: 'tenants',
-    label: 'Organization',
+    label: 'Portfolio Entities',
     icon: FaSitemap,
     image: '/images/product/tenants.jpg',
   },

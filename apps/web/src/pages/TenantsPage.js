@@ -93,10 +93,10 @@ const TenantsPage = () => {
         <div className="page-header">
           <h1 className="page-title">
             <FaBuilding className="text-primary" />
-            Organization
+            Portfolio Entities
           </h1>
           <p className="page-subtitle">
-            Manage your organization's details and view usage statistics
+            Manage your portfolio companies, entities, and view usage statistics
           </p>
         </div>
 
@@ -109,11 +109,11 @@ const TenantsPage = () => {
                   <div className="icon-pill-sm">
                     <FaBuilding size={20} />
                   </div>
-                  <Badge bg="primary" className="px-3 py-2">Tenant</Badge>
+                  <Badge bg="primary" className="px-3 py-2">Portfolio</Badge>
                 </div>
-                <h6 className="text-muted mb-1">Organization Name</h6>
+                <h6 className="text-muted mb-1">Portfolio Name</h6>
                 <div className="h4 fw-bold text-white mb-2">{tenant?.name || 'My Organization'}</div>
-                <div className="small text-muted text-truncate">ID: {tenant?.id}</div>
+                <div className="small text-muted text-truncate">Entity ID: {tenant?.id}</div>
               </Card.Body>
             </Card>
           </Col>
@@ -155,13 +155,13 @@ const TenantsPage = () => {
         {stats && (
           <Card className="tenant-card mb-4">
             <div className="card-header-transparent">
-              <h5 className="mb-0 text-white">Platform Usage Statistics</h5>
+              <h5 className="mb-0 text-white">Portfolio Usage Statistics</h5>
             </div>
             <Card.Body className="card-body-custom">
               <Row className="g-3">
                 <StatItem
                   icon={FaRobot}
-                  label="AI Agents"
+                  label="Agent Fleet"
                   value={stats.overview.total_agents}
                   color="primary"
                 />
@@ -173,37 +173,37 @@ const TenantsPage = () => {
                 />
                 <StatItem
                   icon={FaDatabase}
-                  label="Datasets"
+                  label="Entity Datasets"
                   value={stats.overview.total_datasets}
                   color="info"
                 />
                 <StatItem
                   icon={FaBox}
-                  label="Agent Kits"
+                  label="Agent Playbooks"
                   value={stats.overview.total_agent_kits}
                   color="warning"
                 />
                 <StatItem
                   icon={FaLayerGroup}
-                  label="Vector Stores"
+                  label="Knowledge Bases"
                   value={stats.overview.total_vector_stores}
                   color="danger"
                 />
                 <StatItem
                   icon={FaCommentDots}
-                  label="Chat Sessions"
+                  label="AI Commands"
                   value={stats.overview.total_chat_sessions}
                   color="primary"
                 />
                 <StatItem
                   icon={FaComments}
-                  label="Total Messages"
+                  label="Total Commands"
                   value={stats.activity.total_messages}
                   color="info"
                 />
                 <StatItem
                   icon={FaNetworkWired}
-                  label="Data Sources"
+                  label="ERP Connections"
                   value={stats.overview.total_data_sources}
                   color="success"
                 />
@@ -227,20 +227,20 @@ const TenantsPage = () => {
         {/* Tenant Information */}
         <Card className="tenant-card">
           <div className="card-header-transparent">
-            <h5 className="mb-0 text-white">Tenant Details</h5>
+            <h5 className="mb-0 text-white">Entity Details</h5>
           </div>
           <Card.Body className="card-body-custom">
             <Alert variant="info" className="info-alert mb-4">
-              <strong>Multi-Tenant Isolation:</strong> All your data is completely isolated from other tenants.
-              Your agents, datasets, chat sessions, and configurations are private to your organization.
+              <strong>Portfolio Isolation:</strong> All your data is completely isolated from other portfolio entities.
+              Your agents, datasets, AI commands, and configurations are private to your entity.
             </Alert>
 
             <div>
-              <h6 className="text-white mb-3">What is a Tenant?</h6>
+              <h6 className="text-white mb-3">What is a Portfolio Entity?</h6>
               <p className="text-muted mb-0">
-                A tenant represents your organization in ServiceTsunami. All users in your organization
-                share access to the same AI agents, datasets, and configurations. Data is completely
-                isolated between tenants for security and privacy.
+                A portfolio entity represents a company or business unit in your roll-up. All users
+                within an entity share access to the same AI agent fleet, datasets, and configurations.
+                Data is completely isolated between entities for security and compliance.
               </p>
             </div>
           </Card.Body>
