@@ -83,3 +83,19 @@ Fix any remaining page-specific white backgrounds or contrast issues.
 - Only `bg-white` usage is in `FeatureDemoSection.js` (landing page marketing component) at 10% opacity - intentional, not a bug
 - No page-specific CSS fixes needed - the global overrides cover all dashboard pages
 - Build has a pre-existing ESLint plugin conflict (monorepo hoisting), unrelated to CSS changes
+- E2E tests: 17/20 passed (3 pre-existing API failures unrelated to CSS)
+
+### Visual Verification (Production - 2026-02-10)
+All 9 dashboard pages verified with zero white backgrounds:
+
+| Page | URL | Result |
+|------|-----|--------|
+| Home | /home | Dark cards, teal borders, sidebar correct |
+| Reports/Data Explorer | /notebooks | Dark panels, SQL editor dark |
+| Dashboard | /dashboard | Metric cards + list items fully dark |
+| Chat | /chat | Session list, chat bubbles, input all dark |
+| Agent Wizard | /agents/wizard | Stepper + template cards dark |
+| Integrations | /integrations | Stats cards, alert banner, empty states dark |
+| Datasets | /datasets | Table, tabs, badges all dark |
+| Organization | /tenants | Tenant cards, usage stats grid dark |
+| LLM Models | /settings/llm | Provider cards + form inputs dark |
