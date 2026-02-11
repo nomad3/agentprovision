@@ -1,170 +1,413 @@
-import { useEffect, useState } from 'react';
-import { Alert, Button, Card, Col, Form, Row, Spinner, Table } from 'react-bootstrap';
-import { FaCode, FaDatabase, FaPlay, FaTable } from 'react-icons/fa';
+import { useState } from 'react';
+import {
+  Badge,
+  Button,
+  Card,
+  Col,
+  Form,
+  InputGroup,
+  Modal,
+  Row,
+  Table
+} from 'react-bootstrap';
+import {
+  FaBalanceScale,
+  FaBuilding,
+  FaCalendarCheck,
+  FaChartLine,
+  FaClock,
+  FaExchangeAlt,
+  FaFileExport,
+  FaFileInvoiceDollar,
+  FaFilePdf,
+  FaMoneyBillWave,
+  FaSearch,
+  FaSearchDollar,
+  FaTachometerAlt
+} from 'react-icons/fa';
 import Layout from '../components/Layout';
-import dataSourceService from '../services/dataSource';
+import PremiumCard from '../components/common/PremiumCard';
 import './NotebooksPage.css';
 
+const CATEGORY_COLORS = {
+  Income: 'success',
+  Balance: 'info',
+  'Cash Flow': 'primary',
+  Comparison: 'warning',
+  Diligence: 'danger',
+  KPIs: 'secondary',
+};
+
+const REPORT_TEMPLATES = [
+  {
+    id: 1,
+    name: 'Entity P&L Statement',
+    category: 'Income',
+    icon: FaChartLine,
+    description: 'Revenue, expenses, and net income by portfolio entity',
+    frequency: 'Monthly',
+    entities: 'All Entities',
+    status: 'Ready',
+    lastGenerated: '2026-02-11',
+    data: {
+      columns: ['Metric', 'Entity A', 'Entity B', 'Entity C', 'Total'],
+      rows: [
+        ['Revenue', '$2,450,000', '$1,870,000', '$3,210,000', '$7,530,000'],
+        ['COGS', '$980,000', '$748,000', '$1,284,000', '$3,012,000'],
+        ['Gross Profit', '$1,470,000', '$1,122,000', '$1,926,000', '$4,518,000'],
+        ['OpEx', '$735,000', '$561,000', '$963,000', '$2,259,000'],
+        ['EBITDA', '$882,000', '$673,200', '$1,155,600', '$2,710,800'],
+        ['Net Income', '$588,000', '$448,800', '$770,400', '$1,807,200'],
+      ],
+    },
+  },
+  {
+    id: 2,
+    name: 'Consolidated Balance Sheet',
+    category: 'Balance',
+    icon: FaBalanceScale,
+    description: 'Assets, liabilities, and equity across the portfolio',
+    frequency: 'Quarterly',
+    entities: 'Consolidated',
+    status: 'Ready',
+    lastGenerated: '2026-01-31',
+    data: {
+      columns: ['Metric', 'Entity A', 'Entity B', 'Entity C', 'Total'],
+      rows: [
+        ['Cash & Equivalents', '$1,200,000', '$890,000', '$1,540,000', '$3,630,000'],
+        ['Receivables', '$480,000', '$356,000', '$616,000', '$1,452,000'],
+        ['Total Assets', '$4,800,000', '$3,560,000', '$6,160,000', '$14,520,000'],
+        ['Payables', '$360,000', '$267,000', '$462,000', '$1,089,000'],
+        ['Debt', '$1,440,000', '$1,068,000', '$1,848,000', '$4,356,000'],
+        ['Equity', '$3,000,000', '$2,225,000', '$3,850,000', '$9,075,000'],
+      ],
+    },
+  },
+  {
+    id: 3,
+    name: 'Cash Flow Analysis',
+    category: 'Cash Flow',
+    icon: FaMoneyBillWave,
+    description: 'Operating, investing, and financing cash flows',
+    frequency: 'Monthly',
+    entities: 'All Entities',
+    status: 'Ready',
+    lastGenerated: '2026-02-10',
+    data: {
+      columns: ['Metric', 'Entity A', 'Entity B', 'Entity C', 'Total'],
+      rows: [
+        ['Operating', '$720,000', '$534,000', '$924,000', '$2,178,000'],
+        ['Investing', '-$240,000', '-$178,000', '-$308,000', '-$726,000'],
+        ['Financing', '-$180,000', '-$133,500', '-$231,000', '-$544,500'],
+        ['Net Change', '$300,000', '$222,500', '$385,000', '$907,500'],
+      ],
+    },
+  },
+  {
+    id: 4,
+    name: 'Entity Comparison',
+    category: 'Comparison',
+    icon: FaExchangeAlt,
+    description: 'Side-by-side financial performance across entities',
+    frequency: 'Monthly',
+    entities: 'All Entities',
+    status: 'Scheduled',
+    lastGenerated: '2026-02-09',
+    data: {
+      columns: ['Metric', 'Entity A', 'Entity B', 'Entity C', 'Portfolio Avg'],
+      rows: [
+        ['Revenue', '$2,450,000', '$1,870,000', '$3,210,000', '$2,510,000'],
+        ['Growth %', '12.4%', '8.7%', '15.2%', '12.1%'],
+        ['Margin', '24.0%', '24.0%', '24.0%', '24.0%'],
+        ['Headcount', '45', '32', '58', '45'],
+      ],
+    },
+  },
+  {
+    id: 5,
+    name: 'Due Diligence Summary',
+    category: 'Diligence',
+    icon: FaSearchDollar,
+    description: 'Financial health scores and risk indicators for acquisitions',
+    frequency: 'On-demand',
+    entities: 'Selected',
+    status: 'Ready',
+    lastGenerated: '2026-02-05',
+    data: {
+      columns: ['Metric', 'Entity A', 'Entity B', 'Entity C', 'Benchmark'],
+      rows: [
+        ['Revenue Trend', 'Growing', 'Stable', 'Growing', '—'],
+        ['Debt/Equity', '0.48', '0.48', '0.48', '< 0.60'],
+        ['Working Capital', '$1,320,000', '$979,000', '$1,694,000', '> $500K'],
+        ['Risk Score', 'Low', 'Medium', 'Low', '—'],
+      ],
+    },
+  },
+  {
+    id: 6,
+    name: 'Portfolio KPI Dashboard',
+    category: 'KPIs',
+    icon: FaTachometerAlt,
+    description: 'Revenue growth, EBITDA margins, headcount trends',
+    frequency: 'Weekly',
+    entities: 'All Entities',
+    status: 'Generating',
+    lastGenerated: '2026-02-11',
+    data: {
+      columns: ['KPI', 'This Week', 'Last Week', 'Change'],
+      rows: [
+        ['Revenue', '$1,882,500', '$1,810,000', '+4.0%'],
+        ['EBITDA Margin', '36.0%', '35.2%', '+0.8pp'],
+        ['Customer Count', '1,247', '1,218', '+2.4%'],
+        ['Headcount', '135', '132', '+3'],
+        ['MRR', '$627,500', '$603,333', '+4.0%'],
+      ],
+    },
+  },
+];
+
+const STATUS_COLORS = {
+  Ready: 'success',
+  Generating: 'warning',
+  Scheduled: 'info',
+};
+
 const NotebooksPage = () => {
-  const [dataSources, setDataSources] = useState([]);
-  const [selectedDataSource, setSelectedDataSource] = useState('');
-  const [query, setQuery] = useState('SELECT * FROM information_schema.tables LIMIT 10;');
-  const [results, setResults] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [executing, setExecuting] = useState(false);
-  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedReport, setSelectedReport] = useState(null);
 
-  useEffect(() => {
-    fetchDataSources();
-  }, []);
+  const filteredReports = REPORT_TEMPLATES.filter(
+    (r) =>
+      r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  const fetchDataSources = async () => {
-    try {
-      setLoading(true);
-      const response = await dataSourceService.getAll();
-      setDataSources(response.data);
-      if (response.data.length > 0) {
-        setSelectedDataSource(response.data[0].id);
-      }
-    } catch (err) {
-      console.error('Error fetching data sources:', err);
-      setError('Failed to load data sources.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleExecute = async () => {
-    if (!selectedDataSource) {
-      setError('Please select a data source.');
-      return;
-    }
-
-    try {
-      setExecuting(true);
-      setError(null);
-      setResults(null);
-      const response = await dataSourceService.executeQuery(selectedDataSource, query);
-      setResults(response.data);
-    } catch (err) {
-      console.error('Error executing query:', err);
-      setError(err.response?.data?.detail || 'Query execution failed.');
-    } finally {
-      setExecuting(false);
-    }
-  };
-
-  const renderResults = () => {
-    if (!results) return null;
-    if (results.length === 0) return <Alert variant="info">Query returned no results.</Alert>;
-
-    const columns = Object.keys(results[0]);
-
-    return (
-      <div className="table-responsive">
-        <Table striped bordered hover size="sm">
-          <thead>
-            <tr>
-              {columns.map((col) => (
-                <th key={col}>{col}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {results.map((row, idx) => (
-              <tr key={idx}>
-                {columns.map((col) => (
-                  <td key={`${idx}-${col}`}>
-                    {typeof row[col] === 'object' ? JSON.stringify(row[col]) : String(row[col])}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      </div>
-    );
-  };
+  const scheduledCount = REPORT_TEMPLATES.filter(
+    (r) => r.frequency !== 'On-demand'
+  ).length;
 
   return (
     <Layout>
-      <div className="notebooks-page h-100 d-flex flex-column">
+      <div className="notebooks-page">
         <div className="page-header mb-4">
-          <h1 className="page-title">
-            <FaCode className="title-icon" />
-            Data Explorer
-          </h1>
-          <p className="page-subtitle">Query your data sources directly and analyze results.</p>
+          <div>
+            <h2 className="page-title">
+              <FaFileInvoiceDollar className="me-2" size={32} />
+              Financial Reports
+            </h2>
+            <p className="page-subtitle">
+              Pre-built financial report templates across your portfolio entities
+            </p>
+          </div>
+          <Badge bg="primary" className="bg-opacity-25 text-primary border border-primary px-3 py-2">
+            Roll-up Operator Suite
+          </Badge>
         </div>
 
-        {error && <Alert variant="danger" onClose={() => setError(null)} dismissible>{error}</Alert>}
-
-        <Row className="flex-grow-1">
-          <Col md={3} className="h-100">
-            <Card className="h-100">
-              <Card.Header>
-                <FaDatabase className="me-2" />
-                Data Sources
-              </Card.Header>
-              <Card.Body>
-                {loading ? (
-                  <div className="text-center"><Spinner size="sm" animation="border" /></div>
-                ) : (
-                  <Form.Group>
-                    <Form.Label>Select Source</Form.Label>
-                    <Form.Select
-                      value={selectedDataSource}
-                      onChange={(e) => setSelectedDataSource(e.target.value)}
-                    >
-                      <option value="">Select a source...</option>
-                      {dataSources.map((ds) => (
-                        <option key={ds.id} value={ds.id}>
-                          {ds.name} ({ds.type})
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Form.Group>
-                )}
-                <div className="mt-4 text-muted small">
-                  <p><FaTable className="me-1" /> <strong>Tables</strong></p>
-                  <p>Select a source to view tables (Schema browser coming soon).</p>
+        <Row className="g-4 mb-4">
+          <Col md={3}>
+            <PremiumCard className="h-100">
+              <div className="d-flex align-items-center justify-content-between mb-3">
+                <div className="icon-pill-sm">
+                  <FaFileInvoiceDollar size={20} />
                 </div>
-              </Card.Body>
-            </Card>
+                <Badge bg="primary" className="bg-opacity-25 text-primary border border-primary">Reports</Badge>
+              </div>
+              <h6 className="text-soft mb-1">Total Reports</h6>
+              <div className="display-6 fw-bold text-white">{REPORT_TEMPLATES.length}</div>
+              <div className="mt-2 small text-info">Financial templates</div>
+            </PremiumCard>
           </Col>
-
-          <Col md={9} className="h-100 d-flex flex-column">
-            <Card className="mb-3">
-              <Card.Header className="d-flex justify-content-between align-items-center">
-                <span>SQL Query</span>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={handleExecute}
-                  disabled={executing || !selectedDataSource}
-                >
-                  {executing ? <Spinner size="sm" animation="border" /> : <><FaPlay className="me-1" /> Run Query</>}
-                </Button>
-              </Card.Header>
-              <Card.Body className="p-0">
-                <Form.Control
-                  as="textarea"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  style={{ fontFamily: 'monospace', minHeight: '150px', border: 'none', resize: 'vertical' }}
-                  placeholder="SELECT * FROM ..."
-                />
-              </Card.Body>
-            </Card>
-
-            <Card className="flex-grow-1 overflow-hidden">
-              <Card.Header>Results</Card.Header>
-              <Card.Body className="overflow-auto">
-                {renderResults()}
-              </Card.Body>
-            </Card>
+          <Col md={3}>
+            <PremiumCard className="h-100">
+              <div className="d-flex align-items-center justify-content-between mb-3">
+                <div className="icon-pill-sm">
+                  <FaBuilding size={20} />
+                </div>
+                <Badge bg="success" className="bg-opacity-25 text-success border border-success">Coverage</Badge>
+              </div>
+              <h6 className="text-soft mb-1">Entity Coverage</h6>
+              <div className="display-6 fw-bold text-white">All</div>
+              <div className="mt-2 small text-success">All Entities covered</div>
+            </PremiumCard>
+          </Col>
+          <Col md={3}>
+            <PremiumCard className="h-100">
+              <div className="d-flex align-items-center justify-content-between mb-3">
+                <div className="icon-pill-sm">
+                  <FaClock size={20} />
+                </div>
+                <Badge bg="warning" className="bg-opacity-25 text-warning border border-warning">Scheduled</Badge>
+              </div>
+              <h6 className="text-soft mb-1">Automated</h6>
+              <div className="display-6 fw-bold text-white">{scheduledCount}</div>
+              <div className="mt-2 small text-warning">of {REPORT_TEMPLATES.length} scheduled</div>
+            </PremiumCard>
+          </Col>
+          <Col md={3}>
+            <PremiumCard className="h-100">
+              <div className="d-flex align-items-center justify-content-between mb-3">
+                <div className="icon-pill-sm">
+                  <FaCalendarCheck size={20} />
+                </div>
+                <Badge bg="info" className="bg-opacity-25 text-info border border-info">Fresh</Badge>
+              </div>
+              <h6 className="text-soft mb-1">Last Updated</h6>
+              <div className="display-6 fw-bold text-white">Today</div>
+              <div className="mt-2 small text-info">All reports current</div>
+            </PremiumCard>
           </Col>
         </Row>
+
+        <Card className="data-card mb-4">
+          <Card.Body>
+            <InputGroup>
+              <InputGroup.Text className="search-icon-wrapper">
+                <FaSearch />
+              </InputGroup.Text>
+              <Form.Control
+                type="text"
+                placeholder="Search reports by name, category, or description..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
+            </InputGroup>
+          </Card.Body>
+        </Card>
+
+        <Card className="data-card">
+          <Table hover responsive className="reports-table mb-0">
+            <thead>
+              <tr>
+                <th>Report Name</th>
+                <th>Category</th>
+                <th>Entities</th>
+                <th>Frequency</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredReports.map((report) => {
+                const IconComponent = report.icon;
+                return (
+                  <tr
+                    key={report.id}
+                    className="report-row"
+                    onClick={() => setSelectedReport(report)}
+                  >
+                    <td>
+                      <div className="d-flex align-items-center gap-2">
+                        <div className="report-icon">
+                          <IconComponent size={18} />
+                        </div>
+                        <div>
+                          <strong>{report.name}</strong>
+                          <div className="text-muted small">{report.description}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <Badge
+                        bg={CATEGORY_COLORS[report.category]}
+                        className={`bg-opacity-25 text-${CATEGORY_COLORS[report.category]} border border-${CATEGORY_COLORS[report.category]}`}
+                      >
+                        {report.category}
+                      </Badge>
+                    </td>
+                    <td className="text-soft">{report.entities}</td>
+                    <td className="text-soft">{report.frequency}</td>
+                    <td>
+                      <Badge
+                        bg={STATUS_COLORS[report.status]}
+                        className={`bg-opacity-25 text-${STATUS_COLORS[report.status]} border border-${STATUS_COLORS[report.status]}`}
+                      >
+                        {report.status}
+                      </Badge>
+                    </td>
+                  </tr>
+                );
+              })}
+              {filteredReports.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="text-center text-muted py-4">
+                    No reports match your search.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </Card>
+
+        <Modal
+          show={!!selectedReport}
+          onHide={() => setSelectedReport(null)}
+          size="lg"
+          centered
+          className="report-modal"
+        >
+          {selectedReport && (
+            <>
+              <Modal.Header closeButton>
+                <Modal.Title className="d-flex align-items-center gap-3">
+                  <div className="report-modal-icon">
+                    <selectedReport.icon size={22} />
+                  </div>
+                  <div>
+                    <div>{selectedReport.name}</div>
+                    <div className="d-flex align-items-center gap-2 mt-1">
+                      <Badge
+                        bg={CATEGORY_COLORS[selectedReport.category]}
+                        className={`bg-opacity-25 text-${CATEGORY_COLORS[selectedReport.category]} border border-${CATEGORY_COLORS[selectedReport.category]}`}
+                      >
+                        {selectedReport.category}
+                      </Badge>
+                      <span className="text-muted small">
+                        {selectedReport.frequency} &middot; Last generated {selectedReport.lastGenerated}
+                      </span>
+                    </div>
+                  </div>
+                </Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <p className="text-soft mb-3">{selectedReport.description}</p>
+                <div className="table-responsive">
+                  <Table className="report-data-table mb-0">
+                    <thead>
+                      <tr>
+                        {selectedReport.data.columns.map((col) => (
+                          <th key={col}>{col}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedReport.data.rows.map((row, idx) => (
+                        <tr key={idx}>
+                          {row.map((cell, cellIdx) => (
+                            <td key={cellIdx} className={cellIdx === 0 ? 'fw-semibold' : ''}>
+                              {cell}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </div>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="outline-secondary" onClick={() => setSelectedReport(null)}>
+                  <FaFileExport className="me-1" />
+                  Export CSV
+                </Button>
+                <Button variant="outline-primary">
+                  <FaFilePdf className="me-1" />
+                  Export PDF
+                </Button>
+              </Modal.Footer>
+            </>
+          )}
+        </Modal>
       </div>
     </Layout>
   );
