@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     # MCP Server (Databricks)
     mcp_server_url: str = "http://mcp-server:8000"
     mcp_api_key: str = "dev_mcp_key"
+    mcp_tenant_code: str = "scdp"
 
     # Vertex AI Vector Search
     vertex_project: str = "ai-agency-479516"
