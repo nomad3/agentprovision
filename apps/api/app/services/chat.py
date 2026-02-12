@@ -224,7 +224,42 @@ def _generate_agentic_response(
             content=response_text,
             context=context,
         )
-    except Exception as exc:  # pragma: no cover - network failure path
+    except Exception as exc:
+        # ADK sessions are in-memory; if the pod restarted the session is gone.
+        # Detect 404 "Session not found" and transparently re-create.
+        is_session_lost = "404" in str(exc) or "Session not found" in str(exc)
+        if is_session_lost:
+            logger.warning("ADK session %s lost (pod restart?), re-creating.", adk_session_id)
+            try:
+                adk_state = _build_adk_state(
+                    tenant_id=session.tenant_id,
+                    agent_kit=agent_kit,
+                    dataset=dataset,
+                    dataset_group=dataset_group,
+                )
+                new_adk_session = client.create_session(user_id=user_id, state=adk_state)
+                adk_session_id = new_adk_session.get("id")
+                session.external_id = adk_session_id
+                db.commit()
+                db.refresh(session)
+                events = client.run(user_id=user_id, session_id=str(adk_session_id), message=user_message)
+                response_text, context = _extract_adk_response(events)
+                return _append_message(
+                    db,
+                    session=session,
+                    role="assistant",
+                    content=response_text,
+                    context=context,
+                )
+            except Exception as retry_exc:
+                logger.exception("ADK retry after session re-creation also failed: %s", retry_exc)
+                return _append_message(
+                    db,
+                    session=session,
+                    role="assistant",
+                    content=ADK_FAILURE_MESSAGE,
+                    context={"error": str(retry_exc)},
+                )
         logger.exception("ADK run failed: %s", exc)
         return _append_message(
             db,
