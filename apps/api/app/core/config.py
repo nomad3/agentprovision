@@ -35,6 +35,9 @@ class Settings(BaseSettings):
     ADK_BASE_URL: str | None = None
     ADK_APP_NAME: str = "servicetsunami_supervisor"
 
+    # OpenClaw provisioning
+    OPENCLAW_CHART_PATH: str = "/opt/openclaw-k8s/helm/openclaw"
+
     class Config:
         env_file = ".env"
 
