@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Optional
@@ -6,7 +8,9 @@ import uuid
 from app.api.deps import get_db, get_current_user
 from app.models.user import User
 from app.schemas.agent_task import AgentTask, AgentTaskCreate, AgentTaskUpdate
+from app.schemas.execution_trace import ExecutionTrace as ExecutionTraceSchema
 from app.services import agent_tasks as service
+from app.services import execution_traces as trace_service
 
 router = APIRouter()
 
@@ -60,4 +64,56 @@ def update_task(
     task = service.update_task(db, task_id, current_user.tenant_id, task_in)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
+    return task
+
+
+@router.get("/{task_id}/trace", response_model=List[ExecutionTraceSchema])
+def get_task_trace(
+    task_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Get execution trace for a task."""
+    task = service.get_task(db, task_id, current_user.tenant_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return trace_service.get_traces_by_task(db, task_id, current_user.tenant_id)
+
+
+@router.post("/{task_id}/approve", response_model=AgentTask)
+def approve_task(
+    task_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Approve a task waiting for approval, setting status to executing."""
+    task = service.get_task(db, task_id, current_user.tenant_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    if task.status != "waiting_for_approval":
+        raise HTTPException(status_code=400, detail="Task is not waiting for approval")
+    task.status = "executing"
+    task.started_at = datetime.utcnow()
+    db.commit()
+    db.refresh(task)
+    return task
+
+
+@router.post("/{task_id}/reject", response_model=AgentTask)
+def reject_task(
+    task_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Reject a task waiting for approval, setting status to failed."""
+    task = service.get_task(db, task_id, current_user.tenant_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    if task.status != "waiting_for_approval":
+        raise HTTPException(status_code=400, detail="Task is not waiting for approval")
+    task.status = "failed"
+    task.error = "Rejected by user"
+    task.completed_at = datetime.utcnow()
+    db.commit()
+    db.refresh(task)
     return task
