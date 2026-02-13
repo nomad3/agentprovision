@@ -1,0 +1,25 @@
+import uuid
+from sqlalchemy import Column, String, Integer, Float, ForeignKey, JSON, DateTime
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+from datetime import datetime
+
+from app.db.base import Base
+
+
+class ExecutionTrace(Base):
+    __tablename__ = "execution_traces"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    task_id = Column(UUID(as_uuid=True), ForeignKey("agent_tasks.id"), nullable=False, index=True)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False, index=True)
+    step_type = Column(String, nullable=False)
+    step_order = Column(Integer, nullable=False)
+    agent_id = Column(UUID(as_uuid=True), ForeignKey("agents.id"), nullable=True)
+    details = Column(JSON, nullable=True)
+    duration_ms = Column(Integer, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    task = relationship("AgentTask")
+    tenant = relationship("Tenant")
+    agent = relationship("Agent")
