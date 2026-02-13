@@ -26,6 +26,7 @@ import {
   FaTimesCircle
 } from 'react-icons/fa';
 import Layout from '../components/Layout';
+import OpenClawInstanceCard from '../components/OpenClawInstanceCard';
 import connectorService from '../services/connector';
 import dataPipelineService from '../services/dataPipeline';
 import './IntegrationsPage.css';
@@ -273,6 +274,9 @@ const IntegrationsPage = () => {
 
   const renderOverview = () => (
     <div className="integrations-overview">
+      {/* OpenClaw Instance */}
+      <OpenClawInstanceCard />
+
       {/* Stats Cards */}
       <Row className="g-4 mb-4">
         <Col md={3}>
