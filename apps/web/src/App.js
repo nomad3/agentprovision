@@ -23,6 +23,7 @@ import SettingsPage from './pages/SettingsPage';
 import TeamsPage from './pages/TeamsPage';
 import TenantsPage from './pages/TenantsPage';
 import ToolsPage from './pages/ToolsPage';
+import TaskConsolePage from './pages/TaskConsolePage';
 import VectorStoresPage from './pages/VectorStoresPage';
 import authService from './services/auth';
 
@@ -82,6 +83,7 @@ function App() {
             <Route path="/tenants" element={<ProtectedRoute><TenantsPage /></ProtectedRoute>} />
             <Route path="/teams" element={<ProtectedRoute><TeamsPage /></ProtectedRoute>} />
             <Route path="/memory" element={<ProtectedRoute><MemoryPage /></ProtectedRoute>} />
+            <Route path="/task-console" element={<ProtectedRoute><TaskConsolePage /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
             <Route path="/settings/llm" element={<ProtectedRoute><LLMSettingsPage /></ProtectedRoute>} />
             <Route path="/settings/branding" element={<ProtectedRoute><BrandingPage /></ProtectedRoute>} />

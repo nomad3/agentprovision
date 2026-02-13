@@ -13,7 +13,8 @@ import {
   FaBookmark as JournalBookmarkFill,
   FaUserCircle as PersonCircle,
   FaPlug as PlugFill,
-  FaRobot as Robot
+  FaRobot as Robot,
+  FaTerminal as TerminalFill
 } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -59,6 +60,7 @@ const Layout = ({ children }) => {
       items: [
         { path: '/chat', icon: ChatDotsFill, label: 'AI Command', description: 'Command your AI agent fleet' },
         { path: '/agents', icon: Robot, label: 'Agent Fleet', description: 'Manage your AI agent fleet' },
+        { path: '/task-console', icon: TerminalFill, label: 'Task Console', description: 'Monitor agent task execution and traces' },
       ]
     },
     {
