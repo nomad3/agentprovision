@@ -21,3 +21,4 @@ pytest
 pytest-asyncio
 asyncpg
 databricks-sql-connector
+snowflake-connector-python
