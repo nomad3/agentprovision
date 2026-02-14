@@ -10,15 +10,18 @@ import {
   FaFileAlt as FileTextFill,
   FaCog as GearFill,
   FaHome as HouseDoorFill,
+  FaMoon as MoonFill,
   FaBookmark as JournalBookmarkFill,
   FaUserCircle as PersonCircle,
   FaPlug as PlugFill,
   FaRobot as Robot,
+  FaSun as SunFill,
   FaTerminal as TerminalFill
 } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../App';
+import { useTheme } from '../context/ThemeContext';
 import './Layout.css';
 
 const Layout = ({ children }) => {
@@ -26,6 +29,7 @@ const Layout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { t, i18n } = useTranslation('common');
+  const { theme, toggleTheme } = useTheme();
 
   const currentLanguage = (i18n.language || 'en').split('-')[0];
   const languageOptions = useMemo(
@@ -89,12 +93,22 @@ const Layout = ({ children }) => {
       {/* Glassmorphic Sidebar */}
       <div className="sidebar-glass">
         <div className="sidebar-header">
-          <Link to="/dashboard" className="brand-link">
-            <div className="brand-icon">
-              <Robot size={28} />
-            </div>
-            <span className="brand-text">{t('brand')}</span>
-          </Link>
+          <div className="d-flex align-items-center justify-content-between">
+            <Link to="/dashboard" className="brand-link">
+              <div className="brand-icon">
+                <Robot size={28} />
+              </div>
+              <span className="brand-text">{t('brand')}</span>
+            </Link>
+            <button
+              className="theme-toggle"
+              onClick={toggleTheme}
+              aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+              title={theme === 'light' ? 'Dark mode' : 'Light mode'}
+            >
+              {theme === 'light' ? <MoonFill size={16} /> : <SunFill size={16} />}
+            </button>
+          </div>
         </div>
 
         <Nav className="flex-column sidebar-nav">
