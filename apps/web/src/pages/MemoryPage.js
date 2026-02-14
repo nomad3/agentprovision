@@ -93,7 +93,7 @@ function MemoryPage() {
       <Container fluid className="py-2">
         <Row className="mb-4">
           <Col>
-            <h2 className="fw-bold text-white mb-1">Memory & Knowledge</h2>
+            <h2 className="fw-bold mb-1">Memory & Knowledge</h2>
             <p className="text-soft mb-0">Explore agent memories and knowledge graph</p>
           </Col>
         </Row>
@@ -109,7 +109,7 @@ function MemoryPage() {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                      className="bg-dark text-white border-secondary border-opacity-50"
+                      className="border-secondary border-opacity-50"
                     />
                     <Button variant="outline-primary" onClick={handleSearch}>Search</Button>
                   </InputGroup>
@@ -118,7 +118,7 @@ function MemoryPage() {
                   <Form.Select
                     value={entityType}
                     onChange={(e) => setEntityType(e.target.value)}
-                    className="bg-dark text-white border-secondary border-opacity-50"
+                    className="border-secondary border-opacity-50"
                   >
                     <option value="">All Types</option>
                     {entityTypes.map(type => (
@@ -130,7 +130,7 @@ function MemoryPage() {
                   <Form.Select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
-                    className="bg-dark text-white border-secondary border-opacity-50"
+                    className="border-secondary border-opacity-50"
                   >
                     <option value="">All Statuses</option>
                     {['draft', 'verified', 'enriched', 'actioned', 'archived'].map(s => (
@@ -158,16 +158,16 @@ function MemoryPage() {
                   <tbody>
                     {entities.map((entity) => (
                       <tr key={entity.id}>
-                        <td className="fw-semibold text-white">{entity.name}</td>
+                        <td className="fw-semibold">{entity.name}</td>
                         <td>
-                          <Badge bg="secondary" className="bg-opacity-25 text-light border border-secondary text-uppercase" style={{ fontSize: '0.7rem' }}>
+                          <Badge bg="secondary" className="bg-opacity-25 border border-secondary text-uppercase" style={{ fontSize: '0.7rem' }}>
                             {entity.entity_type}
                           </Badge>
                         </td>
                         <td>
                           <Badge
                             bg={entity.status === 'verified' ? 'success' : entity.status === 'enriched' ? 'info' : entity.status === 'actioned' ? 'primary' : 'warning'}
-                            className="bg-opacity-25 text-light border border-secondary text-uppercase"
+                            className="bg-opacity-25 border border-secondary text-uppercase"
                             style={{ fontSize: '0.7rem' }}
                           >
                             {entity.status || 'draft'}
@@ -175,7 +175,7 @@ function MemoryPage() {
                         </td>
                         <td>
                           <div className="d-flex align-items-center gap-2">
-                            <div className="progress" style={{ height: '4px', width: '60px', backgroundColor: 'rgba(255,255,255,0.1)' }}>
+                            <div className="progress" style={{ height: '4px', width: '60px', backgroundColor: 'rgba(100,130,170,0.15)' }}>
                               <div
                                 className="progress-bar bg-success"
                                 role="progressbar"
@@ -220,7 +220,7 @@ function MemoryPage() {
           <Tab eventKey="import" title="Import Knowledge">
             <PremiumCard>
               <div className="mb-4">
-                <h4 className="text-white">Import Chat History</h4>
+                <h4>Import Chat History</h4>
                 <p className="text-soft">Upload chat exports from other LLM providers to build your knowledge base.</p>
               </div>
 
@@ -232,11 +232,11 @@ function MemoryPage() {
 
               <Row className="g-4">
                 <Col md={6}>
-                  <div className="p-4 border border-secondary border-opacity-25 rounded bg-dark bg-opacity-25 text-center h-100">
+                  <div className="p-4 border border-secondary border-opacity-25 rounded bg-light bg-opacity-25 text-center h-100">
                     <div className="mb-3">
                       <FaFileAlt size={48} className="text-success" />
                     </div>
-                    <h5 className="text-white">ChatGPT Export</h5>
+                    <h5>ChatGPT Export</h5>
                     <p className="text-soft small mb-4">Upload your <code>conversations.json</code> file from OpenAI export.</p>
 
                     <div className="d-grid">
@@ -260,11 +260,11 @@ function MemoryPage() {
                 </Col>
 
                 <Col md={6}>
-                  <div className="p-4 border border-secondary border-opacity-25 rounded bg-dark bg-opacity-25 text-center h-100">
+                  <div className="p-4 border border-secondary border-opacity-25 rounded bg-light bg-opacity-25 text-center h-100">
                     <div className="mb-3">
                       <FaFileAlt size={48} className="text-warning" />
                     </div>
-                    <h5 className="text-white">Claude Export</h5>
+                    <h5>Claude Export</h5>
                     <p className="text-soft small mb-4">Upload your <code>conversations.json</code> file from Anthropic export.</p>
 
                     <div className="d-grid">

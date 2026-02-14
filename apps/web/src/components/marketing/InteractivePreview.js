@@ -77,14 +77,14 @@ const InteractivePreview = () => {
       className="py-5 position-relative overflow-hidden"
       style={{
         background:
-          'radial-gradient(circle at 50% 50%, #1e2228 0%, #13171c 100%)',
+          'radial-gradient(circle at 50% 50%, #f5f8fc 0%, #e8eff6 100%)',
       }}
     >
       <div
         className="position-absolute top-0 start-0 w-100 h-100"
         style={{
           opacity: 0.1,
-          backgroundImage: 'radial-gradient(#0cd18e 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(#2b7de9 1px, transparent 1px)',
           backgroundSize: '30px 30px',
         }}
       />
@@ -97,7 +97,7 @@ const InteractivePreview = () => {
           >
             PRODUCT TOUR
           </Badge>
-          <h2 className="display-5 fw-bold text-white mb-3">
+          <h2 className="display-5 fw-bold mb-3" style={{ color: 'var(--color-foreground)' }}>
             See <span className="gradient-text">ServiceTsunami</span> in Action
           </h2>
           <p className="text-soft lead mx-auto" style={{ maxWidth: '600px' }}>
@@ -118,9 +118,9 @@ const InteractivePreview = () => {
                 style={{
                   background:
                     idx === activeIndex
-                      ? 'rgba(12, 209, 142, 0.2)'
-                      : 'rgba(255,255,255,0.05)',
-                  color: idx === activeIndex ? '#0cd18e' : 'rgba(255,255,255,0.5)',
+                      ? 'rgba(43, 125, 233, 0.12)'
+                      : 'rgba(43,125,233,0.04)',
+                  color: idx === activeIndex ? '#2b7de9' : 'rgba(45,65,90,0.5)',
                   transition: 'all 0.3s ease',
                   fontSize: '0.8rem',
                   fontWeight: idx === activeIndex ? 600 : 400,
@@ -145,16 +145,16 @@ const InteractivePreview = () => {
             style={{
               transform: 'rotateX(3deg)',
               transition: 'transform 0.5s ease',
-              boxShadow: '0 50px 100px -20px rgba(0,0,0,0.7)',
+              boxShadow: '0 50px 100px -20px rgba(100,130,170,0.2)',
               maxWidth: '1100px',
             }}
           >
             <PremiumCard
               className="p-0 overflow-hidden border-secondary border-opacity-25"
-              style={{ background: 'rgba(13, 17, 23, 0.95)' }}
+              style={{ background: 'rgba(255, 255, 255, 0.95)' }}
             >
               {/* Browser Chrome */}
-              <div className="d-flex align-items-center justify-content-between px-4 py-3 border-bottom border-secondary border-opacity-25 bg-dark bg-opacity-50">
+              <div className="d-flex align-items-center justify-content-between px-4 py-3 border-bottom border-secondary border-opacity-25 bg-light bg-opacity-75">
                 <div className="d-flex align-items-center gap-2">
                   <div
                     className="rounded-circle bg-danger"
@@ -185,7 +185,7 @@ const InteractivePreview = () => {
                 style={{
                   position: 'relative',
                   overflow: 'hidden',
-                  background: '#0d1117',
+                  background: '#f0f5fa',
                 }}
               >
                 <img
@@ -215,8 +215,8 @@ const InteractivePreview = () => {
                 borderRadius: '4px',
                 background:
                   idx === activeIndex
-                    ? '#0cd18e'
-                    : 'rgba(255,255,255,0.2)',
+                    ? '#2b7de9'
+                    : 'rgba(43,125,233,0.15)',
                 transition: 'all 0.3s ease',
               }}
               aria-label={`View ${screenshots[idx].label}`}

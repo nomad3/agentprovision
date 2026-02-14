@@ -23,9 +23,9 @@ const NeuralCanvas = ({ className = "" }) => {
     mouseDistance: 300,
     electricDistance: 200,
     colors: {
-      primary: "#0cd18e", // Green (Maestro primary)
-      secondary: "#2a4d75", // Dark blue
-      accent: "#0cd18e", // Green accent
+      primary: "#2b7de9", // Ocean blue
+      secondary: "#5ec5b0", // Seafoam
+      accent: "#2b7de9", // Ocean blue accent
     },
   };
 
@@ -42,7 +42,7 @@ const NeuralCanvas = ({ className = "" }) => {
       this.size = Math.random() * 2 + 1.5;
       this.color =
         Math.random() > 0.5 ? config.colors.primary : config.colors.secondary;
-      this.baseAlpha = 0.3 + Math.random() * 0.2;
+      this.baseAlpha = 0.4 + Math.random() * 0.25;
       this.alpha = this.baseAlpha;
       this.isElectric = false;
     }

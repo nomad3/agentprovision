@@ -335,7 +335,7 @@ const OpenClawInstanceCard = () => {
         border: '1px solid var(--color-border)',
         borderRadius: 12,
         background: 'var(--surface-elevated)',
-        boxShadow: '0 2px 15px rgba(0, 0, 0, 0.15)',
+        boxShadow: '0 2px 15px rgba(100, 130, 170, 0.08)',
       }}
     >
       <Card.Header

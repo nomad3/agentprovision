@@ -11,7 +11,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(5, 11, 26, 0.95);
+  background: rgba(240, 245, 250, 0.95);
   backdrop-filter: blur(10px);
   z-index: 9999;
 }
@@ -35,7 +35,7 @@
 }
 
 .loading-spinner-text {
-  color: rgba(226, 232, 240, 0.9);
+  color: rgba(45, 65, 90, 0.85);
   font-size: 1rem;
   font-weight: 500;
   margin: 0;
@@ -51,9 +51,9 @@
 .skeleton-item {
   background: linear-gradient(
     90deg,
-    rgba(14, 22, 40, 0.5) 0%,
-    rgba(20, 30, 50, 0.6) 50%,
-    rgba(14, 22, 40, 0.5) 100%
+    rgba(200, 215, 230, 0.4) 0%,
+    rgba(210, 225, 240, 0.6) 50%,
+    rgba(200, 215, 230, 0.4) 100%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;

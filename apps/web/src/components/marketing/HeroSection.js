@@ -8,7 +8,7 @@ const HeroSection = ({ onPrimaryCta = noop, onSecondaryCta = noop }) => {
   const { t } = useTranslation(["landing", "common"]);
 
   return (
-    <section className="hero-section text-white pt-5 pb-4" id="hero">
+    <section className="hero-section pt-5 pb-4" id="hero">
       <NeuralCanvas />
       <div className="hero-overlay" />
       <Container className="hero-content py-5">
@@ -27,7 +27,7 @@ const HeroSection = ({ onPrimaryCta = noop, onSecondaryCta = noop }) => {
               </Button>
               <Button
                 size="lg"
-                variant="outline-light"
+                variant="outline-secondary"
                 className="px-5 py-3"
                 onClick={onSecondaryCta}
               >

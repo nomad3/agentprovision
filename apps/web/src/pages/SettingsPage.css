@@ -10,7 +10,7 @@
 .page-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: #1a2b3c;
   margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
@@ -18,24 +18,24 @@
 }
 
 .title-icon {
-  color: #0cd18e;
+  color: #2b7de9;
 }
 
 .page-subtitle {
   font-size: 1rem;
-  color: rgba(226, 232, 240, 0.7);
+  color: rgba(45, 65, 90, 0.6);
   margin: 0;
 }
 
 .settings-card {
-  background: linear-gradient(135deg, rgba(34, 39, 46, 0.9), rgba(26, 30, 36, 0.95));
-  border: 1px solid rgba(148, 163, 184, 0.15);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95));
+  border: 1px solid rgba(180, 200, 220, 0.3);
   border-radius: 16px;
   transition: all 0.3s ease;
 }
 
 .settings-card:hover {
-  border-color: rgba(12, 209, 142, 0.3);
+  border-color: rgba(43, 125, 233, 0.25);
 }
 
 .settings-section-header {
@@ -44,52 +44,52 @@
   gap: 0.75rem;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+  border-bottom: 1px solid rgba(180, 200, 220, 0.25);
 }
 
 .section-icon {
-  color: #0cd18e;
+  color: #2b7de9;
   font-size: 1.5rem;
 }
 
 .section-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #f8fafc;
+  color: #1a2b3c;
   margin: 0;
 }
 
 /* Form Styles */
 .form-label {
-  color: rgba(226, 232, 240, 0.9);
+  color: rgba(45, 65, 90, 0.85);
   font-weight: 500;
   margin-bottom: 0.5rem;
 }
 
 .form-control {
-  background: rgba(34, 39, 46, 0.6);
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  color: #f8fafc;
+  background: rgba(232, 239, 246, 0.6);
+  border: 1px solid rgba(180, 200, 220, 0.3);
+  color: #1a2b3c;
   border-radius: 8px;
   padding: 0.65rem 1rem;
 }
 
 .form-control:focus {
-  background: rgba(34, 39, 46, 0.8);
-  border-color: rgba(12, 209, 142, 0.5);
-  color: #f8fafc;
-  box-shadow: 0 0 0 3px rgba(12, 209, 142, 0.1);
+  background: rgba(232, 239, 246, 0.8);
+  border-color: rgba(43, 125, 233, 0.4);
+  color: #1a2b3c;
+  box-shadow: 0 0 0 3px rgba(43, 125, 233, 0.1);
 }
 
 .form-control:disabled {
-  background: rgba(34, 39, 46, 0.3);
-  color: rgba(226, 232, 240, 0.5);
+  background: rgba(232, 239, 246, 0.3);
+  color: rgba(45, 65, 90, 0.4);
 }
 
 /* Switch Styles */
 .settings-switch {
   padding: 1rem 0;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  border-bottom: 1px solid rgba(180, 200, 220, 0.2);
 }
 
 .settings-switch:last-child {
@@ -99,17 +99,17 @@
 .settings-switch .form-check-input {
   width: 3rem;
   height: 1.5rem;
-  background-color: rgba(148, 163, 184, 0.2);
-  border: 1px solid rgba(148, 163, 184, 0.3);
+  background-color: rgba(180, 200, 220, 0.3);
+  border: 1px solid rgba(180, 200, 220, 0.35);
 }
 
 .settings-switch .form-check-input:checked {
-  background-color: #0cd18e;
-  border-color: #0cd18e;
+  background-color: #2b7de9;
+  border-color: #2b7de9;
 }
 
 .settings-switch .form-check-label {
-  color: rgba(226, 232, 240, 0.9);
+  color: rgba(45, 65, 90, 0.85);
   font-weight: 500;
   margin-left: 0.75rem;
 }
@@ -120,7 +120,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.25rem 0;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  border-bottom: 1px solid rgba(180, 200, 220, 0.2);
 }
 
 .security-item:last-child {
@@ -128,14 +128,14 @@
 }
 
 .security-info strong {
-  color: #f8fafc;
+  color: #1a2b3c;
   font-size: 1rem;
   display: block;
   margin-bottom: 0.25rem;
 }
 
 .security-text {
-  color: rgba(226, 232, 240, 0.7);
+  color: rgba(45, 65, 90, 0.6);
   font-size: 0.9rem;
   margin: 0;
 }
@@ -152,20 +152,20 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: 1.5rem;
-  background: rgba(12, 209, 142, 0.08);
-  border: 1px solid rgba(12, 209, 142, 0.2);
+  background: rgba(43, 125, 233, 0.06);
+  border: 1px solid rgba(43, 125, 233, 0.15);
   border-radius: 12px;
 }
 
 .plan-name {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #f8fafc;
+  color: #1a2b3c;
   margin-bottom: 0.5rem;
 }
 
 .plan-description {
-  color: rgba(226, 232, 240, 0.7);
+  color: rgba(45, 65, 90, 0.6);
   font-size: 0.9rem;
   margin: 0;
 }
@@ -180,7 +180,7 @@
   flex-direction: column;
   gap: 0.75rem;
   padding: 1rem;
-  background: rgba(34, 39, 46, 0.4);
+  background: rgba(232, 239, 246, 0.5);
   border-radius: 10px;
 }
 
@@ -191,12 +191,12 @@
 }
 
 .billing-label {
-  color: rgba(226, 232, 240, 0.7);
+  color: rgba(45, 65, 90, 0.6);
   font-size: 0.9rem;
 }
 
 .billing-value {
-  color: #f8fafc;
+  color: #1a2b3c;
   font-weight: 600;
   font-size: 0.95rem;
 }
@@ -207,7 +207,7 @@
   gap: 1rem;
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(148, 163, 184, 0.1);
+  border-top: 1px solid rgba(180, 200, 220, 0.2);
 }
 
 .settings-actions .btn {

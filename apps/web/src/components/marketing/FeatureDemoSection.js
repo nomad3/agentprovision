@@ -88,8 +88,8 @@ const mockupStyles = {
     borderRadius: 999,
     fontSize: 10,
     fontWeight: 600,
-    background: color === 'green' ? 'rgba(12,209,142,0.15)' : color === 'blue' ? 'rgba(59,130,246,0.15)' : 'rgba(148,163,184,0.12)',
-    color: color === 'green' ? '#0cd18e' : color === 'blue' ? '#60a5fa' : 'var(--color-muted)',
+    background: color === 'green' ? 'rgba(43,125,233,0.12)' : color === 'blue' ? 'rgba(59,130,246,0.15)' : 'rgba(180,200,220,0.15)',
+    color: color === 'green' ? '#2b7de9' : color === 'blue' ? '#60a5fa' : 'var(--color-muted)',
     marginLeft: 8,
   }),
   card: {
@@ -116,7 +116,7 @@ const mockupStyles = {
   connectorLine: {
     width: '100%',
     height: 2,
-    background: 'linear-gradient(90deg, var(--color-primary), rgba(12,209,142,0.3))',
+    background: 'linear-gradient(90deg, var(--color-primary), rgba(43,125,233,0.3))',
   },
   progressBar: (pct, color) => ({
     height: 6,
@@ -137,7 +137,7 @@ const mockupStyles = {
 /* --- Orchestration Mockup --- */
 const OrchestrationMockup = () => {
   const agents = [
-    { name: 'Supervisor', role: 'Orchestrator', status: 'Running', color: '#0cd18e', icon: FaRobot, tasks: 12 },
+    { name: 'Supervisor', role: 'Orchestrator', status: 'Running', color: '#2b7de9', icon: FaRobot, tasks: 12 },
     { name: 'Data Analyst', role: 'Sub-Agent', status: 'Active', color: '#60a5fa', icon: FaDatabase, tasks: 8 },
     { name: 'Report Gen', role: 'Sub-Agent', status: 'Idle', color: '#a78bfa', icon: FaChartBar, tasks: 5 },
   ];
@@ -190,7 +190,7 @@ const OrchestrationMockup = () => {
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 10 }}>
                       <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: agent.status === 'Running' ? '#0cd18e' : agent.status === 'Active' ? '#60a5fa' : '#94a3b8', display: 'inline-block' }} />
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: agent.status === 'Running' ? '#2b7de9' : agent.status === 'Active' ? '#60a5fa' : '#94a3b8', display: 'inline-block' }} />
                         {agent.status}
                       </span>
                       <span style={{ color: 'var(--color-muted)' }}>{agent.tasks} tasks</span>
@@ -216,7 +216,7 @@ const OrchestrationMockup = () => {
                   <div style={{ fontSize: 10, color: 'var(--color-muted)', marginBottom: 2 }}>{m.label}</div>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
                     <span style={{ fontSize: 16, fontWeight: 700 }}>{m.value}</span>
-                    <span style={{ fontSize: 10, color: '#0cd18e' }}>{m.trend}</span>
+                    <span style={{ fontSize: 10, color: '#2b7de9' }}>{m.trend}</span>
                   </div>
                 </div>
               ))}
@@ -231,11 +231,11 @@ const OrchestrationMockup = () => {
 /* --- Memory / Knowledge Graph Mockup --- */
 const MemoryMockup = () => {
   const entities = [
-    { name: 'Customer Onboarding', type: 'Process', relations: 14, confidence: 94, color: '#0cd18e' },
+    { name: 'Customer Onboarding', type: 'Process', relations: 14, confidence: 94, color: '#2b7de9' },
     { name: 'Billing API', type: 'System', relations: 9, confidence: 87, color: '#60a5fa' },
     { name: 'Support Escalation', type: 'Workflow', relations: 7, confidence: 91, color: '#a78bfa' },
     { name: 'User Preferences', type: 'Entity', relations: 12, confidence: 82, color: '#f59e0b' },
-    { name: 'Product Catalog', type: 'Dataset', relations: 18, confidence: 96, color: '#0cd18e' },
+    { name: 'Product Catalog', type: 'Dataset', relations: 18, confidence: 96, color: '#2b7de9' },
   ];
 
   return (
@@ -386,8 +386,8 @@ const ChatMockup = () => {
                   maxWidth: '82%',
                   padding: '10px 14px',
                   borderRadius: msg.role === 'user' ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
-                  background: msg.role === 'user' ? 'rgba(12,209,142,0.12)' : 'var(--surface-elevated)',
-                  border: msg.role === 'user' ? '1px solid rgba(12,209,142,0.25)' : '1px solid var(--color-border)',
+                  background: msg.role === 'user' ? 'rgba(43,125,233,0.1)' : 'var(--surface-elevated)',
+                  border: msg.role === 'user' ? '1px solid rgba(43,125,233,0.2)' : '1px solid var(--color-border)',
                   fontSize: 12,
                   lineHeight: 1.55,
                   color: 'var(--color-foreground)',
@@ -501,16 +501,16 @@ const FeatureDemoSection = () => {
                     key={feature.key}
                     eventKey={feature.key}
                     className={`feature-tab p-4 rounded-4 border transition-all ${activeTab === feature.key
-                        ? 'bg-white bg-opacity-10 border-primary border-opacity-50 shadow-lg'
+                        ? 'bg-primary bg-opacity-10 border-primary border-opacity-50 shadow-lg'
                         : 'bg-transparent border-transparent text-soft hover-bg-dark'
                       }`}
                     style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
                   >
                     <div className="d-flex align-items-center gap-3 mb-2">
-                      <div className={`p-2 rounded-circle ${activeTab === feature.key ? 'bg-primary text-white' : 'bg-dark text-soft'}`}>
+                      <div className={`p-2 rounded-circle ${activeTab === feature.key ? 'bg-primary text-white' : 'bg-light text-soft'}`}>
                         <feature.icon size={20} />
                       </div>
-                      <h5 className={`mb-0 fw-semibold ${activeTab === feature.key ? 'text-white' : 'text-soft'}`}>
+                      <h5 className={`mb-0 fw-semibold ${activeTab === feature.key ? '' : 'text-soft'}`}>
                         {feature.title}
                       </h5>
                     </div>
@@ -529,15 +529,15 @@ const FeatureDemoSection = () => {
                   return (
                     <Tab.Pane key={feature.key} eventKey={feature.key} className="position-relative">
                       <AnimatedSection animation="scale-up">
-                        <div className="video-frame p-2 rounded-4 bg-dark border border-secondary border-opacity-25 shadow-lg position-relative">
+                        <div className="video-frame p-2 rounded-4 bg-white border border-secondary border-opacity-25 shadow-lg position-relative">
                           {/* Browser Chrome Mockup */}
-                          <div className="d-flex align-items-center gap-2 px-3 py-2 border-bottom border-secondary border-opacity-25 mb-0 bg-black bg-opacity-25 rounded-top-3">
+                          <div className="d-flex align-items-center gap-2 px-3 py-2 border-bottom border-secondary border-opacity-25 mb-0 bg-light bg-opacity-75 rounded-top-3">
                             <div className="d-flex gap-1">
                               <div className="rounded-circle bg-danger" style={{ width: '10px', height: '10px' }}></div>
                               <div className="rounded-circle bg-warning" style={{ width: '10px', height: '10px' }}></div>
                               <div className="rounded-circle bg-success" style={{ width: '10px', height: '10px' }}></div>
                             </div>
-                            <div className="mx-auto bg-dark bg-opacity-50 px-4 py-1 rounded-pill text-muted small font-monospace" style={{ fontSize: '10px' }}>
+                            <div className="mx-auto bg-white bg-opacity-75 px-4 py-1 rounded-pill text-muted small font-monospace" style={{ fontSize: '10px' }}>
                               app.servicetsunami.com/{feature.key}
                             </div>
                           </div>

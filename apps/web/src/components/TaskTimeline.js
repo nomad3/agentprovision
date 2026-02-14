@@ -149,7 +149,7 @@ const TaskTimeline = ({ traces = [] }) => {
             <div style={styles.header}>
               <span style={styles.label}>{formatStepType(trace.step_type)}</span>
               {trace.duration && (
-                <Badge bg="dark" style={{ fontSize: '0.7rem', fontWeight: 500 }}>
+                <Badge bg="secondary" style={{ fontSize: '0.7rem', fontWeight: 500 }}>
                   {trace.duration}
                 </Badge>
               )}

@@ -56,7 +56,7 @@ function BrandingPage() {
       <Container fluid className="py-2">
         <Row className="mb-4">
           <Col>
-            <h2 className="fw-bold text-white mb-1">Branding Settings</h2>
+            <h2 className="fw-bold mb-1">Branding Settings</h2>
             <p className="text-soft mb-0">Customize your platform's appearance</p>
           </Col>
         </Row>
@@ -68,7 +68,7 @@ function BrandingPage() {
             <Col md={6}>
               <PremiumCard className="mb-4 h-100">
                 <div className="mb-4 border-bottom border-secondary border-opacity-25 pb-2">
-                  <h5 className="text-white mb-0">Brand Identity</h5>
+                  <h5 className="mb-0">Brand Identity</h5>
                 </div>
                 <Form.Group className="mb-3">
                   <Form.Label className="text-soft">Company Name</Form.Label>
@@ -76,7 +76,7 @@ function BrandingPage() {
                     type="text"
                     value={branding?.company_name || ''}
                     onChange={(e) => updateField('company_name', e.target.value)}
-                    className="bg-dark text-white border-secondary border-opacity-50"
+                    className="border-secondary border-opacity-50"
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
@@ -85,7 +85,7 @@ function BrandingPage() {
                     type="url"
                     value={branding?.logo_url || ''}
                     onChange={(e) => updateField('logo_url', e.target.value)}
-                    className="bg-dark text-white border-secondary border-opacity-50"
+                    className="border-secondary border-opacity-50"
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
@@ -94,7 +94,7 @@ function BrandingPage() {
                     type="email"
                     value={branding?.support_email || ''}
                     onChange={(e) => updateField('support_email', e.target.value)}
-                    className="bg-dark text-white border-secondary border-opacity-50"
+                    className="border-secondary border-opacity-50"
                   />
                 </Form.Group>
               </PremiumCard>
@@ -103,7 +103,7 @@ function BrandingPage() {
             <Col md={6}>
               <PremiumCard className="mb-4 h-100">
                 <div className="mb-4 border-bottom border-secondary border-opacity-25 pb-2">
-                  <h5 className="text-white mb-0">Colors</h5>
+                  <h5 className="mb-0">Colors</h5>
                 </div>
                 <Row>
                   <Col md={6}>
@@ -111,9 +111,9 @@ function BrandingPage() {
                       <Form.Label className="text-soft">Primary Color</Form.Label>
                       <Form.Control
                         type="color"
-                        value={branding?.primary_color || '#0cd18e'}
+                        value={branding?.primary_color || '#2b7de9'}
                         onChange={(e) => updateField('primary_color', e.target.value)}
-                        className="bg-dark border-secondary border-opacity-50"
+                        className="border-secondary border-opacity-50"
                         style={{ minHeight: '40px' }}
                       />
                     </Form.Group>
@@ -123,9 +123,9 @@ function BrandingPage() {
                       <Form.Label className="text-soft">Secondary Color</Form.Label>
                       <Form.Control
                         type="color"
-                        value={branding?.secondary_color || '#2a4d75'}
+                        value={branding?.secondary_color || '#5ec5b0'}
                         onChange={(e) => updateField('secondary_color', e.target.value)}
-                        className="bg-dark border-secondary border-opacity-50"
+                        className="border-secondary border-opacity-50"
                         style={{ minHeight: '40px' }}
                       />
                     </Form.Group>
@@ -137,9 +137,9 @@ function BrandingPage() {
                       <Form.Label className="text-soft">Accent Color</Form.Label>
                       <Form.Control
                         type="color"
-                        value={branding?.accent_color || '#0cd18e'}
+                        value={branding?.accent_color || '#2b7de9'}
                         onChange={(e) => updateField('accent_color', e.target.value)}
-                        className="bg-dark border-secondary border-opacity-50"
+                        className="border-secondary border-opacity-50"
                         style={{ minHeight: '40px' }}
                       />
                     </Form.Group>
@@ -153,7 +153,7 @@ function BrandingPage() {
             <Col md={6}>
               <PremiumCard className="mb-4 h-100">
                 <div className="mb-4 border-bottom border-secondary border-opacity-25 pb-2">
-                  <h5 className="text-white mb-0">AI Assistant</h5>
+                  <h5 className="mb-0">AI Assistant</h5>
                 </div>
                 <Form.Group className="mb-3">
                   <Form.Label className="text-soft">Assistant Name</Form.Label>
@@ -162,7 +162,7 @@ function BrandingPage() {
                     value={branding?.ai_assistant_name || ''}
                     onChange={(e) => updateField('ai_assistant_name', e.target.value)}
                     placeholder="AI Assistant"
-                    className="bg-dark text-white border-secondary border-opacity-50"
+                    className="border-secondary border-opacity-50"
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
@@ -170,7 +170,7 @@ function BrandingPage() {
                   <Form.Select
                     value={branding?.industry || ''}
                     onChange={(e) => updateField('industry', e.target.value)}
-                    className="bg-dark text-white border-secondary border-opacity-50"
+                    className="border-secondary border-opacity-50"
                   >
                     <option value="">Select industry...</option>
                     <option value="healthcare">Healthcare</option>
@@ -186,7 +186,7 @@ function BrandingPage() {
             <Col md={6}>
               <PremiumCard className="mb-4 h-100">
                 <div className="mb-4 border-bottom border-secondary border-opacity-25 pb-2">
-                  <h5 className="text-white mb-0">Custom Domain</h5>
+                  <h5 className="mb-0">Custom Domain</h5>
                 </div>
                 <Form.Group className="mb-3">
                   <Form.Label className="text-soft">Domain</Form.Label>
@@ -195,7 +195,7 @@ function BrandingPage() {
                     value={branding?.custom_domain || ''}
                     onChange={(e) => updateField('custom_domain', e.target.value)}
                     placeholder="app.yourcompany.com"
-                    className="bg-dark text-white border-secondary border-opacity-50"
+                    className="border-secondary border-opacity-50"
                   />
                 </Form.Group>
                 <p className="text-soft small">

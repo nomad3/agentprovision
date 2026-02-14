@@ -16,7 +16,7 @@
 .welcome-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: #1a2b3c;
   margin-bottom: 0.75rem;
   letter-spacing: -0.02em;
 }
@@ -37,7 +37,7 @@
 
 .welcome-subtitle {
   font-size: 1.25rem;
-  color: rgba(226, 232, 240, 0.8);
+  color: rgba(45, 65, 90, 0.7);
   margin: 0;
 }
 
@@ -45,7 +45,7 @@
 .section-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #f8fafc;
+  color: #1a2b3c;
   margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
@@ -53,7 +53,7 @@
 }
 
 .section-icon {
-  color: #0cd18e;
+  color: #2b7de9;
 }
 
 /* Quick Actions Section */
@@ -62,8 +62,8 @@
 }
 
 .quick-action-card {
-  background: linear-gradient(135deg, rgba(34, 39, 46, 0.9), rgba(26, 30, 36, 0.95));
-  border: 1px solid rgba(148, 163, 184, 0.15);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95));
+  border: 1px solid rgba(180, 200, 220, 0.3);
   border-radius: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -79,15 +79,15 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #0cd18e, #2a4d75);
+  background: linear-gradient(90deg, #2b7de9, #5ec5b0);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
 .quick-action-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(12, 209, 142, 0.4);
-  box-shadow: 0 8px 32px rgba(12, 209, 142, 0.2);
+  border-color: rgba(43, 125, 233, 0.3);
+  box-shadow: 0 8px 32px rgba(43, 125, 233, 0.15);
 }
 
 .quick-action-card:hover::before {
@@ -98,28 +98,28 @@
   width: 64px;
   height: 64px;
   border-radius: 16px;
-  background: linear-gradient(135deg, rgba(12, 209, 142, 0.15), rgba(42, 77, 117, 0.15));
+  background: linear-gradient(135deg, rgba(43, 125, 233, 0.12), rgba(94, 197, 176, 0.1));
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1.25rem;
-  border: 1px solid rgba(12, 209, 142, 0.3);
+  border: 1px solid rgba(43, 125, 233, 0.25);
 }
 
 .action-icon {
-  color: #a7f3d0;
+  color: #2b7de9;
 }
 
 .action-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #f8fafc;
+  color: #1a2b3c;
   margin-bottom: 0.5rem;
 }
 
 .action-description {
   font-size: 0.95rem;
-  color: rgba(226, 232, 240, 0.7);
+  color: rgba(45, 65, 90, 0.6);
   margin-bottom: 1.5rem;
 }
 
@@ -137,8 +137,8 @@
 }
 
 .activity-card {
-  background: linear-gradient(135deg, rgba(34, 39, 46, 0.9), rgba(26, 30, 36, 0.95));
-  border: 1px solid rgba(148, 163, 184, 0.15);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95));
+  border: 1px solid rgba(180, 200, 220, 0.3);
   border-radius: 16px;
 }
 
@@ -154,14 +154,14 @@
   gap: 1rem;
   padding: 1rem;
   border-radius: 10px;
-  background: rgba(12, 209, 142, 0.05);
-  border: 1px solid rgba(148, 163, 184, 0.1);
+  background: rgba(43, 125, 233, 0.04);
+  border: 1px solid rgba(180, 200, 220, 0.2);
   transition: all 0.25s ease;
 }
 
 .activity-item:hover {
-  background: rgba(12, 209, 142, 0.1);
-  border-color: rgba(12, 209, 142, 0.3);
+  background: rgba(43, 125, 233, 0.08);
+  border-color: rgba(43, 125, 233, 0.25);
   transform: translateX(4px);
 }
 
@@ -169,10 +169,10 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #0cd18e, #2a4d75);
+  background: linear-gradient(135deg, #2b7de9, #5ec5b0);
   flex-shrink: 0;
   margin-top: 6px;
-  box-shadow: 0 0 12px rgba(12, 209, 142, 0.6);
+  box-shadow: 0 0 12px rgba(43, 125, 233, 0.4);
 }
 
 .activity-content {
@@ -188,18 +188,18 @@
 
 .activity-label {
   font-weight: 600;
-  color: #f8fafc;
+  color: #1a2b3c;
   font-size: 0.95rem;
 }
 
 .activity-time {
   font-size: 0.8rem;
-  color: rgba(148, 163, 184, 0.7);
+  color: rgba(100, 120, 145, 0.6);
 }
 
 .activity-status {
   font-size: 0.875rem;
-  color: rgba(226, 232, 240, 0.7);
+  color: rgba(45, 65, 90, 0.6);
 }
 
 .empty-activity {
@@ -208,12 +208,12 @@
 }
 
 .empty-icon {
-  color: rgba(148, 163, 184, 0.4);
+  color: rgba(100, 120, 145, 0.4);
   margin-bottom: 1rem;
 }
 
 .empty-text {
-  color: rgba(226, 232, 240, 0.6);
+  color: rgba(45, 65, 90, 0.5);
   font-size: 1rem;
   margin: 0;
 }
@@ -224,15 +224,15 @@
 }
 
 .tips-card {
-  background: linear-gradient(135deg, rgba(12, 209, 142, 0.08), rgba(42, 77, 117, 0.05));
-  border: 1px solid rgba(12, 209, 142, 0.2);
+  background: linear-gradient(135deg, rgba(43, 125, 233, 0.06), rgba(94, 197, 176, 0.04));
+  border: 1px solid rgba(43, 125, 233, 0.15);
   border-radius: 16px;
 }
 
 .tips-title {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #f8fafc;
+  color: #1a2b3c;
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -251,9 +251,9 @@
 
 .tips-list li {
   padding: 0.75rem 0;
-  color: rgba(226, 232, 240, 0.8);
+  color: rgba(45, 65, 90, 0.7);
   font-size: 0.95rem;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  border-bottom: 1px solid rgba(180, 200, 220, 0.2);
   position: relative;
   padding-left: 1.5rem;
 }
@@ -266,7 +266,7 @@
   content: '✓';
   position: absolute;
   left: 0;
-  color: #10b981;
+  color: #2d9d78;
   font-weight: bold;
 }
 

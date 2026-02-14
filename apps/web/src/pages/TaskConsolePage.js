@@ -144,7 +144,7 @@ const TaskConsolePage = () => {
             </p>
           </div>
           <Button
-            variant="outline-light"
+            variant="outline-secondary"
             size="sm"
             onClick={handleRefresh}
             disabled={loading}
@@ -286,27 +286,27 @@ const TaskConsolePage = () => {
                     {/* Metadata badges */}
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.25rem' }}>
                       {selectedTask.task_type && (
-                        <Badge bg="dark" style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.35rem 0.6rem' }}>
+                        <Badge bg="light" text="dark" style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.35rem 0.6rem' }}>
                           Type: {selectedTask.task_type}
                         </Badge>
                       )}
                       {selectedTask.priority && (
-                        <Badge bg="dark" style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.35rem 0.6rem' }}>
+                        <Badge bg="light" text="dark" style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.35rem 0.6rem' }}>
                           Priority: {selectedTask.priority}
                         </Badge>
                       )}
                       {selectedTask.confidence != null && (
-                        <Badge bg="dark" style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.35rem 0.6rem' }}>
+                        <Badge bg="light" text="dark" style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.35rem 0.6rem' }}>
                           Confidence: {(selectedTask.confidence * 100).toFixed(0)}%
                         </Badge>
                       )}
                       {selectedTask.tokens_used != null && (
-                        <Badge bg="dark" style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.35rem 0.6rem' }}>
+                        <Badge bg="light" text="dark" style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.35rem 0.6rem' }}>
                           Tokens: {selectedTask.tokens_used.toLocaleString()}
                         </Badge>
                       )}
                       {selectedTask.estimated_cost != null && (
-                        <Badge bg="dark" style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.35rem 0.6rem' }}>
+                        <Badge bg="light" text="dark" style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.35rem 0.6rem' }}>
                           Cost: ${selectedTask.estimated_cost.toFixed(4)}
                         </Badge>
                       )}
@@ -358,7 +358,8 @@ const TaskConsolePage = () => {
                               {Object.entries(collectionSummary.by_type || {}).map(([type, count]) => (
                                 <Badge
                                   key={type}
-                                  bg="dark"
+                                  bg="light"
+                                  text="dark"
                                   style={{ fontSize: '0.7rem', fontWeight: 500, padding: '0.25rem 0.5rem' }}
                                 >
                                   {type}: {count}

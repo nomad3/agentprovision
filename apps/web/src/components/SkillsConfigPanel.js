@@ -242,8 +242,8 @@ const SkillsConfigPanel = ({ instanceStatus: externalInstanceStatus }) => {
             cursor: 'pointer',
             transition: 'all 0.2s ease',
             boxShadow: isExpanded
-              ? `0 4px 20px rgba(0, 0, 0, 0.25)`
-              : '0 2px 10px rgba(0, 0, 0, 0.1)',
+              ? `0 4px 20px rgba(100, 130, 170, 0.15)`
+              : '0 2px 10px rgba(100, 130, 170, 0.08)',
           }}
         >
           {/* Card header - clickable to expand/collapse */}
@@ -318,7 +318,7 @@ const SkillsConfigPanel = ({ instanceStatus: externalInstanceStatus }) => {
                   {isEnabled ? (
                     <FaToggleOn
                       size={22}
-                      style={{ color: '#10b981', cursor: 'pointer' }}
+                      style={{ color: '#2d9d78', cursor: 'pointer' }}
                       onClick={() => handleToggleSkill(skill)}
                     />
                   ) : (
@@ -509,7 +509,7 @@ const SkillsConfigPanel = ({ instanceStatus: externalInstanceStatus }) => {
         border: '1px solid var(--color-border)',
         borderRadius: 12,
         background: 'var(--surface-elevated)',
-        boxShadow: '0 2px 15px rgba(0, 0, 0, 0.15)',
+        boxShadow: '0 2px 15px rgba(100, 130, 170, 0.08)',
       }}
     >
       <Card.Header
