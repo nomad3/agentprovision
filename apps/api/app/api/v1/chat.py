@@ -9,7 +9,9 @@ from sqlalchemy.orm import Session
 from app.api import deps
 from app.models.user import User
 from app.schemas import chat as chat_schema
+from app.schemas import knowledge_entity as ke_schema
 from app.services import chat as chat_service
+from app.services import knowledge as knowledge_service
 from app.services.enhanced_chat import get_enhanced_chat_service
 
 router = APIRouter()
@@ -80,6 +82,29 @@ def list_messages(
     if not session:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found")
     return session.messages
+
+
+@router.get(
+    "/sessions/{session_id}/entities",
+    response_model=List[ke_schema.KnowledgeEntity],
+)
+def get_session_entities(
+    session_id: uuid.UUID,
+    *,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_active_user),
+):
+    """Return knowledge entities for the tenant (scoped via session ownership).
+
+    NOTE: Entities are not yet tagged with a source session_id in the schema,
+    so this returns all tenant entities.  The per-message badge
+    (context.entities_extracted) is the primary UX; this endpoint is
+    preparatory for a future entities panel.
+    """
+    session = chat_service.get_session(db, session_id=session_id, tenant_id=current_user.tenant_id)
+    if not session:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found")
+    return knowledge_service.get_entities(db, tenant_id=current_user.tenant_id)
 
 
 @router.post(

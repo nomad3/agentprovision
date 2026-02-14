@@ -13,6 +13,7 @@ from app.models.dataset import Dataset
 from app.services import agent_kits as agent_kit_service
 from app.services import datasets as dataset_service
 from app.services.adk_client import ADKNotConfiguredError, get_adk_client
+from app.services.knowledge_extraction import knowledge_extraction_service
 
 logger = logging.getLogger(__name__)
 
@@ -217,6 +218,7 @@ def _generate_agentic_response(
     try:
         events = client.run(user_id=user_id, session_id=str(adk_session_id), message=user_message)
         response_text, context = _extract_adk_response(events)
+        _run_entity_extraction(db, session, context)
         return _append_message(
             db,
             session=session,
@@ -244,6 +246,7 @@ def _generate_agentic_response(
                 db.refresh(session)
                 events = client.run(user_id=user_id, session_id=str(adk_session_id), message=user_message)
                 response_text, context = _extract_adk_response(events)
+                _run_entity_extraction(db, session, context)
                 return _append_message(
                     db,
                     session=session,
@@ -268,6 +271,27 @@ def _generate_agentic_response(
             content=ADK_FAILURE_MESSAGE,
             context={"error": str(exc)},
         )
+
+
+def _run_entity_extraction(
+    db: Session,
+    session: ChatSessionModel,
+    context: Dict[str, Any] | None,
+) -> None:
+    """Run entity extraction on the session and store count in context.
+
+    Wrapped in try/except so extraction failures never break chat.
+    """
+    try:
+        extracted = knowledge_extraction_service.extract_from_session(
+            db, session.id, session.tenant_id
+        )
+        entities_extracted = len(extracted)
+        if entities_extracted > 0 and context is not None:
+            context["entities_extracted"] = entities_extracted
+            logger.info("Extracted %d entities from session %s", entities_extracted, session.id)
+    except Exception:
+        logger.warning("Entity extraction failed for session %s", session.id, exc_info=True)
 
 
 def _build_adk_state(

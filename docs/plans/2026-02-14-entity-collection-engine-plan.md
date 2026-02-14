@@ -10,6 +10,26 @@
 
 ---
 
+## Execution Status
+
+| Task | Status | Commit | Timestamp |
+|------|--------|--------|-----------|
+| 1. Migration 029 | ✅ Done | `6ac475f` | 2026-02-14 |
+| 2. Model + Schema + Service | ✅ Done | `f80bf79` | 2026-02-14 |
+| 3. Skill Registry | ✅ Done | `ea20a1d` | 2026-02-14 |
+| 4. Universal Extraction | ✅ Done | `ddaac5d` | 2026-02-14 |
+| 5. EntityValidator | ✅ Done | `8b8c717` | 2026-02-14 |
+| 6. persist_entities Activity | ✅ Done | `f3a1ecb` | 2026-02-14 |
+| 7. Circuit Breaker | ✅ Done | `da8b954` | 2026-02-14 |
+| 8. Bulk Entity Endpoints | ✅ Done | `774de39` | 2026-02-14 |
+| 9. LLM Guardrails | ✅ Done | `04eef2f` | 2026-02-14 |
+| 10. Task Console Badges | ✅ Done | `ff628d0` | 2026-02-14 |
+| 11. Knowledge Page Explorer | ✅ Done | `797270f` | 2026-02-14 |
+| 12. Add Knowledge to Nav | ✅ Done | `1c70380` | 2026-02-14 |
+| 13. Push + Deploy + Verify | ⏳ Pending | — | — |
+
+---
+
 ## Phase 1: Foundation
 
 ### Task 1: Database Migration — Extend Knowledge Entities

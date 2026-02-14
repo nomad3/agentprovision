@@ -222,6 +222,14 @@ const ChatPage = () => {
           return null;
         })}
 
+        {message.role === 'assistant' && message.context?.entities_extracted > 0 && (
+          <div className="mt-2">
+            <Badge bg="info" style={{ fontSize: '0.7rem', fontWeight: 500 }}>
+              {message.context.entities_extracted} {message.context.entities_extracted === 1 ? 'entity' : 'entities'} extracted
+            </Badge>
+          </div>
+        )}
+
         {message.context && message.context.summary && (
           <details className="mt-2">
             <summary>View agent context</summary>

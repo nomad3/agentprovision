@@ -11,11 +11,14 @@ const postMessage = (sessionId, content) =>
     content,
   });
 
+const getSessionEntities = (sessionId) => api.get(`/chat/sessions/${sessionId}/entities`);
+
 const chatService = {
   listSessions,
   createSession,
   listMessages,
   postMessage,
+  getSessionEntities,
 };
 
 export default chatService;
