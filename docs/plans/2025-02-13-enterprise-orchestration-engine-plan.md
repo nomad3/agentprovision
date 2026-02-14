@@ -1379,25 +1379,74 @@ git commit -m "docs: update CLAUDE.md with orchestration engine architecture"
 
 ---
 
-## Execution Order Summary
+## Execution Status — ALL COMPLETE (2025-02-13)
 
-| Phase | Task | Description | Depends On |
-|-------|------|-------------|------------|
-| 1 | 1 | ExecutionTrace model + migration | — |
-| 1 | 2 | ExecutionTrace schema + service | 1 |
-| 1 | 3 | Task execution API endpoints | 2 |
-| 1 | 4 | TaskExecutionWorkflow + activities | 1, 2 |
-| 1 | 5 | Orchestration worker | 4 |
-| 1 | 6 | Task Console frontend | 3 |
-| 2 | 7 | TenantInstance model + migration | — |
-| 2 | 8 | TenantInstance schema + service + routes | 7 |
-| 2 | 9 | OpenClawProvisionWorkflow | 5, 8 |
-| 2 | 10 | OpenClaw instance management UI | 8 |
-| 3 | 11 | SkillConfig + SkillCredential models | 7 |
-| 3 | 12 | Credential vault service | 11 |
-| 3 | 13 | Skill Router service | 9, 12 |
-| 3 | 14 | Skill config API endpoints | 11, 12 |
-| 3 | 15 | Skills Config panel UI | 10, 14 |
-| 4 | 16 | Wire LLM config into Skill Router | 13 |
-| 4 | 17 | Language abstraction | — (independent) |
-| 4 | 18 | Update CLAUDE.md | all |
+All 18 tasks executed via subagent-driven development with spec compliance + code quality reviews.
+
+| Phase | Task | Description | Status | Commit |
+|-------|------|-------------|--------|--------|
+| 1 | 1 | ExecutionTrace model + migration | ✅ | `5775264` |
+| 1 | 2 | ExecutionTrace schema + service | ✅ | `19369bb` |
+| 1 | 3 | Task execution API endpoints | ✅ | `ba07630` |
+| 1 | 4 | TaskExecutionWorkflow + activities | ✅ | `96d538e` |
+| 1 | 5 | Orchestration worker + Helm values | ✅ | `79db10a` |
+| 1 | 6 | Task Console frontend | ✅ | `0c7789a` |
+| 2 | 7 | TenantInstance model + migration | ✅ | `53f33bf` |
+| 2 | 8 | TenantInstance schema + service + routes | ✅ | `ae838c4` |
+| 2 | 9 | OpenClawProvisionWorkflow | ✅ | `b6a3fd4` |
+| 2 | 10 | OpenClaw instance management UI | ✅ | `489e5e2` |
+| 3 | 11 | SkillConfig + SkillCredential models | ✅ | `c89488d` |
+| 3 | 12 | Credential vault service | ✅ | `af4659f` |
+| 3 | 13 | Skill Router service | ✅ | `fcd7b35` |
+| 3 | 14 | Skill config API endpoints | ✅ | `33020b6` |
+| 3 | 15 | Skills Config panel UI | ✅ | `1a9eef7` |
+| 4 | 16 | Wire LLM config into Skill Router | ✅ | `4d43602` |
+| 4 | 17 | Language abstraction (13 files) | ✅ | `1fa546f` |
+| 4 | 18 | Update CLAUDE.md | ✅ | `06c6b02` |
+
+### New Files Created
+
+**Backend (apps/api/):**
+- `app/models/execution_trace.py` — ExecutionTrace model
+- `app/models/tenant_instance.py` — TenantInstance model
+- `app/models/skill_config.py` — SkillConfig model
+- `app/models/skill_credential.py` — SkillCredential model
+- `app/schemas/execution_trace.py` — ExecutionTrace schemas
+- `app/schemas/tenant_instance.py` — TenantInstance schemas
+- `app/schemas/skill_config.py` — SkillConfig + CredentialCreate schemas
+- `app/services/execution_traces.py` — ExecutionTrace CRUD
+- `app/services/tenant_instances.py` — TenantInstance CRUD
+- `app/services/skill_configs.py` — SkillConfig CRUD
+- `app/services/orchestration/credential_vault.py` — Fernet encryption vault
+- `app/services/orchestration/skill_router.py` — Skill execution router with LLM selection
+- `app/workflows/task_execution.py` — TaskExecutionWorkflow (Temporal)
+- `app/workflows/openclaw_provision.py` — OpenClawProvisionWorkflow (Temporal)
+- `app/workflows/activities/task_execution.py` — 4 task execution activities
+- `app/workflows/activities/openclaw_provision.py` — 5 provisioning activities
+- `app/workers/orchestration_worker.py` — Temporal orchestration worker
+- `app/api/v1/instances.py` — Instance management routes (9 endpoints)
+- `app/api/v1/skill_configs.py` — Skill config routes (7 endpoints)
+- `migrations/026_add_execution_traces.sql`
+- `migrations/027_add_tenant_instances.sql`
+- `migrations/028_add_skill_configs_and_credentials.sql`
+
+**Frontend (apps/web/):**
+- `src/pages/TaskConsolePage.js` — Task execution console
+- `src/components/TaskTimeline.js` — Execution trace timeline
+- `src/components/OpenClawInstanceCard.js` — Instance lifecycle card
+- `src/components/SkillsConfigPanel.js` — Skills grid with credential forms
+- `src/services/taskService.js` — Task API service
+- `src/services/instanceService.js` — Instance API service
+- `src/services/skillConfigService.js` — Skill config API service
+
+**Infrastructure:**
+- `helm/values/servicetsunami-orchestration-worker.yaml` — K8s worker deployment
+
+### Key Architecture Decisions
+- Temporal workflows for durable task execution and OpenClaw provisioning
+- Per-tenant isolated OpenClaw pods deployed via Helm (chart at `../openclaw-k8s/`)
+- Fernet-encrypted credential vault — credentials injected per-request, never stored in OpenClaw
+- SkillRouter: instance resolution → config validation → credential decryption → gateway call → trace logging
+- Per-skill LLM selection via `SkillConfig.llm_config_id` → `LLMRouter.select_model()`
+- In-platform traceability via ExecutionTrace (no Temporal UI dependency)
+- Language abstracted from PE-specific to generic enterprise terms across 13 files (EN + ES)
