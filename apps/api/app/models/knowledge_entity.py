@@ -24,6 +24,12 @@ class KnowledgeEntity(Base):
     confidence = Column(Float, default=1.0)  # How confident are we in this entity
     source_agent_id = Column(UUID(as_uuid=True), ForeignKey("agents.id"), nullable=True)
 
+    # Entity lifecycle
+    status = Column(String(20), default="draft")  # draft, verified, enriched, actioned, archived
+    collection_task_id = Column(UUID(as_uuid=True), ForeignKey("agent_tasks.id"), nullable=True)
+    source_url = Column(String, nullable=True)
+    enrichment_data = Column(JSON, nullable=True)
+
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -31,3 +37,4 @@ class KnowledgeEntity(Base):
     # Relationships
     tenant = relationship("Tenant")
     source_agent = relationship("Agent")
+    collection_task = relationship("AgentTask", foreign_keys=[collection_task_id])

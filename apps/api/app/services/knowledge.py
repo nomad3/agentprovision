@@ -1,12 +1,11 @@
 """Service for managing knowledge graph entities and relations"""
 from sqlalchemy.orm import Session
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 import uuid
 
 from app.models.knowledge_entity import KnowledgeEntity
 from app.models.knowledge_relation import KnowledgeRelation
 from app.schemas.knowledge_entity import KnowledgeEntityCreate, KnowledgeEntityUpdate
-from app.schemas.knowledge_relation import KnowledgeRelationCreate
 
 
 # Entity operations
@@ -18,7 +17,11 @@ def create_entity(db: Session, entity_in: KnowledgeEntityCreate, tenant_id: uuid
         name=entity_in.name,
         attributes=entity_in.attributes,
         confidence=entity_in.confidence or 1.0,
-        source_agent_id=entity_in.source_agent_id
+        source_agent_id=entity_in.source_agent_id,
+        status=entity_in.status or "draft",
+        collection_task_id=entity_in.collection_task_id,
+        source_url=entity_in.source_url,
+        enrichment_data=entity_in.enrichment_data,
     )
     db.add(entity)
     db.commit()
@@ -39,12 +42,18 @@ def get_entities(
     tenant_id: uuid.UUID,
     entity_type: str = None,
     skip: int = 0,
-    limit: int = 100
+    limit: int = 100,
+    status: str = None,
+    task_id: uuid.UUID = None,
 ) -> List[KnowledgeEntity]:
-    """List entities."""
+    """List entities with optional filters."""
     query = db.query(KnowledgeEntity).filter(KnowledgeEntity.tenant_id == tenant_id)
     if entity_type:
         query = query.filter(KnowledgeEntity.entity_type == entity_type)
+    if status:
+        query = query.filter(KnowledgeEntity.status == status)
+    if task_id:
+        query = query.filter(KnowledgeEntity.collection_task_id == task_id)
     return query.offset(skip).limit(limit).all()
 
 
@@ -101,8 +110,97 @@ def delete_entity(db: Session, entity_id: uuid.UUID, tenant_id: uuid.UUID) -> bo
     return True
 
 
+def bulk_create_entities(
+    db: Session,
+    entities_in: List[KnowledgeEntityCreate],
+    tenant_id: uuid.UUID,
+) -> Dict[str, Any]:
+    """Bulk create entities with dedup."""
+    created = []
+    duplicates = 0
+
+    for entity_in in entities_in:
+        existing = db.query(KnowledgeEntity).filter(
+            KnowledgeEntity.tenant_id == tenant_id,
+            KnowledgeEntity.name == entity_in.name,
+            KnowledgeEntity.entity_type == entity_in.entity_type,
+        ).first()
+
+        if existing:
+            duplicates += 1
+            continue
+
+        entity = KnowledgeEntity(
+            tenant_id=tenant_id,
+            entity_type=entity_in.entity_type,
+            name=entity_in.name,
+            attributes=entity_in.attributes,
+            confidence=entity_in.confidence or 1.0,
+            source_agent_id=entity_in.source_agent_id,
+            status=entity_in.status or "draft",
+            collection_task_id=entity_in.collection_task_id,
+            source_url=entity_in.source_url,
+            enrichment_data=entity_in.enrichment_data,
+        )
+        db.add(entity)
+        created.append(entity)
+
+    db.commit()
+    for e in created:
+        db.refresh(e)
+
+    return {"created": len(created), "updated": 0, "duplicates_skipped": duplicates, "entities": created}
+
+
+def get_collection_summary(db: Session, task_id: uuid.UUID, tenant_id: uuid.UUID) -> Dict[str, Any]:
+    """Get summary of entities collected by a task."""
+    entities = db.query(KnowledgeEntity).filter(
+        KnowledgeEntity.tenant_id == tenant_id,
+        KnowledgeEntity.collection_task_id == task_id,
+    ).all()
+
+    by_status: Dict[str, int] = {}
+    by_type: Dict[str, int] = {}
+    sources = set()
+
+    for e in entities:
+        by_status[e.status or "draft"] = by_status.get(e.status or "draft", 0) + 1
+        by_type[e.entity_type] = by_type.get(e.entity_type, 0) + 1
+        if e.source_url:
+            sources.add(e.source_url)
+
+    return {
+        "task_id": task_id,
+        "total_entities": len(entities),
+        "by_status": by_status,
+        "by_type": by_type,
+        "sources": list(sources),
+    }
+
+
+def update_entity_status(
+    db: Session,
+    entity_id: uuid.UUID,
+    tenant_id: uuid.UUID,
+    new_status: str,
+) -> Optional[KnowledgeEntity]:
+    """Update entity status (lifecycle transition)."""
+    valid_statuses = {"draft", "verified", "enriched", "actioned", "archived"}
+    if new_status not in valid_statuses:
+        return None
+
+    entity = get_entity(db, entity_id, tenant_id)
+    if not entity:
+        return None
+
+    entity.status = new_status
+    db.commit()
+    db.refresh(entity)
+    return entity
+
+
 # Relation operations
-def create_relation(db: Session, relation_in: KnowledgeRelationCreate, tenant_id: uuid.UUID) -> KnowledgeRelation:
+def create_relation(db: Session, relation_in, tenant_id: uuid.UUID) -> KnowledgeRelation:
     """Create a relation between entities."""
     # Verify both entities exist and belong to tenant
     from_entity = get_entity(db, relation_in.from_entity_id, tenant_id)
