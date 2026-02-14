@@ -38,7 +38,7 @@ def create_task(db: Session, task_in: AgentTaskCreate, tenant_id: uuid.UUID) -> 
 
 def get_task(db: Session, task_id: uuid.UUID, tenant_id: uuid.UUID) -> Optional[AgentTask]:
     """Get task by ID."""
-    return db.query(AgentTask).join(Agent).filter(
+    return db.query(AgentTask).join(Agent, AgentTask.assigned_agent_id == Agent.id).filter(
         AgentTask.id == task_id,
         Agent.tenant_id == tenant_id
     ).first()
@@ -46,7 +46,7 @@ def get_task(db: Session, task_id: uuid.UUID, tenant_id: uuid.UUID) -> Optional[
 
 def get_tasks(db: Session, tenant_id: uuid.UUID, skip: int = 0, limit: int = 100, status: str = None) -> List[AgentTask]:
     """List tasks for tenant."""
-    query = db.query(AgentTask).join(Agent).filter(Agent.tenant_id == tenant_id)
+    query = db.query(AgentTask).join(Agent, AgentTask.assigned_agent_id == Agent.id).filter(Agent.tenant_id == tenant_id)
     if status:
         query = query.filter(AgentTask.status == status)
     return query.order_by(AgentTask.created_at.desc()).offset(skip).limit(limit).all()
