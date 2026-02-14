@@ -17,16 +17,21 @@ const NeuralCanvas = ({ className = "" }) => {
   const dimensionsRef = useRef({ width: 0, height: 0 });
 
   // Configuration
+  const getColors = () => {
+    const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+    return {
+      primary: isDark ? "#3d8ef5" : "#2b7de9",
+      secondary: isDark ? "#6dd4bf" : "#5ec5b0",
+      accent: isDark ? "#3d8ef5" : "#2b7de9",
+    };
+  };
+
   const config = {
     particleCount: 100,
     connectionDistance: 180,
     mouseDistance: 300,
     electricDistance: 200,
-    colors: {
-      primary: "#2b7de9", // Ocean blue
-      secondary: "#5ec5b0", // Seafoam
-      accent: "#2b7de9", // Ocean blue accent
-    },
+    colors: getColors(),
   };
 
   // Particle class
@@ -250,6 +255,10 @@ const NeuralCanvas = ({ className = "" }) => {
     const mouse = mouseRef.current;
 
     ctx.clearRect(0, 0, width, height);
+
+    // Update colors based on current theme
+    const currentColors = getColors();
+    config.colors = currentColors;
 
     // Draw electric lightning from mouse
     drawElectricConnections(ctx, mouse, particles);

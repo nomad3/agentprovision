@@ -1542,3 +1542,167 @@ button:focus-visible {
   clip-path: polygon(0 0, 100% 40px, 100% 100%, 0 100%);
   z-index: 1;
 }
+
+/* ── Dark Mode Landing Page Overrides ── */
+
+[data-bs-theme="dark"] .hero-section {
+  background: #0f1923;
+}
+
+[data-bs-theme="dark"] .hero-overlay {
+  background: radial-gradient(circle at center,
+      transparent 0%,
+      rgba(15, 25, 35, 0.1) 80%);
+}
+
+[data-bs-theme="dark"] .floating-card {
+  background: rgba(22, 34, 49, 0.75);
+  border-color: rgba(60, 90, 130, 0.4);
+  color: #e2e8f0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+[data-bs-theme="dark"] .floating-card:hover {
+  background: rgba(22, 34, 49, 0.9);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+[data-bs-theme="dark"] .card-1 {
+  background: linear-gradient(135deg,
+      rgba(61, 142, 245, 0.15),
+      rgba(109, 212, 191, 0.08));
+}
+
+[data-bs-theme="dark"] .card-2 {
+  background: linear-gradient(135deg,
+      rgba(109, 212, 191, 0.15),
+      rgba(61, 142, 245, 0.08));
+}
+
+[data-bs-theme="dark"] .card-3 {
+  background: linear-gradient(135deg,
+      rgba(61, 142, 245, 0.15),
+      rgba(61, 142, 245, 0.08));
+}
+
+[data-bs-theme="dark"] .card-icon {
+  color: #3d8ef5;
+  filter: drop-shadow(0 0 10px rgba(61, 142, 245, 0.5));
+}
+
+[data-bs-theme="dark"] .card-title {
+  color: #e2e8f0;
+}
+
+[data-bs-theme="dark"] .card-label {
+  color: rgba(200, 215, 235, 0.7);
+}
+
+[data-bs-theme="dark"] .visual-showcase {
+  background: linear-gradient(135deg, #0f1923 0%, #121e2b 100%);
+}
+
+[data-bs-theme="dark"] .showcase-item {
+  background: rgba(22, 34, 49, 0.75);
+  border-color: rgba(60, 90, 130, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+[data-bs-theme="dark"] .showcase-item:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+[data-bs-theme="dark"] .showcase-overlay {
+  background: linear-gradient(to top, rgba(22, 34, 49, 0.95) 0%, transparent 100%);
+  color: #e2e8f0;
+}
+
+[data-bs-theme="dark"] .showcase-icon {
+  color: #3d8ef5;
+  filter: drop-shadow(0 0 10px rgba(61, 142, 245, 0.5));
+}
+
+[data-bs-theme="dark"] .showcase-overlay h4,
+[data-bs-theme="dark"] .showcase-overlay h3 {
+  color: #e2e8f0;
+}
+
+[data-bs-theme="dark"] .showcase-overlay p {
+  color: rgba(200, 215, 235, 0.7);
+}
+
+[data-bs-theme="dark"] .showcase-overlay .lead {
+  color: rgba(200, 215, 235, 0.85);
+}
+
+[data-bs-theme="dark"] .features-section {
+  background: #0f1923;
+}
+
+[data-bs-theme="dark"] .feature-card {
+  background: rgba(22, 34, 49, 0.75);
+  border-color: rgba(60, 90, 130, 0.3);
+}
+
+[data-bs-theme="dark"] .feature-card::before {
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(61, 142, 245, 0.08),
+      transparent);
+}
+
+[data-bs-theme="dark"] .feature-card:hover {
+  background: rgba(22, 34, 49, 0.9);
+  border-color: rgba(61, 142, 245, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+[data-bs-theme="dark"] .cta-section {
+  background: linear-gradient(135deg, #121e2b 0%, #0f1923 100%);
+}
+
+[data-bs-theme="dark"] .cta-banner-content {
+  background: rgba(22, 34, 49, 0.96);
+}
+
+[data-bs-theme="dark"] .stat-item {
+  background: rgba(22, 34, 49, 0.75);
+  border-color: rgba(60, 90, 130, 0.3);
+}
+
+[data-bs-theme="dark"] .stat-item:hover {
+  background: rgba(22, 34, 49, 0.9);
+  border-color: rgba(61, 142, 245, 0.25);
+}
+
+[data-bs-theme="dark"] .stat-label {
+  color: rgba(200, 215, 235, 0.7);
+}
+
+[data-bs-theme="dark"] .badge-item {
+  background: rgba(22, 34, 49, 0.75);
+  border-color: rgba(60, 90, 130, 0.3);
+  color: rgba(200, 215, 235, 0.7);
+}
+
+[data-bs-theme="dark"] .feature-title {
+  color: #e2e8f0;
+}
+
+[data-bs-theme="dark"] .feature-description {
+  color: rgba(200, 215, 235, 0.7);
+}
+
+[data-bs-theme="dark"] .feature-icon {
+  color: #3d8ef5;
+  filter: drop-shadow(0 0 20px rgba(61, 142, 245, 0.4));
+}
+
+[data-bs-theme="dark"] .nav-dark.scrolled {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  background: rgba(22, 34, 49, 0.98) !important;
+}
+
+[data-bs-theme="dark"] .section-with-bg::before {
+  background: linear-gradient(135deg, rgba(15, 25, 35, 0.92) 0%, rgba(22, 34, 49, 0.88) 100%);
+}
