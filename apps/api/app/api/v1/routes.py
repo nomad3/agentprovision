@@ -27,6 +27,7 @@ from app.api.v1 import (
     integrations,
     users,
     instances,
+    skill_configs,
 )
 
 router = APIRouter()
@@ -62,3 +63,4 @@ router.include_router(features.router, prefix="/features", tags=["features"])
 router.include_router(tenant_analytics.router, prefix="/tenant-analytics", tags=["tenant-analytics"])
 router.include_router(integrations.router, prefix="/integrations", tags=["integrations"])
 router.include_router(instances.router, prefix="/instances", tags=["instances"])
+router.include_router(skill_configs.router, prefix="/skill-configs", tags=["skill-configs"])
