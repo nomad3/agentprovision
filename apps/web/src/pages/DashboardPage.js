@@ -77,13 +77,13 @@ const DashboardPage = () => {
 
       <div className="d-flex flex-wrap align-items-center justify-content-between mb-4">
         <div>
-          <h2 className="mb-1 fw-bold text-white">Operations Command Center</h2>
+          <h2 className="mb-1 fw-bold">Operations Command Center</h2>
           <p className="text-soft mb-0">
             Real-time cross-business metrics and intelligence across your organization.
           </p>
         </div>
         <div className="d-flex align-items-center gap-2">
-          <Badge bg="dark" className="border border-secondary text-soft">{viewerEmail}</Badge>
+          <Badge bg="light" className="border border-secondary text-dark">{viewerEmail}</Badge>
           <Badge bg="success" className="bg-opacity-25 text-success border border-success">
             Live data
           </Badge>
@@ -100,7 +100,7 @@ const DashboardPage = () => {
               <Badge bg="primary" className="bg-opacity-25 text-primary border border-primary">Agent Fleet</Badge>
             </div>
             <h6 className="text-soft mb-1">Active Agent Fleet</h6>
-            <div className="display-6 fw-bold text-white">{overview.total_agents}</div>
+            <div className="display-6 fw-bold text-primary">{overview.total_agents}</div>
             <div className="mt-2 small text-info">{overview.total_deployments} deployments</div>
           </PremiumCard>
         </Col>
@@ -114,7 +114,7 @@ const DashboardPage = () => {
               <Badge bg="success" className="bg-opacity-25 text-success border border-success">AI Commands</Badge>
             </div>
             <h6 className="text-soft mb-1">Total AI Commands</h6>
-            <div className="display-6 fw-bold text-white">{activity.total_messages}</div>
+            <div className="display-6 fw-bold text-primary">{activity.total_messages}</div>
             <div className="mt-2 small text-success">{activity.recent_messages_7d} last 7 days</div>
           </PremiumCard>
         </Col>
@@ -128,7 +128,7 @@ const DashboardPage = () => {
               <Badge bg="info" className="bg-opacity-25 text-info border border-info">Business Data</Badge>
             </div>
             <h6 className="text-soft mb-1">Datasets</h6>
-            <div className="display-6 fw-bold text-white">{overview.total_datasets}</div>
+            <div className="display-6 fw-bold text-primary">{overview.total_datasets}</div>
             <div className="mt-2 small text-info">{activity.dataset_rows_total.toLocaleString()} total rows</div>
           </PremiumCard>
         </Col>
@@ -142,7 +142,7 @@ const DashboardPage = () => {
               <Badge bg="warning" className="bg-opacity-25 text-warning border border-warning">ERP & Systems</Badge>
             </div>
             <h6 className="text-soft mb-1">ERP Connections & Pipelines</h6>
-            <div className="display-6 fw-bold text-white">{overview.total_data_sources}</div>
+            <div className="display-6 fw-bold text-primary">{overview.total_data_sources}</div>
             <div className="mt-2 small text-warning">{overview.total_pipelines} active pipelines</div>
           </PremiumCard>
         </Col>
@@ -152,21 +152,21 @@ const DashboardPage = () => {
         <Col md={4}>
           <PremiumCard className="h-100">
             <h6 className="text-soft mb-1">Systems Integrated</h6>
-            <div className="display-6 fw-bold text-white">{overview.total_data_sources + overview.total_pipelines}</div>
+            <div className="display-6 fw-bold text-primary">{overview.total_data_sources + overview.total_pipelines}</div>
             <div className="mt-2 small text-info">{overview.total_data_sources} sources + {overview.total_pipelines} pipelines</div>
           </PremiumCard>
         </Col>
         <Col md={4}>
           <PremiumCard className="h-100">
             <h6 className="text-soft mb-1">Data Points Consolidated</h6>
-            <div className="display-6 fw-bold text-white">{activity.dataset_rows_total.toLocaleString()}</div>
+            <div className="display-6 fw-bold text-primary">{activity.dataset_rows_total.toLocaleString()}</div>
             <div className="mt-2 small text-success">{overview.total_datasets} datasets</div>
           </PremiumCard>
         </Col>
         <Col md={4}>
           <PremiumCard className="h-100">
             <h6 className="text-soft mb-1">Automation Coverage</h6>
-            <div className="display-6 fw-bold text-white">{overview.total_agents + overview.total_tools}</div>
+            <div className="display-6 fw-bold text-primary">{overview.total_agents + overview.total_tools}</div>
             <div className="mt-2 small text-warning">{overview.total_agents} agents + {overview.total_tools} tools</div>
           </PremiumCard>
         </Col>
@@ -176,14 +176,14 @@ const DashboardPage = () => {
         <Col lg={6}>
           <PremiumCard className="h-100">
             <div className="d-flex align-items-center justify-content-between mb-4">
-              <span className="fw-semibold text-white fs-5">Operations Overview</span>
-              <Badge bg="secondary" className="bg-opacity-25 text-light border border-secondary">Metrics</Badge>
+              <span className="fw-semibold fs-5">Operations Overview</span>
+              <Badge bg="secondary" className="bg-opacity-25 text-secondary border border-secondary">Metrics</Badge>
             </div>
             <ListGroup variant="flush">
               <ListGroup.Item className="bg-transparent px-0 py-3 border-secondary border-opacity-25">
                 <div className="d-flex justify-content-between align-items-start">
                   <div>
-                    <h6 className="mb-1 text-white">Agent Playbooks</h6>
+                    <h6 className="mb-1">Agent Playbooks</h6>
                     <p className="text-muted mb-0 small">Pre-built agent playbooks for business operations</p>
                   </div>
                   <Badge bg="primary" pill>{overview.total_agent_kits}</Badge>
@@ -192,7 +192,7 @@ const DashboardPage = () => {
               <ListGroup.Item className="bg-transparent px-0 py-3 border-secondary border-opacity-25">
                 <div className="d-flex justify-content-between align-items-start">
                   <div>
-                    <h6 className="mb-1 text-white">Knowledge Bases</h6>
+                    <h6 className="mb-1">Knowledge Bases</h6>
                     <p className="text-muted mb-0 small">Knowledge bases for context-aware AI</p>
                   </div>
                   <Badge bg="info" pill>{overview.total_vector_stores}</Badge>
@@ -201,7 +201,7 @@ const DashboardPage = () => {
               <ListGroup.Item className="bg-transparent px-0 py-3 border-0">
                 <div className="d-flex justify-content-between align-items-start">
                   <div>
-                    <h6 className="mb-1 text-white">Tools & System Integrations</h6>
+                    <h6 className="mb-1">Tools & System Integrations</h6>
                     <p className="text-muted mb-0 small">Connected tools across business units</p>
                   </div>
                   <Badge bg="success" pill>{overview.total_tools}</Badge>
@@ -214,8 +214,8 @@ const DashboardPage = () => {
         <Col lg={6}>
           <PremiumCard className="h-100">
             <div className="d-flex align-items-center justify-content-between mb-4">
-              <span className="fw-semibold text-white fs-5">Recent AI Commands</span>
-              <Badge bg="secondary" className="bg-opacity-25 text-light border border-secondary">Commands</Badge>
+              <span className="fw-semibold fs-5">Recent AI Commands</span>
+              <Badge bg="secondary" className="bg-opacity-25 text-secondary border border-secondary">Commands</Badge>
             </div>
             {recent_sessions && recent_sessions.length > 0 ? (
               <ListGroup variant="flush">
@@ -226,7 +226,7 @@ const DashboardPage = () => {
                   >
                     <div className="d-flex justify-content-between align-items-start">
                       <div style={{ flex: 1 }}>
-                        <h6 className="mb-1 text-white">{session.title}</h6>
+                        <h6 className="mb-1">{session.title}</h6>
                         <p className="text-muted mb-0 small">
                           {session.message_count} messages • {new Date(session.created_at).toLocaleDateString()}
                         </p>
@@ -247,8 +247,8 @@ const DashboardPage = () => {
         <Col lg={7}>
           <PremiumCard>
             <div className="d-flex align-items-center justify-content-between mb-4">
-              <span className="fw-semibold text-white fs-5">Agent Fleet & Deployments</span>
-              <Badge bg="secondary" className="bg-opacity-25 text-light border border-secondary">Fleet</Badge>
+              <span className="fw-semibold fs-5">Agent Fleet & Deployments</span>
+              <Badge bg="secondary" className="bg-opacity-25 text-secondary border border-secondary">Fleet</Badge>
             </div>
             {agents && agents.length > 0 ? (
               <Table hover responsive borderless className="mb-0 align-middle text-soft">
@@ -262,7 +262,7 @@ const DashboardPage = () => {
                 <tbody>
                   {agents.map((agent) => (
                     <tr key={agent.name}>
-                      <td className="fw-semibold text-white">{agent.name}</td>
+                      <td className="fw-semibold">{agent.name}</td>
                       <td>
                         <Badge bg="primary" className="bg-opacity-25 text-primary border border-primary">{agent.deployment_count}</Badge>
                       </td>
@@ -284,8 +284,8 @@ const DashboardPage = () => {
         <Col lg={5}>
           <PremiumCard>
             <div className="d-flex align-items-center justify-content-between mb-4">
-              <span className="fw-semibold text-white fs-5">Business Data</span>
-              <Badge bg="secondary" className="bg-opacity-25 text-light border border-secondary">Data</Badge>
+              <span className="fw-semibold fs-5">Business Data</span>
+              <Badge bg="secondary" className="bg-opacity-25 text-secondary border border-secondary">Data</Badge>
             </div>
             {datasets && datasets.length > 0 ? (
               <ListGroup variant="flush">
@@ -296,7 +296,7 @@ const DashboardPage = () => {
                   >
                     <div className="d-flex align-items-center justify-content-between">
                       <div style={{ flex: 1 }}>
-                        <h6 className="mb-1 text-white">{dataset.name}</h6>
+                        <h6 className="mb-1">{dataset.name}</h6>
                         <p className="text-muted small mb-0">
                           {dataset.rows.toLocaleString()} rows • {new Date(dataset.created_at).toLocaleDateString()}
                         </p>

@@ -112,7 +112,7 @@ const TenantsPage = () => {
                   <Badge bg="primary" className="px-3 py-2">Organization</Badge>
                 </div>
                 <h6 className="text-muted mb-1">Organization Name</h6>
-                <div className="h4 fw-bold text-white mb-2">{tenant?.name || 'My Organization'}</div>
+                <div className="h4 fw-bold mb-2">{tenant?.name || 'My Organization'}</div>
                 <div className="small text-muted text-truncate">Organization ID: {tenant?.id}</div>
               </Card.Body>
             </Card>
@@ -128,7 +128,7 @@ const TenantsPage = () => {
                   <Badge bg="success" className="px-3 py-2">Active User</Badge>
                 </div>
                 <h6 className="text-muted mb-1">Logged in as</h6>
-                <div className="h4 fw-bold text-white mb-2">{user?.full_name || 'User'}</div>
+                <div className="h4 fw-bold mb-2">{user?.full_name || 'User'}</div>
                 <div className="small text-muted">{user?.email}</div>
               </Card.Body>
             </Card>
@@ -155,7 +155,7 @@ const TenantsPage = () => {
         {stats && (
           <Card className="tenant-card mb-4">
             <div className="card-header-transparent">
-              <h5 className="mb-0 text-white">Usage Statistics</h5>
+              <h5 className="mb-0">Usage Statistics</h5>
             </div>
             <Card.Body className="card-body-custom">
               <Row className="g-3">
@@ -227,7 +227,7 @@ const TenantsPage = () => {
         {/* Tenant Information */}
         <Card className="tenant-card">
           <div className="card-header-transparent">
-            <h5 className="mb-0 text-white">Organization Details</h5>
+            <h5 className="mb-0">Organization Details</h5>
           </div>
           <Card.Body className="card-body-custom">
             <Alert variant="info" className="info-alert mb-4">
@@ -236,7 +236,7 @@ const TenantsPage = () => {
             </Alert>
 
             <div>
-              <h6 className="text-white mb-3">What is an Organization?</h6>
+              <h6 className="mb-3">What is an Organization?</h6>
               <p className="text-muted mb-0">
                 An organization represents a company or business unit in your platform. All users
                 within an organization share access to the same AI agent fleet, datasets, and configurations.

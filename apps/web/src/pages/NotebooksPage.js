@@ -215,7 +215,7 @@ const NotebooksPage = () => {
                 <Badge bg="primary" className="bg-opacity-25 text-primary border border-primary">Reports</Badge>
               </div>
               <h6 className="text-soft mb-1">Total Reports</h6>
-              <div className="display-6 fw-bold text-white">{REPORT_TEMPLATES.length}</div>
+              <div className="display-6 fw-bold text-primary">{REPORT_TEMPLATES.length}</div>
               <div className="mt-2 small text-info">Financial templates</div>
             </PremiumCard>
           </Col>
@@ -228,7 +228,7 @@ const NotebooksPage = () => {
                 <Badge bg="success" className="bg-opacity-25 text-success border border-success">Coverage</Badge>
               </div>
               <h6 className="text-soft mb-1">Coverage</h6>
-              <div className="display-6 fw-bold text-white">All</div>
+              <div className="display-6 fw-bold text-primary">All</div>
               <div className="mt-2 small text-success">All business units covered</div>
             </PremiumCard>
           </Col>
@@ -241,7 +241,7 @@ const NotebooksPage = () => {
                 <Badge bg="warning" className="bg-opacity-25 text-warning border border-warning">Scheduled</Badge>
               </div>
               <h6 className="text-soft mb-1">Automated</h6>
-              <div className="display-6 fw-bold text-white">{scheduledCount}</div>
+              <div className="display-6 fw-bold text-primary">{scheduledCount}</div>
               <div className="mt-2 small text-warning">of {REPORT_TEMPLATES.length} scheduled</div>
             </PremiumCard>
           </Col>
@@ -254,7 +254,7 @@ const NotebooksPage = () => {
                 <Badge bg="info" className="bg-opacity-25 text-info border border-info">Fresh</Badge>
               </div>
               <h6 className="text-soft mb-1">Last Updated</h6>
-              <div className="display-6 fw-bold text-white">Today</div>
+              <div className="display-6 fw-bold text-primary">Today</div>
               <div className="mt-2 small text-info">All reports current</div>
             </PremiumCard>
           </Col>

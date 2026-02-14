@@ -86,7 +86,7 @@ const LLMSettingsPage = () => {
             <FaMicrochip size={24} />
           </div>
           <div>
-            <h2 className="mb-1 fw-bold text-white">LLM Providers</h2>
+            <h2 className="mb-1 fw-bold">LLM Providers</h2>
             <p className="text-soft mb-0">Configure API keys for each provider</p>
           </div>
         </div>
@@ -106,7 +106,7 @@ const LLMSettingsPage = () => {
                     <span className="me-2" style={{ fontSize: '1.5rem' }}>
                       {getProviderIcon(provider.name)}
                     </span>
-                    <strong className="text-white">{provider.display_name}</strong>
+                    <strong>{provider.display_name}</strong>
                   </div>
                   {provider.configured ? (
                     <Badge bg="success" className="d-flex align-items-center bg-opacity-25 text-success border border-success">
@@ -131,7 +131,7 @@ const LLMSettingsPage = () => {
                       value={apiKeys[provider.name] || ''}
                       onChange={(e) => handleKeyChange(provider.name, e.target.value)}
                       disabled={savingProvider === provider.name}
-                      className="bg-dark text-white border-secondary border-opacity-50"
+                      className="border-secondary border-opacity-50"
                     />
                     <Button
                       variant="outline-secondary"

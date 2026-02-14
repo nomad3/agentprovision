@@ -42,7 +42,7 @@ function TeamsPage() {
       <Container fluid className="py-2">
         <Row className="mb-4 align-items-center">
           <Col>
-            <h2 className="fw-bold text-white mb-1">Agent Teams</h2>
+            <h2 className="fw-bold mb-1">Agent Teams</h2>
             <p className="text-soft mb-0">Manage agent groups and orchestration</p>
           </Col>
           <Col xs="auto">
@@ -58,7 +58,7 @@ function TeamsPage() {
           ) : groups.length === 0 ? (
             <Col className="text-center py-5">
               <PremiumCard className="p-5 text-center">
-                <h4 className="text-white mb-3">No teams yet</h4>
+                <h4 className="mb-3">No teams yet</h4>
                 <p className="text-soft mb-4">Create your first agent team to start orchestrating tasks.</p>
                 <Button variant="primary" onClick={() => setShowModal(true)}>
                   Create Team
@@ -70,7 +70,7 @@ function TeamsPage() {
               <Col md={4} key={group.id}>
                 <PremiumCard className="h-100">
                   <div className="d-flex justify-content-between align-items-start mb-3">
-                    <h4 className="text-white mb-0">{group.name}</h4>
+                    <h4 className="mb-0">{group.name}</h4>
                     <Badge bg="primary" className="bg-opacity-25 text-primary border border-primary">Active</Badge>
                   </div>
                   <p className="text-soft mb-4" style={{ minHeight: '3rem' }}>{group.description || 'No description provided.'}</p>
@@ -93,7 +93,7 @@ function TeamsPage() {
           )}
         </Row>
 
-        <Modal show={showModal} onHide={() => setShowModal(false)} centered contentClassName="bg-dark border border-secondary border-opacity-50 text-white">
+        <Modal show={showModal} onHide={() => setShowModal(false)} centered contentClassName="border border-secondary border-opacity-50">
           <Modal.Header closeButton closeVariant="white" className="border-secondary border-opacity-25">
             <Modal.Title>Create Agent Team</Modal.Title>
           </Modal.Header>
@@ -106,7 +106,7 @@ function TeamsPage() {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
-                  className="bg-dark text-white border-secondary border-opacity-50"
+                  className="border-secondary border-opacity-50"
                 />
               </Form.Group>
               <Form.Group className="mb-3">
@@ -116,7 +116,7 @@ function TeamsPage() {
                   rows={2}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="bg-dark text-white border-secondary border-opacity-50"
+                  className="border-secondary border-opacity-50"
                 />
               </Form.Group>
               <Form.Group className="mb-3">
@@ -125,7 +125,7 @@ function TeamsPage() {
                   type="text"
                   value={formData.goal}
                   onChange={(e) => setFormData({ ...formData, goal: e.target.value })}
-                  className="bg-dark text-white border-secondary border-opacity-50"
+                  className="border-secondary border-opacity-50"
                 />
               </Form.Group>
             </Modal.Body>
