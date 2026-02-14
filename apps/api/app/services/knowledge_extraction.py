@@ -23,6 +23,7 @@ from app.models.chat import ChatSession
 from app.models.knowledge_entity import KnowledgeEntity
 from app.models.knowledge_relation import KnowledgeRelation  # noqa: F401 — reserved for future relation extraction
 from app.services.llm.legacy_service import get_llm_service
+from app.services.orchestration.entity_validator import EntityValidator, ValidationPolicy
 
 logger = logging.getLogger(__name__)
 
@@ -274,14 +275,38 @@ class KnowledgeExtractionService:
         source_agent_id: Optional[uuid.UUID],
         collection_task_id: Optional[uuid.UUID],
     ) -> List[KnowledgeEntity]:
-        """Deduplicate and persist extracted entities.
+        """Validate, deduplicate, and persist extracted entities.
 
-        Deduplication key: (tenant_id, name, entity_type).
+        Uses EntityValidator for enterprise guardrails (rate limits, dedup,
+        content validation) before persisting to the knowledge graph.
         """
-        created: List[KnowledgeEntity] = []
+        default_type = entity_schema.get("entity_type", "concept") if entity_schema else "concept"
 
-        for item in entities_data:
-            name = (item.get("name") or "").strip()
+        # Build validation policy from schema
+        dedup_fields = ["name", "entity_type"]
+        if entity_schema and "dedup_on" in entity_schema:
+            dedup_fields = entity_schema["dedup_on"]
+
+        policy = ValidationPolicy(
+            required_fields=["name"],
+            dedup_fields=dedup_fields,
+        )
+
+        # Validate batch through EntityValidator
+        validator = EntityValidator(db, tenant_id)
+        result = validator.validate_batch(entities_data, policy, collection_task_id)
+
+        if result.errors:
+            for err in result.errors:
+                logger.warning("Validation: %s", err)
+
+        if result.rejected_entities:
+            logger.warning("Rejected %d entities", len(result.rejected_entities))
+
+        # Persist valid entities
+        created: List[KnowledgeEntity] = []
+        for item in result.valid_entities:
+            name = item.get("name", "").strip()
             if not name:
                 continue
 
@@ -289,20 +314,7 @@ class KnowledgeExtractionService:
             if entity_schema and entity_schema.get("entity_type"):
                 entity_type = entity_schema["entity_type"].lower()
             else:
-                entity_type = (item.get("type") or "concept").lower()
-
-            # Dedup by tenant + name + entity_type
-            existing = (
-                db.query(KnowledgeEntity)
-                .filter(
-                    KnowledgeEntity.tenant_id == tenant_id,
-                    KnowledgeEntity.name == name,
-                    KnowledgeEntity.entity_type == entity_type,
-                )
-                .first()
-            )
-            if existing:
-                continue
+                entity_type = (item.get("type") or default_type).lower()
 
             # Merge LLM-returned attributes with description
             attributes: Dict[str, Any] = {}
@@ -311,13 +323,16 @@ class KnowledgeExtractionService:
             if isinstance(item.get("attributes"), dict):
                 attributes.update(item["attributes"])
 
+            confidence = float(item.get("confidence", 0.8))
+
             entity = KnowledgeEntity(
                 tenant_id=tenant_id,
                 name=name,
                 entity_type=entity_type,
                 attributes=attributes or None,
-                confidence=float(item.get("confidence", 0.8)),
+                confidence=confidence,
                 source_agent_id=source_agent_id,
+                status="draft",
                 collection_task_id=collection_task_id,
                 source_url=source_url,
             )
@@ -327,6 +342,12 @@ class KnowledgeExtractionService:
         if created:
             db.commit()
 
+        logger.info(
+            "Persisted %d entities, skipped %d dupes, rejected %d",
+            len(created),
+            result.duplicates_skipped,
+            len(result.rejected_entities),
+        )
         return created
 
 
