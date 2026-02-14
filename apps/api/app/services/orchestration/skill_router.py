@@ -21,6 +21,7 @@ from app.models.tenant_instance import TenantInstance
 from app.models.skill_config import SkillConfig
 from app.models.execution_trace import ExecutionTrace
 from app.services.orchestration.credential_vault import retrieve_credentials_for_skill
+from app.services.llm.router import LLMRouter
 
 logger = logging.getLogger(__name__)
 
@@ -73,12 +74,16 @@ class SkillRouter:
             self.db, skill_config.id, self.tenant_id
         )
 
+        # Step 3.5: Resolve LLM model for this skill
+        llm_info = self._resolve_llm(skill_config)
+
         # Step 4: Call OpenClaw Gateway
         result = self._call_openclaw(
             instance.internal_url,
             skill_name,
             payload,
             credentials,
+            llm_info=llm_info,
         )
 
         duration_ms = int((time.time() - start) * 1000)
@@ -94,6 +99,7 @@ class SkillRouter:
                     "instance_id": str(instance.id),
                     "status": result.get("status"),
                     "duration_ms": duration_ms,
+                    "llm": llm_info,
                 },
                 duration_ms=duration_ms,
             )
@@ -103,6 +109,28 @@ class SkillRouter:
             "result": result.get("data"),
             "duration_ms": duration_ms,
         }
+
+    def _resolve_llm(self, skill_config: SkillConfig) -> Dict[str, Any]:
+        """Resolve LLM model configuration for the skill."""
+        try:
+            llm_router = LLMRouter(self.db)
+            if skill_config.llm_config_id:
+                model = llm_router.select_model(
+                    tenant_id=self.tenant_id,
+                    config_id=skill_config.llm_config_id,
+                )
+            else:
+                model = llm_router.select_model(
+                    tenant_id=self.tenant_id,
+                )
+
+            return {
+                "model_name": model.name if model else None,
+                "provider": model.provider.name if model and model.provider else None,
+            }
+        except (ValueError, Exception) as e:
+            logger.warning("Could not resolve LLM for skill: %s", str(e))
+            return {}
 
     def _resolve_instance(self) -> Optional[TenantInstance]:
         """Find the tenant's running OpenClaw instance."""
@@ -133,6 +161,7 @@ class SkillRouter:
         skill_name: str,
         payload: Dict[str, Any],
         credentials: Dict[str, str],
+        llm_info: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
         Call OpenClaw Gateway via HTTP POST.
@@ -151,6 +180,7 @@ class SkillRouter:
                     "skill": skill_name,
                     "payload": payload,
                     "credentials": credentials,  # Injected at runtime, never stored in OpenClaw
+                    "llm": llm_info or {},  # Model info for skill execution
                 },
                 timeout=60,
             )
