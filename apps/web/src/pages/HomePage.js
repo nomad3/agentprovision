@@ -18,7 +18,7 @@ const HomePage = () => {
   const quickActions = [
     {
       icon: FaFileAlt,
-      title: 'Import Entity Data',
+      title: 'Import Business Data',
       description: 'Upload files or connect an ERP system',
       action: () => navigate('/datasets'),
       color: 'primary'
@@ -32,17 +32,17 @@ const HomePage = () => {
     },
     {
       icon: FaChartBar,
-      title: 'Portfolio Overview',
-      description: 'Cross-entity metrics and KPIs',
+      title: 'Analytics Overview',
+      description: 'Cross-business metrics and KPIs',
       action: () => navigate('/dashboard'),
       color: 'info'
     }
   ];
 
   const recentActivity = [
-    { label: 'Entity P&L - Q4', status: 'Ready for consolidation', time: '2 hours ago', type: 'dataset' },
-    { label: 'Due Diligence Report', status: 'Completed', time: 'Yesterday', type: 'report' },
-    { label: 'Portfolio KPIs', status: 'Auto-updated', time: '3 days ago', type: 'dashboard' }
+    { label: 'P&L Report - Q4', status: 'Ready for consolidation', time: '2 hours ago', type: 'dataset' },
+    { label: 'Business Health Assessment', status: 'Completed', time: 'Yesterday', type: 'report' },
+    { label: 'KPI Dashboard', status: 'Auto-updated', time: '3 days ago', type: 'dashboard' }
   ];
 
   return (
@@ -113,7 +113,7 @@ const HomePage = () => {
                 <div className="empty-activity">
                   <FaLightbulb size={48} className="empty-icon" />
                   <p className="empty-text">
-                    No activity yet. Start by importing entity data or commanding your AI fleet!
+                    No activity yet. Start by importing business data or commanding your AI fleet!
                   </p>
                 </div>
               )}
@@ -130,9 +130,9 @@ const HomePage = () => {
                 Getting Started Tips
               </h3>
               <ul className="tips-list">
-                <li>Import your first entity dataset to consolidate portfolio data</li>
-                <li>Ask your AI agent fleet questions in plain English about any entity</li>
-                <li>Monitor cross-entity KPIs from the Portfolio Overview</li>
+                <li>Import your first dataset to consolidate business data</li>
+                <li>Ask your AI agent fleet questions in plain English about any business unit</li>
+                <li>Monitor cross-business KPIs from the Analytics Overview</li>
                 <li>Deploy agents to automate finance, compliance, and operations tasks</li>
               </ul>
             </Card.Body>

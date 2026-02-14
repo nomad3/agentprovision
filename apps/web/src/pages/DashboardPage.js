@@ -77,9 +77,9 @@ const DashboardPage = () => {
 
       <div className="d-flex flex-wrap align-items-center justify-content-between mb-4">
         <div>
-          <h2 className="mb-1 fw-bold text-white">Portfolio Command Center</h2>
+          <h2 className="mb-1 fw-bold text-white">Operations Command Center</h2>
           <p className="text-soft mb-0">
-            Real-time cross-entity metrics and intelligence across your portfolio.
+            Real-time cross-business metrics and intelligence across your organization.
           </p>
         </div>
         <div className="d-flex align-items-center gap-2">
@@ -125,9 +125,9 @@ const DashboardPage = () => {
               <div className="icon-pill-sm">
                 <FaDatabase size={20} />
               </div>
-              <Badge bg="info" className="bg-opacity-25 text-info border border-info">Entity Data</Badge>
+              <Badge bg="info" className="bg-opacity-25 text-info border border-info">Business Data</Badge>
             </div>
-            <h6 className="text-soft mb-1">Entity Datasets</h6>
+            <h6 className="text-soft mb-1">Datasets</h6>
             <div className="display-6 fw-bold text-white">{overview.total_datasets}</div>
             <div className="mt-2 small text-info">{activity.dataset_rows_total.toLocaleString()} total rows</div>
           </PremiumCard>
@@ -151,7 +151,7 @@ const DashboardPage = () => {
       <Row className="g-4 mt-1">
         <Col md={4}>
           <PremiumCard className="h-100">
-            <h6 className="text-soft mb-1">Entities Integrated</h6>
+            <h6 className="text-soft mb-1">Systems Integrated</h6>
             <div className="display-6 fw-bold text-white">{overview.total_data_sources + overview.total_pipelines}</div>
             <div className="mt-2 small text-info">{overview.total_data_sources} sources + {overview.total_pipelines} pipelines</div>
           </PremiumCard>
@@ -177,14 +177,14 @@ const DashboardPage = () => {
           <PremiumCard className="h-100">
             <div className="d-flex align-items-center justify-content-between mb-4">
               <span className="fw-semibold text-white fs-5">Operations Overview</span>
-              <Badge bg="secondary" className="bg-opacity-25 text-light border border-secondary">Portfolio Metrics</Badge>
+              <Badge bg="secondary" className="bg-opacity-25 text-light border border-secondary">Metrics</Badge>
             </div>
             <ListGroup variant="flush">
               <ListGroup.Item className="bg-transparent px-0 py-3 border-secondary border-opacity-25">
                 <div className="d-flex justify-content-between align-items-start">
                   <div>
                     <h6 className="mb-1 text-white">Agent Playbooks</h6>
-                    <p className="text-muted mb-0 small">Pre-built agent playbooks for roll-up operations</p>
+                    <p className="text-muted mb-0 small">Pre-built agent playbooks for business operations</p>
                   </div>
                   <Badge bg="primary" pill>{overview.total_agent_kits}</Badge>
                 </div>
@@ -193,7 +193,7 @@ const DashboardPage = () => {
                 <div className="d-flex justify-content-between align-items-start">
                   <div>
                     <h6 className="mb-1 text-white">Knowledge Bases</h6>
-                    <p className="text-muted mb-0 small">Entity knowledge bases for context-aware AI</p>
+                    <p className="text-muted mb-0 small">Knowledge bases for context-aware AI</p>
                   </div>
                   <Badge bg="info" pill>{overview.total_vector_stores}</Badge>
                 </div>
@@ -201,8 +201,8 @@ const DashboardPage = () => {
               <ListGroup.Item className="bg-transparent px-0 py-3 border-0">
                 <div className="d-flex justify-content-between align-items-start">
                   <div>
-                    <h6 className="mb-1 text-white">Tools & Entity Integrations</h6>
-                    <p className="text-muted mb-0 small">Connected tools across portfolio entities</p>
+                    <h6 className="mb-1 text-white">Tools & System Integrations</h6>
+                    <p className="text-muted mb-0 small">Connected tools across business units</p>
                   </div>
                   <Badge bg="success" pill>{overview.total_tools}</Badge>
                 </div>
@@ -284,8 +284,8 @@ const DashboardPage = () => {
         <Col lg={5}>
           <PremiumCard>
             <div className="d-flex align-items-center justify-content-between mb-4">
-              <span className="fw-semibold text-white fs-5">Entity Data</span>
-              <Badge bg="secondary" className="bg-opacity-25 text-light border border-secondary">Entities</Badge>
+              <span className="fw-semibold text-white fs-5">Business Data</span>
+              <Badge bg="secondary" className="bg-opacity-25 text-light border border-secondary">Data</Badge>
             </div>
             {datasets && datasets.length > 0 ? (
               <ListGroup variant="flush">

@@ -129,7 +129,7 @@ const OpenClawInstanceCard = () => {
       <FaServer size={36} className="text-muted mb-3" />
       <h6 style={{ color: 'var(--color-foreground)' }}>No OpenClaw Instance</h6>
       <p className="text-muted small mb-3">
-        Deploy a dedicated OpenClaw instance to enable document processing and entity extraction for your portfolio.
+        Deploy a dedicated OpenClaw instance to enable document processing and entity extraction for your organization.
       </p>
       <Button
         variant="primary"

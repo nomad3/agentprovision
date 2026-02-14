@@ -14,7 +14,7 @@ import PremiumCard from '../common/PremiumCard';
 const screenshots = [
   {
     key: 'dashboard',
-    label: 'Portfolio Overview',
+    label: 'Analytics Overview',
     icon: FaChartBar,
     image: '/images/product/dashboard.jpg',
   },
@@ -38,7 +38,7 @@ const screenshots = [
   },
   {
     key: 'integrations',
-    label: 'Entity Integrations',
+    label: 'System Integrations',
     icon: FaPlug,
     image: '/images/product/integrations.jpg',
   },
@@ -50,7 +50,7 @@ const screenshots = [
   },
   {
     key: 'tenants',
-    label: 'Portfolio Entities',
+    label: 'Organizations',
     icon: FaSitemap,
     image: '/images/product/tenants.jpg',
   },

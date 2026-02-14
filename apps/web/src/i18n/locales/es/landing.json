@@ -1,26 +1,26 @@
 {
   "hero": {
-    "badge": "El Sistema Operativo con IA para Roll-Ups",
-    "title": "Adquiere. Integra. Escala. Repite.",
-    "lead": "ServiceTsunami es el centro de comando unificado para operadores de roll-ups. Consolida ERP, finanzas, RRHH, cumplimiento e IA en cada empresa del portafolio desde el primer dia.",
-    "subtext": "Deja de unir hojas de calculo y sistemas legados despues de cada adquisicion. Una plataforma para operar todo tu roll-up — desde el pipeline de M&A hasta la salida.",
-    "subHighlight": "El sistema operativo que escala con cada adquisicion.",
+    "badge": "La Plataforma de Operaciones con IA",
+    "title": "Conecta. Automatiza. Escala. Repite.",
+    "lead": "ServiceTsunami es el centro de comando unificado para operaciones empresariales. Consolida ERP, finanzas, RRHH, cumplimiento e IA en cada unidad de negocio desde el primer dia.",
+    "subtext": "Deja de unir hojas de calculo y sistemas legados. Una plataforma para operar toda tu organizacion — desde el pipeline de crecimiento hasta la optimizacion.",
+    "subHighlight": "La plataforma de operaciones que escala con cada unidad de negocio.",
     "spotlight": {
-      "heading": "Construido para Operadores de Roll-Ups",
+      "heading": "Construido para Operadores Empresariales",
       "badge": "Listo desde el Dia Uno"
     },
     "highlights": {
       "governedDataProducts": {
-        "title": "Back Office Unificado entre Entidades",
-        "description": "Consolida ERP, finanzas, banca y gestion de gastos en cada empresa del portafolio. Un plan de cuentas, una fuente de verdad, un panel para todo el roll-up."
+        "title": "Back Office Unificado entre Unidades de Negocio",
+        "description": "Consolida ERP, finanzas, banca y gestion de gastos en cada unidad de negocio. Un plan de cuentas, una fuente de verdad, un panel para toda la organizacion."
       },
       "unifiedLakehouseFabric": {
         "title": "Agentes IA que Conocen tu Negocio",
-        "description": "Despliega agentes IA autonomos para campanas publicitarias hiperlocales, automatizacion de RCM de seguros, cumplimiento de RRHH y reportes financieros. Los agentes aprenden el contexto de cada entidad y operan 24/7."
+        "description": "Despliega agentes IA autonomos para campanas publicitarias hiperlocales, automatizacion de RCM de seguros, cumplimiento de RRHH y reportes financieros. Los agentes aprenden el contexto de cada unidad de negocio y operan 24/7."
       },
       "agenticAutomation": {
-        "title": "Del Pipeline de M&A al Plan de Salida",
-        "description": "Rastrea deals, ejecuta due diligence, modela planes de integracion y gestiona preparacion para salida — todo en un solo lugar. Construido para operadores que manejan de 5 a 500 entidades."
+        "title": "Del Pipeline de Crecimiento al Plan de Optimizacion",
+        "description": "Rastrea oportunidades, ejecuta evaluaciones, modela planes de integracion y gestiona preparacion operativa — todo en un solo lugar. Construido para operadores que manejan de 5 a 500 unidades de negocio."
       }
     }
   },
@@ -32,32 +32,32 @@
     "items": [
       {
         "label": "ERP y Finanzas",
-        "value": "Un Back Office, Muchas Entidades",
-        "description": "Consolida libro mayor, cuentas por pagar/cobrar, nomina y banca en cada adquisicion. Elimina sistemas duplicados, reduce costos de personal y cierra libros en dias en vez de semanas."
+        "value": "Un Back Office, Muchas Unidades de Negocio",
+        "description": "Consolida libro mayor, cuentas por pagar/cobrar, nomina y banca en cada unidad de negocio. Elimina sistemas duplicados, reduce costos de personal y cierra libros en dias en vez de semanas."
       },
       {
         "label": "Publicidad con IA",
         "value": "Campanas Hiperlocales a Escala",
-        "description": "Despliega campanas publicitarias impulsadas por IA adaptadas al mercado local de cada entidad. Optimiza automaticamente creativos, segmentacion y asignacion de presupuesto en cientos de ubicaciones."
+        "description": "Despliega campanas publicitarias impulsadas por IA adaptadas al mercado local de cada unidad de negocio. Optimiza automaticamente creativos, segmentacion y asignacion de presupuesto en cientos de ubicaciones."
       },
       {
         "label": "Cumplimiento y RRHH",
         "value": "Estandariza desde el Dia Uno",
-        "description": "Incorpora nuevas adquisiciones a politicas unificadas de RRHH, beneficios y marcos de cumplimiento al instante. Automatiza el seguimiento regulatorio por estado y reduce los tiempos de integracion en un 80%."
+        "description": "Incorpora nuevas unidades de negocio a politicas unificadas de RRHH, beneficios y marcos de cumplimiento al instante. Automatiza el seguimiento regulatorio por estado y reduce los tiempos de integracion en un 80%."
       }
     ]
   },
   "features": {
-    "heading": "Cada Modulo que un Roll-Up Necesita",
-    "subtitle": "Desde la busqueda de deals hasta la salida — una plataforma, cero dolores de cabeza de integracion.",
+    "heading": "Cada Modulo que tus Operaciones Necesitan",
+    "subtitle": "Desde la busqueda de oportunidades hasta la optimizacion — una plataforma, cero dolores de cabeza de integracion.",
     "items": {
       "connectEverySource": {
-        "title": "Pipeline de M&A y Due Diligence",
-        "description": "Rastrea objetivos de adquisicion, gestiona LOIs, ejecuta checklists automatizados de due diligence y modela planes de integracion post-cierre. Nunca mas pierdas un deal por desorganizacion."
+        "title": "Pipeline de Crecimiento y Evaluaciones",
+        "description": "Rastrea objetivos de crecimiento, gestiona oportunidades, ejecuta checklists automatizados de evaluacion y modela planes de integracion. Nunca mas pierdas un deal por desorganizacion."
       },
       "semanticControlPlane": {
         "title": "Banca y Gestion de Gastos",
-        "description": "Tesoreria centralizada, banca por entidad, politicas de gastos automatizadas y visibilidad de gastos en tiempo real. Controla el flujo de caja de todo tu portafolio desde un solo panel."
+        "description": "Tesoreria centralizada, banca por unidad, politicas de gastos automatizadas y visibilidad de gastos en tiempo real. Controla el flujo de caja de toda tu organizacion desde un solo panel."
       },
       "agentAutomationStudio": {
         "title": "Seguros y Automatizacion de RCM",
@@ -67,65 +67,65 @@
   },
   "lakehouse": {
     "heading": "Construido para Operadores que se Mueven Rapido",
-    "description": "Los roll-ups fallan cuando la integracion se estanca. ServiceTsunami asegura que cada adquisicion sea operativa desde el dia uno.",
+    "description": "Las operaciones fallan cuando la integracion se estanca. ServiceTsunami asegura que cada unidad de negocio sea operativa desde el dia uno.",
     "highlights": {
       "unifiedGovernance": {
         "title": "El Problema de Integracion",
-        "description": "La mayoria de los roll-ups pasan 12-18 meses integrando cada adquisicion en sistemas legados. ServiceTsunami reduce eso a semanas con playbooks pre-construidos y automatizacion impulsada por IA."
+        "description": "La mayoria de las organizaciones pasan 12-18 meses integrando cada nueva unidad de negocio en sistemas legados. ServiceTsunami reduce eso a semanas con playbooks pre-construidos y automatizacion impulsada por IA."
       },
       "programmablePipelines": {
         "title": "El Problema de Visibilidad",
-        "description": "Operar 50+ entidades en diferentes sistemas significa que nadie tiene la imagen completa. Nuestra plataforma unificada te da P&L en tiempo real, flujo de caja y KPIs de cada entidad."
+        "description": "Operar 50+ unidades de negocio en diferentes sistemas significa que nadie tiene la imagen completa. Nuestra plataforma unificada te da P&L en tiempo real, flujo de caja y KPIs de cada unidad."
       },
       "compliantCollaboration": {
         "title": "El Problema de Escala",
-        "description": "Agregar personal por cada adquisicion mata tus margenes. Los agentes IA manejan tareas rutinarias de finanzas, RRHH y cumplimiento para que puedas escalar entidades sin escalar costos."
+        "description": "Agregar personal por cada nueva unidad de negocio mata tus margenes. Los agentes IA manejan tareas rutinarias de finanzas, RRHH y cumplimiento para que puedas escalar operaciones sin escalar costos."
       }
     },
     "secondary": {
       "heading": "Valor Entregado",
-      "description": "Resultados tangibles para operadores de roll-ups.",
+      "description": "Resultados tangibles para operadores empresariales.",
       "items": {
         "adaptiveGuardrails": {
           "title": "Integracion mas Rapida",
-          "description": "Reduce la integracion post-adquisicion de meses a semanas. Playbooks pre-construidos para migracion de ERP, incorporacion de RRHH y consolidacion financiera."
+          "description": "Reduce la integracion post-incorporacion de meses a semanas. Playbooks pre-construidos para migracion de ERP, incorporacion de RRHH y consolidacion financiera."
         },
         "explainableDecisions": {
           "title": "Menor Overhead",
-          "description": "Los agentes IA reemplazan procesos manuales en finanzas, RRHH y cumplimiento. Escala de 10 a 100 entidades sin crecimiento proporcional de personal."
+          "description": "Los agentes IA reemplazan procesos manuales en finanzas, RRHH y cumplimiento. Escala de 10 a 100 unidades de negocio sin crecimiento proporcional de personal."
         },
         "lakehouseSignals": {
-          "title": "Preparacion para la Salida",
-          "description": "Finanzas limpias, sistemas unificados y datos auditables desde el dia uno. Cuando llegue el momento de salir, tu casa ya esta en orden."
+          "title": "Preparacion Operativa",
+          "description": "Finanzas limpias, sistemas unificados y datos auditables desde el dia uno. Tus operaciones siempre estan en orden."
         }
       }
     }
   },
   "architecture": {
     "heading": "Arquitectura de la Plataforma",
-    "description": "Infraestructura de grado empresarial para operaciones multi-entidad.",
+    "description": "Infraestructura de grado empresarial para operaciones multi-unidad.",
     "layers": {
       "dataIntegrationLayer": {
         "title": "Capa de Datos e Integracion",
-        "description": "Conecta ERPs, bancos, sistemas de nomina y CRMs. Ingesta datos de cada entidad en un data lake unificado con reconciliacion automatizada."
+        "description": "Conecta ERPs, bancos, sistemas de nomina y CRMs. Ingesta datos de cada unidad de negocio en un data lake unificado con reconciliacion automatizada."
       },
       "semanticGovernanceLayer": {
         "title": "Capa de Orquestacion",
-        "description": "Flujos de trabajo impulsados por Temporal manejan procesos entre entidades: consolidacion financiera, verificaciones de cumplimiento, playbooks de integracion de M&A y reportes programados."
+        "description": "Flujos de trabajo impulsados por Temporal manejan procesos entre unidades: consolidacion financiera, verificaciones de cumplimiento, playbooks de integracion y reportes programados."
       },
       "agenticExecutionLayer": {
         "title": "Capa de Agentes IA",
-        "description": "Agentes autonomos para optimizacion de publicidad, automatizacion de RCM, analisis financiero, cumplimiento de RRHH y mas. Cada agente entiende el contexto a nivel de entidad y opera continuamente."
+        "description": "Agentes autonomos para optimizacion de publicidad, automatizacion de RCM, analisis financiero, cumplimiento de RRHH y mas. Cada agente entiende el contexto a nivel de unidad y opera continuamente."
       }
     }
   },
   "ai": {
     "heading": "Agentes IA para Cada Funcion",
-    "description": "Despliega agentes especializados en todo tu roll-up.",
+    "description": "Despliega agentes especializados en toda tu organizacion.",
     "items": {
       "insightCopilots": {
         "title": "Agentes de Inteligencia Financiera",
-        "description": "Consolida P&L entre entidades, detecta anomalias, pronostica flujo de caja y genera reportes listos para el directorio. Como tener un equipo de CFO que nunca duerme."
+        "description": "Consolida P&L entre unidades de negocio, detecta anomalias, pronostica flujo de caja y genera reportes listos para el directorio. Como tener un equipo de CFO que nunca duerme."
       },
       "composableSkills": {
         "title": "Agentes de Operaciones y Cumplimiento",
@@ -133,46 +133,46 @@
       },
       "closedLoopActuators": {
         "title": "Agentes de Crecimiento e Ingresos",
-        "description": "Ejecuta campanas publicitarias hiperlocales, optimiza precios, gestiona adquisicion de clientes y automatiza la gestion del ciclo de ingresos en cada entidad."
+        "description": "Ejecuta campanas publicitarias hiperlocales, optimiza precios, gestiona adquisicion de clientes y automatiza la gestion del ciclo de ingresos en cada unidad de negocio."
       }
     }
   },
   "roadmap": {
     "heading": "Lo que Estamos Construyendo",
-    "subtitle": "Funciones construidas a proposito para operadores de roll-ups.",
+    "subtitle": "Funciones construidas a proposito para operadores empresariales.",
     "items": {
       "marketplaceConnectors": {
         "title": "Credito Privado y Prestamos",
-        "description": "Gestion integrada de deuda, seguimiento de covenants y reportes para prestamistas. Gestiona la estructura de capital en todo tu portafolio."
+        "description": "Gestion integrada de deuda, seguimiento de covenants y reportes para prestamistas. Gestiona la estructura de capital en toda tu organizacion."
       },
       "adaptiveGovernanceAi": {
-        "title": "Hub de Salida y Liquidez",
-        "description": "Preparacion automatizada de sell-side, generacion de data room, soporte de calidad de ganancias y gestion de compradores. Estate listo para la salida en todo momento."
+        "title": "Hub de Optimizacion y Analitica",
+        "description": "Reportes automatizados, generacion de data room, soporte de calidad de ganancias y gestion de partes interesadas. Se operacionalmente excelente en todo momento."
       },
       "autonomousFinopsSuites": {
         "title": "Playbooks por Industria",
-        "description": "Plantillas de integracion pre-construidas para salud, servicios del hogar, servicios profesionales y otras verticales de roll-up de alta frecuencia."
+        "description": "Plantillas de integracion pre-construidas para salud, servicios del hogar, servicios profesionales y otras verticales operativas de alta frecuencia."
       }
     }
   },
   "testimonials": {
-    "heading": "Construido para Operadores de Roll-Ups",
-    "subtitle": "Como operadores multi-entidad estan escalando con ServiceTsunami",
+    "heading": "Construido para Operadores Empresariales",
+    "subtitle": "Como operadores multi-unidad estan escalando con ServiceTsunami",
     "items": [
       {
-        "quote": "Nos estabamos ahogando en hojas de calculo tratando de consolidar finanzas de 30 entidades en 4 ERPs diferentes. ServiceTsunami nos dio una unica fuente de verdad y redujo nuestro cierre mensual de 3 semanas a 5 dias.",
+        "quote": "Nos estabamos ahogando en hojas de calculo tratando de consolidar finanzas de 30 unidades de negocio en 4 ERPs diferentes. ServiceTsunami nos dio una unica fuente de verdad y redujo nuestro cierre mensual de 3 semanas a 5 dias.",
         "author": "CFO",
-        "role": "Roll-Up de Servicios Multi-Ubicacion"
+        "role": "Organizacion de Servicios Multi-Ubicacion"
       },
       {
-        "quote": "Cada adquisicion significaba contratar 2-3 personas mas solo para manejar la integracion. Ahora nuestros agentes IA manejan el 80% de la incorporacion automaticamente. Estamos escalando mas rapido con un equipo mas liviano.",
+        "quote": "Cada nueva unidad de negocio significaba contratar 2-3 personas mas solo para manejar la integracion. Ahora nuestros agentes IA manejan el 80% de la incorporacion automaticamente. Estamos escalando mas rapido con un equipo mas liviano.",
         "author": "COO",
         "role": "Plataforma de Servicios de Salud"
       }
     ]
   },
   "cta": {
-    "heading": "Listo para Escalar tu Roll-Up?",
-    "description": "Mira como ServiceTsunami consolida operaciones en cada entidad de tu portafolio. Agenda una demo y te mostraremos como se ve la integracion desde el dia uno."
+    "heading": "Listo para Escalar tus Operaciones?",
+    "description": "Mira como ServiceTsunami consolida operaciones en cada unidad de negocio de tu organizacion. Agenda una demo y te mostraremos como se ve la integracion desde el dia uno."
   }
 }

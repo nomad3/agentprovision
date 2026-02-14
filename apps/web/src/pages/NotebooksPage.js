@@ -41,16 +41,16 @@ const CATEGORY_COLORS = {
 const REPORT_TEMPLATES = [
   {
     id: 1,
-    name: 'Entity P&L Statement',
+    name: 'P&L Statement',
     category: 'Income',
     icon: FaChartLine,
-    description: 'Revenue, expenses, and net income by portfolio entity',
+    description: 'Revenue, expenses, and net income by business unit',
     frequency: 'Monthly',
-    entities: 'All Entities',
+    entities: 'All Units',
     status: 'Ready',
     lastGenerated: '2026-02-11',
     data: {
-      columns: ['Metric', 'Entity A', 'Entity B', 'Entity C', 'Total'],
+      columns: ['Metric', 'Unit A', 'Unit B', 'Unit C', 'Total'],
       rows: [
         ['Revenue', '$2,450,000', '$1,870,000', '$3,210,000', '$7,530,000'],
         ['COGS', '$980,000', '$748,000', '$1,284,000', '$3,012,000'],
@@ -66,13 +66,13 @@ const REPORT_TEMPLATES = [
     name: 'Consolidated Balance Sheet',
     category: 'Balance',
     icon: FaBalanceScale,
-    description: 'Assets, liabilities, and equity across the portfolio',
+    description: 'Assets, liabilities, and equity across the organization',
     frequency: 'Quarterly',
     entities: 'Consolidated',
     status: 'Ready',
     lastGenerated: '2026-01-31',
     data: {
-      columns: ['Metric', 'Entity A', 'Entity B', 'Entity C', 'Total'],
+      columns: ['Metric', 'Unit A', 'Unit B', 'Unit C', 'Total'],
       rows: [
         ['Cash & Equivalents', '$1,200,000', '$890,000', '$1,540,000', '$3,630,000'],
         ['Receivables', '$480,000', '$356,000', '$616,000', '$1,452,000'],
@@ -90,11 +90,11 @@ const REPORT_TEMPLATES = [
     icon: FaMoneyBillWave,
     description: 'Operating, investing, and financing cash flows',
     frequency: 'Monthly',
-    entities: 'All Entities',
+    entities: 'All Units',
     status: 'Ready',
     lastGenerated: '2026-02-10',
     data: {
-      columns: ['Metric', 'Entity A', 'Entity B', 'Entity C', 'Total'],
+      columns: ['Metric', 'Unit A', 'Unit B', 'Unit C', 'Total'],
       rows: [
         ['Operating', '$720,000', '$534,000', '$924,000', '$2,178,000'],
         ['Investing', '-$240,000', '-$178,000', '-$308,000', '-$726,000'],
@@ -105,16 +105,16 @@ const REPORT_TEMPLATES = [
   },
   {
     id: 4,
-    name: 'Entity Comparison',
+    name: 'Business Unit Comparison',
     category: 'Comparison',
     icon: FaExchangeAlt,
-    description: 'Side-by-side financial performance across entities',
+    description: 'Side-by-side financial performance across business units',
     frequency: 'Monthly',
-    entities: 'All Entities',
+    entities: 'All Units',
     status: 'Scheduled',
     lastGenerated: '2026-02-09',
     data: {
-      columns: ['Metric', 'Entity A', 'Entity B', 'Entity C', 'Portfolio Avg'],
+      columns: ['Metric', 'Unit A', 'Unit B', 'Unit C', 'Average'],
       rows: [
         ['Revenue', '$2,450,000', '$1,870,000', '$3,210,000', '$2,510,000'],
         ['Growth %', '12.4%', '8.7%', '15.2%', '12.1%'],
@@ -125,16 +125,16 @@ const REPORT_TEMPLATES = [
   },
   {
     id: 5,
-    name: 'Due Diligence Summary',
+    name: 'Business Health Assessment',
     category: 'Diligence',
     icon: FaSearchDollar,
-    description: 'Financial health scores and risk indicators for acquisitions',
+    description: 'Financial health scores and risk indicators',
     frequency: 'On-demand',
     entities: 'Selected',
     status: 'Ready',
     lastGenerated: '2026-02-05',
     data: {
-      columns: ['Metric', 'Entity A', 'Entity B', 'Entity C', 'Benchmark'],
+      columns: ['Metric', 'Unit A', 'Unit B', 'Unit C', 'Benchmark'],
       rows: [
         ['Revenue Trend', 'Growing', 'Stable', 'Growing', '—'],
         ['Debt/Equity', '0.48', '0.48', '0.48', '< 0.60'],
@@ -145,12 +145,12 @@ const REPORT_TEMPLATES = [
   },
   {
     id: 6,
-    name: 'Portfolio KPI Dashboard',
+    name: 'KPI Dashboard',
     category: 'KPIs',
     icon: FaTachometerAlt,
     description: 'Revenue growth, EBITDA margins, headcount trends',
     frequency: 'Weekly',
-    entities: 'All Entities',
+    entities: 'All Units',
     status: 'Generating',
     lastGenerated: '2026-02-11',
     data: {
@@ -197,11 +197,11 @@ const NotebooksPage = () => {
               Financial Reports
             </h2>
             <p className="page-subtitle">
-              Pre-built financial report templates across your portfolio entities
+              Pre-built financial report templates across your business units
             </p>
           </div>
           <Badge bg="primary" className="bg-opacity-25 text-primary border border-primary px-3 py-2">
-            Roll-up Operator Suite
+            Enterprise Suite
           </Badge>
         </div>
 
@@ -227,9 +227,9 @@ const NotebooksPage = () => {
                 </div>
                 <Badge bg="success" className="bg-opacity-25 text-success border border-success">Coverage</Badge>
               </div>
-              <h6 className="text-soft mb-1">Entity Coverage</h6>
+              <h6 className="text-soft mb-1">Coverage</h6>
               <div className="display-6 fw-bold text-white">All</div>
-              <div className="mt-2 small text-success">All Entities covered</div>
+              <div className="mt-2 small text-success">All business units covered</div>
             </PremiumCard>
           </Col>
           <Col md={3}>
@@ -283,7 +283,7 @@ const NotebooksPage = () => {
               <tr>
                 <th>Report Name</th>
                 <th>Category</th>
-                <th>Entities</th>
+                <th>Scope</th>
                 <th>Frequency</th>
                 <th>Status</th>
               </tr>

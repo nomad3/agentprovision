@@ -70,7 +70,7 @@ const QuickStartSection = ({ onUploadClick, onConnectClick }) => {
       <div className="text-center mb-4">
         <h3>Quick Start Guide</h3>
         <p className="text-muted">
-          Get your portfolio operational in 3 steps
+          Get operational in 3 steps
         </p>
       </div>
 
@@ -79,7 +79,7 @@ const QuickStartSection = ({ onUploadClick, onConnectClick }) => {
         <Col md={4}>
           <QuickStartCard
             step={1}
-            title="Connect Entity Data"
+            title="Connect Your Data"
             description="Upload files or connect to your ERPs & systems"
             icon={CloudUploadFill}
             completed={progress.hasData}
@@ -106,7 +106,7 @@ const QuickStartSection = ({ onUploadClick, onConnectClick }) => {
           <QuickStartCard
             step={2}
             title="Deploy an Agent"
-            description="Build an AI agent for your roll-up operations"
+            description="Build an AI agent for your business operations"
             icon={Robot}
             completed={progress.hasAgents}
             locked={!progress.hasData}
@@ -133,7 +133,7 @@ const QuickStartSection = ({ onUploadClick, onConnectClick }) => {
           <QuickStartCard
             step={3}
             title="Command Your Fleet"
-            description="Use AI commands to analyze entity data"
+            description="Use AI commands to analyze your data"
             icon={ChatDotsFill}
             completed={progress.hasChats}
             locked={!progress.hasAgents}

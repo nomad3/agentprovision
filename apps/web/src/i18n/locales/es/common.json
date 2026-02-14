@@ -22,12 +22,12 @@
     "logout": "Cerrar sesión"
   },
   "sidebar": {
-    "dashboard": "Vista del Portafolio",
+    "dashboard": "Vista Analitica",
     "dataSources": "ERP y Sistemas",
     "dataPipelines": "Pipelines de Datos",
     "notebooks": "Reportes Financieros",
     "agents": "Flota de Agentes",
-    "datasets": "Datos de Entidades",
+    "datasets": "Datos de Negocio",
     "chat": "Comando IA",
     "tools": "Herramientas",
     "connectors": "Conectores de Sistemas",

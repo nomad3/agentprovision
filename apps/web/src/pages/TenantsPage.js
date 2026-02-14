@@ -93,10 +93,10 @@ const TenantsPage = () => {
         <div className="page-header">
           <h1 className="page-title">
             <FaBuilding className="text-primary" />
-            Portfolio Entities
+            Organizations
           </h1>
           <p className="page-subtitle">
-            Manage your portfolio companies, entities, and view usage statistics
+            Manage your organizations, business units, and view usage statistics
           </p>
         </div>
 
@@ -109,11 +109,11 @@ const TenantsPage = () => {
                   <div className="icon-pill-sm">
                     <FaBuilding size={20} />
                   </div>
-                  <Badge bg="primary" className="px-3 py-2">Portfolio</Badge>
+                  <Badge bg="primary" className="px-3 py-2">Organization</Badge>
                 </div>
-                <h6 className="text-muted mb-1">Portfolio Name</h6>
+                <h6 className="text-muted mb-1">Organization Name</h6>
                 <div className="h4 fw-bold text-white mb-2">{tenant?.name || 'My Organization'}</div>
-                <div className="small text-muted text-truncate">Entity ID: {tenant?.id}</div>
+                <div className="small text-muted text-truncate">Organization ID: {tenant?.id}</div>
               </Card.Body>
             </Card>
           </Col>
@@ -155,7 +155,7 @@ const TenantsPage = () => {
         {stats && (
           <Card className="tenant-card mb-4">
             <div className="card-header-transparent">
-              <h5 className="mb-0 text-white">Portfolio Usage Statistics</h5>
+              <h5 className="mb-0 text-white">Usage Statistics</h5>
             </div>
             <Card.Body className="card-body-custom">
               <Row className="g-3">
@@ -173,7 +173,7 @@ const TenantsPage = () => {
                 />
                 <StatItem
                   icon={FaDatabase}
-                  label="Entity Datasets"
+                  label="Datasets"
                   value={stats.overview.total_datasets}
                   color="info"
                 />
@@ -227,20 +227,20 @@ const TenantsPage = () => {
         {/* Tenant Information */}
         <Card className="tenant-card">
           <div className="card-header-transparent">
-            <h5 className="mb-0 text-white">Entity Details</h5>
+            <h5 className="mb-0 text-white">Organization Details</h5>
           </div>
           <Card.Body className="card-body-custom">
             <Alert variant="info" className="info-alert mb-4">
-              <strong>Portfolio Isolation:</strong> All your data is completely isolated from other portfolio entities.
-              Your agents, datasets, AI commands, and configurations are private to your entity.
+              <strong>Data Isolation:</strong> All your data is completely isolated from other organizations.
+              Your agents, datasets, AI commands, and configurations are private to your organization.
             </Alert>
 
             <div>
-              <h6 className="text-white mb-3">What is a Portfolio Entity?</h6>
+              <h6 className="text-white mb-3">What is an Organization?</h6>
               <p className="text-muted mb-0">
-                A portfolio entity represents a company or business unit in your roll-up. All users
-                within an entity share access to the same AI agent fleet, datasets, and configurations.
-                Data is completely isolated between entities for security and compliance.
+                An organization represents a company or business unit in your platform. All users
+                within an organization share access to the same AI agent fleet, datasets, and configurations.
+                Data is completely isolated between organizations for security and compliance.
               </p>
             </div>
           </Card.Body>

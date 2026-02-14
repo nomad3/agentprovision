@@ -1,26 +1,26 @@
 {
   "hero": {
-    "badge": "The AI-Powered Operating System for Roll-Ups",
-    "title": "Acquire. Integrate. Scale. Repeat.",
-    "lead": "ServiceTsunami is the unified command center for roll-up operators. Consolidate ERP, finance, HR, compliance, and AI across every portfolio company from day one.",
-    "subtext": "Stop stitching together spreadsheets and legacy systems after every acquisition. One platform to run your entire roll-up — from M&A pipeline to exit.",
-    "subHighlight": "The operating system that scales with every acquisition.",
+    "badge": "The AI-Powered Operations Platform",
+    "title": "Connect. Automate. Scale. Repeat.",
+    "lead": "ServiceTsunami is the unified command center for enterprise operations. Consolidate ERP, finance, HR, compliance, and AI across every business unit from day one.",
+    "subtext": "Stop stitching together spreadsheets and legacy systems. One platform to run your entire operation — from growth pipeline to optimization.",
+    "subHighlight": "The operations platform that scales with every business unit.",
     "spotlight": {
-      "heading": "Built for Roll-Up Operators",
+      "heading": "Built for Enterprise Operators",
       "badge": "Day-One Ready"
     },
     "highlights": {
       "governedDataProducts": {
-        "title": "Unified Back Office Across Entities",
-        "description": "Consolidate ERP, finance, banking, and spend management across every portfolio company. One chart of accounts, one source of truth, one dashboard for the entire roll-up."
+        "title": "Unified Back Office Across Business Units",
+        "description": "Consolidate ERP, finance, banking, and spend management across every business unit. One chart of accounts, one source of truth, one dashboard for the entire organization."
       },
       "unifiedLakehouseFabric": {
         "title": "AI Agents That Know Your Business",
-        "description": "Deploy autonomous AI agents for hyper-local ad campaigns, insurance RCM automation, HR compliance, and financial reporting. Agents learn each entity's context and operate 24/7."
+        "description": "Deploy autonomous AI agents for hyper-local ad campaigns, insurance RCM automation, HR compliance, and financial reporting. Agents learn each business unit's context and operate 24/7."
       },
       "agenticAutomation": {
-        "title": "M&A Pipeline to Exit Playbook",
-        "description": "Track deals, run due diligence, model integration plans, and manage exit readiness — all in one place. Purpose-built for operators running 5 to 500 entities."
+        "title": "Growth Pipeline to Optimization Playbook",
+        "description": "Track opportunities, run assessments, model integration plans, and manage operational readiness — all in one place. Purpose-built for operators running 5 to 500 business units."
       }
     }
   },
@@ -39,32 +39,32 @@
     "items": [
       {
         "label": "ERP & Finance",
-        "value": "One Back Office, Many Entities",
-        "description": "Consolidate general ledger, AP/AR, payroll, and banking across every acquisition. Eliminate duplicate systems, reduce headcount overhead, and close books in days instead of weeks."
+        "value": "One Back Office, Many Business Units",
+        "description": "Consolidate general ledger, AP/AR, payroll, and banking across every business unit. Eliminate duplicate systems, reduce headcount overhead, and close books in days instead of weeks."
       },
       {
         "label": "AI-Powered Ads",
         "value": "Hyper-Local Campaigns at Scale",
-        "description": "Deploy AI-driven ad campaigns tailored to each entity's local market. Automatically optimize creative, targeting, and budget allocation across hundreds of locations."
+        "description": "Deploy AI-driven ad campaigns tailored to each business unit's local market. Automatically optimize creative, targeting, and budget allocation across hundreds of locations."
       },
       {
         "label": "Compliance & HR",
         "value": "Standardize from Day One",
-        "description": "Onboard new acquisitions to unified HR policies, benefits, and compliance frameworks instantly. Automate state-by-state regulatory tracking and reduce integration timelines by 80%."
+        "description": "Onboard new business units to unified HR policies, benefits, and compliance frameworks instantly. Automate state-by-state regulatory tracking and reduce integration timelines by 80%."
       }
     ]
   },
   "features": {
-    "heading": "Every Module a Roll-Up Needs",
-    "subtitle": "From deal sourcing to exit — one platform, zero integration headaches.",
+    "heading": "Every Module Your Operations Need",
+    "subtitle": "From opportunity sourcing to optimization — one platform, zero integration headaches.",
     "items": {
       "connectEverySource": {
-        "title": "M&A Pipeline & Due Diligence",
-        "description": "Track acquisition targets, manage LOIs, run automated due diligence checklists, and model post-close integration plans. Never lose a deal to disorganization again."
+        "title": "Growth Pipeline & Assessments",
+        "description": "Track growth targets, manage opportunities, run automated assessment checklists, and model integration plans. Never lose a deal to disorganization again."
       },
       "semanticControlPlane": {
         "title": "Banking & Spend Management",
-        "description": "Centralized treasury, entity-level banking, automated expense policies, and real-time spend visibility. Control cash flow across your entire portfolio from one dashboard."
+        "description": "Centralized treasury, unit-level banking, automated expense policies, and real-time spend visibility. Control cash flow across your entire organization from one dashboard."
       },
       "agentAutomationStudio": {
         "title": "Insurance & RCM Automation",
@@ -74,65 +74,65 @@
   },
   "lakehouse": {
     "heading": "Built for Operators Who Move Fast",
-    "description": "Roll-ups fail when integration stalls. ServiceTsunami ensures every acquisition is operational from day one.",
+    "description": "Operations fail when integration stalls. ServiceTsunami ensures every business unit is operational from day one.",
     "highlights": {
       "unifiedGovernance": {
         "title": "The Integration Problem",
-        "description": "Most roll-ups spend 12-18 months integrating each acquisition onto legacy systems. ServiceTsunami cuts that to weeks with pre-built playbooks and AI-powered automation."
+        "description": "Most organizations spend 12-18 months integrating each new business unit onto legacy systems. ServiceTsunami cuts that to weeks with pre-built playbooks and AI-powered automation."
       },
       "programmablePipelines": {
         "title": "The Visibility Problem",
-        "description": "Operating 50+ entities on different systems means no one has the full picture. Our unified platform gives you real-time P&L, cash flow, and KPIs across every entity."
+        "description": "Operating 50+ business units on different systems means no one has the full picture. Our unified platform gives you real-time P&L, cash flow, and KPIs across every unit."
       },
       "compliantCollaboration": {
         "title": "The Scale Problem",
-        "description": "Adding headcount for every acquisition kills your margins. AI agents handle routine finance, HR, and compliance tasks so you can scale entities without scaling overhead."
+        "description": "Adding headcount for every new business unit kills your margins. AI agents handle routine finance, HR, and compliance tasks so you can scale operations without scaling overhead."
       }
     },
     "secondary": {
       "heading": "Value Delivered",
-      "description": "Tangible results for roll-up operators.",
+      "description": "Tangible results for enterprise operators.",
       "items": {
         "adaptiveGuardrails": {
           "title": "Faster Integration",
-          "description": "Reduce post-acquisition integration from months to weeks. Pre-built playbooks for ERP migration, HR onboarding, and financial consolidation."
+          "description": "Reduce post-onboarding integration from months to weeks. Pre-built playbooks for ERP migration, HR onboarding, and financial consolidation."
         },
         "explainableDecisions": {
           "title": "Lower Overhead",
-          "description": "AI agents replace manual processes across finance, HR, and compliance. Scale from 10 to 100 entities without proportional headcount growth."
+          "description": "AI agents replace manual processes across finance, HR, and compliance. Scale from 10 to 100 business units without proportional headcount growth."
         },
         "lakehouseSignals": {
-          "title": "Exit Readiness",
-          "description": "Clean financials, unified systems, and auditable data from day one. When it's time to exit, your house is already in order."
+          "title": "Operational Readiness",
+          "description": "Clean financials, unified systems, and auditable data from day one. Your operations are always in order."
         }
       }
     }
   },
   "architecture": {
     "heading": "Platform Architecture",
-    "description": "Enterprise-grade infrastructure for multi-entity operations.",
+    "description": "Enterprise-grade infrastructure for multi-unit operations.",
     "layers": {
       "dataIntegrationLayer": {
         "title": "Data & Integration Layer",
-        "description": "Connect ERPs, banks, payroll systems, and CRMs. Ingest data from every entity into a unified data lake with automated reconciliation."
+        "description": "Connect ERPs, banks, payroll systems, and CRMs. Ingest data from every business unit into a unified data lake with automated reconciliation."
       },
       "semanticGovernanceLayer": {
         "title": "Orchestration Layer",
-        "description": "Temporal-powered workflows handle cross-entity processes: financial consolidation, compliance checks, M&A integration playbooks, and scheduled reporting."
+        "description": "Temporal-powered workflows handle cross-unit processes: financial consolidation, compliance checks, integration playbooks, and scheduled reporting."
       },
       "agenticExecutionLayer": {
         "title": "AI Agent Layer",
-        "description": "Autonomous agents for ad optimization, RCM automation, financial analysis, HR compliance, and more. Each agent understands entity-level context and operates continuously."
+        "description": "Autonomous agents for ad optimization, RCM automation, financial analysis, HR compliance, and more. Each agent understands unit-level context and operates continuously."
       }
     }
   },
   "ai": {
     "heading": "AI Agents for Every Function",
-    "description": "Deploy specialized agents across your roll-up.",
+    "description": "Deploy specialized agents across your organization.",
     "items": {
       "insightCopilots": {
         "title": "Financial Intelligence Agents",
-        "description": "Consolidate P&L across entities, flag anomalies, forecast cash flow, and generate board-ready reports. Like having a CFO team that never sleeps."
+        "description": "Consolidate P&L across business units, flag anomalies, forecast cash flow, and generate board-ready reports. Like having a CFO team that never sleeps."
       },
       "composableSkills": {
         "title": "Operations & Compliance Agents",
@@ -140,46 +140,46 @@
       },
       "closedLoopActuators": {
         "title": "Growth & Revenue Agents",
-        "description": "Run hyper-local ad campaigns, optimize pricing, manage customer acquisition, and automate revenue cycle management across every entity."
+        "description": "Run hyper-local ad campaigns, optimize pricing, manage customer acquisition, and automate revenue cycle management across every business unit."
       }
     }
   },
   "roadmap": {
     "heading": "What We're Building Next",
-    "subtitle": "Purpose-built features for roll-up operators.",
+    "subtitle": "Purpose-built features for enterprise operators.",
     "items": {
       "marketplaceConnectors": {
         "title": "Private Credit & Lending",
-        "description": "Integrated debt management, covenant tracking, and lender reporting. Manage capital structure across your entire portfolio."
+        "description": "Integrated debt management, covenant tracking, and lender reporting. Manage capital structure across your entire organization."
       },
       "adaptiveGovernanceAi": {
-        "title": "Exit & Liquidity Hub",
-        "description": "Automated sell-side prep, data room generation, quality of earnings support, and buyer management. Be exit-ready at all times."
+        "title": "Optimization & Analytics Hub",
+        "description": "Automated reporting, data room generation, quality of earnings support, and stakeholder management. Be operationally excellent at all times."
       },
       "autonomousFinopsSuites": {
         "title": "Industry-Specific Playbooks",
-        "description": "Pre-built integration templates for healthcare, home services, professional services, and other high-frequency roll-up verticals."
+        "description": "Pre-built integration templates for healthcare, home services, professional services, and other high-frequency operational verticals."
       }
     }
   },
   "testimonials": {
-    "heading": "Built for Roll-Up Operators",
-    "subtitle": "How multi-entity operators are scaling with ServiceTsunami",
+    "heading": "Built for Enterprise Operators",
+    "subtitle": "How multi-unit operators are scaling with ServiceTsunami",
     "items": [
       {
-        "quote": "We were drowning in spreadsheets trying to consolidate financials across 30 entities on 4 different ERPs. ServiceTsunami gave us a single source of truth and cut our monthly close from 3 weeks to 5 days.",
+        "quote": "We were drowning in spreadsheets trying to consolidate financials across 30 business units on 4 different ERPs. ServiceTsunami gave us a single source of truth and cut our monthly close from 3 weeks to 5 days.",
         "author": "CFO",
-        "role": "Multi-Location Services Roll-Up"
+        "role": "Multi-Location Services Organization"
       },
       {
-        "quote": "Every acquisition used to mean hiring 2-3 more people just to handle integration. Now our AI agents handle 80% of the onboarding automatically. We're scaling faster with a leaner team.",
+        "quote": "Every new business unit used to mean hiring 2-3 more people just to handle integration. Now our AI agents handle 80% of the onboarding automatically. We're scaling faster with a leaner team.",
         "author": "COO",
         "role": "Healthcare Services Platform"
       }
     ]
   },
   "cta": {
-    "heading": "Ready to Scale Your Roll-Up?",
-    "description": "See how ServiceTsunami consolidates operations across every entity in your portfolio. Book a demo and we'll show you what day-one integration looks like."
+    "heading": "Ready to Scale Your Operations?",
+    "description": "See how ServiceTsunami consolidates operations across every business unit in your organization. Book a demo and we'll show you what day-one integration looks like."
   }
 }

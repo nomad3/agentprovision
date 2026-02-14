@@ -22,12 +22,12 @@
     "logout": "Logout"
   },
   "sidebar": {
-    "dashboard": "Portfolio Overview",
+    "dashboard": "Analytics Overview",
     "dataSources": "ERP & Systems",
     "dataPipelines": "Data Pipelines",
     "notebooks": "Financial Reports",
     "agents": "Agent Fleet",
-    "datasets": "Entity Data",
+    "datasets": "Business Data",
     "chat": "AI Command",
     "tools": "Tools",
     "connectors": "System Connectors",

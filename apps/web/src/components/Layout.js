@@ -52,7 +52,7 @@ const Layout = ({ children }) => {
       items: [
         { path: '/home', icon: HouseDoorFill, label: 'Home', description: 'Your personalized homepage' },
         { path: '/notebooks', icon: JournalBookmarkFill, label: 'Financial Reports', description: 'Financial reports & SQL notebooks' },
-        { path: '/dashboard', icon: BarChartFill, label: 'Portfolio Overview', description: 'Cross-entity metrics and KPIs' },
+        { path: '/dashboard', icon: BarChartFill, label: 'Analytics Overview', description: 'Cross-business metrics and KPIs' },
       ]
     },
     {
@@ -64,17 +64,17 @@ const Layout = ({ children }) => {
       ]
     },
     {
-      title: 'ENTITY DATA',
+      title: 'DATA',
       items: [
-        { path: '/integrations', icon: PlugFill, label: 'Entity Integrations', description: 'ERP connectors & entity data syncs' },
-        { path: '/datasets', icon: FileTextFill, label: 'Entity Data', description: 'Manage entity datasets & files' },
+        { path: '/integrations', icon: PlugFill, label: 'System Integrations', description: 'ERP connectors & data syncs' },
+        { path: '/datasets', icon: FileTextFill, label: 'Business Data', description: 'Manage datasets & files' },
         { path: '/data-sources', icon: DatabaseFill, label: 'ERP & Systems', description: 'Connect ERPs, banks & systems' },
       ]
     },
     {
-      title: 'PORTFOLIO ADMIN',
+      title: 'ADMIN',
       items: [
-        { path: '/tenants', icon: BuildingFill, label: 'Portfolio Entities', description: 'Manage portfolio companies & entities' },
+        { path: '/tenants', icon: BuildingFill, label: 'Organizations', description: 'Manage organizations & business units' },
         { path: '/settings/llm', icon: CpuFill, label: 'AI Models', description: 'Configure AI model providers' },
         { path: '/settings', icon: GearFill, label: 'Settings', description: 'Platform settings' },
       ]
