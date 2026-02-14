@@ -7,6 +7,7 @@ from .credential_vault import (
     revoke_credential,
 )
 from .skill_router import SkillRouter
+from .entity_validator import EntityValidator, ValidationPolicy, ValidationResult
 
 __all__ = [
     "TaskDispatcher",
@@ -16,4 +17,7 @@ __all__ = [
     "retrieve_credentials_for_skill",
     "revoke_credential",
     "SkillRouter",
+    "EntityValidator",
+    "ValidationPolicy",
+    "ValidationResult",
 ]
