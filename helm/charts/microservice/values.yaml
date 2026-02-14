@@ -24,6 +24,10 @@ serviceAccount:
 # Pod configuration
 replicaCount: 2
 
+# Deployment strategy
+strategy:
+  type: Recreate
+
 podAnnotations: {}
 podLabels: {}
 
