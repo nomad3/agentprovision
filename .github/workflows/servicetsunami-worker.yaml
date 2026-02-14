@@ -75,8 +75,12 @@ jobs:
 
       - name: Deploy with Helm
         run: |
-          # Rollback any stuck pending releases
-          helm rollback servicetsunami-worker -n ${{ env.NAMESPACE }} 2>/dev/null || true
+          # Check if release exists and has a stuck/failed status
+          RELEASE_STATUS=$(helm status servicetsunami-worker -n ${{ env.NAMESPACE }} -o json 2>/dev/null | jq -r '.info.status' || echo "not-found")
+          if [[ "$RELEASE_STATUS" == "pending-install" || "$RELEASE_STATUS" == "pending-upgrade" || "$RELEASE_STATUS" == "pending-rollback" || "$RELEASE_STATUS" == "failed" ]]; then
+            echo "Found stuck release in status: $RELEASE_STATUS. Uninstalling..."
+            helm uninstall servicetsunami-worker -n ${{ env.NAMESPACE }} --wait || true
+          fi
           # Deploy with atomic to auto-rollback on failure
           helm upgrade --install servicetsunami-worker \
             ./helm/charts/microservice \
