@@ -12,6 +12,9 @@ Routes skill calls by:
 import uuid
 import time
 import logging
+from collections import defaultdict
+from datetime import datetime, timedelta
+from threading import Lock
 from typing import Dict, Any, Optional
 
 from sqlalchemy import func
@@ -24,6 +27,15 @@ from app.services.orchestration.credential_vault import retrieve_credentials_for
 from app.services.llm.router import LLMRouter
 
 logger = logging.getLogger(__name__)
+
+# Module-level circuit breaker state (shared across SkillRouter instances)
+_circuit_breaker_lock = Lock()
+_circuit_breaker_state: Dict[str, Dict[str, Any]] = defaultdict(
+    lambda: {"failures": 0, "last_failure": None, "open_until": None}
+)
+CIRCUIT_BREAKER_THRESHOLD = 3
+CIRCUIT_BREAKER_WINDOW = timedelta(minutes=5)
+CIRCUIT_BREAKER_COOLDOWN = timedelta(minutes=2)
 
 
 class SkillRouter:
@@ -60,6 +72,11 @@ class SkillRouter:
         if not instance:
             return {"status": "error", "error": "No running OpenClaw instance for tenant"}
 
+        # Step 1.5: Circuit breaker check
+        cb_error = self._check_circuit_breaker(str(instance.id))
+        if cb_error:
+            return cb_error
+
         # Step 2: Validate skill config
         skill_config = self._get_skill_config(skill_name)
         if not skill_config:
@@ -86,6 +103,12 @@ class SkillRouter:
             llm_info=llm_info,
         )
 
+        # Step 4.5: Track circuit breaker state
+        if result.get("status") == "error":
+            self._record_failure(str(instance.id))
+        else:
+            self._record_success(str(instance.id))
+
         duration_ms = int((time.time() - start) * 1000)
 
         # Step 5: Log execution trace
@@ -109,6 +132,112 @@ class SkillRouter:
             "result": result.get("data"),
             "duration_ms": duration_ms,
         }
+
+    # ── Circuit Breaker Methods ────────────────────────────────────────
+
+    def _check_circuit_breaker(self, instance_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Check if the circuit breaker is open for the given instance.
+
+        Returns an error dict if the circuit is open (too many recent failures),
+        or None if the circuit is closed and the call may proceed.
+        Automatically resets the circuit after the cooldown period elapses.
+        """
+        with _circuit_breaker_lock:
+            state = _circuit_breaker_state[instance_id]
+            if state["open_until"] is not None:
+                if datetime.utcnow() < state["open_until"]:
+                    logger.warning(
+                        "Circuit breaker OPEN for instance %s until %s",
+                        instance_id,
+                        state["open_until"].isoformat(),
+                    )
+                    return {
+                        "status": "error",
+                        "error": "Circuit breaker open — instance temporarily unavailable",
+                        "retry_after": state["open_until"].isoformat(),
+                    }
+                # Cooldown elapsed — half-open: reset and allow one attempt
+                logger.info(
+                    "Circuit breaker cooldown elapsed for instance %s, resetting",
+                    instance_id,
+                )
+                state["failures"] = 0
+                state["last_failure"] = None
+                state["open_until"] = None
+        return None
+
+    def _record_failure(self, instance_id: str) -> None:
+        """
+        Record a failure for the given instance.
+
+        Increments the failure counter. If the threshold is reached within the
+        configured window, the circuit breaker opens for the cooldown duration.
+        Old failures (outside the window) are ignored by resetting the counter.
+        """
+        with _circuit_breaker_lock:
+            state = _circuit_breaker_state[instance_id]
+            now = datetime.utcnow()
+
+            # If the last failure was outside the window, start a fresh count
+            if (
+                state["last_failure"] is not None
+                and now - state["last_failure"] > CIRCUIT_BREAKER_WINDOW
+            ):
+                state["failures"] = 0
+
+            state["failures"] += 1
+            state["last_failure"] = now
+
+            if state["failures"] >= CIRCUIT_BREAKER_THRESHOLD:
+                state["open_until"] = now + CIRCUIT_BREAKER_COOLDOWN
+                logger.error(
+                    "Circuit breaker OPENED for instance %s after %d failures "
+                    "(cooldown until %s)",
+                    instance_id,
+                    state["failures"],
+                    state["open_until"].isoformat(),
+                )
+
+    def _record_success(self, instance_id: str) -> None:
+        """Reset the failure counter for the given instance on success."""
+        with _circuit_breaker_lock:
+            state = _circuit_breaker_state[instance_id]
+            state["failures"] = 0
+            state["last_failure"] = None
+            state["open_until"] = None
+
+    # ── Health Check ─────────────────────────────────────────────────
+
+    def health_check(self) -> Dict[str, Any]:
+        """Check health of tenant's OpenClaw instance."""
+        instance = self._resolve_instance()
+        if not instance:
+            return {"status": "no_instance", "healthy": False}
+
+        import requests
+
+        try:
+            response = requests.get(
+                f"{instance.internal_url}/health", timeout=5
+            )
+            healthy = response.status_code < 400
+            return {
+                "status": "healthy" if healthy else "unhealthy",
+                "healthy": healthy,
+                "instance_id": str(instance.id),
+                "response_code": response.status_code,
+            }
+        except Exception as e:
+            self._record_failure(str(instance.id))
+            return {
+                "status": "unreachable",
+                "healthy": False,
+                "instance_id": str(instance.id),
+                "error": str(e),
+            }
+
+    # ── Internal Helpers ─────────────────────────────────────────────
 
     def _resolve_llm(self, skill_config: SkillConfig) -> Dict[str, Any]:
         """Resolve LLM model configuration for the skill."""
