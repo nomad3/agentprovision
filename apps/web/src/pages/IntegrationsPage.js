@@ -27,6 +27,7 @@ import {
 } from 'react-icons/fa';
 import Layout from '../components/Layout';
 import OpenClawInstanceCard from '../components/OpenClawInstanceCard';
+import SkillsConfigPanel from '../components/SkillsConfigPanel';
 import connectorService from '../services/connector';
 import dataPipelineService from '../services/dataPipeline';
 import './IntegrationsPage.css';
@@ -276,6 +277,9 @@ const IntegrationsPage = () => {
     <div className="integrations-overview">
       {/* OpenClaw Instance */}
       <OpenClawInstanceCard />
+
+      {/* Skills Config Panel - shown when OpenClaw instance is running */}
+      <SkillsConfigPanel />
 
       {/* Stats Cards */}
       <Row className="g-4 mb-4">
