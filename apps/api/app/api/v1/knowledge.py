@@ -6,7 +6,10 @@ import uuid
 
 from app.api.deps import get_db, get_current_user
 from app.models.user import User
-from app.schemas.knowledge_entity import KnowledgeEntity, KnowledgeEntityCreate, KnowledgeEntityUpdate
+from app.schemas.knowledge_entity import (
+    KnowledgeEntity, KnowledgeEntityCreate, KnowledgeEntityUpdate,
+    KnowledgeEntityBulkCreate, KnowledgeEntityBulkResponse, CollectionSummary,
+)
 from app.schemas.knowledge_relation import KnowledgeRelation, KnowledgeRelationCreate
 from app.services import knowledge as service
 
@@ -27,13 +30,18 @@ def create_entity(
 @router.get("/entities", response_model=List[KnowledgeEntity])
 def list_entities(
     entity_type: Optional[str] = None,
+    status: Optional[str] = None,
+    task_id: Optional[uuid.UUID] = None,
     skip: int = 0,
     limit: int = 100,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """List all entities."""
-    return service.get_entities(db, current_user.tenant_id, entity_type, skip, limit)
+    """List entities with optional filters."""
+    return service.get_entities(
+        db, current_user.tenant_id, entity_type, skip, limit,
+        status=status, task_id=task_id,
+    )
 
 
 @router.get("/entities/search", response_model=List[KnowledgeEntity])
@@ -45,6 +53,16 @@ def search_entities(
 ):
     """Search entities by name."""
     return service.search_entities(db, current_user.tenant_id, q, entity_type)
+
+
+@router.post("/entities/bulk", response_model=KnowledgeEntityBulkResponse, status_code=201)
+def bulk_create_entities(
+    bulk_in: KnowledgeEntityBulkCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Bulk create entities with dedup."""
+    return service.bulk_create_entities(db, bulk_in.entities, current_user.tenant_id)
 
 
 @router.get("/entities/{entity_id}", response_model=KnowledgeEntity)
@@ -83,6 +101,33 @@ def delete_entity(
     """Delete an entity and its relations."""
     if not service.delete_entity(db, entity_id, current_user.tenant_id):
         raise HTTPException(status_code=404, detail="Entity not found")
+
+
+@router.put("/entities/{entity_id}/status", response_model=KnowledgeEntity)
+def update_entity_status(
+    entity_id: uuid.UUID,
+    status_update: dict,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Update entity lifecycle status."""
+    new_status = status_update.get("status")
+    if not new_status:
+        raise HTTPException(status_code=400, detail="'status' field required")
+    entity = service.update_entity_status(db, entity_id, current_user.tenant_id, new_status)
+    if not entity:
+        raise HTTPException(status_code=404, detail="Entity not found or invalid status")
+    return entity
+
+
+@router.get("/collections/{task_id}/summary", response_model=CollectionSummary)
+def get_collection_summary(
+    task_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Get collection summary for a task."""
+    return service.get_collection_summary(db, task_id, current_user.tenant_id)
 
 
 # Relation endpoints
