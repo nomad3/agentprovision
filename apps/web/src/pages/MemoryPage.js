@@ -10,18 +10,24 @@ function MemoryPage() {
   const [entities, setEntities] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [entityType, setEntityType] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
   const [loading, setLoading] = useState(true);
   const [importing, setImporting] = useState(false);
   const [importMessage, setImportMessage] = useState(null);
 
   useEffect(() => {
     loadEntities();
-  }, [entityType]);
+  }, [entityType, statusFilter]);
 
   const loadEntities = async () => {
     try {
-      const data = await memoryService.getEntities(entityType || null);
-      setEntities(data);
+      setLoading(true);
+      const params = new URLSearchParams();
+      if (entityType) params.append('entity_type', entityType);
+      if (statusFilter) params.append('status', statusFilter);
+      params.append('limit', '100');
+      const res = await api.get(`/knowledge/entities?${params.toString()}`);
+      setEntities(res.data || []);
     } catch (error) {
       console.error('Failed to load entities:', error);
     } finally {
@@ -80,7 +86,7 @@ function MemoryPage() {
     }
   };
 
-  const entityTypes = ['customer', 'product', 'concept', 'person'];
+  const entityTypes = ['customer', 'product', 'concept', 'person', 'organization', 'prospect', 'location'];
 
   return (
     <Layout>
@@ -120,6 +126,18 @@ function MemoryPage() {
                     ))}
                   </Form.Select>
                 </Col>
+                <Col md={3}>
+                  <Form.Select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="bg-dark text-white border-secondary border-opacity-50"
+                  >
+                    <option value="">All Statuses</option>
+                    {['draft', 'verified', 'enriched', 'actioned', 'archived'].map(s => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </Form.Select>
+                </Col>
               </Row>
 
               {loading ? (
@@ -130,7 +148,9 @@ function MemoryPage() {
                     <tr>
                       <th>Name</th>
                       <th>Type</th>
+                      <th>Status</th>
                       <th>Confidence</th>
+                      <th>Source</th>
                       <th>Created</th>
                       <th>Actions</th>
                     </tr>
@@ -145,6 +165,15 @@ function MemoryPage() {
                           </Badge>
                         </td>
                         <td>
+                          <Badge
+                            bg={entity.status === 'verified' ? 'success' : entity.status === 'enriched' ? 'info' : entity.status === 'actioned' ? 'primary' : 'warning'}
+                            className="bg-opacity-25 text-light border border-secondary text-uppercase"
+                            style={{ fontSize: '0.7rem' }}
+                          >
+                            {entity.status || 'draft'}
+                          </Badge>
+                        </td>
+                        <td>
                           <div className="d-flex align-items-center gap-2">
                             <div className="progress" style={{ height: '4px', width: '60px', backgroundColor: 'rgba(255,255,255,0.1)' }}>
                               <div
@@ -156,6 +185,13 @@ function MemoryPage() {
                             <span className="small text-muted">{(entity.confidence * 100).toFixed(0)}%</span>
                           </div>
                         </td>
+                        <td className="text-muted small">
+                          {entity.source_url ? (
+                            <a href={entity.source_url} target="_blank" rel="noreferrer" className="text-primary text-decoration-none">
+                              Source
+                            </a>
+                          ) : '-'}
+                        </td>
                         <td className="text-muted small">{new Date(entity.created_at).toLocaleDateString()}</td>
                         <td>
                           <Button variant="link" size="sm" className="text-primary p-0 text-decoration-none">View Relations</Button>
@@ -164,7 +200,7 @@ function MemoryPage() {
                     ))}
                     {entities.length === 0 && (
                       <tr>
-                        <td colSpan="5" className="text-center py-4">No entities found. Import chat history to build knowledge.</td>
+                        <td colSpan="7" className="text-center py-4">No entities found. Import chat history to build knowledge.</td>
                       </tr>
                     )}
                   </tbody>
