@@ -10,11 +10,13 @@ import {
 } from 'react-bootstrap';
 import {
   FaCheck,
+  FaDatabase,
   FaSyncAlt,
   FaTimes
 } from 'react-icons/fa';
 import Layout from '../components/Layout';
 import TaskTimeline from '../components/TaskTimeline';
+import api from '../services/api';
 import taskService from '../services/taskService';
 
 const STATUS_COLORS = {
@@ -36,6 +38,7 @@ const TaskConsolePage = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [traces, setTraces] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [collectionSummary, setCollectionSummary] = useState(null);
   const intervalRef = useRef(null);
 
   const fetchTasks = useCallback(async () => {
@@ -111,6 +114,16 @@ const TaskConsolePage = () => {
       }
     };
   }, [fetchTasks]);
+
+  useEffect(() => {
+    if (selectedTask?.id && selectedTask?.context?.config?.entity_type) {
+      api.get(`/knowledge/collections/${selectedTask.id}/summary`)
+        .then(res => setCollectionSummary(res.data))
+        .catch(() => setCollectionSummary(null));
+    } else {
+      setCollectionSummary(null);
+    }
+  }, [selectedTask]);
 
   return (
     <Layout>
@@ -301,6 +314,63 @@ const TaskConsolePage = () => {
                         {formatStatus(selectedTask.status)}
                       </Badge>
                     </div>
+
+                    {/* Entity Collection Summary */}
+                    {selectedTask?.context?.config?.entity_type && (
+                      <div style={{
+                        borderTop: '1px solid var(--color-border)',
+                        paddingTop: '1rem',
+                        marginBottom: '1rem',
+                      }}>
+                        <h6 style={{
+                          color: 'var(--color-muted)',
+                          fontSize: '0.8rem',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em',
+                          marginBottom: '0.75rem',
+                          fontWeight: 600,
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.4rem',
+                        }}>
+                          <FaDatabase size={12} />
+                          Collected Entities
+                          {collectionSummary && (
+                            <Badge bg="info" style={{ fontSize: '0.7rem', fontWeight: 500, marginLeft: '0.3rem' }}>
+                              {collectionSummary.total_entities}
+                            </Badge>
+                          )}
+                        </h6>
+                        {collectionSummary ? (
+                          <div>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '0.5rem' }}>
+                              {Object.entries(collectionSummary.by_status || {}).map(([status, count]) => (
+                                <Badge
+                                  key={status}
+                                  bg={status === 'verified' ? 'success' : status === 'draft' ? 'warning' : 'secondary'}
+                                  style={{ fontSize: '0.7rem', fontWeight: 500, padding: '0.25rem 0.5rem' }}
+                                >
+                                  {status}: {count}
+                                </Badge>
+                              ))}
+                            </div>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+                              {Object.entries(collectionSummary.by_type || {}).map(([type, count]) => (
+                                <Badge
+                                  key={type}
+                                  bg="dark"
+                                  style={{ fontSize: '0.7rem', fontWeight: 500, padding: '0.25rem 0.5rem' }}
+                                >
+                                  {type}: {count}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        ) : (
+                          <small style={{ color: 'var(--color-muted)' }}>No entities collected yet</small>
+                        )}
+                      </div>
+                    )}
 
                     {/* Execution Trace */}
                     <div style={{
