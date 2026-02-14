@@ -12,6 +12,7 @@ from app.workflows.activities.task_execution import (
     dispatch_task,
     recall_memory,
     execute_task,
+    persist_entities,
     evaluate_task,
 )
 from app.workflows.openclaw_provision import OpenClawProvisionWorkflow
@@ -34,7 +35,7 @@ async def run_orchestration_worker():
     Start Temporal worker for orchestration engine workflows
 
     This worker processes:
-    - TaskExecutionWorkflow (dispatch, recall, execute, evaluate)
+    - TaskExecutionWorkflow (dispatch, recall, execute, persist_entities, evaluate)
     - OpenClawProvisionWorkflow (generate values, helm install, wait pod, health check, register)
 
     Task queue: servicetsunami-orchestration
@@ -58,6 +59,7 @@ async def run_orchestration_worker():
             dispatch_task,
             recall_memory,
             execute_task,
+            persist_entities,
             evaluate_task,
             generate_openclaw_values,
             helm_install_openclaw,

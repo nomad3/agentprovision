@@ -5,6 +5,7 @@ Activities:
 - dispatch_task: Find best agent for a task
 - recall_memory: Load relevant agent memories
 - execute_task: Run task via ADK
+- persist_entities: Extract and persist entities to knowledge graph
 - evaluate_task: Score results and store learnings
 """
 
@@ -19,7 +20,10 @@ from app.models.agent_task import AgentTask
 from app.models.agent_memory import AgentMemory
 from app.models.agent_skill import AgentSkill
 from app.models.execution_trace import ExecutionTrace
+from app.models.knowledge_entity import KnowledgeEntity
 from app.services.orchestration.task_dispatcher import TaskDispatcher
+from app.services.knowledge_extraction import KnowledgeExtractionService
+from app.services.orchestration.entity_validator import EntityValidator, ValidationPolicy
 from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -324,7 +328,7 @@ async def evaluate_task(task_id: str, tenant_id: str, agent_id: str, execute_res
             task_id=task_id,
             tenant_id=tenant_id,
             step_type="completed",
-            step_order=4,
+            step_order=5,
             agent_id=agent_id,
             details={
                 "confidence": confidence,
@@ -345,3 +349,104 @@ async def evaluate_task(task_id: str, tenant_id: str, agent_id: str, execute_res
         }
     finally:
         db.close()
+
+
+@activity.defn
+async def persist_entities(
+    task_id: str, tenant_id: str, agent_id: str, execute_result: Dict[str, Any]
+) -> Dict[str, Any]:
+    """
+    Persist extracted entities to the knowledge graph.
+
+    Parses agent output for structured entity data, validates against policy,
+    deduplicates, and creates KnowledgeEntity records.
+
+    Runs between execute_task and evaluate_task in the workflow pipeline.
+    """
+    start = time.time()
+    db = SessionLocal()
+    try:
+        task = db.query(AgentTask).filter(AgentTask.id == uuid.UUID(task_id)).first()
+        if not task:
+            raise RuntimeError(f"AgentTask {task_id} not found")
+
+        output = execute_result.get("output", {})
+        response_text = ""
+        if isinstance(output, dict):
+            response_text = output.get("response", "")
+        elif isinstance(output, str):
+            response_text = output
+
+        if not response_text:
+            logger.info(f"No output to extract entities from for task {task_id}")
+            return {"entities_created": 0, "entities_updated": 0, "duplicates_skipped": 0}
+
+        # Determine entity schema from task context
+        context = task.context or {}
+        config = context.get("config", {})
+        entity_schema = config.get("entity_schema")
+        entity_type = config.get("entity_type")
+        if entity_type and not entity_schema:
+            entity_schema = {"entity_type": entity_type}
+
+        # Determine content type from output source
+        content_type = "plain_text"
+        if isinstance(output, dict):
+            source = output.get("source", "")
+            if source == "adk":
+                content_type = "structured_json" if _looks_like_json(response_text) else "plain_text"
+
+        # Build validation policy from task guardrails
+        guardrails = config.get("guardrails", {})
+        policy = ValidationPolicy(
+            max_entities_per_task=guardrails.get("max_per_source", 500),
+            dedup_fields=guardrails.get("dedup_on", ["name", "entity_type"]),
+        )
+
+        # Extract entities via LLM
+        extraction_service = KnowledgeExtractionService()
+        entities = extraction_service.extract_from_content(
+            db=db,
+            content=response_text,
+            content_type=content_type,
+            tenant_id=uuid.UUID(tenant_id),
+            source_agent_id=uuid.UUID(agent_id) if agent_id else None,
+            collection_task_id=uuid.UUID(task_id),
+            entity_schema=entity_schema,
+        )
+
+        # Count results
+        entities_created = len(entities)
+
+        duration_ms = int((time.time() - start) * 1000)
+        _log_trace(
+            db,
+            task_id=task_id,
+            tenant_id=tenant_id,
+            step_type="entity_persist",
+            step_order=4,
+            agent_id=agent_id,
+            details={
+                "entities_created": entities_created,
+                "content_type": content_type,
+                "has_schema": entity_schema is not None,
+            },
+            duration_ms=duration_ms,
+        )
+
+        logger.info(f"Persisted {entities_created} entities for task {task_id}")
+        return {
+            "entities_created": entities_created,
+            "entities_updated": 0,
+            "duplicates_skipped": 0,
+        }
+    finally:
+        db.close()
+
+
+def _looks_like_json(text: str) -> bool:
+    """Quick check if text looks like JSON."""
+    stripped = text.strip()
+    return (stripped.startswith("[") or stripped.startswith("{")) and (
+        stripped.endswith("]") or stripped.endswith("}")
+    )

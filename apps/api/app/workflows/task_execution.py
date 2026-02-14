@@ -5,7 +5,8 @@ Steps:
 1. Dispatch task to best agent
 2. Recall relevant agent memories
 3. Execute task via ADK
-4. Evaluate results and store learnings
+4. Persist entities from output to knowledge graph
+5. Evaluate results and store learnings
 """
 
 from temporalio import workflow
@@ -22,7 +23,8 @@ class TaskExecutionWorkflow:
     1. dispatch_task - Find best agent for the task
     2. recall_memory - Load relevant agent memories
     3. execute_task - Run task via ADK
-    4. evaluate_task - Score results, store memory, update skills
+    4. persist_entities - Extract and persist entities to knowledge graph
+    5. evaluate_task - Score results, store memory, update skills
     """
 
     @workflow.run
@@ -82,7 +84,19 @@ class TaskExecutionWorkflow:
 
         workflow.logger.info(f"Task executed with status: {execute_result['status']}")
 
-        # Step 4: Evaluate results
+        # Step 4: Persist entities from output (if applicable)
+        persist_result = await workflow.execute_activity(
+            "persist_entities",
+            args=[task_id, tenant_id, agent_id, execute_result],
+            start_to_close_timeout=timedelta(minutes=5),
+            retry_policy=retry_policy,
+        )
+
+        workflow.logger.info(
+            f"Entities persisted: {persist_result.get('entities_created', 0)} created"
+        )
+
+        # Step 5: Evaluate results
         evaluate_result = await workflow.execute_activity(
             "evaluate_task",
             args=[task_id, tenant_id, agent_id, execute_result],
