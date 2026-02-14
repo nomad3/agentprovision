@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from 'react';
 import { Route, BrowserRouter as Router, Routes, useNavigate } from 'react-router-dom';
 import { ToastProvider } from './components/common';
+import { ThemeProvider } from './context/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import LandingPage from './LandingPage';
 // Agent Kits removed - using ADK for agent configuration
@@ -59,10 +60,11 @@ export const useAuth = () => {
 
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <ToastProvider>
-          <Routes>
+    <ThemeProvider>
+      <Router>
+        <AuthProvider>
+          <ToastProvider>
+            <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/auth/login" element={<LoginPage />} />
@@ -88,10 +90,11 @@ function App() {
             <Route path="/settings/llm" element={<ProtectedRoute><LLMSettingsPage /></ProtectedRoute>} />
             <Route path="/settings/branding" element={<ProtectedRoute><BrandingPage /></ProtectedRoute>} />
             <Route path="/branding" element={<ProtectedRoute><BrandingPage /></ProtectedRoute>} />
-          </Routes>
-        </ToastProvider>
-      </AuthProvider>
-    </Router>
+            </Routes>
+          </ToastProvider>
+        </AuthProvider>
+      </Router>
+    </ThemeProvider>
   );
 }
 
