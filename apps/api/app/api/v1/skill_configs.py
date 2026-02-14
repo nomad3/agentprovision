@@ -88,6 +88,20 @@ SKILL_CREDENTIAL_SCHEMAS = {
             {"key": "api_key", "label": "API Key", "type": "password", "required": True},
         ],
     },
+    "peekaboo": {
+        "display_name": "Peekaboo (Browser Automation)",
+        "description": "macOS UI automation for web scraping, form filling, and browser interaction — no API keys needed",
+        "icon": "FaDesktop",
+        "credentials": [],
+    },
+    "linkedin": {
+        "display_name": "LinkedIn",
+        "description": "LinkedIn prospecting via browser automation — profile scraping, connection requests, messaging",
+        "icon": "FaLinkedin",
+        "credentials": [
+            {"key": "session_cookie", "label": "Session Cookie (li_at)", "type": "password", "required": False},
+        ],
+    },
 }
 
 
