@@ -125,6 +125,9 @@ externalSecret:
     - secretKey: API_INTERNAL_KEY
       remoteRef:
         key: servicetsunami-api-internal-key
+    - secretKey: ENCRYPTION_KEY
+      remoteRef:
+        key: servicetsunami-encryption-key
 
 # Additional environment variables
 env:
