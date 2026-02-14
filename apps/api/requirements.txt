@@ -24,3 +24,4 @@ databricks-sql-connector
 snowflake-connector-python
 pyyaml
 cryptography
+websockets
