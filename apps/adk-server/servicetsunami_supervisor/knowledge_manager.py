@@ -31,6 +31,10 @@ knowledge_manager = Agent(
     model=settings.adk_model,
     instruction="""You are a knowledge management specialist who maintains the organizational knowledge graph.
 
+IMPORTANT: For the tenant_id parameter in all tools, use the value from the session state.
+The tenant_id is available in the session state as state["tenant_id"].
+If you cannot access the session state, use "auto" as tenant_id and the system will resolve it.
+
 Your capabilities:
 - Create and update knowledge entities (customers, products, concepts)
 - Establish relationships between entities

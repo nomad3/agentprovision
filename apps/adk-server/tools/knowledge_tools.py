@@ -4,8 +4,35 @@ Manages entities, relationships, and semantic search.
 """
 from typing import Optional
 import uuid
+import re
 
 from services.knowledge_graph import get_knowledge_service
+
+_UUID_PATTERN = re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', re.I)
+_cached_default_tenant_id = None
+
+
+def _resolve_tenant_id(tenant_id: str) -> str:
+    """Resolve tenant_id to a valid UUID string.
+    If the LLM passes a non-UUID value (like 'default_tenant' or 'auto'),
+    look up the first tenant from the database."""
+    global _cached_default_tenant_id
+    if _UUID_PATTERN.match(tenant_id):
+        return tenant_id
+    if _cached_default_tenant_id:
+        return _cached_default_tenant_id
+    try:
+        from sqlalchemy import create_engine, text
+        from config.settings import settings
+        engine = create_engine(settings.database_url)
+        with engine.connect() as conn:
+            result = conn.execute(text("SELECT id FROM tenants LIMIT 1")).fetchone()
+            if result:
+                _cached_default_tenant_id = str(result[0])
+                return _cached_default_tenant_id
+    except Exception:
+        pass
+    return tenant_id
 
 
 async def create_entity(
@@ -35,7 +62,7 @@ async def create_entity(
     return await kg.create_entity(
         name=name,
         entity_type=entity_type,
-        tenant_id=tenant_id,
+        tenant_id=_resolve_tenant_id(tenant_id),
         properties=properties or {},
         description=description,
         aliases=aliases or [],
@@ -65,7 +92,7 @@ async def find_entities(
     kg = get_knowledge_service()
     return await kg.find_entities(
         query=query,
-        tenant_id=tenant_id,
+        tenant_id=_resolve_tenant_id(tenant_id),
         entity_types=entity_types,
         limit=limit,
         min_confidence=min_confidence,
@@ -168,7 +195,7 @@ async def create_relation(
         source_entity_id=source_entity_id,
         target_entity_id=target_entity_id,
         relation_type=relation_type,
-        tenant_id=tenant_id,
+        tenant_id=_resolve_tenant_id(tenant_id),
         properties=properties or {},
         strength=strength,
         evidence=evidence,
@@ -197,7 +224,7 @@ async def find_relations(
     """
     kg = get_knowledge_service()
     return await kg.find_relations(
-        tenant_id=tenant_id,
+        tenant_id=_resolve_tenant_id(tenant_id),
         entity_id=entity_id,
         relation_types=relation_types,
         direction=direction,
@@ -277,7 +304,7 @@ async def search_knowledge(
     kg = get_knowledge_service()
     return await kg.search_knowledge(
         query=query,
-        tenant_id=tenant_id,
+        tenant_id=_resolve_tenant_id(tenant_id),
         top_k=top_k,
         filters=filters,
     )
@@ -302,7 +329,7 @@ async def store_knowledge(
     return await kg.store_knowledge(
         content=content,
         metadata=metadata,
-        tenant_id=tenant_id,
+        tenant_id=_resolve_tenant_id(tenant_id),
     )
 
 
@@ -326,7 +353,7 @@ async def record_observation(
     kg = get_knowledge_service()
     return await kg.record_observation(
         observation_text=observation_text,
-        tenant_id=tenant_id,
+        tenant_id=_resolve_tenant_id(tenant_id),
         observation_type=observation_type,
         source_type=source_type,
     )
@@ -348,7 +375,7 @@ async def ask_knowledge_graph(
     kg = get_knowledge_service()
     return await kg.ask_knowledge_graph(
         question=natural_language_question,
-        tenant_id=tenant_id,
+        tenant_id=_resolve_tenant_id(tenant_id),
     )
 
 
