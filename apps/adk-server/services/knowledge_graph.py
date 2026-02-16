@@ -18,6 +18,20 @@ class KnowledgeGraphService:
         self.engine = create_engine(settings.database_url)
         self.Session = sessionmaker(bind=self.engine)
         self.embedding_service = get_embedding_service()
+        self._pgvector_available = None
+
+    def _check_pgvector(self) -> bool:
+        """Check if pgvector extension is available."""
+        if self._pgvector_available is None:
+            try:
+                with self.Session() as session:
+                    result = session.execute(
+                        text("SELECT 1 FROM pg_extension WHERE extname='vector'")
+                    ).fetchone()
+                    self._pgvector_available = result is not None
+            except Exception:
+                self._pgvector_available = False
+        return self._pgvector_available
 
     async def create_entity(
         self,
@@ -31,30 +45,48 @@ class KnowledgeGraphService:
     ) -> dict:
         """Create a new knowledge entity."""
         entity_id = str(uuid.uuid4())
-
-        # Generate embedding for semantic search
-        text_for_embedding = f"{name} {description or ''}"
-        embedding = await self.embedding_service.get_embedding(text_for_embedding)
+        import json
 
         with self.Session() as session:
-            session.execute(
-                text("""
-                    INSERT INTO knowledge_entities
-                    (id, tenant_id, name, entity_type, description, properties, aliases, confidence, embedding)
-                    VALUES (:id, :tenant_id, :name, :entity_type, :description, :properties, :aliases, :confidence, :embedding)
-                """),
-                {
-                    "id": entity_id,
-                    "tenant_id": tenant_id,
-                    "name": name,
-                    "entity_type": entity_type,
-                    "description": description,
-                    "properties": properties or {},
-                    "aliases": aliases or [],
-                    "confidence": confidence,
-                    "embedding": embedding,
-                }
-            )
+            if self._check_pgvector():
+                text_for_embedding = f"{name} {description or ''}"
+                embedding = await self.embedding_service.get_embedding(text_for_embedding)
+                session.execute(
+                    text("""
+                        INSERT INTO knowledge_entities
+                        (id, tenant_id, name, entity_type, description, properties, aliases, confidence, embedding)
+                        VALUES (:id, :tenant_id, :name, :entity_type, :description, :properties, :aliases, :confidence, :embedding)
+                    """),
+                    {
+                        "id": entity_id,
+                        "tenant_id": tenant_id,
+                        "name": name,
+                        "entity_type": entity_type,
+                        "description": description,
+                        "properties": json.dumps(properties or {}),
+                        "aliases": json.dumps(aliases or []),
+                        "confidence": confidence,
+                        "embedding": embedding,
+                    }
+                )
+            else:
+                session.execute(
+                    text("""
+                        INSERT INTO knowledge_entities
+                        (id, tenant_id, name, entity_type, description, properties, aliases, confidence)
+                        VALUES (:id, :tenant_id, :name, :entity_type, :description, :properties, :aliases, :confidence)
+                    """),
+                    {
+                        "id": entity_id,
+                        "tenant_id": tenant_id,
+                        "name": name,
+                        "entity_type": entity_type,
+                        "description": description,
+                        "properties": json.dumps(properties or {}),
+                        "aliases": json.dumps(aliases or []),
+                        "confidence": confidence,
+                    }
+                )
             session.commit()
 
         return {"id": entity_id, "name": name, "entity_type": entity_type}
@@ -67,34 +99,54 @@ class KnowledgeGraphService:
         limit: int = 10,
         min_confidence: float = 0.5,
     ) -> list[dict]:
-        """Semantic search for entities."""
-        # Get query embedding
-        query_embedding = await self.embedding_service.get_embedding(query)
-
+        """Search for entities using vector similarity or text fallback."""
         with self.Session() as session:
             type_filter = ""
             if entity_types:
                 type_list = ",".join(f"'{t}'" for t in entity_types)
                 type_filter = f"AND entity_type IN ({type_list})"
 
-            result = session.execute(
-                text(f"""
-                    SELECT id, name, entity_type, description, confidence,
-                           1 - (embedding <=> :embedding) as similarity
-                    FROM knowledge_entities
-                    WHERE tenant_id = :tenant_id
-                    AND confidence >= :min_confidence
-                    {type_filter}
-                    ORDER BY embedding <=> :embedding
-                    LIMIT :limit
-                """),
-                {
-                    "tenant_id": tenant_id,
-                    "embedding": query_embedding,
-                    "min_confidence": min_confidence,
-                    "limit": limit,
-                }
-            )
+            if self._check_pgvector():
+                query_embedding = await self.embedding_service.get_embedding(query)
+                result = session.execute(
+                    text(f"""
+                        SELECT id, name, entity_type, description, confidence,
+                               1 - (embedding <=> :embedding) as similarity
+                        FROM knowledge_entities
+                        WHERE tenant_id = :tenant_id
+                        AND confidence >= :min_confidence
+                        {type_filter}
+                        ORDER BY embedding <=> :embedding
+                        LIMIT :limit
+                    """),
+                    {
+                        "tenant_id": tenant_id,
+                        "embedding": query_embedding,
+                        "min_confidence": min_confidence,
+                        "limit": limit,
+                    }
+                )
+            else:
+                # Text-based fallback when pgvector is not available
+                result = session.execute(
+                    text(f"""
+                        SELECT id, name, entity_type, description, confidence,
+                               1.0 as similarity
+                        FROM knowledge_entities
+                        WHERE tenant_id = :tenant_id
+                        AND confidence >= :min_confidence
+                        AND (name ILIKE :query OR description ILIKE :query)
+                        {type_filter}
+                        ORDER BY confidence DESC
+                        LIMIT :limit
+                    """),
+                    {
+                        "tenant_id": tenant_id,
+                        "query": f"%{query}%",
+                        "min_confidence": min_confidence,
+                        "limit": limit,
+                    }
+                )
 
             return [dict(row._mapping) for row in result]
 
@@ -123,17 +175,17 @@ class KnowledgeGraphService:
             if include_relations:
                 relations = session.execute(
                     text("""
-                        SELECT r.id, r.relation_type, r.strength, r.properties,
+                        SELECT r.id, r.relation_type, r.strength, r.evidence,
                                e.id as target_id, e.name as target_name, e.entity_type as target_type
                         FROM knowledge_relations r
-                        JOIN knowledge_entities e ON r.target_entity_id = e.id
-                        WHERE r.source_entity_id = :entity_id
+                        JOIN knowledge_entities e ON r.to_entity_id = e.id
+                        WHERE r.from_entity_id = :entity_id
                         UNION ALL
-                        SELECT r.id, r.relation_type, r.strength, r.properties,
+                        SELECT r.id, r.relation_type, r.strength, r.evidence,
                                e.id as target_id, e.name as target_name, e.entity_type as target_type
                         FROM knowledge_relations r
-                        JOIN knowledge_entities e ON r.source_entity_id = e.id
-                        WHERE r.target_entity_id = :entity_id
+                        JOIN knowledge_entities e ON r.from_entity_id = e.id
+                        WHERE r.to_entity_id = :entity_id
                     """),
                     {"entity_id": entity_id}
                 )
@@ -171,14 +223,15 @@ class KnowledgeGraphService:
                     }
                 )
 
+            import json
             # Update entity
             session.execute(
                 text("""
                     UPDATE knowledge_entities
-                    SET properties = properties || :updates, updated_at = NOW()
+                    SET properties = :updates, updated_at = NOW()
                     WHERE id = :entity_id
                 """),
-                {"entity_id": entity_id, "updates": updates}
+                {"entity_id": entity_id, "updates": json.dumps(updates)}
             )
             session.commit()
 
@@ -197,16 +250,16 @@ class KnowledgeGraphService:
                 session.execute(
                     text("""
                         UPDATE knowledge_relations
-                        SET source_entity_id = :primary_id
-                        WHERE source_entity_id = :dup_id
+                        SET from_entity_id = :primary_id
+                        WHERE from_entity_id = :dup_id
                     """),
                     {"primary_id": primary_entity_id, "dup_id": dup_id}
                 )
                 session.execute(
                     text("""
                         UPDATE knowledge_relations
-                        SET target_entity_id = :primary_id
-                        WHERE target_entity_id = :dup_id
+                        SET to_entity_id = :primary_id
+                        WHERE to_entity_id = :dup_id
                     """),
                     {"primary_id": primary_entity_id, "dup_id": dup_id}
                 )
@@ -233,16 +286,17 @@ class KnowledgeGraphService:
         bidirectional: bool = False,
     ) -> dict:
         """Create relationship between entities."""
+        import json
         relation_id = str(uuid.uuid4())
 
         with self.Session() as session:
             session.execute(
                 text("""
                     INSERT INTO knowledge_relations
-                    (id, tenant_id, source_entity_id, target_entity_id, relation_type,
-                     properties, strength, evidence, bidirectional)
+                    (id, tenant_id, from_entity_id, to_entity_id, relation_type,
+                     strength, evidence)
                     VALUES (:id, :tenant_id, :source_id, :target_id, :relation_type,
-                            :properties, :strength, :evidence, :bidirectional)
+                            :strength, :evidence)
                 """),
                 {
                     "id": relation_id,
@@ -250,10 +304,8 @@ class KnowledgeGraphService:
                     "source_id": source_entity_id,
                     "target_id": target_entity_id,
                     "relation_type": relation_type,
-                    "properties": properties or {},
                     "strength": strength,
-                    "evidence": evidence,
-                    "bidirectional": bidirectional,
+                    "evidence": json.dumps({"text": evidence, "properties": properties or {}}),
                 }
             )
             session.commit()
@@ -275,11 +327,11 @@ class KnowledgeGraphService:
 
             if entity_id:
                 if direction == "outgoing":
-                    conditions.append("r.source_entity_id = :entity_id")
+                    conditions.append("r.from_entity_id = :entity_id")
                 elif direction == "incoming":
-                    conditions.append("r.target_entity_id = :entity_id")
+                    conditions.append("r.to_entity_id = :entity_id")
                 else:
-                    conditions.append("(r.source_entity_id = :entity_id OR r.target_entity_id = :entity_id)")
+                    conditions.append("(r.from_entity_id = :entity_id OR r.to_entity_id = :entity_id)")
                 params["entity_id"] = entity_id
 
             if relation_types:
@@ -290,12 +342,14 @@ class KnowledgeGraphService:
 
             result = session.execute(
                 text(f"""
-                    SELECT r.*,
+                    SELECT r.id, r.tenant_id, r.from_entity_id as source_entity_id,
+                           r.to_entity_id as target_entity_id, r.relation_type,
+                           r.strength, r.evidence, r.created_at,
                            s.name as source_name, s.entity_type as source_type,
                            t.name as target_name, t.entity_type as target_type
                     FROM knowledge_relations r
-                    JOIN knowledge_entities s ON r.source_entity_id = s.id
-                    JOIN knowledge_entities t ON r.target_entity_id = t.id
+                    JOIN knowledge_entities s ON r.from_entity_id = s.id
+                    JOIN knowledge_entities t ON r.to_entity_id = t.id
                     WHERE {where_clause}
                 """),
                 params
@@ -418,24 +472,40 @@ class KnowledgeGraphService:
     ) -> str:
         """Record observation for later processing."""
         obs_id = str(uuid.uuid4())
-        embedding = await self.embedding_service.get_embedding(observation_text)
 
         with self.Session() as session:
-            session.execute(
-                text("""
-                    INSERT INTO knowledge_observations
-                    (id, tenant_id, observation_text, observation_type, source_type, embedding)
-                    VALUES (:id, :tenant_id, :text, :type, :source, :embedding)
-                """),
-                {
-                    "id": obs_id,
-                    "tenant_id": tenant_id,
-                    "text": observation_text,
-                    "type": observation_type,
-                    "source": source_type,
-                    "embedding": embedding,
-                }
-            )
+            if self._check_pgvector():
+                embedding = await self.embedding_service.get_embedding(observation_text)
+                session.execute(
+                    text("""
+                        INSERT INTO knowledge_observations
+                        (id, tenant_id, observation_text, observation_type, source_type, embedding)
+                        VALUES (:id, :tenant_id, :text, :type, :source, :embedding)
+                    """),
+                    {
+                        "id": obs_id,
+                        "tenant_id": tenant_id,
+                        "text": observation_text,
+                        "type": observation_type,
+                        "source": source_type,
+                        "embedding": embedding,
+                    }
+                )
+            else:
+                session.execute(
+                    text("""
+                        INSERT INTO knowledge_observations
+                        (id, tenant_id, observation_text, observation_type, source_type)
+                        VALUES (:id, :tenant_id, :text, :type, :source)
+                    """),
+                    {
+                        "id": obs_id,
+                        "tenant_id": tenant_id,
+                        "text": observation_text,
+                        "type": observation_type,
+                        "source": source_type,
+                    }
+                )
             session.commit()
 
         return obs_id

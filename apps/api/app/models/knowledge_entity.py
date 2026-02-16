@@ -1,7 +1,7 @@
 """KnowledgeEntity model for knowledge graph nodes"""
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, ForeignKey, JSON, DateTime, Float
+from sqlalchemy import Column, String, Text, ForeignKey, JSON, DateTime, Float
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -18,7 +18,10 @@ class KnowledgeEntity(Base):
     # Entity definition
     entity_type = Column(String, nullable=False)  # customer, product, concept, person, organization, location
     name = Column(String, nullable=False, index=True)
+    description = Column(Text, nullable=True)  # Entity description for semantic search
     attributes = Column(JSON, nullable=True)  # Flexible attribute storage
+    properties = Column(JSON, nullable=True)  # Structured properties (used by ADK)
+    aliases = Column(JSON, default=list)  # Alternative names for the entity
 
     # Confidence and provenance
     confidence = Column(Float, default=1.0)  # How confident are we in this entity
