@@ -30,7 +30,7 @@ const AgentWizard = () => {
     template: null,
     basicInfo: { name: '', description: '', avatar: '' },
     personality: { preset: 'friendly', temperature: 0.7, max_tokens: 2000, system_prompt: '' },
-    skills: { sql_query: false, data_summary: false, calculator: false },
+    skills: { sql_query: false, data_summary: false, calculator: false, entity_extraction: false, knowledge_search: false },
     datasets: [],
   });
   const [datasets, setDatasets] = useState([]);
@@ -160,6 +160,7 @@ const AgentWizard = () => {
             .filter(([_, enabled]) => enabled)
             .map(([tool, _]) => tool),
           datasets: wizardData.datasets,
+          entity_schema: wizardData.template?.config?.entity_schema || null,
         },
       };
 
@@ -234,7 +235,7 @@ const AgentWizard = () => {
                     skills: template.config.tools.reduce((acc, tool) => {
                       acc[tool] = true;
                       return acc;
-                    }, { sql_query: false, data_summary: false, calculator: false }),
+                    }, { sql_query: false, data_summary: false, calculator: false, entity_extraction: false, knowledge_search: false }),
                   });
                   setValidationState({ ...validationState, step1: true });
                 }}

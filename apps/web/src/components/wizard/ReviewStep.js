@@ -14,6 +14,8 @@ const ReviewStep = ({ wizardData, datasets, onEdit }) => {
     sql_query: 'SQL Query Tool',
     data_summary: 'Data Summary Tool',
     calculator: 'Calculator Tool',
+    entity_extraction: 'Entity Extraction',
+    knowledge_search: 'Knowledge Search',
   };
 
   const personalityNames = {

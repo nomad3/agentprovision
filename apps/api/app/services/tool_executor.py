@@ -392,6 +392,136 @@ class ReportGenerationTool(Tool):
             )
 
 
+class EntityExtractionTool(Tool):
+    """Tool for extracting entities from text content."""
+
+    def __init__(self, db, tenant_id):
+        super().__init__(
+            name="entity_extraction",
+            description="Extract people, companies, and concepts from text content and store them in the knowledge graph"
+        )
+        self.db = db
+        self.tenant_id = tenant_id
+
+    def get_schema(self) -> Dict[str, Any]:
+        return {
+            "name": self.name,
+            "description": self.description,
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "type": "string",
+                        "description": "The text content to extract entities from"
+                    },
+                    "content_type": {
+                        "type": "string",
+                        "description": "Type of content: plain_text, html, json, transcript",
+                        "default": "plain_text"
+                    },
+                    "entity_schema": {
+                        "type": "object",
+                        "description": "Optional schema to guide extraction (e.g. {\"fields\": [\"name\", \"email\"], \"entity_type\": \"prospect\"})"
+                    }
+                },
+                "required": ["content"]
+            }
+        }
+
+    def execute(self, **kwargs) -> ToolResult:
+        try:
+            content = kwargs.get("content")
+            if not content:
+                return ToolResult(success=False, error="content is required")
+
+            content_type = kwargs.get("content_type", "plain_text")
+            entity_schema = kwargs.get("entity_schema")
+
+            from app.services.knowledge_extraction import KnowledgeExtractionService
+            service = KnowledgeExtractionService()
+            entities = service.extract_from_content(
+                self.db,
+                self.tenant_id,
+                content,
+                content_type,
+                entity_schema=entity_schema,
+            )
+
+            return ToolResult(
+                success=True,
+                data=[{
+                    "id": str(e.id),
+                    "name": e.name,
+                    "entity_type": e.entity_type,
+                    "properties": e.properties,
+                } for e in entities],
+                metadata={"entity_count": len(entities)}
+            )
+        except Exception as e:
+            return ToolResult(success=False, error=f"Entity extraction failed: {str(e)}")
+
+
+class KnowledgeSearchTool(Tool):
+    """Tool for searching the knowledge graph."""
+
+    def __init__(self, db, tenant_id):
+        super().__init__(
+            name="knowledge_search",
+            description="Search and browse entities in the knowledge graph"
+        )
+        self.db = db
+        self.tenant_id = tenant_id
+
+    def get_schema(self) -> Dict[str, Any]:
+        return {
+            "name": self.name,
+            "description": self.description,
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "Search query to match entity names"
+                    },
+                    "entity_type": {
+                        "type": "string",
+                        "description": "Optional filter by entity type (e.g. person, company, concept)"
+                    }
+                },
+                "required": ["query"]
+            }
+        }
+
+    def execute(self, **kwargs) -> ToolResult:
+        try:
+            query = kwargs.get("query")
+            if not query:
+                return ToolResult(success=False, error="query is required")
+
+            entity_type = kwargs.get("entity_type")
+
+            from app.services.knowledge import search_entities
+            entities = search_entities(
+                self.db,
+                self.tenant_id,
+                query,
+                entity_type=entity_type,
+            )
+
+            return ToolResult(
+                success=True,
+                data=[{
+                    "id": str(e.id),
+                    "name": e.name,
+                    "entity_type": e.entity_type,
+                    "properties": e.properties,
+                } for e in entities],
+                metadata={"result_count": len(entities)}
+            )
+        except Exception as e:
+            return ToolResult(success=False, error=f"Knowledge search failed: {str(e)}")
+
+
 class ToolRegistry:
     """Registry for managing available tools."""
 

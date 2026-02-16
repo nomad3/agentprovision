@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Form, Row, Col, Alert } from 'react-bootstrap';
-import { FaDatabase as Database, FaCalculator as CalcIcon, FaChartBar as BarChart } from 'react-icons/fa';
+import { FaDatabase as Database, FaCalculator as CalcIcon, FaChartBar as BarChart, FaProjectDiagram, FaSearch } from 'react-icons/fa';
 import datasetService from '../../services/dataset';
 import { LoadingSpinner } from '../common';
 
@@ -28,6 +28,22 @@ const TOOLS = [
     description: 'Perform calculations and number crunching',
     requiresDataset: false,
     helpText: 'Enable this for pricing, conversions, or any math needs',
+  },
+  {
+    id: 'entity_extraction',
+    name: 'Entity Extraction',
+    icon: FaProjectDiagram,
+    description: 'Extract people, companies, and concepts from text',
+    requiresDataset: false,
+    helpText: 'Your agent can identify and store entities from conversations and documents into the knowledge graph',
+  },
+  {
+    id: 'knowledge_search',
+    name: 'Knowledge Search',
+    icon: FaSearch,
+    description: 'Search and browse the knowledge graph',
+    requiresDataset: false,
+    helpText: 'Your agent can look up people, companies, and concepts previously extracted into the knowledge graph',
   },
 ];
 

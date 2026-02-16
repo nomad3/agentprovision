@@ -1,6 +1,6 @@
 import React from 'react';
 import { Row, Col, Card, Button } from 'react-bootstrap';
-import { FaHeadset as Headset, FaChartBar as BarChart, FaBriefcase as Briefcase, FaRobot as Robot, FaEdit as PencilSquare } from 'react-icons/fa';
+import { FaHeadset as Headset, FaChartBar as BarChart, FaBriefcase as Briefcase, FaRobot as Robot, FaEdit as PencilSquare, FaSearch, FaUserTie, FaSitemap } from 'react-icons/fa';
 
 const TEMPLATES = [
   {
@@ -75,6 +75,55 @@ const TEMPLATES = [
       max_tokens: 3000,
       system_prompt: 'You are a creative writing assistant. Use imaginative and engaging language. Help draft compelling content.',
       tools: [],
+      suggestDatasets: false,
+    },
+  },
+  {
+    id: 'research_agent',
+    name: 'Research Agent',
+    icon: FaSearch,
+    description: 'Extract entities from conversations and documents. Build knowledge graphs from unstructured data',
+    config: {
+      model: 'gpt-4',
+      personality: 'formal',
+      temperature: 0.3,
+      max_tokens: 2500,
+      system_prompt: 'You are a meticulous research agent. Extract key entities (people, organizations, concepts) from content. Identify relationships between entities and maintain a structured knowledge graph.',
+      tools: ['entity_extraction', 'knowledge_search', 'data_summary'],
+      suggestDatasets: false,
+    },
+  },
+  {
+    id: 'lead_generation',
+    name: 'Lead Generation Agent',
+    icon: FaUserTie,
+    description: 'Identify prospects, companies, and contacts. Build structured lead databases from conversations',
+    config: {
+      model: 'gpt-4',
+      personality: 'friendly',
+      temperature: 0.5,
+      max_tokens: 2000,
+      system_prompt: 'You are a lead generation specialist. Identify potential prospects, companies, and contacts from conversations. Extract structured information like names, emails, companies, roles, and interests.',
+      tools: ['entity_extraction', 'knowledge_search'],
+      suggestDatasets: false,
+      entity_schema: {
+        fields: ['name', 'email', 'company', 'role', 'interest'],
+        entity_type: 'prospect',
+      },
+    },
+  },
+  {
+    id: 'knowledge_manager',
+    name: 'Knowledge Manager',
+    icon: FaSitemap,
+    description: 'Curate, verify, and organize your knowledge graph. Maintain entity accuracy and relationships',
+    config: {
+      model: 'gpt-4',
+      personality: 'formal',
+      temperature: 0.4,
+      max_tokens: 2500,
+      system_prompt: 'You are a knowledge management specialist. Curate and organize the knowledge graph by verifying entities, resolving duplicates, and maintaining accurate relationships between people, organizations, and concepts.',
+      tools: ['entity_extraction', 'knowledge_search', 'data_summary'],
       suggestDatasets: false,
     },
   },
