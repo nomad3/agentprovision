@@ -146,11 +146,15 @@ jobs:
       id-token: write
 
     outputs:
-      image_tag: ${{ github.sha }}
+      image_tag: ${{ steps.meta.outputs.tag }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set image tag
+        id: meta
+        run: echo "tag=${{ github.sha }}" >> $GITHUB_OUTPUT
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
@@ -165,9 +169,9 @@ jobs:
 
       - name: Build and push ADK
         run: |
-          docker build -t gcr.io/${{ env.GCP_PROJECT }}/servicetsunami-adk:${{ github.sha }} apps/adk-server/
-          docker tag gcr.io/${{ env.GCP_PROJECT }}/servicetsunami-adk:${{ github.sha }} gcr.io/${{ env.GCP_PROJECT }}/servicetsunami-adk:latest
-          docker push gcr.io/${{ env.GCP_PROJECT }}/servicetsunami-adk:${{ github.sha }}
+          docker build -t gcr.io/${{ env.GCP_PROJECT }}/servicetsunami-adk:${{ steps.meta.outputs.tag }} apps/adk-server/
+          docker tag gcr.io/${{ env.GCP_PROJECT }}/servicetsunami-adk:${{ steps.meta.outputs.tag }} gcr.io/${{ env.GCP_PROJECT }}/servicetsunami-adk:latest
+          docker push gcr.io/${{ env.GCP_PROJECT }}/servicetsunami-adk:${{ steps.meta.outputs.tag }}
           docker push gcr.io/${{ env.GCP_PROJECT }}/servicetsunami-adk:latest
 
   deploy-all:
