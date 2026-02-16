@@ -67,7 +67,7 @@ This is a **Turborepo monorepo** managed with `pnpm` workspaces:
 
 **Credential Vault**: `CredentialVault` (`apps/api/app/services/orchestration/credential_vault.py`) provides Fernet encryption for skill API keys/tokens. Credentials are stored encrypted in `SkillCredential`, decrypted at runtime, injected per-request, never stored in OpenClaw pods.
 
-**Knowledge Graph**: Entities (`knowledge_entity.py`) and relations (`knowledge_relation.py`) form a knowledge graph. Knowledge is extracted from chat and content via `knowledge_extraction.py`.
+**Knowledge Graph**: Entities (`knowledge_entity.py`) and relations (`knowledge_relation.py`) form a knowledge graph. Supporting tables: `knowledge_observations` (raw facts from conversations), `knowledge_entity_history` (entity version tracking). Knowledge is extracted from chat and content via `knowledge_extraction.py`. The ADK knowledge_manager agent provides semantic search, entity CRUD, and graph traversal. Note: pgvector is not installed on Cloud SQL; the ADK knowledge_graph service falls back to text-based ILIKE search.
 
 **Temporal workflows**: Durable workflow execution. Workers in `apps/api/app/workers/`:
 - `orchestration_worker.py`: Task execution and OpenClaw provisioning workflows (queue: `servicetsunami-orchestration`)
@@ -184,7 +184,7 @@ Business logic layer (one service per model):
 - `base.py`: Generic CRUD base service
 - `llm.py`: Claude AI integration with fallback handling
 - `context_manager.py`: Token counting, conversation summarization
-- `tool_executor.py`: Tool execution framework (SQL Query, Calculator, Data Summary)
+- `tool_executor.py`: Tool execution framework (SQL Query, Calculator, Data Summary, Entity Extraction, Knowledge Search)
 - `chat.py`, `enhanced_chat.py`: LLM-powered chat with tool and multi-agent support
 - `adk_client.py`, `mcp_client.py`: Google ADK and MCP server clients
 - `knowledge.py`, `knowledge_extraction.py`: Knowledge graph operations and extraction
@@ -220,7 +220,7 @@ Organized in 3-section navigation:
 ### Components (`apps/web/src/components/`)
 
 - `Layout.js`: Authenticated layout with glassmorphic dark theme sidebar
-- `wizard/`: Agent creation wizard (5-step flow with localStorage draft persistence)
+- `wizard/`: Agent creation wizard (5-step flow with localStorage draft persistence). 8 templates including Research Agent, Lead Generation, and Knowledge Manager. 5 tools: sql_query, calculator, data_summary, entity_extraction, knowledge_search
 - `TaskTimeline.js`: Execution trace timeline with step icons and duration badges
 - `OpenClawInstanceCard.js`: Per-tenant OpenClaw instance lifecycle card (deploy/stop/start/restart/destroy)
 - `SkillsConfigPanel.js`: Skill enablement grid with dynamic credential forms from registry
@@ -300,8 +300,8 @@ helm rollback servicetsunami-api -n prod
 ```
 
 **GitHub Actions Workflows** (`.github/workflows/`):
-- `deploy-all.yaml`: Full stack deployment
-- `adk-deploy.yaml`: ADK server only
+- `deploy-all.yaml`: Full stack deployment (API, Web, Worker, ADK, Temporal, Redis, PostgreSQL)
+- `adk-deploy.yaml`: ADK server only (auto-triggers on push to `apps/adk-server/**`)
 - `servicetsunami-api.yaml`: API service
 - `servicetsunami-web.yaml`: Web frontend
 - `servicetsunami-worker.yaml`: Temporal worker

@@ -17,6 +17,8 @@ The Tool Execution Framework provides a flexible, extensible system for agents t
    - `SQLQueryTool` - Execute SQL queries on datasets
    - `CalculatorTool` - Perform mathematical calculations
    - `DataSummaryTool` - Get statistical summaries
+   - `EntityExtractionTool` - Extract entities from text into knowledge graph
+   - `KnowledgeSearchTool` - Search knowledge graph entities
 
 ### Files
 
@@ -99,6 +101,53 @@ Result:
 ```bash
 # Ask: "What are the revenue statistics?"
 # Claude will use the data_summary tool
+```
+
+---
+
+### 4. Entity Extraction Tool
+
+Extract people, companies, and concepts from text into the knowledge graph.
+
+**Capabilities:**
+- Extracts entities (people, organizations, locations, products) from free text
+- Wraps `knowledge_extraction_service.extract_from_content()`
+- Supports optional entity_schema for structured extraction
+- Returns list of extracted entity dicts with types and confidence
+
+**Parameters:**
+- `content` (required) - Text content to extract entities from
+- `content_type` (default: "plain_text") - Type of content
+- `entity_schema` (optional) - Schema to guide extraction
+
+**Example Usage:**
+```
+User: "Extract contacts from these conference notes"
+Agent: Extracts entities via knowledge_extraction_service
+Result: [{name: "John Smith", type: "person", confidence: 0.95}, ...]
+```
+
+---
+
+### 5. Knowledge Search Tool
+
+Search and browse the knowledge graph for entities.
+
+**Capabilities:**
+- Searches knowledge_entities by name, type, and description
+- Wraps `knowledge.search_entities()` with tenant isolation
+- Supports filtering by entity_type
+- Returns matching entities ranked by relevance
+
+**Parameters:**
+- `query` (required) - Search query
+- `entity_type` (optional) - Filter by type (person, organization, product, etc.)
+
+**Example Usage:**
+```
+User: "Find all companies in the knowledge graph"
+Agent: Searches knowledge graph with entity_type="organization"
+Result: [{name: "Acme Corp", type: "organization"}, ...]
 ```
 
 ---
@@ -338,7 +387,7 @@ Use the test scripts:
 
 ## Files Modified
 
-- ✅ `apps/api/app/services/tool_executor.py` - NEW: Tool framework
+- ✅ `apps/api/app/services/tool_executor.py` - Tool framework with EntityExtractionTool and KnowledgeSearchTool
 - ✅ `apps/api/app/services/chat.py` - Integrated tool registry
 - ✅ `apps/api/app/services/llm.py` - Removed hardcoded SQL tool
 

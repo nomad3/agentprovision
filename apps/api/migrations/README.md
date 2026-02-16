@@ -40,6 +40,13 @@ asyncio.run(run_migration())
 ## Migration Files
 
 - `001_add_databricks_metadata.sql` - Adds metadata_ JSONB column to all Databricks-integrated tables
+- `002_update_connectors_table.sql` - Updates connectors table schema
+- `003_add_connectors_timestamps.sql` - Adds timestamps to connectors
+- `026_add_execution_traces.sql` - Adds execution_traces table for task audit trails
+- `027_add_tenant_instances.sql` - Adds tenant_instances table for managed OpenClaw pods
+- `028_add_skill_configs_and_credentials.sql` - Adds skill_configs and skill_credentials tables
+- `029_extend_knowledge_entities.sql` - Adds status lifecycle, collection_task_id, source_url, enrichment_data to knowledge_entities
+- `030_add_knowledge_entity_description_aliases.sql` - Adds description, properties, aliases columns to knowledge_entities; creates knowledge_observations and knowledge_entity_history tables
 
 ## Rollback
 
