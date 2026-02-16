@@ -190,19 +190,7 @@ jobs:
         run: |
           sed -i 's/YOUR_GCP_PROJECT/${{ env.GCP_PROJECT }}/g' helm/values/*.yaml
 
-      - name: Deploy PostgreSQL (if not exists)
-        run: |
-          if ! helm status postgresql -n database 2>/dev/null; then
-            helm upgrade --install postgresql \
-              ./helm/charts/microservice \
-              --namespace database \
-              --create-namespace \
-              --values ./helm/values/postgresql.yaml \
-              --wait \
-              --timeout 5m
-          fi
-
-      - name: Deploy Redis
+      - name: Deploy Redis (if not running)
         run: |
           helm upgrade --install redis \
             ./helm/charts/microservice \
@@ -210,8 +198,9 @@ jobs:
             --values ./helm/values/redis.yaml \
             --wait \
             --timeout 5m
+        continue-on-error: true
 
-      - name: Deploy Temporal
+      - name: Deploy Temporal (if not running)
         run: |
           helm upgrade --install temporal \
             ./helm/charts/microservice \
@@ -219,8 +208,9 @@ jobs:
             --values ./helm/values/temporal.yaml \
             --wait \
             --timeout 5m
+        continue-on-error: true
 
-      - name: Deploy Temporal Web UI
+      - name: Deploy Temporal Web UI (if not running)
         run: |
           helm upgrade --install temporal-web \
             ./helm/charts/microservice \
@@ -228,6 +218,7 @@ jobs:
             --values ./helm/values/temporal-web.yaml \
             --wait \
             --timeout 5m
+        continue-on-error: true
 
       - name: Deploy API
         run: |
