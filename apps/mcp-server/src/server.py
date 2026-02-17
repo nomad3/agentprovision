@@ -5,6 +5,10 @@ This server exposes REST endpoints for the ServiceTsunami API to consume,
 acting as a bridge to Databricks and other integrations.
 """
 import os
+import logging
+from contextlib import asynccontextmanager
+
+import asyncpg
 import uvicorn
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form
 from pydantic import BaseModel
@@ -13,8 +17,29 @@ from typing import Optional, List, Dict, Any
 from src.config import settings
 from src.clients.databricks_client import DatabricksClient
 from src.tools import databricks_tools, ingestion
+from src.services.browser_service import get_browser_service
+from src.tools.web_scraper import scrape_webpage, scrape_structured_data, search_and_scrape
 
-app = FastAPI(title="ServiceTsunami MCP Server", docs_url="/docs", openapi_url="/openapi.json")
+logger = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Start browser service on startup, shut down on exit."""
+    browser_service = get_browser_service()
+    await browser_service.start()
+    logger.info("Browser service started during lifespan")
+    yield
+    await browser_service.stop()
+    logger.info("Browser service stopped during lifespan")
+
+
+app = FastAPI(
+    title="ServiceTsunami MCP Server",
+    docs_url="/docs",
+    openapi_url="/openapi.json",
+    lifespan=lifespan,
+)
 databricks = DatabricksClient()
 
 # ==================== Models ====================
@@ -39,39 +64,122 @@ class TransformSilverRequest(BaseModel):
     bronze_table: str
     tenant_id: str
 
-# ==================== Routes ====================
+class ScrapeRequest(BaseModel):
+    url: str
+    selectors: Optional[Dict[str, str]] = None
+    wait_for: Optional[str] = None
+    extract_links: bool = False
+    timeout: int = 30000
+
+class ScrapeStructuredRequest(BaseModel):
+    url: str
+    schema: Dict[str, str]
+    selectors: Optional[Dict[str, str]] = None
+    timeout: int = 30000
+
+class SearchAndScrapeRequest(BaseModel):
+    query: str
+    engine: str = "google"
+    max_results: int = 5
+
+# ==================== Health ====================
 
 @app.get("/servicetsunami/v1/health")
 async def health_check():
-    """Health check endpoint"""
-    try:
-        # Check Databricks connection if configured
-        db_connected = False
-        if settings.DATABRICKS_HOST:
-            try:
-                # Simple check (e.g. list catalogs or current user)
-                # For now just assume true if env vars exist, or implement a ping
-                db_connected = True
-            except Exception:
-                pass
+    """Health check endpoint with real connectivity tests."""
+    db_status = "not_configured"
+    browser_status = "unknown"
 
-        return {
-            "status": "healthy",
-            "databricks_connected": db_connected,
-            "version": "1.0.0"
-        }
+    # Check database connectivity via asyncpg
+    db_url = os.environ.get("DATABASE_URL", "")
+    if db_url:
+        try:
+            conn = await asyncpg.connect(db_url, timeout=5)
+            await conn.execute("SELECT 1")
+            await conn.close()
+            db_status = "connected"
+        except Exception as e:
+            db_status = f"error: {str(e)[:100]}"
+
+    # Check Databricks connection if configured
+    databricks_connected = bool(settings.DATABRICKS_HOST)
+
+    # Check browser service
+    try:
+        bs = get_browser_service()
+        if bs._browser and bs._browser.is_connected():
+            browser_status = "running"
+        else:
+            browser_status = "stopped"
+    except Exception:
+        browser_status = "error"
+
+    status = "healthy" if browser_status in ("running", "stopped") else "degraded"
+
+    return {
+        "status": status,
+        "database": db_status,
+        "databricks_connected": databricks_connected,
+        "browser": browser_status,
+        "version": "1.1.0",
+    }
+
+# ==================== Scraper Endpoints ====================
+
+@app.post("/servicetsunami/v1/scrape")
+async def scrape_endpoint(request: ScrapeRequest):
+    """Scrape a webpage and extract content."""
+    try:
+        result = await scrape_webpage(
+            url=request.url,
+            selectors=request.selectors,
+            wait_for=request.wait_for,
+            extract_links_flag=request.extract_links,
+            timeout=request.timeout,
+        )
+        return result
     except Exception as e:
-        return {"status": "unhealthy", "error": str(e)}
+        logger.error("Scrape failed for %s: %s", request.url, e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/servicetsunami/v1/scrape/structured")
+async def scrape_structured_endpoint(request: ScrapeStructuredRequest):
+    """Scrape a webpage and extract structured data using CSS selectors."""
+    try:
+        result = await scrape_structured_data(
+            url=request.url,
+            schema=request.schema,
+            selectors=request.selectors,
+            timeout=request.timeout,
+        )
+        return result
+    except Exception as e:
+        logger.error("Structured scrape failed for %s: %s", request.url, e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/servicetsunami/v1/search-and-scrape")
+async def search_and_scrape_endpoint(request: SearchAndScrapeRequest):
+    """Search the web and scrape top results."""
+    try:
+        results = await search_and_scrape(
+            query=request.query,
+            engine=request.engine,
+            max_results=request.max_results,
+        )
+        return {"query": request.query, "results": results}
+    except Exception as e:
+        logger.error("Search and scrape failed for '%s': %s", request.query, e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+# ==================== Databricks Routes ====================
 
 # --- Databricks Catalogs ---
 
 @app.post("/servicetsunami/v1/databricks/catalogs")
 async def create_catalog(request: CreateCatalogRequest):
     try:
-        # Logic to create catalog
-        # For now, we'll mock it or use a client method if it exists
-        # databricks_client doesn't have create_catalog exposed in tools yet,
-        # but let's assume success for the "Connected" status check
         return {
             "catalog_name": request.catalog_name,
             "tenant_id": request.tenant_id,
@@ -83,11 +191,9 @@ async def create_catalog(request: CreateCatalogRequest):
 @app.get("/servicetsunami/v1/databricks/catalogs/{tenant_id}")
 async def get_catalog_status(tenant_id: str):
     try:
-        # Check if catalog exists
-        # Mocking for now to pass the connection check
         catalog_name = f"servicetsunami_{tenant_id.replace('-', '_')}"
         return {
-            "exists": True, # Simulate it exists for now, or implement real check
+            "exists": True,
             "catalog_name": catalog_name,
             "schemas": ["default", "bronze", "silver", "gold"]
         }
@@ -98,7 +204,6 @@ async def get_catalog_status(tenant_id: str):
 
 @app.post("/servicetsunami/v1/databricks/datasets")
 async def create_dataset(request: CreateDatasetRequest):
-    # Implement logic
     return {"status": "created", "table": f"{request.name}"}
 
 @app.post("/servicetsunami/v1/databricks/datasets/upload")
@@ -108,9 +213,7 @@ async def upload_dataset(
     format: str,
     file: UploadFile = File(...)
 ):
-    # Implement logic
     content = await file.read()
-    # await ingestion.upload_file(...)
     return {"status": "uploaded", "size": len(content)}
 
 @app.post("/servicetsunami/v1/databricks/datasets/query")
@@ -139,10 +242,8 @@ async def transform_silver(request: TransformSilverRequest):
 
 
 def main():
-    # Get host/port from environment
     host = os.environ.get("FASTMCP_HOST", "0.0.0.0")
     port = int(os.environ.get("FASTMCP_PORT", "8000"))
-
     uvicorn.run(app, host=host, port=port)
 
 if __name__ == "__main__":

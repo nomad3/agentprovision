@@ -21,6 +21,11 @@ class Settings(BaseSettings):
     MCP_PORT: int = 8086
     MCP_TRANSPORT: str = "streamable-http"
 
+    # Browser / Playwright
+    BROWSER_HEADLESS: bool = True
+    BROWSER_TIMEOUT: int = 30000
+    SCRAPE_MAX_RESULTS: int = 10
+
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"

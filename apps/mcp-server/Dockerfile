@@ -1,17 +1,32 @@
-FROM python:3.11-slim
+FROM mcr.microsoft.com/playwright/python:v1.41.0-jammy
 
 WORKDIR /app
 
+# Create non-root user
+RUN groupadd -g 1001 mcpuser && \
+    useradd -r -u 1001 -g mcpuser mcpuser
+
 # Install dependencies
 COPY pyproject.toml .
-RUN pip install --no-cache-dir .
+RUN pip install --no-cache-dir . && \
+    playwright install chromium
 
 # Copy source
 COPY src/ src/
 COPY .env.example .env
 
-# Expose MCP port (8086 to avoid conflict with dental-erp MCP on 8085)
+# Set ownership
+RUN chown -R mcpuser:mcpuser /app
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:8086/servicetsunami/v1/health || exit 1
+
+# Expose MCP port
 EXPOSE 8086
+
+# Run as non-root
+USER mcpuser
 
 # Run server
 CMD ["python", "-m", "src.server"]
