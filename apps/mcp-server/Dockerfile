@@ -2,9 +2,9 @@ FROM mcr.microsoft.com/playwright/python:v1.50.0-noble
 
 WORKDIR /app
 
-# Create non-root user
-RUN groupadd -g 1001 mcpuser && \
-    useradd -r -u 1001 -g mcpuser -m mcpuser
+# Create non-root user (use high UID/GID to avoid conflicts with base image)
+RUN groupadd -g 2001 mcpuser && \
+    useradd -r -u 2001 -g mcpuser -m mcpuser
 
 # Install dependencies
 COPY pyproject.toml .
