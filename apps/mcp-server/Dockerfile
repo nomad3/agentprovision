@@ -1,15 +1,14 @@
-FROM mcr.microsoft.com/playwright/python:v1.41.0-jammy
+FROM mcr.microsoft.com/playwright/python:v1.50.0-noble
 
 WORKDIR /app
 
 # Create non-root user
 RUN groupadd -g 1001 mcpuser && \
-    useradd -r -u 1001 -g mcpuser mcpuser
+    useradd -r -u 1001 -g mcpuser -m mcpuser
 
 # Install dependencies
 COPY pyproject.toml .
-RUN pip install --no-cache-dir . && \
-    playwright install chromium
+RUN pip install --no-cache-dir --break-system-packages .
 
 # Copy source
 COPY src/ src/
