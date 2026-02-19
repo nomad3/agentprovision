@@ -54,8 +54,8 @@ class KnowledgeGraphService:
                 session.execute(
                     text("""
                         INSERT INTO knowledge_entities
-                        (id, tenant_id, name, entity_type, description, properties, aliases, confidence, embedding)
-                        VALUES (:id, :tenant_id, :name, :entity_type, :description, :properties, :aliases, :confidence, :embedding)
+                        (id, tenant_id, name, entity_type, description, properties, aliases, confidence, embedding, created_at, updated_at)
+                        VALUES (:id, :tenant_id, :name, :entity_type, :description, :properties, :aliases, :confidence, :embedding, NOW(), NOW())
                     """),
                     {
                         "id": entity_id,
@@ -73,8 +73,8 @@ class KnowledgeGraphService:
                 session.execute(
                     text("""
                         INSERT INTO knowledge_entities
-                        (id, tenant_id, name, entity_type, description, properties, aliases, confidence)
-                        VALUES (:id, :tenant_id, :name, :entity_type, :description, :properties, :aliases, :confidence)
+                        (id, tenant_id, name, entity_type, description, properties, aliases, confidence, created_at, updated_at)
+                        VALUES (:id, :tenant_id, :name, :entity_type, :description, :properties, :aliases, :confidence, NOW(), NOW())
                     """),
                     {
                         "id": entity_id,
@@ -294,9 +294,9 @@ class KnowledgeGraphService:
                 text("""
                     INSERT INTO knowledge_relations
                     (id, tenant_id, from_entity_id, to_entity_id, relation_type,
-                     strength, evidence)
+                     strength, evidence, created_at)
                     VALUES (:id, :tenant_id, :source_id, :target_id, :relation_type,
-                            :strength, :evidence)
+                            :strength, :evidence, NOW())
                 """),
                 {
                     "id": relation_id,
