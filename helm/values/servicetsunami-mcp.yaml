@@ -109,9 +109,6 @@ externalSecret:
     - secretKey: MCP_API_KEY
       remoteRef:
         key: servicetsunami-mcp-api-key
-    - secretKey: DATABRICKS_TOKEN
-      remoteRef:
-        key: servicetsunami-databricks-token
     - secretKey: DATABASE_URL
       remoteRef:
         key: servicetsunami-database-url
