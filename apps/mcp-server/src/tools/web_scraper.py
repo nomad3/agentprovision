@@ -115,25 +115,50 @@ async def _search_serper(query: str, max_results: int) -> list[dict]:
 
 
 async def _search_duckduckgo(query: str, max_results: int) -> list[dict]:
-    """Search via DuckDuckGo using Playwright (no CAPTCHA from cloud IPs)."""
+    """Search via DuckDuckGo API (JSON endpoint, no Playwright needed)."""
+    import httpx
+    try:
+        async with httpx.AsyncClient(timeout=15, follow_redirects=True) as client:
+            resp = await client.get(
+                "https://api.duckduckgo.com/",
+                params={"q": query, "format": "json", "no_html": "1", "skip_disambig": "1"},
+            )
+            resp.raise_for_status()
+            data = resp.json()
+        results = []
+        for item in data.get("RelatedTopics", [])[:max_results]:
+            if "FirstURL" in item:
+                results.append({
+                    "url": item["FirstURL"],
+                    "title": item.get("Text", "")[:100],
+                    "snippet": item.get("Text", ""),
+                })
+        if not results:
+            # Fallback to Bing
+            return await _search_bing(query, max_results)
+        return results
+    except Exception as e:
+        logger.warning("DuckDuckGo API failed: %s, falling back to Bing", e)
+        return await _search_bing(query, max_results)
+
+
+async def _search_bing(query: str, max_results: int) -> list[dict]:
+    """Search via Bing using Playwright (less aggressive bot detection than Google)."""
     browser_service = get_browser_service()
     async with browser_service.new_page() as page:
         await page.goto(
-            f"https://html.duckduckgo.com/html/?q={query.replace(' ', '+')}",
+            f"https://www.bing.com/search?q={query.replace(' ', '+')}",
             wait_until="domcontentloaded",
         )
+        await page.wait_for_selector("#b_results", timeout=10000)
         search_results = await page.evaluate("""() => {
             const results = [];
-            document.querySelectorAll('.result').forEach(r => {
-                const a = r.querySelector('.result__a');
-                const snippet = r.querySelector('.result__snippet');
-                if (a && a.href) {
-                    let url = a.href;
-                    // DuckDuckGo wraps URLs in a redirect
-                    const match = url.match(/uddg=([^&]+)/);
-                    if (match) url = decodeURIComponent(match[1]);
+            document.querySelectorAll('#b_results .b_algo').forEach(r => {
+                const a = r.querySelector('h2 a');
+                const snippet = r.querySelector('.b_caption p');
+                if (a && a.href && a.href.startsWith('http')) {
                     results.push({
-                        url: url,
+                        url: a.href,
                         title: a.innerText.trim(),
                         snippet: snippet ? snippet.innerText.trim() : ''
                     });
@@ -212,8 +237,11 @@ async def search_and_scrape(
     elif engine == "google":
         logger.info("Searching via Google Playwright: %s", query)
         search_results = await _search_google(query, max_results)
+    elif engine == "bing":
+        logger.info("Searching via Bing Playwright: %s", query)
+        search_results = await _search_bing(query, max_results)
     else:
-        logger.info("Searching via DuckDuckGo: %s", query)
+        logger.info("Searching via DuckDuckGo API (Bing fallback): %s", query)
         search_results = await _search_duckduckgo(query, max_results)
 
     # Scrape the top N result pages
