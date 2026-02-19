@@ -27,6 +27,9 @@ class Settings(BaseSettings):
     mcp_api_key: str = "dev_mcp_key"
     mcp_tenant_code: str = "scdp"
 
+    # MCP Scraper Server (Playwright web scraping)
+    mcp_scraper_url: str = "http://servicetsunami-mcp"
+
     # Vertex AI Vector Search
     vertex_project: str = "ai-agency-479516"
     vertex_location: str = "us-central1"

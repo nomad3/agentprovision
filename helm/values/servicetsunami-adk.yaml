@@ -86,6 +86,7 @@ configMap:
     GOOGLE_GENAI_USE_VERTEXAI: "TRUE"
     ADK_MODEL: "gemini-2.5-flash"
     MCP_SERVER_URL: "http://st-mcp-server-st-microservice"
+    MCP_SCRAPER_URL: "http://servicetsunami-mcp"
     MCP_TENANT_CODE: "scdp"
     DATABASE_HOST: "localhost"
     DATABASE_PORT: "5432"

@@ -22,7 +22,7 @@ class MCPScraperClient:
     """HTTP client for MCP server scraping endpoints."""
 
     def __init__(self):
-        self.base_url = settings.mcp_server_url
+        self.base_url = settings.mcp_scraper_url
         self.api_key = settings.mcp_api_key
         self.tenant_code = settings.mcp_tenant_code
         self.client = httpx.AsyncClient(
