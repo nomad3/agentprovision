@@ -85,6 +85,14 @@ class SearchAndScrapeRequest(BaseModel):
 class CookieImportRequest(BaseModel):
     cookies: List[Dict[str, Any]]
 
+class GoogleLoginRequest(BaseModel):
+    email: str
+    password: str
+
+class LinkedInLoginRequest(BaseModel):
+    email: str
+    password: str
+
 # ==================== Health ====================
 
 @app.get("/servicetsunami/v1/health")
@@ -209,6 +217,38 @@ async def get_cookie_status():
         "cookies_count": len(cookies),
         "domains": sorted(domains),
     }
+
+
+@app.post("/servicetsunami/v1/auth/google/login")
+async def google_login(request: GoogleLoginRequest):
+    """Login to Google via Playwright browser.
+
+    Navigates to accounts.google.com, enters email/password,
+    and stores session cookies for authenticated Google Search and other services.
+    """
+    try:
+        bs = get_browser_service()
+        result = await bs.login_google(email=request.email, password=request.password)
+        return result
+    except Exception as e:
+        logger.error("Google login endpoint failed: %s", e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/servicetsunami/v1/auth/linkedin/login")
+async def linkedin_login(request: LinkedInLoginRequest):
+    """Login to LinkedIn via Playwright browser.
+
+    Navigates to linkedin.com/login, enters email/password,
+    and stores session cookies for authenticated LinkedIn scraping.
+    """
+    try:
+        bs = get_browser_service()
+        result = await bs.login_linkedin(email=request.email, password=request.password)
+        return result
+    except Exception as e:
+        logger.error("LinkedIn login endpoint failed: %s", e)
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # ==================== Databricks Routes ====================

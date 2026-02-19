@@ -127,6 +127,45 @@ async def search_and_scrape(
     })
 
 
+async def login_google(email: str, password: str) -> dict:
+    """Login to Google via the MCP server's Playwright browser.
+
+    This authenticates the scraping browser with Google credentials so that
+    subsequent web searches and scrapes use an authenticated Google session,
+    avoiding CAPTCHA blocks from cloud IPs.
+
+    Args:
+        email: Google/Gmail email address.
+        password: Google account password.
+
+    Returns:
+        Dict with status, cookies_stored count, and authenticated domains.
+    """
+    return await _get_client().post("/servicetsunami/v1/auth/google/login", {
+        "email": email,
+        "password": password,
+    })
+
+
+async def login_linkedin(email: str, password: str) -> dict:
+    """Login to LinkedIn via the MCP server's Playwright browser.
+
+    This authenticates the scraping browser with LinkedIn credentials so that
+    subsequent LinkedIn page scrapes can access full profile and company data.
+
+    Args:
+        email: LinkedIn email address.
+        password: LinkedIn password.
+
+    Returns:
+        Dict with status, cookies_stored count, and authenticated domains.
+    """
+    return await _get_client().post("/servicetsunami/v1/auth/linkedin/login", {
+        "email": email,
+        "password": password,
+    })
+
+
 # ---------- Agent definition ----------
 
 web_researcher = Agent(
@@ -139,6 +178,7 @@ Your capabilities:
 - Search the web for companies, people, job postings, news, and market signals
 - Extract structured data from web pages using CSS selectors
 - Research companies and their key contacts for lead generation
+- Login to Google and LinkedIn to access authenticated content and avoid CAPTCHA blocks
 
 Guidelines:
 1. Start with search_and_scrape for broad research queries
@@ -148,6 +188,12 @@ Guidelines:
 5. When you find valuable entities (companies, people, technologies), delegate to knowledge_manager to store them
 6. Be methodical: search first, then scrape the most promising results for details
 7. Respect rate limits - don't scrape too many pages in rapid succession
+
+## Authentication
+- If web searches fail with CAPTCHA or blocking errors, use login_google to authenticate with a Google account first
+- If LinkedIn pages return limited data, use login_linkedin to authenticate first
+- Login only needs to be done once per session — cookies are stored and reused for subsequent requests
+- After logging in, retry the original search or scrape operation
 
 ## Entity Categorization
 
@@ -189,5 +235,7 @@ When researching leads:
         scrape_webpage,
         scrape_structured_data,
         search_and_scrape,
+        login_google,
+        login_linkedin,
     ],
 )
