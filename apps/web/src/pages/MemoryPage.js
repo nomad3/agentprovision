@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, Badge, Button, Col, Container, Form, InputGroup, Row, Spinner, Tab, Table, Tabs } from 'react-bootstrap';
+import { Alert, Badge, Button, Col, Container, Form, InputGroup, Modal, Row, Spinner, Tab, Table, Tabs } from 'react-bootstrap';
 import { FaCloudUploadAlt, FaFileAlt } from 'react-icons/fa';
 import PremiumCard from '../components/common/PremiumCard';
 import Layout from '../components/Layout';
@@ -15,6 +15,10 @@ function MemoryPage() {
   const [loading, setLoading] = useState(true);
   const [importing, setImporting] = useState(false);
   const [importMessage, setImportMessage] = useState(null);
+  const [selectedEntity, setSelectedEntity] = useState(null);
+  const [relations, setRelations] = useState([]);
+  const [relationsLoading, setRelationsLoading] = useState(false);
+  const [showRelations, setShowRelations] = useState(false);
 
   useEffect(() => {
     loadEntities();
@@ -85,6 +89,34 @@ function MemoryPage() {
       setImporting(false);
       event.target.value = null;
     }
+  };
+
+  const handleViewRelations = async (entity) => {
+    setSelectedEntity(entity);
+    setShowRelations(true);
+    setRelationsLoading(true);
+    try {
+      const res = await api.get(`/knowledge/entities/${entity.id}/relations`);
+      setRelations(res.data || []);
+    } catch (error) {
+      console.error('Failed to load relations:', error);
+      setRelations([]);
+    } finally {
+      setRelationsLoading(false);
+    }
+  };
+
+  const getRelatedEntityName = (relation) => {
+    if (relation.from_entity_id === selectedEntity?.id) {
+      const target = entities.find(e => e.id === relation.to_entity_id);
+      return target ? target.name : relation.to_entity_id;
+    }
+    const source = entities.find(e => e.id === relation.from_entity_id);
+    return source ? source.name : relation.from_entity_id;
+  };
+
+  const getRelationDirection = (relation) => {
+    return relation.from_entity_id === selectedEntity?.id ? 'outgoing' : 'incoming';
   };
 
   const categories = ['lead', 'contact', 'investor', 'accelerator', 'signal', 'organization', 'person'];
@@ -230,7 +262,7 @@ function MemoryPage() {
                         </td>
                         <td className="text-muted small">{entity.created_at ? new Date(entity.created_at).toLocaleDateString() : '-'}</td>
                         <td>
-                          <Button variant="link" size="sm" className="text-primary p-0 text-decoration-none">View Relations</Button>
+                          <Button variant="link" size="sm" className="text-primary p-0 text-decoration-none" onClick={() => handleViewRelations(entity)}>View Relations</Button>
                         </td>
                       </tr>
                     ))}
@@ -326,6 +358,62 @@ function MemoryPage() {
             </PremiumCard>
           </Tab>
         </Tabs>
+
+        <Modal show={showRelations} onHide={() => setShowRelations(false)} size="lg" centered contentClassName="bg-dark text-light border-secondary">
+          <Modal.Header closeButton closeVariant="white" className="border-secondary border-opacity-25">
+            <Modal.Title className="fs-5">
+              Relations for <span className="text-primary">{selectedEntity?.name}</span>
+              {selectedEntity?.category && (
+                <Badge bg={getCategoryBadgeColor(selectedEntity.category)} className="ms-2 bg-opacity-25 border border-secondary text-uppercase" style={{ fontSize: '0.65rem' }}>
+                  {selectedEntity.category}
+                </Badge>
+              )}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {relationsLoading ? (
+              <div className="text-center py-4"><Spinner animation="border" size="sm" className="text-primary" /></div>
+            ) : relations.length === 0 ? (
+              <p className="text-soft text-center py-4 mb-0">No relations found for this entity.</p>
+            ) : (
+              <Table hover responsive borderless className="align-middle text-soft mb-0">
+                <thead className="text-muted border-bottom border-secondary border-opacity-25">
+                  <tr>
+                    <th>Direction</th>
+                    <th>Relation</th>
+                    <th>Connected Entity</th>
+                    <th>Strength</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {relations.map((rel) => (
+                    <tr key={rel.id}>
+                      <td>
+                        <Badge bg={getRelationDirection(rel) === 'outgoing' ? 'info' : 'secondary'} className="bg-opacity-25 border border-secondary" style={{ fontSize: '0.7rem' }}>
+                          {getRelationDirection(rel) === 'outgoing' ? '\u2192 outgoing' : '\u2190 incoming'}
+                        </Badge>
+                      </td>
+                      <td>
+                        <Badge bg="primary" className="bg-opacity-25 border border-secondary text-uppercase" style={{ fontSize: '0.7rem' }}>
+                          {rel.relation_type}
+                        </Badge>
+                      </td>
+                      <td className="fw-semibold">{getRelatedEntityName(rel)}</td>
+                      <td>
+                        <div className="d-flex align-items-center gap-2">
+                          <div className="progress" style={{ height: '4px', width: '40px', backgroundColor: 'rgba(100,130,170,0.15)' }}>
+                            <div className="progress-bar bg-success" role="progressbar" style={{ width: `${(rel.strength || 1) * 100}%` }} />
+                          </div>
+                          <span className="small text-muted">{((rel.strength || 1) * 100).toFixed(0)}%</span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            )}
+          </Modal.Body>
+        </Modal>
       </Container>
     </Layout>
   );
