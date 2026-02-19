@@ -3,12 +3,26 @@
 Uses PostgreSQL with pgvector for storage and Vertex AI for embeddings.
 """
 from typing import Optional, Any
+from datetime import datetime, date
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 import uuid
 
 from config.settings import settings
 from memory.vertex_vector import get_embedding_service
+
+
+def _serialize_row(row_mapping) -> dict:
+    """Convert a SQLAlchemy row mapping to a JSON-safe dict."""
+    result = {}
+    for k, v in dict(row_mapping).items():
+        if isinstance(v, uuid.UUID):
+            result[k] = str(v)
+        elif isinstance(v, (datetime, date)):
+            result[k] = v.isoformat()
+        else:
+            result[k] = v
+    return result
 
 
 class KnowledgeGraphService:
@@ -148,7 +162,7 @@ class KnowledgeGraphService:
                     }
                 )
 
-            return [dict(row._mapping) for row in result]
+            return [_serialize_row(row._mapping) for row in result]
 
     async def get_entity(
         self,
@@ -170,7 +184,7 @@ class KnowledgeGraphService:
             if not result:
                 return {"error": "Entity not found"}
 
-            entity = dict(result._mapping)
+            entity = _serialize_row(result._mapping)
 
             if include_relations:
                 relations = session.execute(
@@ -189,7 +203,7 @@ class KnowledgeGraphService:
                     """),
                     {"entity_id": entity_id}
                 )
-                entity["relations"] = [dict(row._mapping) for row in relations]
+                entity["relations"] = [_serialize_row(row._mapping) for row in relations]
 
             return entity
 
@@ -355,7 +369,7 @@ class KnowledgeGraphService:
                 params
             )
 
-            return [dict(row._mapping) for row in result]
+            return [_serialize_row(row._mapping) for row in result]
 
     async def get_path(
         self,
@@ -556,7 +570,7 @@ class KnowledgeGraphService:
                 {"entity_id": entity_id}
             )
 
-            return [dict(row._mapping) for row in result]
+            return [_serialize_row(row._mapping) for row in result]
 
 
 # Singleton instance
