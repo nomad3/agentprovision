@@ -21,7 +21,7 @@ class ADKClient:
         *,
         base_url: str,
         app_name: str,
-        timeout: float = 60.0,
+        timeout: float = 300.0,
         client: Optional[httpx.Client] = None,
     ) -> None:
         if not base_url:
