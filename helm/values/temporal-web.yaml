@@ -17,16 +17,13 @@ serviceAccount:
   create: true
   annotations: {}
 
-# Pod security
+# Pod security - temporalio/ui needs to write ./config/docker.yaml at startup
 podSecurityContext:
-  runAsNonRoot: true
-  runAsUser: 1000
-  runAsGroup: 1000
   fsGroup: 1000
 
 securityContext:
   allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: false  # temporalio/ui writes ./config/docker.yaml at startup
+  readOnlyRootFilesystem: false
   capabilities:
     drop:
       - ALL
