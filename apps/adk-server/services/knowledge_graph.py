@@ -4,6 +4,7 @@ Uses PostgreSQL with pgvector for storage and Vertex AI for embeddings.
 """
 from typing import Optional, Any
 from datetime import datetime, date
+from decimal import Decimal
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 import uuid
@@ -20,6 +21,8 @@ def _serialize_row(row_mapping) -> dict:
             result[k] = str(v)
         elif isinstance(v, (datetime, date)):
             result[k] = v.isoformat()
+        elif isinstance(v, Decimal):
+            result[k] = float(v)
         else:
             result[k] = v
     return result
