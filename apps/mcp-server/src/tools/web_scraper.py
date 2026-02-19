@@ -156,10 +156,19 @@ async def _search_bing(query: str, max_results: int) -> list[dict]:
             document.querySelectorAll('#b_results .b_algo').forEach(r => {
                 const a = r.querySelector('h2 a');
                 const snippet = r.querySelector('.b_caption p');
-                if (a && a.href && a.href.startsWith('http')) {
+                // Extract actual URL from cite element (avoids Bing redirect wrapper)
+                const cite = r.querySelector('cite');
+                let url = '';
+                if (cite) {
+                    url = cite.innerText.trim();
+                    if (!url.startsWith('http')) url = 'https://' + url;
+                } else if (a && a.href) {
+                    url = a.href;
+                }
+                if (url && !url.includes('bing.com/ck/')) {
                     results.push({
-                        url: a.href,
-                        title: a.innerText.trim(),
+                        url: url,
+                        title: a ? a.innerText.trim() : '',
                         snippet: snippet ? snippet.innerText.trim() : ''
                     });
                 }
