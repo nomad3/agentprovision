@@ -59,6 +59,7 @@ class KnowledgeGraphService:
         description: str = None,
         aliases: list = None,
         confidence: float = 1.0,
+        category: str = None,
     ) -> dict:
         """Create a new knowledge entity."""
         entity_id = str(uuid.uuid4())
@@ -71,14 +72,15 @@ class KnowledgeGraphService:
                 session.execute(
                     text("""
                         INSERT INTO knowledge_entities
-                        (id, tenant_id, name, entity_type, description, properties, aliases, confidence, embedding, created_at, updated_at)
-                        VALUES (:id, :tenant_id, :name, :entity_type, :description, :properties, :aliases, :confidence, :embedding, NOW(), NOW())
+                        (id, tenant_id, name, entity_type, category, description, properties, aliases, confidence, embedding, created_at, updated_at)
+                        VALUES (:id, :tenant_id, :name, :entity_type, :category, :description, :properties, :aliases, :confidence, :embedding, NOW(), NOW())
                     """),
                     {
                         "id": entity_id,
                         "tenant_id": tenant_id,
                         "name": name,
                         "entity_type": entity_type,
+                        "category": category,
                         "description": description,
                         "properties": json.dumps(properties or {}),
                         "aliases": json.dumps(aliases or []),
@@ -90,14 +92,15 @@ class KnowledgeGraphService:
                 session.execute(
                     text("""
                         INSERT INTO knowledge_entities
-                        (id, tenant_id, name, entity_type, description, properties, aliases, confidence, created_at, updated_at)
-                        VALUES (:id, :tenant_id, :name, :entity_type, :description, :properties, :aliases, :confidence, NOW(), NOW())
+                        (id, tenant_id, name, entity_type, category, description, properties, aliases, confidence, created_at, updated_at)
+                        VALUES (:id, :tenant_id, :name, :entity_type, :category, :description, :properties, :aliases, :confidence, NOW(), NOW())
                     """),
                     {
                         "id": entity_id,
                         "tenant_id": tenant_id,
                         "name": name,
                         "entity_type": entity_type,
+                        "category": category,
                         "description": description,
                         "properties": json.dumps(properties or {}),
                         "aliases": json.dumps(aliases or []),
@@ -106,7 +109,7 @@ class KnowledgeGraphService:
                 )
             session.commit()
 
-        return {"id": entity_id, "name": name, "entity_type": entity_type}
+        return {"id": entity_id, "name": name, "entity_type": entity_type, "category": category}
 
     async def find_entities(
         self,
@@ -127,7 +130,7 @@ class KnowledgeGraphService:
                 query_embedding = await self.embedding_service.get_embedding(query)
                 result = session.execute(
                     text(f"""
-                        SELECT id, name, entity_type, description, confidence,
+                        SELECT id, name, entity_type, category, description, confidence,
                                1 - (embedding <=> :embedding) as similarity
                         FROM knowledge_entities
                         WHERE tenant_id = :tenant_id
@@ -147,7 +150,7 @@ class KnowledgeGraphService:
                 # Text-based fallback when pgvector is not available
                 result = session.execute(
                     text(f"""
-                        SELECT id, name, entity_type, description, confidence,
+                        SELECT id, name, entity_type, category, description, confidence,
                                1.0 as similarity
                         FROM knowledge_entities
                         WHERE tenant_id = :tenant_id
@@ -176,7 +179,7 @@ class KnowledgeGraphService:
         with self.Session() as session:
             result = session.execute(
                 text("""
-                    SELECT id, tenant_id, name, entity_type, description,
+                    SELECT id, tenant_id, name, entity_type, category, description,
                            properties, aliases, confidence, created_at, updated_at
                     FROM knowledge_entities
                     WHERE id = :entity_id
@@ -477,6 +480,7 @@ class KnowledgeGraphService:
             tenant_id=tenant_id,
             description=content,
             properties=metadata,
+            category=metadata.get("category"),
         )
         return entity["id"]
 

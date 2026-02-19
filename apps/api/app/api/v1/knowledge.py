@@ -30,6 +30,7 @@ def create_entity(
 @router.get("/entities", response_model=List[KnowledgeEntity])
 def list_entities(
     entity_type: Optional[str] = None,
+    category: Optional[str] = None,
     status: Optional[str] = None,
     task_id: Optional[uuid.UUID] = None,
     skip: int = 0,
@@ -40,7 +41,7 @@ def list_entities(
     """List entities with optional filters."""
     return service.get_entities(
         db, current_user.tenant_id, entity_type, skip, limit,
-        status=status, task_id=task_id,
+        status=status, task_id=task_id, category=category,
     )
 
 
@@ -48,11 +49,12 @@ def list_entities(
 def search_entities(
     q: str,
     entity_type: Optional[str] = None,
+    category: Optional[str] = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """Search entities by name."""
-    return service.search_entities(db, current_user.tenant_id, q, entity_type)
+    return service.search_entities(db, current_user.tenant_id, q, entity_type, category=category)
 
 
 @router.post("/entities/bulk", response_model=KnowledgeEntityBulkResponse, status_code=201)

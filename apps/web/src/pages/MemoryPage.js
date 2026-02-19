@@ -9,6 +9,7 @@ import { memoryService } from '../services/memory';
 function MemoryPage() {
   const [entities, setEntities] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
   const [entityType, setEntityType] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [loading, setLoading] = useState(true);
@@ -17,12 +18,13 @@ function MemoryPage() {
 
   useEffect(() => {
     loadEntities();
-  }, [entityType, statusFilter]);
+  }, [categoryFilter, entityType, statusFilter]);
 
   const loadEntities = async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
+      if (categoryFilter) params.append('category', categoryFilter);
       if (entityType) params.append('entity_type', entityType);
       if (statusFilter) params.append('status', statusFilter);
       params.append('limit', '100');
@@ -81,28 +83,40 @@ function MemoryPage() {
       });
     } finally {
       setImporting(false);
-      // Reset file input
       event.target.value = null;
     }
   };
 
-  const entityTypes = ['customer', 'product', 'concept', 'person', 'organization', 'prospect', 'location'];
+  const categories = ['lead', 'contact', 'investor', 'accelerator', 'signal', 'organization', 'person'];
+
+  const getCategoryBadgeColor = (category) => {
+    switch (category) {
+      case 'lead': return 'success';
+      case 'contact': return 'info';
+      case 'investor': return 'primary';
+      case 'accelerator': return 'info';
+      case 'signal': return 'warning';
+      default: return 'secondary';
+    }
+  };
+
+  const uniqueTypes = [...new Set(entities.map(e => e.entity_type))].sort();
 
   return (
     <Layout>
       <Container fluid className="py-2">
         <Row className="mb-4">
           <Col>
-            <h2 className="fw-bold mb-1">Memory & Knowledge</h2>
-            <p className="text-soft mb-0">Explore agent memories and knowledge graph</p>
+            <h2 className="fw-bold mb-1">Memory</h2>
+            <p className="text-soft mb-0">Entities, signals, and relations</p>
           </Col>
         </Row>
 
-        <Tabs defaultActiveKey="knowledge" className="mb-4 custom-tabs">
-          <Tab eventKey="knowledge" title="Knowledge Graph">
+        <Tabs defaultActiveKey="entities" className="mb-4 custom-tabs">
+          <Tab eventKey="entities" title="Entities">
             <PremiumCard>
               <Row className="mb-4">
-                <Col md={6}>
+                <Col md={4}>
                   <InputGroup>
                     <Form.Control
                       placeholder="Search entities..."
@@ -114,19 +128,31 @@ function MemoryPage() {
                     <Button variant="outline-primary" onClick={handleSearch}>Search</Button>
                   </InputGroup>
                 </Col>
-                <Col md={3}>
+                <Col md={2}>
+                  <Form.Select
+                    value={categoryFilter}
+                    onChange={(e) => setCategoryFilter(e.target.value)}
+                    className="border-secondary border-opacity-50"
+                  >
+                    <option value="">All Categories</option>
+                    {categories.map(cat => (
+                      <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
+                    ))}
+                  </Form.Select>
+                </Col>
+                <Col md={2}>
                   <Form.Select
                     value={entityType}
                     onChange={(e) => setEntityType(e.target.value)}
                     className="border-secondary border-opacity-50"
                   >
                     <option value="">All Types</option>
-                    {entityTypes.map(type => (
+                    {uniqueTypes.map(type => (
                       <option key={type} value={type}>{type}</option>
                     ))}
                   </Form.Select>
                 </Col>
-                <Col md={3}>
+                <Col md={2}>
                   <Form.Select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
@@ -147,6 +173,7 @@ function MemoryPage() {
                   <thead className="text-muted border-bottom border-secondary border-opacity-25">
                     <tr>
                       <th>Name</th>
+                      <th>Category</th>
                       <th>Type</th>
                       <th>Status</th>
                       <th>Confidence</th>
@@ -159,6 +186,15 @@ function MemoryPage() {
                     {entities.map((entity) => (
                       <tr key={entity.id}>
                         <td className="fw-semibold">{entity.name}</td>
+                        <td>
+                          <Badge
+                            bg={getCategoryBadgeColor(entity.category)}
+                            className="bg-opacity-25 border border-secondary text-uppercase"
+                            style={{ fontSize: '0.7rem' }}
+                          >
+                            {entity.category || 'uncategorized'}
+                          </Badge>
+                        </td>
                         <td>
                           <Badge bg="secondary" className="bg-opacity-25 border border-secondary text-uppercase" style={{ fontSize: '0.7rem' }}>
                             {entity.entity_type}
@@ -192,7 +228,7 @@ function MemoryPage() {
                             </a>
                           ) : '-'}
                         </td>
-                        <td className="text-muted small">{new Date(entity.created_at).toLocaleDateString()}</td>
+                        <td className="text-muted small">{entity.created_at ? new Date(entity.created_at).toLocaleDateString() : '-'}</td>
                         <td>
                           <Button variant="link" size="sm" className="text-primary p-0 text-decoration-none">View Relations</Button>
                         </td>
@@ -200,7 +236,7 @@ function MemoryPage() {
                     ))}
                     {entities.length === 0 && (
                       <tr>
-                        <td colSpan="7" className="text-center py-4">No entities found. Import chat history to build knowledge.</td>
+                        <td colSpan="8" className="text-center py-4">No entities found. Use the AI agent to research and store leads, contacts, and signals.</td>
                       </tr>
                     )}
                   </tbody>
@@ -217,7 +253,7 @@ function MemoryPage() {
             </PremiumCard>
           </Tab>
 
-          <Tab eventKey="import" title="Import Knowledge">
+          <Tab eventKey="import" title="Import">
             <PremiumCard>
               <div className="mb-4">
                 <h4>Import Chat History</h4>

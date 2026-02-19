@@ -17,6 +17,7 @@ class KnowledgeEntity(Base):
 
     # Entity definition
     entity_type = Column(String, nullable=False)  # customer, product, concept, person, organization, location
+    category = Column(String(50), nullable=True)  # lead, contact, investor, accelerator, signal, organization, person
     name = Column(String, nullable=False, index=True)
     description = Column(Text, nullable=True)  # Entity description for semantic search
     attributes = Column(JSON, nullable=True)  # Flexible attribute storage

@@ -14,6 +14,7 @@ def create_entity(db: Session, entity_in: KnowledgeEntityCreate, tenant_id: uuid
     entity = KnowledgeEntity(
         tenant_id=tenant_id,
         entity_type=entity_in.entity_type,
+        category=entity_in.category,
         name=entity_in.name,
         attributes=entity_in.attributes,
         confidence=entity_in.confidence or 1.0,
@@ -45,6 +46,7 @@ def get_entities(
     limit: int = 100,
     status: str = None,
     task_id: uuid.UUID = None,
+    category: str = None,
 ) -> List[KnowledgeEntity]:
     """List entities with optional filters."""
     query = db.query(KnowledgeEntity).filter(KnowledgeEntity.tenant_id == tenant_id)
@@ -54,14 +56,17 @@ def get_entities(
         query = query.filter(KnowledgeEntity.status == status)
     if task_id:
         query = query.filter(KnowledgeEntity.collection_task_id == task_id)
-    return query.offset(skip).limit(limit).all()
+    if category:
+        query = query.filter(KnowledgeEntity.category == category)
+    return query.order_by(KnowledgeEntity.created_at.desc()).offset(skip).limit(limit).all()
 
 
 def search_entities(
     db: Session,
     tenant_id: uuid.UUID,
     name_query: str,
-    entity_type: str = None
+    entity_type: str = None,
+    category: str = None,
 ) -> List[KnowledgeEntity]:
     """Search entities by name."""
     query = db.query(KnowledgeEntity).filter(
@@ -70,6 +75,8 @@ def search_entities(
     )
     if entity_type:
         query = query.filter(KnowledgeEntity.entity_type == entity_type)
+    if category:
+        query = query.filter(KnowledgeEntity.category == category)
     return query.limit(50).all()
 
 
@@ -133,6 +140,7 @@ def bulk_create_entities(
         entity = KnowledgeEntity(
             tenant_id=tenant_id,
             entity_type=entity_in.entity_type,
+            category=entity_in.category,
             name=entity_in.name,
             attributes=entity_in.attributes,
             confidence=entity_in.confidence or 1.0,
@@ -161,11 +169,14 @@ def get_collection_summary(db: Session, task_id: uuid.UUID, tenant_id: uuid.UUID
 
     by_status: Dict[str, int] = {}
     by_type: Dict[str, int] = {}
+    by_category: Dict[str, int] = {}
     sources = set()
 
     for e in entities:
         by_status[e.status or "draft"] = by_status.get(e.status or "draft", 0) + 1
         by_type[e.entity_type] = by_type.get(e.entity_type, 0) + 1
+        cat = e.category or "uncategorized"
+        by_category[cat] = by_category.get(cat, 0) + 1
         if e.source_url:
             sources.add(e.source_url)
 
@@ -174,6 +185,7 @@ def get_collection_summary(db: Session, task_id: uuid.UUID, tenant_id: uuid.UUID
         "total_entities": len(entities),
         "by_status": by_status,
         "by_type": by_type,
+        "by_category": by_category,
         "sources": list(sources),
     }
 

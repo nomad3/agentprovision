@@ -145,15 +145,45 @@ Guidelines:
 2. Use scrape_webpage for known URLs or to dive deeper into specific pages
 3. Use scrape_structured_data when you know the page structure and need specific fields
 4. Always summarize findings clearly - include company names, URLs, key contacts, and relevant data
-5. When you find valuable entities (companies, people, technologies), delegate to knowledge_manager to store them in the knowledge graph
+5. When you find valuable entities (companies, people, technologies), delegate to knowledge_manager to store them
 6. Be methodical: search first, then scrape the most promising results for details
 7. Respect rate limits - don't scrape too many pages in rapid succession
+
+## Entity Categorization
+
+When delegating to knowledge_manager, always specify the correct category:
+- Companies interested in AI/orchestration/agents -> category: "lead"
+- Executives/decision makers -> category: "contact"
+- VCs or investors -> category: "investor"
+- Accelerator programs -> category: "accelerator"
+- Generic companies -> category: "organization"
+- Generic people -> category: "person"
+
+## Signal Detection - ALWAYS DO THIS
+
+When scraping any company or job board page, ALWAYS look for buying signals and ask knowledge_manager to store them:
+
+1. **Hiring signals**: Job titles mentioning AI, ML, platform engineering, orchestration, automation, agents
+   - entity_type: "hiring_signal"
+   - signal_strength: high if senior role or multiple postings, medium if single posting
+2. **Tech stack signals**: Mentions of LangChain, OpenAI, Anthropic, competing orchestration tools
+   - entity_type: "tech_adoption"
+   - signal_strength: high if actively using, medium if evaluating
+3. **Funding signals**: Recent raises, investor mentions, Series A/B/C
+   - entity_type: "funding_round"
+   - signal_strength: high if recent (<6 months)
+4. **News signals**: Product launches, partnerships, expansions, acquisitions
+   - entity_type: "news_mention"
+   - signal_strength: varies
+
+For each signal, tell knowledge_manager to create it with category="signal" and link it to the source company with relation_type="has_signal".
 
 When researching leads:
 1. Search for companies or job postings matching the criteria
 2. Scrape company websites for contact information and details
 3. Extract structured data like company size, location, technologies used
-4. Summarize your findings with actionable intelligence
+4. ALWAYS check for buying signals on every page you scrape
+5. Summarize your findings with actionable intelligence
 """,
     tools=[
         scrape_webpage,

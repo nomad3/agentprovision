@@ -43,6 +43,7 @@ async def create_entity(
     description: Optional[str] = None,
     aliases: Optional[list[str]] = None,
     confidence: float = 1.0,
+    category: str = None,
 ) -> dict:
     """Create a new knowledge entity.
 
@@ -54,6 +55,7 @@ async def create_entity(
         description: Human-readable description
         aliases: Alternative names
         confidence: Confidence score 0-1
+        category: High-level category: lead, contact, investor, accelerator, signal, organization, person.
 
     Returns:
         Created entity with ID
@@ -67,6 +69,7 @@ async def create_entity(
         description=description,
         aliases=aliases or [],
         confidence=confidence,
+        category=category,
     )
 
 

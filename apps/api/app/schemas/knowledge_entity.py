@@ -7,6 +7,7 @@ import uuid
 
 class KnowledgeEntityBase(BaseModel):
     entity_type: str  # customer, product, concept, person, organization, prospect
+    category: Optional[str] = None  # lead, contact, investor, accelerator, signal, organization, person
     name: str
     attributes: Optional[Dict[str, Any]] = None
     confidence: Optional[float] = 1.0
@@ -22,6 +23,7 @@ class KnowledgeEntityCreate(KnowledgeEntityBase):
 
 class KnowledgeEntityUpdate(BaseModel):
     name: Optional[str] = None
+    category: Optional[str] = None
     attributes: Optional[Dict[str, Any]] = None
     confidence: Optional[float] = None
     status: Optional[str] = None
@@ -61,4 +63,5 @@ class CollectionSummary(BaseModel):
     total_entities: int
     by_status: Dict[str, int]
     by_type: Dict[str, int]
+    by_category: Dict[str, int]
     sources: List[str]
