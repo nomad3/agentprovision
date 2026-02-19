@@ -75,9 +75,10 @@ configMap:
 externalSecret:
   enabled: false
 
-# Temporary directories
+# Temporary directories - /home/ui-server/config needed for docker.yaml at startup
 tmpDirs:
   - /tmp
+  - /home/ui-server/config
 
 # No autoscaling
 autoscaling:
