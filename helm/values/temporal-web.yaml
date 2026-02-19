@@ -26,7 +26,7 @@ podSecurityContext:
 
 securityContext:
   allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: true
+  readOnlyRootFilesystem: false  # temporalio/ui writes ./config/docker.yaml at startup
   capabilities:
     drop:
       - ALL
