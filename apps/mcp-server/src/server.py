@@ -79,8 +79,11 @@ class ScrapeStructuredRequest(BaseModel):
 
 class SearchAndScrapeRequest(BaseModel):
     query: str
-    engine: str = "google"
+    engine: str = ""
     max_results: int = 5
+
+class CookieImportRequest(BaseModel):
+    cookies: List[Dict[str, Any]]
 
 # ==================== Health ====================
 
@@ -172,6 +175,41 @@ async def search_and_scrape_endpoint(request: SearchAndScrapeRequest):
     except Exception as e:
         logger.error("Search and scrape failed for '%s': %s", request.query, e)
         raise HTTPException(status_code=500, detail=str(e))
+
+# ==================== Cookie Auth ====================
+
+@app.post("/servicetsunami/v1/auth/cookies")
+async def import_cookies(request: CookieImportRequest):
+    """Import browser cookies for authenticated scraping (Google, LinkedIn, etc.)."""
+    bs = get_browser_service()
+    bs.set_cookies(request.cookies)
+    domains = set()
+    for c in request.cookies:
+        d = c.get("domain", "")
+        if d:
+            domains.add(d.lstrip("."))
+    return {
+        "status": "ok",
+        "cookies_imported": len(request.cookies),
+        "domains": sorted(domains),
+    }
+
+
+@app.get("/servicetsunami/v1/auth/cookies")
+async def get_cookie_status():
+    """Check what cookies are stored."""
+    bs = get_browser_service()
+    cookies = bs.get_cookies()
+    domains = set()
+    for c in cookies:
+        d = c.get("domain", "")
+        if d:
+            domains.add(d.lstrip("."))
+    return {
+        "cookies_count": len(cookies),
+        "domains": sorted(domains),
+    }
+
 
 # ==================== Databricks Routes ====================
 

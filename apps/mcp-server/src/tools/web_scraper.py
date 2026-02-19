@@ -93,26 +93,61 @@ async def scrape_structured_data(
         }
 
 
-async def search_and_scrape(
-    query: str,
-    engine: str = "google",
-    max_results: int = 5,
-) -> list[dict]:
-    """Search the web via Playwright and scrape top results.
+async def _search_serper(query: str, max_results: int) -> list[dict]:
+    """Search via Serper.dev API (no CAPTCHA, fast, reliable)."""
+    import httpx
+    async with httpx.AsyncClient(timeout=15) as client:
+        resp = await client.post(
+            "https://google.serper.dev/search",
+            json={"q": query, "num": max_results},
+            headers={"X-API-KEY": settings.SERPER_API_KEY, "Content-Type": "application/json"},
+        )
+        resp.raise_for_status()
+        data = resp.json()
+    results = []
+    for item in data.get("organic", [])[:max_results]:
+        results.append({
+            "url": item.get("link", ""),
+            "title": item.get("title", ""),
+            "snippet": item.get("snippet", ""),
+        })
+    return results
 
-    Args:
-        query: Search query string.
-        engine: Search engine to use (currently only "google").
-        max_results: Maximum number of results to scrape.
 
-    Returns:
-        [{url, title, snippet, content}]
-    """
-    max_results = min(max_results, settings.SCRAPE_MAX_RESULTS)
+async def _search_duckduckgo(query: str, max_results: int) -> list[dict]:
+    """Search via DuckDuckGo using Playwright (no CAPTCHA from cloud IPs)."""
     browser_service = get_browser_service()
-
     async with browser_service.new_page() as page:
-        # Navigate to Google and search
+        await page.goto(
+            f"https://html.duckduckgo.com/html/?q={query.replace(' ', '+')}",
+            wait_until="domcontentloaded",
+        )
+        search_results = await page.evaluate("""() => {
+            const results = [];
+            document.querySelectorAll('.result').forEach(r => {
+                const a = r.querySelector('.result__a');
+                const snippet = r.querySelector('.result__snippet');
+                if (a && a.href) {
+                    let url = a.href;
+                    // DuckDuckGo wraps URLs in a redirect
+                    const match = url.match(/uddg=([^&]+)/);
+                    if (match) url = decodeURIComponent(match[1]);
+                    results.push({
+                        url: url,
+                        title: a.innerText.trim(),
+                        snippet: snippet ? snippet.innerText.trim() : ''
+                    });
+                }
+            });
+            return results;
+        }""")
+    return search_results[:max_results]
+
+
+async def _search_google(query: str, max_results: int) -> list[dict]:
+    """Search via Google using Playwright (may hit CAPTCHA from cloud IPs)."""
+    browser_service = get_browser_service()
+    async with browser_service.new_page() as page:
         await page.goto("https://www.google.com", wait_until="domcontentloaded")
 
         # Accept cookies if the consent dialog appears
@@ -124,13 +159,11 @@ async def search_and_scrape(
         except Exception:
             pass
 
-        # Type the query and search
         search_input = page.locator('textarea[name="q"], input[name="q"]')
         await search_input.fill(query)
         await search_input.press("Enter")
         await page.wait_for_selector("#search", timeout=10000)
 
-        # Collect search result URLs and snippets
         search_results = await page.evaluate("""() => {
             const results = [];
             document.querySelectorAll('#search .g').forEach(g => {
@@ -146,6 +179,42 @@ async def search_and_scrape(
             });
             return results;
         }""")
+    return search_results[:max_results]
+
+
+async def search_and_scrape(
+    query: str,
+    engine: str = "",
+    max_results: int = 5,
+) -> list[dict]:
+    """Search the web and scrape top results.
+
+    Uses Serper API if configured, otherwise DuckDuckGo (no CAPTCHA),
+    with Google as an explicit option (may CAPTCHA from cloud IPs).
+
+    Args:
+        query: Search query string.
+        engine: "serper", "duckduckgo", or "google". Defaults to config.
+        max_results: Maximum number of results to scrape.
+
+    Returns:
+        [{url, title, snippet, content}]
+    """
+    max_results = min(max_results, settings.SCRAPE_MAX_RESULTS)
+    engine = engine or settings.SEARCH_ENGINE
+
+    # Pick search backend
+    if engine == "serper" or (not engine and settings.SERPER_API_KEY):
+        if not settings.SERPER_API_KEY:
+            raise ValueError("SERPER_API_KEY not configured")
+        logger.info("Searching via Serper API: %s", query)
+        search_results = await _search_serper(query, max_results)
+    elif engine == "google":
+        logger.info("Searching via Google Playwright: %s", query)
+        search_results = await _search_google(query, max_results)
+    else:
+        logger.info("Searching via DuckDuckGo: %s", query)
+        search_results = await _search_duckduckgo(query, max_results)
 
     # Scrape the top N result pages
     results = []

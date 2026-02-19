@@ -1,6 +1,8 @@
-"""Playwright browser lifecycle manager with anti-detection and pooling."""
+"""Playwright browser lifecycle manager with anti-detection, cookie auth, and pooling."""
 import asyncio
+import json
 import logging
+from pathlib import Path
 from typing import Optional
 from contextlib import asynccontextmanager
 
@@ -32,6 +34,8 @@ WEBDRIVER_MASK_SCRIPT = """
     });
 """
 
+COOKIE_STORE_PATH = Path("/tmp/mcp_cookies.json")
+
 
 class BrowserService:
     """Manages a reusable Playwright browser instance with anti-detection."""
@@ -40,7 +44,31 @@ class BrowserService:
         self._playwright: Optional[Playwright] = None
         self._browser: Optional[Browser] = None
         self._lock = asyncio.Lock()
+        self._cookies: list[dict] = []
         self.circuit_breaker = CircuitBreaker(failure_threshold=5, recovery_timeout=120)
+        self._load_stored_cookies()
+
+    def _load_stored_cookies(self):
+        """Load cookies from persistent storage if available."""
+        if COOKIE_STORE_PATH.exists():
+            try:
+                self._cookies = json.loads(COOKIE_STORE_PATH.read_text())
+                logger.info("Loaded %d stored cookies", len(self._cookies))
+            except Exception as e:
+                logger.warning("Failed to load stored cookies: %s", e)
+
+    def set_cookies(self, cookies: list[dict]):
+        """Store cookies for injection into browser contexts."""
+        self._cookies = cookies
+        try:
+            COOKIE_STORE_PATH.write_text(json.dumps(cookies))
+            logger.info("Stored %d cookies to %s", len(cookies), COOKIE_STORE_PATH)
+        except Exception as e:
+            logger.warning("Failed to persist cookies: %s", e)
+
+    def get_cookies(self) -> list[dict]:
+        """Return currently stored cookies."""
+        return self._cookies
 
     async def start(self):
         """Start the browser pool."""
@@ -71,8 +99,12 @@ class BrowserService:
             await self.start()
 
     @asynccontextmanager
-    async def new_page(self, timeout: Optional[int] = None):
+    async def new_page(self, timeout: Optional[int] = None, use_cookies: bool = True):
         """Create a new browser page with anti-detection context.
+
+        Args:
+            timeout: Page timeout in ms.
+            use_cookies: Whether to inject stored cookies into the context.
 
         Usage:
             async with browser_service.new_page() as page:
@@ -96,6 +128,9 @@ class BrowserService:
                 timezone_id="America/New_York",
             )
             await context.add_init_script(WEBDRIVER_MASK_SCRIPT)
+            if use_cookies and self._cookies:
+                await context.add_cookies(self._cookies)
+                logger.debug("Injected %d cookies into context", len(self._cookies))
             page = await context.new_page()
             page.set_default_timeout(page_timeout)
             self.circuit_breaker.record_success()

@@ -26,6 +26,10 @@ class Settings(BaseSettings):
     BROWSER_TIMEOUT: int = 30000
     SCRAPE_MAX_RESULTS: int = 10
 
+    # Search API (optional - falls back to DuckDuckGo if not set)
+    SERPER_API_KEY: str = ""
+    SEARCH_ENGINE: str = "duckduckgo"  # "duckduckgo", "serper", or "google"
+
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
