@@ -4,7 +4,12 @@ Handles all knowledge graph and memory operations:
 - Storing and retrieving facts
 - Managing entity relationships
 - Semantic search across knowledge base
+- Lead scoring for entities
 """
+import logging
+from typing import Optional
+
+import httpx
 from google.adk.agents import Agent
 
 from tools.knowledge_tools import (
@@ -24,6 +29,55 @@ from tools.knowledge_tools import (
     get_entity_timeline,
 )
 from config.settings import settings
+
+logger = logging.getLogger(__name__)
+
+# ---------- API helper for callbacks to FastAPI backend ----------
+
+_http_client: Optional[httpx.AsyncClient] = None
+
+
+def _get_http_client() -> httpx.AsyncClient:
+    global _http_client
+    if _http_client is None:
+        _http_client = httpx.AsyncClient(
+            base_url=settings.api_base_url,
+            timeout=30.0,
+        )
+    return _http_client
+
+
+async def _call_api(method: str, path: str, **kwargs) -> dict:
+    """Call the FastAPI backend and return the JSON response."""
+    client = _get_http_client()
+    try:
+        response = await client.request(method, f"/api/v1{path}", **kwargs)
+        response.raise_for_status()
+        return response.json()
+    except httpx.HTTPStatusError as e:
+        logger.error("API %s %s returned %s: %s", method, path, e.response.status_code, e.response.text[:300])
+        return {"error": f"API call failed with status {e.response.status_code}"}
+    except Exception as e:
+        logger.error("API %s %s failed: %s", method, path, e)
+        return {"error": f"API call failed: {str(e)}"}
+
+
+# ---------- Tool functions ----------
+
+
+async def score_entity(entity_id: str) -> dict:
+    """Compute a composite lead score (0-100) for an entity.
+
+    Uses LLM analysis of the entity's properties, relations, and context to score
+    based on hiring signals, tech stack alignment, funding, company size, news, and direct fit.
+
+    Args:
+        entity_id: UUID of the entity to score.
+
+    Returns:
+        Dict with score (0-100), breakdown by category, and reasoning.
+    """
+    return await _call_api("POST", f"/knowledge/entities/{entity_id}/score")
 
 
 knowledge_manager = Agent(
@@ -52,27 +106,26 @@ When creating entities, ALWAYS set both `category` and `entity_type`:
 | contact | Decision makers and key people at companies | cto, vp_engineering, ceo, head_of_ai, founder |
 | investor | VCs, angels, funding sources | vc_fund, angel_investor, corporate_vc |
 | accelerator | Programs, incubators, startup programs | accelerator, incubator, startup_program |
-| signal | Buying signals and market intelligence | job_posting, hiring_signal, tech_adoption, funding_round, news_mention |
 | organization | Generic companies (when not a lead) | company, nonprofit, government |
 | person | Generic people (when not a contact) | employee, researcher |
 
 The `category` is the high-level bucket. The `entity_type` is the specific granular type - use any descriptive string.
 
-## Signal Entities
+## Lead Scoring
 
-Signals are entities with `category='signal'`. When you detect buying signals, create them as signal entities and link them to the source company:
+After creating or enriching a lead entity, score it using the score_entity tool.
+This computes a composite 0-100 score based on:
+- Hiring signals (AI/ML/agent job posts): 0-25 pts
+- Tech stack alignment (LangChain, OpenAI, etc.): 0-20 pts
+- Funding recency: 0-20 pts
+- Company size/stage fit: 0-15 pts
+- News/momentum: 0-10 pts
+- Direct fit indicators: 0-10 pts
 
-Signal properties (stored in `properties` JSON):
-- signal_type: hiring_signal, tech_adoption, funding_round, news_mention
-- signal_strength: high, medium, low
-- signal_source: linkedin, website, news, job_board
-- signal_detail: description of the signal
-- detected_at: ISO date string
-- source_url: URL where signal was found
+Always report the score and key factors to the user after scoring.
 
-After creating a signal entity, create a relation from the source company to the signal:
-- relation_type: "has_signal"
-- strength: 0.5-1.0 based on signal_strength
+Do NOT create separate signal entities. Instead, store raw intelligence
+(hiring posts, tech mentions, funding data) directly in the entity's properties field.
 
 ## Relationship Types
 
@@ -104,5 +157,6 @@ Guidelines:
         record_observation,
         ask_knowledge_graph,
         get_entity_timeline,
+        score_entity,
     ],
 )

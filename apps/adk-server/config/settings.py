@@ -30,6 +30,9 @@ class Settings(BaseSettings):
     # MCP Scraper Server (Playwright web scraping)
     mcp_scraper_url: str = "http://servicetsunami-mcp"
 
+    # FastAPI backend (for ADK -> API callbacks like lead scoring)
+    api_base_url: str = "http://servicetsunami-api:8000"
+
     # Vertex AI Vector Search
     vertex_project: str = "ai-agency-479516"
     vertex_location: str = "us-central1"
