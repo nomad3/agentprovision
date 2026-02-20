@@ -30,8 +30,9 @@ const AgentWizard = () => {
     template: null,
     basicInfo: { name: '', description: '', avatar: '' },
     personality: { preset: 'friendly', temperature: 0.7, max_tokens: 2000, system_prompt: '' },
-    skills: { sql_query: false, data_summary: false, calculator: false, entity_extraction: false, knowledge_search: false },
+    skills: { sql_query: false, data_summary: false, calculator: false, entity_extraction: false, knowledge_search: false, lead_scoring: false },
     datasets: [],
+    scoring_rubric: null,
   });
   const [datasets, setDatasets] = useState([]);
   const [creating, setCreating] = useState(false);
@@ -161,6 +162,7 @@ const AgentWizard = () => {
             .map(([tool, _]) => tool),
           datasets: wizardData.datasets,
           entity_schema: wizardData.template?.config?.entity_schema || null,
+          scoring_rubric: wizardData.scoring_rubric || null,
         },
       };
 
@@ -235,7 +237,8 @@ const AgentWizard = () => {
                     skills: template.config.tools.reduce((acc, tool) => {
                       acc[tool] = true;
                       return acc;
-                    }, { sql_query: false, data_summary: false, calculator: false, entity_extraction: false, knowledge_search: false }),
+                    }, { sql_query: false, data_summary: false, calculator: false, entity_extraction: false, knowledge_search: false, lead_scoring: false }),
+                    scoring_rubric: template.config.scoring_rubric || null,
                   });
                   setValidationState({ ...validationState, step1: true });
                 }}

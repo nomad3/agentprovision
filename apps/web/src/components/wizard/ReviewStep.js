@@ -16,12 +16,20 @@ const ReviewStep = ({ wizardData, datasets, onEdit }) => {
     calculator: 'Calculator Tool',
     entity_extraction: 'Entity Extraction',
     knowledge_search: 'Knowledge Search',
+    lead_scoring: 'Lead Scoring',
+  };
+
+  const rubricNames = {
+    ai_lead: 'AI Lead Scoring',
+    hca_deal: 'M&A Deal Scoring',
+    marketing_signal: 'Marketing Signal Scoring',
   };
 
   const personalityNames = {
     formal: 'Formal & Professional',
     friendly: 'Friendly & Conversational',
     creative: 'Creative & Expressive',
+    analytical: 'Analytical & Precise',
   };
 
   return (
@@ -108,6 +116,11 @@ const ReviewStep = ({ wizardData, datasets, onEdit }) => {
                 </div>
               ) : (
                 <small className="text-muted">No special tools enabled</small>
+              )}
+              {wizardData.scoring_rubric && (
+                <div className="mt-2 small text-muted">
+                  Scoring rubric: <Badge bg="secondary">{rubricNames[wizardData.scoring_rubric] || wizardData.scoring_rubric}</Badge>
+                </div>
               )}
             </Card.Body>
           </Card>

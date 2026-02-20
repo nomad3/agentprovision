@@ -523,47 +523,35 @@ class KnowledgeSearchTool(Tool):
 
 
 class LeadScoringTool(Tool):
-    """Tool for computing a composite lead score for knowledge entities."""
+    """Tool for computing a configurable composite score for knowledge entities.
 
-    SCORING_PROMPT = """You are a lead scoring specialist. Analyze the following entity and compute a composite score from 0 to 100 based on how likely this entity is to become a customer for an AI agent orchestration platform.
+    Supports multiple scoring rubrics:
+    - ai_lead: AI orchestration platform lead scoring (default)
+    - hca_deal: M&A sell-likelihood for investment banking
+    - marketing_signal: Marketing engagement and intent scoring
+    - Custom rubrics via agent kit configuration
+    """
 
-## Scoring Rubric (0-100 total)
-
-| Category | Max Points | What to look for |
-|---|---|---|
-| hiring | 25 | Job posts mentioning AI, ML, agents, orchestration, automation, platform engineering |
-| tech_stack | 20 | Uses or evaluates LangChain, OpenAI, Anthropic, CrewAI, AutoGen, or similar agent frameworks |
-| funding | 20 | Recent funding round (Series A/B/C within 12 months scores highest) |
-| company_size | 15 | Mid-market (50-500 employees) and growth-stage companies score highest |
-| news | 10 | Recent product launches, partnerships, expansions, AI initiatives |
-| direct_fit | 10 | Explicit mentions of orchestration needs, multi-agent workflows, workflow automation |
-
-## Entity to Score
-
-Name: {name}
-Type: {entity_type}
-Category: {category}
-Description: {description}
-Properties: {properties}
-Enrichment Data: {enrichment_data}
-Source URL: {source_url}
-
-## Related Entities
-{relations_text}
-
-## Instructions
-
-Return ONLY a JSON object with this exact structure:
-{{"score": <integer 0-100>, "breakdown": {{"hiring": <integer 0-25>, "tech_stack": <integer 0-20>, "funding": <integer 0-20>, "company_size": <integer 0-15>, "news": <integer 0-10>, "direct_fit": <integer 0-10>}}, "reasoning": "<one paragraph explaining the score>"}}
-"""
-
-    def __init__(self, db, tenant_id):
+    def __init__(self, db, tenant_id, rubric_id=None, custom_rubric=None):
         super().__init__(
             name="lead_scoring",
-            description="Compute a composite lead score (0-100) for a knowledge entity based on hiring signals, tech stack, funding, and other factors"
+            description="Compute a composite score (0-100) for a knowledge entity using a configurable scoring rubric"
         )
         self.db = db
         self.tenant_id = tenant_id
+        self.rubric_id = rubric_id or "ai_lead"
+        self.custom_rubric = custom_rubric
+
+    def _get_rubric(self):
+        """Get the scoring rubric to use."""
+        if self.custom_rubric:
+            return self.custom_rubric
+        from app.services.scoring_rubrics import get_rubric
+        rubric = get_rubric(self.rubric_id)
+        if not rubric:
+            from app.services.scoring_rubrics import get_rubric as get_default
+            rubric = get_default("ai_lead")
+        return rubric
 
     def get_schema(self) -> Dict[str, Any]:
         return {
@@ -580,6 +568,10 @@ Return ONLY a JSON object with this exact structure:
                         "type": "string",
                         "description": "Name of the entity to score (used if entity_id not provided)"
                     },
+                    "rubric_id": {
+                        "type": "string",
+                        "description": "Scoring rubric to use: ai_lead, hca_deal, marketing_signal"
+                    },
                 },
                 "required": []
             }
@@ -595,6 +587,10 @@ Return ONLY a JSON object with this exact structure:
 
             entity_id = kwargs.get("entity_id")
             entity_name = kwargs.get("entity_name")
+            # Allow overriding rubric_id per-call
+            rubric_id_override = kwargs.get("rubric_id")
+            if rubric_id_override:
+                self.rubric_id = rubric_id_override
 
             if not entity_id and not entity_name:
                 return ToolResult(success=False, error="Either entity_id or entity_name is required")
@@ -633,8 +629,13 @@ Return ONLY a JSON object with this exact structure:
             if not relations_text:
                 relations_text = "No related entities found."
 
+            # Get the rubric
+            rubric = self._get_rubric()
+            prompt_template = rubric["prompt_template"]
+            system_prompt = rubric.get("system_prompt", "You are a scoring engine. Return only valid JSON.")
+
             # Build the prompt
-            prompt = self.SCORING_PROMPT.format(
+            prompt = prompt_template.format(
                 name=entity.name,
                 entity_type=entity.entity_type or "",
                 category=entity.category or "",
@@ -651,7 +652,7 @@ Return ONLY a JSON object with this exact structure:
             response = llm.generate_chat_response(
                 user_message=prompt,
                 conversation_history=[],
-                system_prompt="You are a lead scoring engine. Return only valid JSON.",
+                system_prompt=system_prompt,
                 max_tokens=1024,
                 temperature=0.3,
             )
@@ -670,9 +671,11 @@ Return ONLY a JSON object with this exact structure:
             # Write score to entity
             entity.score = score
             entity.scored_at = datetime.utcnow()
+            entity.scoring_rubric_id = self.rubric_id
             props = entity.properties or {}
             props["score_breakdown"] = breakdown
             props["score_reasoning"] = reasoning
+            props["scoring_rubric_id"] = self.rubric_id
             entity.properties = props
             self.db.commit()
             self.db.refresh(entity)
@@ -686,6 +689,8 @@ Return ONLY a JSON object with this exact structure:
                     "breakdown": breakdown,
                     "reasoning": reasoning,
                     "scored_at": entity.scored_at.isoformat(),
+                    "rubric_id": self.rubric_id,
+                    "rubric_name": rubric.get("name", self.rubric_id),
                 },
                 metadata={"entity_type": entity.entity_type, "category": entity.category}
             )

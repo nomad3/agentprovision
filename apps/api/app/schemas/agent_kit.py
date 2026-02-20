@@ -42,6 +42,7 @@ class AgentKitBase(BaseModel):
     description: str | None = None
     version: str | None = None
     config: AgentKitConfig
+    scoring_rubric: Dict[str, Any] | None = None
 
 class AgentKitCreate(AgentKitBase):
     pass
@@ -51,6 +52,7 @@ class AgentKitUpdate(BaseModel):
     description: str | None = None
     version: str | None = None
     config: AgentKitConfig | None = None
+    scoring_rubric: Dict[str, Any] | None = None
 
 class AgentKit(AgentKitBase):
     id: uuid.UUID

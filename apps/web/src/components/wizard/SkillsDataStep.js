@@ -49,7 +49,7 @@ const TOOLS = [
     id: 'lead_scoring',
     name: 'Lead Scoring',
     icon: FaChartLine,
-    description: 'Score leads 0-100 based on hiring signals, tech stack, funding, and fit',
+    description: 'Score entities 0-100 using configurable rubrics (AI leads, M&A deals, marketing signals)',
     requiresDataset: false,
     helpText: 'Your agent can compute composite lead scores using AI analysis of entity data',
   },

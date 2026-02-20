@@ -37,6 +37,7 @@ class KnowledgeEntity(Base):
     # Lead scoring
     score = Column(Integer, nullable=True)  # Composite lead score 0-100
     scored_at = Column(DateTime, nullable=True)  # When last scored
+    scoring_rubric_id = Column(String, nullable=True)  # Which rubric was used: ai_lead, hca_deal, marketing_signal
 
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)

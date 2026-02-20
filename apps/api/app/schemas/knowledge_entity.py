@@ -41,6 +41,7 @@ class KnowledgeEntity(KnowledgeEntityBase):
     description: Optional[str] = None
     score: Optional[int] = None
     scored_at: Optional[datetime] = None
+    scoring_rubric_id: Optional[str] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 

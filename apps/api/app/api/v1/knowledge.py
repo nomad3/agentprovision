@@ -16,6 +16,13 @@ from app.services import knowledge as service
 router = APIRouter()
 
 
+@router.get("/scoring-rubrics")
+def list_scoring_rubrics(current_user: User = Depends(get_current_user)):
+    """List all available scoring rubrics."""
+    from app.services.scoring_rubrics import list_rubrics
+    return list_rubrics()
+
+
 # Entity endpoints
 @router.post("/entities", response_model=KnowledgeEntity, status_code=201)
 def create_entity(
@@ -108,11 +115,12 @@ def delete_entity(
 @router.post("/entities/{entity_id}/score")
 def score_entity(
     entity_id: uuid.UUID,
+    rubric_id: str = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Compute and store a lead score for an entity."""
-    result = service.score_entity(db, entity_id, current_user.tenant_id)
+    """Compute and store a lead score for an entity using a configurable rubric."""
+    result = service.score_entity(db, entity_id, current_user.tenant_id, rubric_id=rubric_id)
     if not result:
         raise HTTPException(status_code=404, detail="Entity not found or scoring failed")
     return result

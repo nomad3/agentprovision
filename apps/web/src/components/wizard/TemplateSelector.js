@@ -1,6 +1,6 @@
 import React from 'react';
 import { Row, Col, Card, Button } from 'react-bootstrap';
-import { FaHeadset as Headset, FaChartBar as BarChart, FaBriefcase as Briefcase, FaRobot as Robot, FaEdit as PencilSquare, FaSearch, FaUserTie, FaSitemap } from 'react-icons/fa';
+import { FaHeadset as Headset, FaChartBar as BarChart, FaBriefcase as Briefcase, FaRobot as Robot, FaEdit as PencilSquare, FaSearch, FaUserTie, FaSitemap, FaBriefcase, FaBullhorn } from 'react-icons/fa';
 
 const TEMPLATES = [
   {
@@ -90,6 +90,7 @@ const TEMPLATES = [
       max_tokens: 2500,
       system_prompt: 'You are a meticulous research agent. Extract key entities (people, organizations, concepts) from content. Identify relationships between entities and maintain a structured knowledge graph.',
       tools: ['entity_extraction', 'knowledge_search', 'data_summary', 'lead_scoring'],
+      scoring_rubric: 'ai_lead',
       suggestDatasets: false,
     },
   },
@@ -105,6 +106,7 @@ const TEMPLATES = [
       max_tokens: 2000,
       system_prompt: 'You are a lead generation specialist. Identify potential prospects, companies, and contacts from conversations. Extract structured information like names, emails, companies, roles, and interests.',
       tools: ['entity_extraction', 'knowledge_search', 'lead_scoring'],
+      scoring_rubric: 'ai_lead',
       suggestDatasets: false,
       entity_schema: {
         fields: ['name', 'email', 'company', 'role', 'interest'],
@@ -124,6 +126,38 @@ const TEMPLATES = [
       max_tokens: 2500,
       system_prompt: 'You are a knowledge management specialist. Curate and organize the knowledge graph by verifying entities, resolving duplicates, and maintaining accurate relationships between people, organizations, and concepts.',
       tools: ['entity_extraction', 'knowledge_search', 'data_summary'],
+      suggestDatasets: false,
+    },
+  },
+  {
+    id: 'deal_intelligence',
+    name: 'Deal Intelligence Agent',
+    icon: FaBriefcase,
+    description: 'Score companies on sell-likelihood for M&A advisory using ownership, market timing, and performance signals',
+    config: {
+      model: 'gpt-4',
+      personality: 'analytical',
+      temperature: 0.3,
+      max_tokens: 2000,
+      system_prompt: 'You are a deal intelligence analyst specializing in M&A advisory. Evaluate companies on sell-likelihood by analyzing ownership structures, market timing signals, and financial performance indicators. Provide structured scoring and reasoning for each assessment.',
+      tools: ['entity_extraction', 'knowledge_search', 'lead_scoring'],
+      scoring_rubric: 'hca_deal',
+      suggestDatasets: false,
+    },
+  },
+  {
+    id: 'marketing_intelligence',
+    name: 'Marketing Intelligence Agent',
+    icon: FaBullhorn,
+    description: 'Score leads based on marketing engagement, campaign response, intent signals, and firmographic fit',
+    config: {
+      model: 'gpt-4',
+      personality: 'analytical',
+      temperature: 0.3,
+      max_tokens: 2000,
+      system_prompt: 'You are a marketing intelligence specialist. Score and prioritize leads based on marketing engagement metrics, campaign response patterns, intent signals, and firmographic fit. Provide actionable insights for marketing and sales alignment.',
+      tools: ['entity_extraction', 'knowledge_search', 'lead_scoring'],
+      scoring_rubric: 'marketing_signal',
       suggestDatasets: false,
     },
   },

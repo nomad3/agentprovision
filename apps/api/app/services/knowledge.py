@@ -190,10 +190,10 @@ def get_collection_summary(db: Session, task_id: uuid.UUID, tenant_id: uuid.UUID
     }
 
 
-def score_entity(db: Session, entity_id: uuid.UUID, tenant_id: uuid.UUID) -> Optional[dict]:
-    """Score an entity using the LeadScoringTool."""
+def score_entity(db: Session, entity_id: uuid.UUID, tenant_id: uuid.UUID, rubric_id: str = None) -> Optional[dict]:
+    """Score an entity using the LeadScoringTool with a configurable rubric."""
     from app.services.tool_executor import LeadScoringTool
-    tool = LeadScoringTool(db, tenant_id)
+    tool = LeadScoringTool(db, tenant_id, rubric_id=rubric_id)
     result = tool.execute(entity_id=str(entity_id))
     if result.success:
         return result.data

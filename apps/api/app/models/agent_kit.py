@@ -21,3 +21,4 @@ class AgentKit(Base):
     default_agents = Column(JSON, nullable=True)  # [{"name": "Analyst", "role": "analyst", ...}]
     default_hierarchy = Column(JSON, nullable=True)  # {"supervisor": "Manager", "workers": ["Analyst"]}
     industry = Column(String, nullable=True)  # "healthcare", "finance", "legal", "retail"
+    scoring_rubric = Column(JSON, nullable=True)  # Configurable scoring rubric for lead/deal/signal scoring
