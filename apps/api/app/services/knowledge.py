@@ -190,6 +190,16 @@ def get_collection_summary(db: Session, task_id: uuid.UUID, tenant_id: uuid.UUID
     }
 
 
+def score_entity(db: Session, entity_id: uuid.UUID, tenant_id: uuid.UUID) -> Optional[dict]:
+    """Score an entity using the LeadScoringTool."""
+    from app.services.tool_executor import LeadScoringTool
+    tool = LeadScoringTool(db, tenant_id)
+    result = tool.execute(entity_id=str(entity_id))
+    if result.success:
+        return result.data
+    return None
+
+
 def update_entity_status(
     db: Session,
     entity_id: uuid.UUID,

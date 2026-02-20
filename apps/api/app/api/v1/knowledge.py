@@ -105,6 +105,19 @@ def delete_entity(
         raise HTTPException(status_code=404, detail="Entity not found")
 
 
+@router.post("/entities/{entity_id}/score")
+def score_entity(
+    entity_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Compute and store a lead score for an entity."""
+    result = service.score_entity(db, entity_id, current_user.tenant_id)
+    if not result:
+        raise HTTPException(status_code=404, detail="Entity not found or scoring failed")
+    return result
+
+
 @router.put("/entities/{entity_id}/status", response_model=KnowledgeEntity)
 def update_entity_status(
     entity_id: uuid.UUID,
