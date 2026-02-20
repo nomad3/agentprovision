@@ -89,7 +89,7 @@ const TEMPLATES = [
       temperature: 0.3,
       max_tokens: 2500,
       system_prompt: 'You are a meticulous research agent. Extract key entities (people, organizations, concepts) from content. Identify relationships between entities and maintain a structured knowledge graph.',
-      tools: ['entity_extraction', 'knowledge_search', 'data_summary'],
+      tools: ['entity_extraction', 'knowledge_search', 'data_summary', 'lead_scoring'],
       suggestDatasets: false,
     },
   },
@@ -104,7 +104,7 @@ const TEMPLATES = [
       temperature: 0.5,
       max_tokens: 2000,
       system_prompt: 'You are a lead generation specialist. Identify potential prospects, companies, and contacts from conversations. Extract structured information like names, emails, companies, roles, and interests.',
-      tools: ['entity_extraction', 'knowledge_search'],
+      tools: ['entity_extraction', 'knowledge_search', 'lead_scoring'],
       suggestDatasets: false,
       entity_schema: {
         fields: ['name', 'email', 'company', 'role', 'interest'],

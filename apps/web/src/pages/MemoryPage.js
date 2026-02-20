@@ -119,7 +119,7 @@ function MemoryPage() {
     return relation.from_entity_id === selectedEntity?.id ? 'outgoing' : 'incoming';
   };
 
-  const categories = ['lead', 'contact', 'investor', 'accelerator', 'signal', 'organization', 'person'];
+  const categories = ['lead', 'contact', 'investor', 'accelerator', 'organization', 'person'];
 
   const getCategoryBadgeColor = (category) => {
     switch (category) {
@@ -127,7 +127,6 @@ function MemoryPage() {
       case 'contact': return 'info';
       case 'investor': return 'primary';
       case 'accelerator': return 'info';
-      case 'signal': return 'warning';
       default: return 'secondary';
     }
   };
@@ -208,6 +207,7 @@ function MemoryPage() {
                       <th>Category</th>
                       <th>Type</th>
                       <th>Status</th>
+                      <th>Score</th>
                       <th>Confidence</th>
                       <th>Source</th>
                       <th>Created</th>
@@ -242,6 +242,19 @@ function MemoryPage() {
                           </Badge>
                         </td>
                         <td>
+                          {entity.score != null ? (
+                            <Badge
+                              bg={entity.score >= 61 ? 'success' : entity.score >= 31 ? 'warning' : 'danger'}
+                              className="bg-opacity-25 border border-secondary"
+                              style={{ fontSize: '0.75rem', minWidth: '36px' }}
+                            >
+                              {entity.score}
+                            </Badge>
+                          ) : (
+                            <span className="text-muted small">—</span>
+                          )}
+                        </td>
+                        <td>
                           <div className="d-flex align-items-center gap-2">
                             <div className="progress" style={{ height: '4px', width: '60px', backgroundColor: 'rgba(100,130,170,0.15)' }}>
                               <div
@@ -268,7 +281,7 @@ function MemoryPage() {
                     ))}
                     {entities.length === 0 && (
                       <tr>
-                        <td colSpan="8" className="text-center py-4">No entities found. Use the AI agent to research and store leads, contacts, and signals.</td>
+                        <td colSpan="9" className="text-center py-4">No entities found. Use the AI agent to research and store leads, contacts, and signals.</td>
                       </tr>
                     )}
                   </tbody>

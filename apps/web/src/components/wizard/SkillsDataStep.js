@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Form, Row, Col, Alert } from 'react-bootstrap';
-import { FaDatabase as Database, FaCalculator as CalcIcon, FaChartBar as BarChart, FaProjectDiagram, FaSearch } from 'react-icons/fa';
+import { FaDatabase as Database, FaCalculator as CalcIcon, FaChartBar as BarChart, FaProjectDiagram, FaSearch, FaChartLine } from 'react-icons/fa';
 import datasetService from '../../services/dataset';
 import { LoadingSpinner } from '../common';
 
@@ -44,6 +44,14 @@ const TOOLS = [
     description: 'Search and browse the knowledge graph',
     requiresDataset: false,
     helpText: 'Your agent can look up people, companies, and concepts previously extracted into the knowledge graph',
+  },
+  {
+    id: 'lead_scoring',
+    name: 'Lead Scoring',
+    icon: FaChartLine,
+    description: 'Score leads 0-100 based on hiring signals, tech stack, funding, and fit',
+    requiresDataset: false,
+    helpText: 'Your agent can compute composite lead scores using AI analysis of entity data',
   },
 ];
 
