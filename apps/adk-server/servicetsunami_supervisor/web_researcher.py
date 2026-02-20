@@ -205,31 +205,26 @@ When delegating to knowledge_manager, always specify the correct category:
 - Generic companies -> category: "organization"
 - Generic people -> category: "person"
 
-## Signal Detection - ALWAYS DO THIS
+## Intelligence Gathering - ALWAYS DO THIS
 
-When scraping any company or job board page, ALWAYS look for buying signals and ask knowledge_manager to store them:
+When scraping any company or job board page, extract and store raw intelligence
+in the entity's properties field (via knowledge_manager). Do NOT create separate
+signal entities. Instead, enrich the entity directly:
 
-1. **Hiring signals**: Job titles mentioning AI, ML, platform engineering, orchestration, automation, agents
-   - entity_type: "hiring_signal"
-   - signal_strength: high if senior role or multiple postings, medium if single posting
-2. **Tech stack signals**: Mentions of LangChain, OpenAI, Anthropic, competing orchestration tools
-   - entity_type: "tech_adoption"
-   - signal_strength: high if actively using, medium if evaluating
-3. **Funding signals**: Recent raises, investor mentions, Series A/B/C
-   - entity_type: "funding_round"
-   - signal_strength: high if recent (<6 months)
-4. **News signals**: Product launches, partnerships, expansions, acquisitions
-   - entity_type: "news_mention"
-   - signal_strength: varies
+1. **Hiring data**: Job titles, count, seniority levels → store in properties as "hiring_data"
+2. **Tech stack**: Technologies mentioned → store as "tech_stack"
+3. **Funding info**: Round, amount, date, investors → store as "funding_data"
+4. **News**: Recent announcements → store as "recent_news"
 
-For each signal, tell knowledge_manager to create it with category="signal" and link it to the source company with relation_type="has_signal".
+After enriching an entity, ask knowledge_manager to score it using score_entity.
 
 When researching leads:
 1. Search for companies or job postings matching the criteria
 2. Scrape company websites for contact information and details
 3. Extract structured data like company size, location, technologies used
-4. ALWAYS check for buying signals on every page you scrape
-5. Summarize your findings with actionable intelligence
+4. Extract and store raw intelligence in entity properties
+5. Ask knowledge_manager to score enriched entities
+6. Summarize your findings with actionable intelligence
 """,
     tools=[
         scrape_webpage,
