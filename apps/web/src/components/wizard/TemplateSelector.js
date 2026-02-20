@@ -1,6 +1,6 @@
 import React from 'react';
 import { Row, Col, Card, Button } from 'react-bootstrap';
-import { FaHeadset as Headset, FaChartBar as BarChart, FaBriefcase as Briefcase, FaRobot as Robot, FaEdit as PencilSquare, FaSearch, FaUserTie, FaSitemap, FaBriefcase, FaBullhorn } from 'react-icons/fa';
+import { FaHeadset as Headset, FaChartBar as BarChart, FaBriefcase as Briefcase, FaRobot as Robot, FaEdit as PencilSquare, FaSearch, FaUserTie, FaSitemap, FaBullhorn } from 'react-icons/fa';
 
 const TEMPLATES = [
   {
@@ -132,7 +132,7 @@ const TEMPLATES = [
   {
     id: 'deal_intelligence',
     name: 'Deal Intelligence Agent',
-    icon: FaBriefcase,
+    icon: Briefcase,
     description: 'Score companies on sell-likelihood for M&A advisory using ownership, market timing, and performance signals',
     config: {
       model: 'gpt-4',
