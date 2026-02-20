@@ -37,6 +37,10 @@ class KnowledgeEntity(KnowledgeEntityBase):
     source_agent_id: Optional[uuid.UUID]
     collection_task_id: Optional[uuid.UUID] = None
     enrichment_data: Optional[Dict[str, Any]] = None
+    properties: Optional[Dict[str, Any]] = None
+    description: Optional[str] = None
+    score: Optional[int] = None
+    scored_at: Optional[datetime] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 

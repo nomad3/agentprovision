@@ -1,7 +1,7 @@
 """KnowledgeEntity model for knowledge graph nodes"""
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, Text, ForeignKey, JSON, DateTime, Float
+from sqlalchemy import Column, String, Text, ForeignKey, JSON, DateTime, Float, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -33,6 +33,10 @@ class KnowledgeEntity(Base):
     collection_task_id = Column(UUID(as_uuid=True), ForeignKey("agent_tasks.id"), nullable=True)
     source_url = Column(String, nullable=True)
     enrichment_data = Column(JSON, nullable=True)
+
+    # Lead scoring
+    score = Column(Integer, nullable=True)  # Composite lead score 0-100
+    scored_at = Column(DateTime, nullable=True)  # When last scored
 
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)
