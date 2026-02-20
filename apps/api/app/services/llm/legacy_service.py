@@ -14,7 +14,7 @@ class LLMService:
     def __init__(self):
         if not settings.ANTHROPIC_API_KEY:
             raise ValueError("ANTHROPIC_API_KEY not configured")
-        self.client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
+        self.client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY.strip())
         self.model = settings.LLM_MODEL
         self.max_tokens = settings.LLM_MAX_TOKENS
         self.temperature = settings.LLM_TEMPERATURE

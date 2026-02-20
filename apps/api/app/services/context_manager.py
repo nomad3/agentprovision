@@ -29,7 +29,7 @@ class ContextManager:
         """Initialize context manager with optional Anthropic client for summarization."""
         self.client = anthropic_client
         if not self.client and settings.ANTHROPIC_API_KEY:
-            self.client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
+            self.client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY.strip())
 
     def estimate_tokens(self, text: str) -> int:
         """
