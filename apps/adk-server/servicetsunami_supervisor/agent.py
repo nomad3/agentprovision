@@ -40,6 +40,8 @@ Routing guidelines:
 - Web research, scraping, lead generation, market intelligence -> transfer to web_researcher
 - Research + store results -> transfer to web_researcher first, then knowledge_manager
 - Creating or scoring entities -> ALWAYS transfer to knowledge_manager
+- M&A deal scoring, sell-likelihood -> transfer to knowledge_manager (uses hca_deal rubric)
+- Marketing engagement scoring, MQL scoring -> transfer to knowledge_manager (uses marketing_signal rubric)
 - For ambiguous requests, ask clarifying questions
 - Always explain what you're doing before delegating
 

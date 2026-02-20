@@ -65,19 +65,28 @@ async def _call_api(method: str, path: str, **kwargs) -> dict:
 # ---------- Tool functions ----------
 
 
-async def score_entity(entity_id: str) -> dict:
-    """Compute a composite lead score (0-100) for an entity.
+async def score_entity(entity_id: str, rubric_id: str = "ai_lead") -> dict:
+    """Compute a composite score (0-100) for an entity using a configurable rubric.
 
-    Uses LLM analysis of the entity's properties, relations, and context to score
-    based on hiring signals, tech stack alignment, funding, company size, news, and direct fit.
+    Available rubrics:
+    - "ai_lead" (default): Score likelihood of becoming an AI platform customer.
+      Categories: hiring (25), tech_stack (20), funding (20), company_size (15), news (10), direct_fit (10)
+    - "hca_deal": Score sell-likelihood for M&A advisory.
+      Categories: ownership_succession (30), market_timing (25), company_performance (20), external_triggers (15), negative_signals (-10)
+    - "marketing_signal": Score marketing-qualified lead engagement.
+      Categories: engagement (25), intent_signals (25), firmographic_fit (20), behavioral_recency (15), champion_signals (15)
 
     Args:
         entity_id: UUID of the entity to score.
+        rubric_id: Which scoring rubric to use. One of "ai_lead", "hca_deal", "marketing_signal".
 
     Returns:
-        Dict with score (0-100), breakdown by category, and reasoning.
+        Dict with score (0-100), breakdown by category, reasoning, and rubric metadata.
     """
-    return await _call_api("POST", f"/knowledge/entities/{entity_id}/score")
+    params = {}
+    if rubric_id and rubric_id != "ai_lead":
+        params["rubric_id"] = rubric_id
+    return await _call_api("POST", f"/knowledge/entities/{entity_id}/score", params=params)
 
 
 knowledge_manager = Agent(
@@ -113,16 +122,23 @@ The `category` is the high-level bucket. The `entity_type` is the specific granu
 
 ## Lead Scoring
 
-After creating or enriching a lead entity, score it using the score_entity tool.
-This computes a composite 0-100 score based on:
-- Hiring signals (AI/ML/agent job posts): 0-25 pts
-- Tech stack alignment (LangChain, OpenAI, etc.): 0-20 pts
-- Funding recency: 0-20 pts
-- Company size/stage fit: 0-15 pts
-- News/momentum: 0-10 pts
-- Direct fit indicators: 0-10 pts
+After creating or enriching an entity, score it using the score_entity tool with the appropriate rubric.
 
-Always report the score and key factors to the user after scoring.
+**Choose the rubric based on context:**
+
+| Rubric | When to use | Key categories |
+|---|---|---|
+| `ai_lead` (default) | Scoring AI/tech leads on customer likelihood | hiring (25), tech_stack (20), funding (20), company_size (15), news (10), direct_fit (10) |
+| `hca_deal` | Scoring companies on M&A sell-likelihood | ownership_succession (30), market_timing (25), company_performance (20), external_triggers (15), negative_signals (-10) |
+| `marketing_signal` | Scoring leads on marketing engagement/intent | engagement (25), intent_signals (25), firmographic_fit (20), behavioral_recency (15), champion_signals (15) |
+
+**Rubric selection rules:**
+- If the user mentions M&A, deals, sell-likelihood, investment banking, or ownership transitions → use `hca_deal`
+- If the user mentions marketing, campaigns, engagement, MQL, intent signals → use `marketing_signal`
+- For general leads, AI companies, or when unsure → use `ai_lead` (the default)
+- If the user explicitly requests a rubric by name, use that one
+
+Always report the score, rubric used, and key factors to the user after scoring.
 
 Do NOT create separate signal entities. Instead, store raw intelligence
 (hiring posts, tech mentions, funding data) directly in the entity's properties field.
