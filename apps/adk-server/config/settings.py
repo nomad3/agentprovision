@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     mcp_scraper_url: str = "http://servicetsunami-mcp"
 
     # FastAPI backend (for ADK -> API callbacks like lead scoring)
-    api_base_url: str = "http://servicetsunami-api:8000"
+    api_base_url: str = "http://servicetsunami-api"
 
     # Vertex AI Vector Search
     vertex_project: str = "ai-agency-479516"
