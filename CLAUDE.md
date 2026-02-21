@@ -59,24 +59,30 @@ This is a **Turborepo monorepo** managed with `pnpm` workspaces:
 
 **Multi-LLM Router**: Supports multiple LLM providers (Anthropic, OpenAI, DeepSeek, etc.) with per-tenant configuration and cost-based routing. Models: `llm_provider.py`, `llm_model.py`, `llm_config.py`. Chat falls back to static templates if no API key is set.
 
-**Multi-Agent Orchestration**: Agent groups (`agent_group.py`) organize agents into teams. Agents have relationships (`agent_relationship.py`: supervises, delegates_to, collaborates_with), assigned tasks (`agent_task.py`), inter-agent messaging (`agent_message.py`), learnable skills (`agent_skill.py`), and semantic memory (`agent_memory.py`). Task execution is orchestrated through `TaskExecutionWorkflow` (Temporal) with 4 activities: dispatch → recall memory → execute via ADK → evaluate results. All steps are recorded in `ExecutionTrace` for full in-platform traceability.
+**Multi-Agent Orchestration**: Agent groups (`agent_group.py`) organize agents into teams. Agents have relationships (`agent_relationship.py`: supervises, delegates_to, collaborates_with), assigned tasks (`agent_task.py`), inter-agent messaging (`agent_message.py`), learnable skills (`agent_skill.py`), and semantic memory (`agent_memory.py`). Task execution is orchestrated through `TaskExecutionWorkflow` (Temporal) with 5 activities: dispatch → recall memory → execute via ADK → persist entities → evaluate results. All steps are recorded in `ExecutionTrace` for full in-platform traceability.
 
-**Managed OpenClaw Instances**: Each tenant gets an isolated OpenClaw pod deployed via Helm (`OpenClawProvisionWorkflow`). Models: `tenant_instance.py` tracks pod lifecycle (provisioning/running/stopped/error). OpenClaw provides 50+ skill integrations (Slack, Gmail, GitHub, WhatsApp, Notion, Jira, etc.).
+**Managed OpenClaw Instances**: Each tenant gets an isolated OpenClaw pod deployed via Helm (`OpenClawProvisionWorkflow`). Models: `tenant_instance.py` tracks pod lifecycle (provisioning/running/stopped/error). OpenClaw provides 50+ skill integrations (Slack, Gmail, GitHub, WhatsApp, Notion, Jira, etc.). Instance lifecycle endpoints (`instances.py`) use kubectl for stop/start/restart and Temporal workflows for create/upgrade. A live health probe verifies actual pod connectivity via HTTP + WebSocket.
 
-**Skills Gateway**: The `SkillRouter` (`apps/api/app/services/orchestration/skill_router.py`) orchestrates skill execution: resolves tenant's OpenClaw instance → validates SkillConfig → decrypts credentials → calls gateway → logs trace. Per-skill LLM selection via `llm_config_id`.
+**OpenClaw Gateway Protocol**: OpenClaw uses a WebSocket-only protocol on port 18789 (HTTP POST returns 405). Connection flow: connect → receive challenge (nonce) → authenticate with token → send `sessions_send` for skill execution → collect response. Auth token stored in k8s secret `openclaw-secrets` as `OPENCLAW_GATEWAY_TOKEN`.
+
+**Skills Gateway**: The `SkillRouter` (`apps/api/app/services/orchestration/skill_router.py`) orchestrates skill execution via WebSocket: resolves tenant's OpenClaw instance → circuit breaker check (3 failures / 5min window) → validates SkillConfig → decrypts credentials → resolves LLM model → calls OpenClaw gateway (WebSocket challenge-response) → logs trace. Per-skill LLM selection via `llm_config_id`. API: `POST /api/v1/skills/execute` and `GET /api/v1/skills/health`.
 
 **Credential Vault**: `CredentialVault` (`apps/api/app/services/orchestration/credential_vault.py`) provides Fernet encryption for skill API keys/tokens. Credentials are stored encrypted in `SkillCredential`, decrypted at runtime, injected per-request, never stored in OpenClaw pods.
 
 **Knowledge Graph**: Entities (`knowledge_entity.py`) and relations (`knowledge_relation.py`) form a knowledge graph. Supporting tables: `knowledge_observations` (raw facts from conversations), `knowledge_entity_history` (entity version tracking). Knowledge is extracted from chat and content via `knowledge_extraction.py`. The ADK knowledge_manager agent provides semantic search, entity CRUD, and graph traversal. Note: pgvector is not installed on Cloud SQL; the ADK knowledge_graph service falls back to text-based ILIKE search.
 
-**Temporal workflows**: Durable workflow execution. Workers in `apps/api/app/workers/`:
+**Temporal workflows**: Durable workflow execution across two task queues. Workers in `apps/api/app/workers/`:
 - `orchestration_worker.py`: Task execution and OpenClaw provisioning workflows (queue: `servicetsunami-orchestration`)
-- `databricks_worker.py`: Async dataset sync to Databricks Unity Catalog
-- `scheduler_worker.py`: Pipeline scheduling (cron/interval-based)
+- `databricks_worker.py`: Dataset sync, knowledge extraction, agent kit, data source sync (queue: `servicetsunami-databricks`)
+- `scheduler_worker.py`: Pipeline scheduling (cron/interval-based, polls every 60s)
 
 Workflows in `apps/api/app/workflows/`:
-- `task_execution.py`: `TaskExecutionWorkflow` — dispatch, recall memory, execute, evaluate
-- `openclaw_provision.py`: `OpenClawProvisionWorkflow` — generate values, helm install, wait pod, health check, register instance
+- `task_execution.py`: `TaskExecutionWorkflow` — dispatch, recall memory, execute, persist entities, evaluate (5 steps)
+- `openclaw_provision.py`: `OpenClawProvisionWorkflow` — generate values, helm install, wait pod, health check, register instance (5 steps)
+- `dataset_sync.py`: `DatasetSyncWorkflow` — sync to bronze, transform to silver, update metadata
+- `data_source_sync.py`: `DataSourceSyncWorkflow` + `ScheduledSyncWorkflow` — connector extraction with incremental sync
+- `knowledge_extraction.py`: `KnowledgeExtractionWorkflow` — LLM entity extraction from chat sessions
+- `agent_kit_execution.py`: `AgentKitExecutionWorkflow` — agent kit task bundle execution
 
 **Pipeline Run Tracking**: `pipeline_run.py` model tracks pipeline execution history with status, duration, and error details. The scheduler worker handles automated pipeline execution.
 
@@ -199,8 +205,9 @@ Business logic layer (one service per model):
 ### Workers (`apps/api/app/workers/`)
 
 Temporal workers for async processing:
-- `databricks_worker.py`: Dataset sync to Databricks Unity Catalog
-- `scheduler_worker.py`: Automated pipeline execution (cron/interval scheduling)
+- `orchestration_worker.py`: TaskExecutionWorkflow + OpenClawProvisionWorkflow (queue: `servicetsunami-orchestration`)
+- `databricks_worker.py`: DatasetSync, KnowledgeExtraction, AgentKitExecution, DataSourceSync workflows (queue: `servicetsunami-databricks`)
+- `scheduler_worker.py`: Automated pipeline execution (cron/interval scheduling, polls every 60s)
 
 ### Routes (`apps/api/app/api/v1/`)
 
@@ -222,8 +229,8 @@ Organized in 3-section navigation:
 - `Layout.js`: Authenticated layout with glassmorphic dark theme sidebar
 - `wizard/`: Agent creation wizard (5-step flow with localStorage draft persistence). 8 templates including Research Agent, Lead Generation, and Knowledge Manager. 5 tools: sql_query, calculator, data_summary, entity_extraction, knowledge_search
 - `TaskTimeline.js`: Execution trace timeline with step icons and duration badges
-- `OpenClawInstanceCard.js`: Per-tenant OpenClaw instance lifecycle card (deploy/stop/start/restart/destroy)
-- `SkillsConfigPanel.js`: Skill enablement grid with dynamic credential forms from registry
+- `OpenClawInstanceCard.js`: Per-tenant OpenClaw instance lifecycle card (deploy/stop/start/restart/destroy) with live health probe (green "Live" / red "Unreachable" badge)
+- `SkillsConfigPanel.js`: Skill enablement grid with dynamic credential forms from registry and test execution button
 
 ## Environment Configuration
 
@@ -260,6 +267,7 @@ ADK_APP_NAME=servicetsunami_supervisor
 
 # OpenClaw
 OPENCLAW_CHART_PATH=/opt/openclaw-k8s/helm/openclaw  # Helm chart for per-tenant instances
+OPENCLAW_GATEWAY_TOKEN=<from-k8s-secret>  # WebSocket auth token (stored in openclaw-secrets k8s secret)
 
 # Credential Vault
 ENCRYPTION_KEY=<fernet-key>  # Generate with: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
@@ -349,7 +357,11 @@ When making manual changes, always replicate them to Helm, Git, and Terraform to
 ## Additional Documentation
 
 - `docs/KUBERNETES_DEPLOYMENT.md`: Full Kubernetes deployment runbook
-- `docs/plans/`: Implementation plans
+- `docs/plans/`: Implementation plans and design documents
+  - `2026-02-21-temporal-openclaw-architecture-design.md`: Complete Temporal workflows + OpenClaw WebSocket integration architecture
   - `2025-02-13-enterprise-orchestration-engine-design.md`: Orchestration engine design document
   - `2025-02-13-enterprise-orchestration-engine-plan.md`: 18-task implementation plan
+  - `2026-02-20-whatsapp-agent-integration-platform-design.md`: WhatsApp agent + external app integration
+  - `2026-02-20-lead-scoring-skill-design.md`: LLM-powered lead scoring with configurable rubrics
+  - `2025-12-18-automations-temporal-plan.md`: Automations with Temporal connectors and scheduling
 - `LLM_INTEGRATION_README.md`, `TOOL_FRAMEWORK_README.md`, `DATABRICKS_SYNC_README.md`: Feature docs
