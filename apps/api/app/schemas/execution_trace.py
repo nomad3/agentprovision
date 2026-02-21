@@ -6,6 +6,7 @@ import uuid
 StepType = Literal[
     "dispatched", "memory_recall", "executing", "skill_call",
     "delegated", "approval_requested", "approval_granted",
+    "entity_persist", "evaluation",
     "completed", "failed"
 ]
 
