@@ -135,6 +135,11 @@ env:
     value: "temporal:7233"
   - name: MCP_SERVER_URL
     value: "http://mcp-server:8000"
+  - name: OPENCLAW_GATEWAY_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: openclaw-secrets
+        key: OPENCLAW_GATEWAY_TOKEN
 
 # Horizontal Pod Autoscaler - disabled for cost savings
 autoscaling:

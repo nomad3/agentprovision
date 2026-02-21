@@ -210,32 +210,53 @@ class SkillRouter:
     # ── Health Check ─────────────────────────────────────────────────
 
     def health_check(self) -> Dict[str, Any]:
-        """Check health of tenant's OpenClaw instance."""
+        """Check health of tenant's OpenClaw instance via HTTP and WebSocket."""
         instance = self._resolve_instance()
         if not instance:
             return {"status": "no_instance", "healthy": False}
 
         import requests
 
+        # HTTP check — verifies pod is serving
+        http_ok = False
         try:
-            response = requests.get(
-                f"{instance.internal_url}/health", timeout=5
-            )
-            healthy = response.status_code < 400
-            return {
-                "status": "healthy" if healthy else "unhealthy",
-                "healthy": healthy,
-                "instance_id": str(instance.id),
-                "response_code": response.status_code,
-            }
-        except Exception as e:
+            response = requests.get(instance.internal_url, timeout=5)
+            http_ok = response.status_code < 400
+        except Exception:
+            pass
+
+        # WebSocket check — verifies gateway is accepting connections
+        ws_ok = False
+        try:
+            import asyncio
+            import json as _json
+
+            ws_url = instance.internal_url.replace("http://", "ws://").replace("https://", "wss://")
+
+            async def _ws_ping():
+                import websockets
+                async with websockets.connect(ws_url, open_timeout=5) as ws:
+                    raw = await asyncio.wait_for(ws.recv(), timeout=5)
+                    frame = _json.loads(raw)
+                    return frame.get("event") == "connect.challenge"
+
+            ws_ok = asyncio.run(_ws_ping())
+        except Exception:
+            pass
+
+        healthy = http_ok and ws_ok
+        status = "healthy" if healthy else ("http_only" if http_ok else "unreachable")
+
+        if not healthy:
             self._record_failure(str(instance.id))
-            return {
-                "status": "unreachable",
-                "healthy": False,
-                "instance_id": str(instance.id),
-                "error": str(e),
-            }
+
+        return {
+            "status": status,
+            "healthy": healthy,
+            "instance_id": str(instance.id),
+            "http_ok": http_ok,
+            "ws_ok": ws_ok,
+        }
 
     # ── Internal Helpers ─────────────────────────────────────────────
 
@@ -293,45 +314,127 @@ class SkillRouter:
         llm_info: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
-        Call OpenClaw Gateway via HTTP POST.
+        Call OpenClaw Gateway via WebSocket.
 
-        MVP uses synchronous HTTP. WebSocket support (port 18789) will be added
-        when the OpenClaw Gateway protocol is finalized.
+        Protocol: connect → challenge-response auth → sessions_send → collect reply.
         """
-        import requests
+        import asyncio
+        import json as _json
 
-        try:
-            # MVP: HTTP POST to OpenClaw Gateway
-            gateway_url = f"{internal_url}/api/execute"
-            response = requests.post(
-                gateway_url,
-                json={
+        from app.core.config import settings
+
+        ws_url = internal_url.replace("http://", "ws://").replace("https://", "wss://")
+        token = settings.OPENCLAW_GATEWAY_TOKEN
+        if not token:
+            return {"status": "error", "error": "OPENCLAW_GATEWAY_TOKEN not configured"}
+
+        async def _execute():
+            import websockets
+
+            async with websockets.connect(ws_url, open_timeout=10) as ws:
+                # Step 1: Receive challenge
+                raw = await asyncio.wait_for(ws.recv(), timeout=10)
+                challenge = _json.loads(raw)
+                if challenge.get("event") != "connect.challenge":
+                    return {"status": "error", "error": f"Unexpected frame: {challenge.get('event')}"}
+
+                nonce = challenge["payload"]["nonce"]
+
+                # Step 2: Authenticate
+                connect_req = {
+                    "type": "req",
+                    "id": f"connect-{uuid.uuid4().hex[:8]}",
+                    "method": "connect",
+                    "params": {
+                        "minProtocol": 3,
+                        "maxProtocol": 3,
+                        "client": {
+                            "id": "servicetsunami-api",
+                            "version": "1.0.0",
+                            "platform": "linux",
+                            "mode": "operator",
+                        },
+                        "role": "operator",
+                        "scopes": ["operator.read", "operator.write"],
+                        "auth": {"token": token},
+                        "device": {
+                            "id": f"st-api-{self.tenant_id}",
+                            "nonce": nonce,
+                        },
+                    },
+                }
+                await ws.send(_json.dumps(connect_req))
+                hello_raw = await asyncio.wait_for(ws.recv(), timeout=10)
+                hello = _json.loads(hello_raw)
+                if not hello.get("ok"):
+                    err = hello.get("error", hello)
+                    return {"status": "error", "error": f"Auth failed: {err}"}
+
+                # Step 3: Send skill execution message
+                exec_id = f"exec-{uuid.uuid4().hex[:8]}"
+                prompt = _json.dumps({
                     "skill": skill_name,
                     "payload": payload,
-                    "credentials": credentials,  # Injected at runtime, never stored in OpenClaw
-                    "llm": llm_info or {},  # Model info for skill execution
-                },
-                timeout=60,
-            )
+                    "credentials": credentials,
+                    "llm": llm_info or {},
+                })
+                exec_req = {
+                    "type": "req",
+                    "id": exec_id,
+                    "method": "sessions_send",
+                    "params": {
+                        "message": f"Execute skill '{skill_name}' with payload: {prompt}",
+                    },
+                }
+                await ws.send(_json.dumps(exec_req))
 
-            if response.status_code < 400:
-                return {"status": "completed", "data": response.json()}
+                # Step 4: Collect response (wait for matching res or timeout)
+                deadline = asyncio.get_event_loop().time() + 60
+                result_data = None
+                while asyncio.get_event_loop().time() < deadline:
+                    try:
+                        raw = await asyncio.wait_for(ws.recv(), timeout=5)
+                        frame = _json.loads(raw)
+                        # Look for the response to our exec request
+                        if frame.get("type") == "res" and frame.get("id") == exec_id:
+                            if frame.get("ok"):
+                                result_data = frame.get("payload", {})
+                            else:
+                                return {"status": "error", "error": str(frame.get("error", "Unknown"))}
+                            break
+                        # Also accept event frames with results
+                        if frame.get("type") == "event" and frame.get("event") in (
+                            "session.message", "agent.message", "message",
+                        ):
+                            result_data = frame.get("payload", {})
+                            break
+                    except asyncio.TimeoutError:
+                        continue
+
+                if result_data is None:
+                    return {"status": "error", "error": "No response from OpenClaw within timeout"}
+
+                return {"status": "completed", "data": result_data}
+
+        try:
+            loop = None
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                pass
+
+            if loop and loop.is_running():
+                # We're inside an existing event loop (e.g. FastAPI async endpoint)
+                import concurrent.futures
+                with concurrent.futures.ThreadPoolExecutor() as pool:
+                    result = pool.submit(asyncio.run, _execute()).result(timeout=90)
             else:
-                logger.error(
-                    "OpenClaw gateway error for skill '%s': %s",
-                    skill_name,
-                    response.text[:200],
-                )
-                return {"status": "error", "error": response.text[:200]}
+                result = asyncio.run(_execute())
 
-        except requests.ConnectionError:
-            logger.error("Cannot connect to OpenClaw at %s", internal_url)
-            return {"status": "error", "error": "OpenClaw instance unreachable"}
-        except requests.Timeout:
-            logger.error("Timeout calling OpenClaw at %s", internal_url)
-            return {"status": "error", "error": "OpenClaw execution timeout"}
+            return result
+
         except Exception as e:
-            logger.error("Unexpected error calling OpenClaw: %s", str(e))
+            logger.error("OpenClaw WebSocket error for skill '%s': %s", skill_name, str(e))
             return {"status": "error", "error": str(e)}
 
     def _log_trace(

@@ -37,6 +37,7 @@ class Settings(BaseSettings):
 
     # OpenClaw provisioning
     OPENCLAW_CHART_PATH: str = "/opt/openclaw-k8s/helm/openclaw"
+    OPENCLAW_GATEWAY_TOKEN: str | None = None
 
     # Credential Vault encryption (Fernet key — generate with: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())")
     ENCRYPTION_KEY: str | None = None

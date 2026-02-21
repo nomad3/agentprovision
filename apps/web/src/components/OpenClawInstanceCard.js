@@ -12,6 +12,7 @@ import {
   FaTrash,
 } from 'react-icons/fa';
 import instanceService from '../services/instanceService';
+import skillService from '../services/skillService';
 
 const STATUS_CONFIG = {
   provisioning: { bg: 'info', icon: FaSyncAlt, text: 'Provisioning', spin: true },
@@ -27,13 +28,31 @@ const OpenClawInstanceCard = () => {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(null);
   const [error, setError] = useState(null);
+  const [healthStatus, setHealthStatus] = useState(null); // null | 'healthy' | 'unhealthy' | 'checking'
+
+  const checkHealth = useCallback(async () => {
+    setHealthStatus('checking');
+    try {
+      const res = await skillService.health();
+      setHealthStatus(res.data?.healthy ? 'healthy' : 'unhealthy');
+    } catch {
+      setHealthStatus('unhealthy');
+    }
+  }, []);
 
   const fetchInstance = useCallback(async () => {
     try {
       const res = await instanceService.getAll();
       const instances = res.data || [];
-      setInstance(instances.length > 0 ? instances[0] : null);
+      const inst = instances.length > 0 ? instances[0] : null;
+      setInstance(inst);
       setError(null);
+      // If DB says running, verify with a live health check
+      if (inst && inst.status === 'running') {
+        checkHealth();
+      } else {
+        setHealthStatus(null);
+      }
     } catch (err) {
       // 404 or empty is fine -- means no instance yet
       if (err.response?.status !== 404) {
@@ -43,7 +62,7 @@ const OpenClawInstanceCard = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [checkHealth]);
 
   useEffect(() => {
     fetchInstance();
@@ -170,6 +189,19 @@ const OpenClawInstanceCard = () => {
               OpenClaw Instance
             </h6>
             {renderStatusBadge(instance.status)}
+            {healthStatus === 'checking' && (
+              <Spinner animation="border" size="sm" style={{ width: 12, height: 12, borderWidth: 1.5 }} />
+            )}
+            {healthStatus === 'healthy' && (
+              <Badge bg="success" style={{ fontSize: '0.65rem' }}>
+                <FaCheckCircle size={8} className="me-1" />Live
+              </Badge>
+            )}
+            {healthStatus === 'unhealthy' && (
+              <Badge bg="danger" style={{ fontSize: '0.65rem' }}>
+                <FaExclamationTriangle size={8} className="me-1" />Unreachable
+              </Badge>
+            )}
           </div>
           <div className="d-flex gap-4 text-muted small">
             {instance.version && <span>Version: <strong>{instance.version}</strong></span>}

@@ -26,8 +26,11 @@ import {
   FaToggleOn,
   FaToggleOff,
   FaPuzzlePiece,
+  FaPlay,
+  FaLinkedin,
 } from 'react-icons/fa';
 import skillConfigService from '../services/skillConfigService';
+import skillService from '../services/skillService';
 import instanceService from '../services/instanceService';
 
 // Map icon name strings from the registry to actual React icon components
@@ -40,6 +43,8 @@ const ICON_MAP = {
   FaTasks: FaTasks,
   FaCalendar: FaCalendar,
   FaProjectDiagram: FaProjectDiagram,
+  FaLinkedin: FaLinkedin,
+  FaPuzzlePiece: FaPuzzlePiece,
 };
 
 // Color accents per skill for visual distinction
@@ -61,6 +66,7 @@ const SkillsConfigPanel = ({ instanceStatus: externalInstanceStatus }) => {
   const [expandedSkill, setExpandedSkill] = useState(null);
   const [credentialForms, setCredentialForms] = useState({});
   const [saving, setSaving] = useState(null);
+  const [testingSkill, setTestingSkill] = useState(null);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [instanceRunning, setInstanceRunning] = useState(false);
@@ -217,6 +223,25 @@ const SkillsConfigPanel = ({ instanceStatus: externalInstanceStatus }) => {
       setTimeout(() => setError(null), 5000);
     } finally {
       setSaving(null);
+    }
+  };
+
+  const handleTestSkill = async (skill) => {
+    try {
+      setTestingSkill(skill.skill_name);
+      setError(null);
+      const res = await skillService.execute({
+        skill_name: skill.skill_name,
+        payload: { test: true, message: 'ping' },
+      });
+      setSuccess(`${skill.display_name}: connected (${res.data?.duration_ms || 0}ms)`);
+      setTimeout(() => setSuccess(null), 5000);
+    } catch (err) {
+      const detail = err.response?.data?.detail || err.message || 'Test failed';
+      setError(`${skill.display_name}: ${detail}`);
+      setTimeout(() => setError(null), 8000);
+    } finally {
+      setTestingSkill(null);
     }
   };
 
@@ -444,25 +469,44 @@ const SkillsConfigPanel = ({ instanceStatus: externalInstanceStatus }) => {
                     </Form.Select>
                   </Form.Group>
 
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    className="w-100"
-                    onClick={() => handleSaveCredentials(skill)}
-                    disabled={saving === skill.skill_name}
-                  >
-                    {saving === skill.skill_name ? (
-                      <Spinner
-                        animation="border"
-                        size="sm"
-                        style={{ width: 14, height: 14, borderWidth: 1.5 }}
-                        className="me-2"
-                      />
-                    ) : (
-                      <FaSave className="me-2" size={12} />
-                    )}
-                    Save Credentials
-                  </Button>
+                  <div className="d-flex gap-2">
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      className="flex-grow-1"
+                      onClick={() => handleSaveCredentials(skill)}
+                      disabled={saving === skill.skill_name}
+                    >
+                      {saving === skill.skill_name ? (
+                        <Spinner
+                          animation="border"
+                          size="sm"
+                          style={{ width: 14, height: 14, borderWidth: 1.5 }}
+                          className="me-2"
+                        />
+                      ) : (
+                        <FaSave className="me-2" size={12} />
+                      )}
+                      Save Credentials
+                    </Button>
+                    <Button
+                      variant="outline-success"
+                      size="sm"
+                      onClick={() => handleTestSkill(skill)}
+                      disabled={testingSkill === skill.skill_name || saving === skill.skill_name}
+                      title="Test skill execution via OpenClaw"
+                    >
+                      {testingSkill === skill.skill_name ? (
+                        <Spinner
+                          animation="border"
+                          size="sm"
+                          style={{ width: 14, height: 14, borderWidth: 1.5 }}
+                        />
+                      ) : (
+                        <FaPlay size={12} />
+                      )}
+                    </Button>
+                  </div>
                 </>
               )}
 
