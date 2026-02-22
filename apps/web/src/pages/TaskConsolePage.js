@@ -17,6 +17,7 @@ import {
   FaClock,
   FaCog,
   FaCoins,
+  FaComments,
   FaCopy,
   FaDatabase,
   FaDollarSign,
@@ -61,6 +62,7 @@ const REFRESH_OPTIONS = [
 const TABS = [
   { key: 'all', label: 'All' },
   { key: 'agent_task', label: 'Agent Tasks' },
+  { key: 'chat', label: 'Chat' },
   { key: 'provision', label: 'Provisioning' },
   { key: 'pipeline', label: 'Data Pipelines' },
   { key: 'sync', label: 'Data Sync' },
@@ -68,6 +70,7 @@ const TABS = [
 
 const TYPE_ICONS = {
   agent_task: FaRobot,
+  chat: FaComments,
   research: FaRobot,
   analyze: FaRobot,
   generate: FaRobot,
@@ -84,6 +87,7 @@ const TYPE_ICONS = {
 
 const TYPE_COLORS = {
   agent_task: '#60a5fa',
+  chat: '#38bdf8',
   OpenClawProvisionWorkflow: '#a78bfa',
   DatasetSyncWorkflow: '#34d399',
   DataSourceSyncWorkflow: '#fbbf24',
@@ -131,7 +135,8 @@ const getTypeIcon = (type) => TYPE_ICONS[type] || FaCog;
 
 const matchesTab = (item, tab) => {
   if (tab === 'all') return true;
-  if (tab === 'agent_task') return item.source === 'agent_task';
+  if (tab === 'agent_task') return item.source === 'agent_task' && item.type !== 'chat';
+  if (tab === 'chat') return item.type === 'chat';
   if (tab === 'provision') return (item.type || '').includes('Provision');
   if (tab === 'pipeline') return (item.type || '').includes('DatasetSync') || (item.type || '').includes('KnowledgeExtraction');
   if (tab === 'sync') return (item.type || '').includes('DataSourceSync') || (item.type || '').includes('ScheduledSync');

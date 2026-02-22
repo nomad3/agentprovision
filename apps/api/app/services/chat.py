@@ -1,15 +1,20 @@
 from __future__ import annotations
 
 import logging
+import time
+from datetime import datetime
 from typing import Any, Dict, List, Tuple
 import uuid
 
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
+from app.models.agent import Agent
 from app.models.agent_kit import AgentKit
+from app.models.agent_task import AgentTask
 from app.models.chat import ChatSession as ChatSessionModel, ChatMessage
 from app.models.dataset import Dataset
+from app.models.execution_trace import ExecutionTrace
 from app.services import agent_kits as agent_kit_service
 from app.services import datasets as dataset_service
 from app.services.adk_client import ADKNotConfiguredError, get_adk_client
@@ -190,6 +195,12 @@ def _generate_agentic_response(
             context=None,
         )
 
+    # --- Chat-to-Workflow bridge: create audit task before ADK call ---
+    bridge_start = time.time()
+    bridge_task_id, bridge_agent_id = _bridge_chat_to_workflow(
+        db, session=session, user_message=user_message,
+    )
+
     adk_session_id = session.external_id
     if not adk_session_id:
         try:
@@ -207,6 +218,13 @@ def _generate_agentic_response(
             db.refresh(session)
         except Exception as exc:  # pragma: no cover - network failure path
             logger.exception("Unable to create ADK session for chat: %s", exc)
+            if bridge_task_id:
+                _bridge_complete_task(
+                    db, task_id=bridge_task_id, tenant_id=session.tenant_id,
+                    agent_id=bridge_agent_id, success=False,
+                    duration_ms=int((time.time() - bridge_start) * 1000),
+                    error=f"ADK session creation failed: {exc}",
+                )
             return _append_message(
                 db,
                 session=session,
@@ -219,13 +237,30 @@ def _generate_agentic_response(
         events = client.run(user_id=user_id, session_id=str(adk_session_id), message=user_message)
         response_text, context = _extract_adk_response(events)
         _run_entity_extraction(db, session, context)
-        return _append_message(
-            db,
-            session=session,
-            role="assistant",
-            content=response_text,
-            context=context,
+
+        # --- Bridge: mark task completed ---
+        if bridge_task_id:
+            duration_ms = int((time.time() - bridge_start) * 1000)
+            _bridge_complete_task(
+                db, task_id=bridge_task_id, tenant_id=session.tenant_id,
+                agent_id=bridge_agent_id, success=True, duration_ms=duration_ms,
+                details={
+                    "response_preview": response_text[:300] if response_text else "",
+                    "events_count": len(events),
+                    "entities_extracted": context.get("entities_extracted", 0) if context else 0,
+                },
+            )
+
+        assistant_msg = _append_message(
+            db, session=session, role="assistant",
+            content=response_text, context=context,
         )
+        if bridge_task_id:
+            assistant_msg.task_id = bridge_task_id
+            assistant_msg.agent_id = bridge_agent_id
+            db.commit()
+        return assistant_msg
+
     except Exception as exc:
         # ADK sessions are in-memory; if the pod restarted the session is gone.
         # Detect 404 "Session not found" and transparently re-create.
@@ -247,15 +282,39 @@ def _generate_agentic_response(
                 events = client.run(user_id=user_id, session_id=str(adk_session_id), message=user_message)
                 response_text, context = _extract_adk_response(events)
                 _run_entity_extraction(db, session, context)
-                return _append_message(
-                    db,
-                    session=session,
-                    role="assistant",
-                    content=response_text,
-                    context=context,
+
+                # --- Bridge: mark task completed after retry ---
+                if bridge_task_id:
+                    duration_ms = int((time.time() - bridge_start) * 1000)
+                    _bridge_complete_task(
+                        db, task_id=bridge_task_id, tenant_id=session.tenant_id,
+                        agent_id=bridge_agent_id, success=True, duration_ms=duration_ms,
+                        details={
+                            "response_preview": response_text[:300] if response_text else "",
+                            "events_count": len(events),
+                            "session_recreated": True,
+                        },
+                    )
+
+                assistant_msg = _append_message(
+                    db, session=session, role="assistant",
+                    content=response_text, context=context,
                 )
+                if bridge_task_id:
+                    assistant_msg.task_id = bridge_task_id
+                    assistant_msg.agent_id = bridge_agent_id
+                    db.commit()
+                return assistant_msg
+
             except Exception as retry_exc:
                 logger.exception("ADK retry after session re-creation also failed: %s", retry_exc)
+                if bridge_task_id:
+                    _bridge_complete_task(
+                        db, task_id=bridge_task_id, tenant_id=session.tenant_id,
+                        agent_id=bridge_agent_id, success=False,
+                        duration_ms=int((time.time() - bridge_start) * 1000),
+                        error=str(retry_exc),
+                    )
                 return _append_message(
                     db,
                     session=session,
@@ -263,7 +322,16 @@ def _generate_agentic_response(
                     content=ADK_FAILURE_MESSAGE,
                     context={"error": str(retry_exc)},
                 )
+
         logger.exception("ADK run failed: %s", exc)
+        # --- Bridge: mark task failed ---
+        if bridge_task_id:
+            _bridge_complete_task(
+                db, task_id=bridge_task_id, tenant_id=session.tenant_id,
+                agent_id=bridge_agent_id, success=False,
+                duration_ms=int((time.time() - bridge_start) * 1000),
+                error=str(exc),
+            )
         return _append_message(
             db,
             session=session,
@@ -292,6 +360,165 @@ def _run_entity_extraction(
             logger.info("Extracted %d entities from session %s", entities_extracted, session.id)
     except Exception:
         logger.warning("Entity extraction failed for session %s", session.id, exc_info=True)
+
+
+# ---------------------------------------------------------------------------
+# Chat-to-Workflow bridge
+# ---------------------------------------------------------------------------
+
+def _resolve_agent_for_session(
+    db: Session,
+    *,
+    session: ChatSessionModel,
+) -> uuid.UUID | None:
+    """Resolve an Agent ID from the session's agent_kit or tenant."""
+    tenant_id = session.tenant_id
+    agent_kit = session.agent_kit
+
+    # Try to match from agent_kit.default_agents JSON
+    if agent_kit and agent_kit.default_agents:
+        default_agents = agent_kit.default_agents
+        if isinstance(default_agents, list) and len(default_agents) > 0:
+            first_agent = default_agents[0]
+            first_name = first_agent.get("name") if isinstance(first_agent, dict) else None
+            if first_name:
+                agent = (
+                    db.query(Agent)
+                    .filter(Agent.tenant_id == tenant_id, Agent.name == first_name)
+                    .first()
+                )
+                if agent:
+                    return agent.id
+
+    # Fallback: first agent in tenant
+    agent = db.query(Agent).filter(Agent.tenant_id == tenant_id).first()
+    return agent.id if agent else None
+
+
+def _bridge_chat_to_workflow(
+    db: Session,
+    *,
+    session: ChatSessionModel,
+    user_message: str,
+) -> Tuple[uuid.UUID | None, uuid.UUID | None]:
+    """Create AgentTask + initial ExecutionTrace for chat audit trail.
+
+    Returns (task_id, agent_id) or (None, None) on failure.
+    """
+    try:
+        agent_id = _resolve_agent_for_session(db, session=session)
+        if not agent_id:
+            logger.debug("No agent found for tenant %s; skipping chat bridge", session.tenant_id)
+            return None, None
+
+        objective = user_message[:200] if len(user_message) > 200 else user_message
+        now = datetime.utcnow()
+
+        task = AgentTask(
+            id=uuid.uuid4(),
+            assigned_agent_id=agent_id,
+            human_requested=True,
+            status="executing",
+            priority="normal",
+            task_type="chat",
+            objective=objective,
+            context={
+                "chat_session_id": str(session.id),
+                "agent_kit_id": str(session.agent_kit_id) if session.agent_kit_id else None,
+                "source": "chat_bridge",
+            },
+            started_at=now,
+            created_at=now,
+        )
+        db.add(task)
+        db.flush()
+
+        # Link task to session
+        if not session.root_task_id:
+            session.root_task_id = task.id
+
+        trace = ExecutionTrace(
+            id=uuid.uuid4(),
+            task_id=task.id,
+            tenant_id=session.tenant_id,
+            step_type="dispatched",
+            step_order=1,
+            agent_id=agent_id,
+            details={
+                "source": "chat_bridge",
+                "chat_session_id": str(session.id),
+                "message_preview": objective[:100],
+            },
+            created_at=now,
+        )
+        db.add(trace)
+        db.commit()
+
+        return task.id, agent_id
+    except Exception:
+        logger.warning("Chat-to-workflow bridge failed", exc_info=True)
+        db.rollback()
+        return None, None
+
+
+def _bridge_complete_task(
+    db: Session,
+    *,
+    task_id: uuid.UUID,
+    tenant_id: uuid.UUID,
+    agent_id: uuid.UUID,
+    success: bool,
+    duration_ms: int,
+    details: dict | None = None,
+    error: str | None = None,
+) -> None:
+    """Update the bridged task and create final ExecutionTrace records."""
+    try:
+        task = db.query(AgentTask).filter(AgentTask.id == task_id).first()
+        if not task:
+            return
+
+        now = datetime.utcnow()
+        task.completed_at = now
+
+        if success:
+            task.status = "completed"
+            if details:
+                task.output = details
+        else:
+            task.status = "failed"
+            task.error = error or "ADK execution failed"
+
+        # "executing" trace — records the ADK call
+        db.add(ExecutionTrace(
+            id=uuid.uuid4(),
+            task_id=task_id,
+            tenant_id=tenant_id,
+            step_type="executing",
+            step_order=2,
+            agent_id=agent_id,
+            details={"source": "adk", "duration_ms": duration_ms},
+            duration_ms=duration_ms,
+            created_at=now,
+        ))
+
+        # Final trace
+        db.add(ExecutionTrace(
+            id=uuid.uuid4(),
+            task_id=task_id,
+            tenant_id=tenant_id,
+            step_type="completed" if success else "failed",
+            step_order=3,
+            agent_id=agent_id,
+            details=details if success else {"error": error},
+            duration_ms=duration_ms,
+            created_at=now,
+        ))
+
+        db.commit()
+    except Exception:
+        logger.warning("Chat bridge task completion failed", exc_info=True)
+        db.rollback()
 
 
 def _build_adk_state(
