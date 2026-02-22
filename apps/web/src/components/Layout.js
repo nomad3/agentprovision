@@ -64,7 +64,7 @@ const Layout = ({ children }) => {
       items: [
         { path: '/chat', icon: ChatDotsFill, label: 'AI Command', description: 'Command your AI agent fleet' },
         { path: '/agents', icon: Robot, label: 'Agent Fleet', description: 'Manage your AI agent fleet' },
-        { path: '/task-console', icon: TerminalFill, label: 'Task Console', description: 'Monitor agent task execution and traces' },
+        { path: '/task-console', icon: TerminalFill, label: 'Workflow Audit', description: 'Monitor workflows, tasks, and execution traces' },
         { path: '/memory', icon: DatabaseFill, label: 'Memory', description: 'Entities, signals, and relations' },
       ]
     },
