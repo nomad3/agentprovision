@@ -3,10 +3,9 @@ import {
   Badge,
   Button,
   Card,
-  Col,
   Form,
+  Modal,
   Nav,
-  Row,
   Spinner,
 } from 'react-bootstrap';
 import {
@@ -44,7 +43,6 @@ const STATUS_COLORS = {
   waiting_input: 'danger',
   completed: 'success',
   failed: 'danger',
-  // Temporal statuses
   RUNNING: 'warning',
   COMPLETED: 'success',
   FAILED: 'danger',
@@ -143,7 +141,7 @@ const matchesTab = (item, tab) => {
 // ---------------------------------------------------------------------------
 // Stat Card
 // ---------------------------------------------------------------------------
-const StatCard = ({ icon: Icon, label, value, color, sub }) => (
+const StatCard = ({ icon: Icon, label, value, color }) => (
   <Card style={{
     background: 'var(--surface-elevated)',
     border: '1px solid var(--color-border)',
@@ -173,87 +171,11 @@ const StatCard = ({ icon: Icon, label, value, color, sub }) => (
         </div>
       </div>
     </div>
-    {sub && <div style={{ fontSize: '0.7rem', color: 'var(--color-muted)', marginTop: '0.3rem' }}>{sub}</div>}
   </Card>
 );
 
 // ---------------------------------------------------------------------------
-// Workflow Row
-// ---------------------------------------------------------------------------
-const WorkflowRow = ({ item, isSelected, onClick }) => {
-  const IconComp = getTypeIcon(item.type);
-  const iconColor = TYPE_COLORS[item.type] || TYPE_COLORS.agent_task;
-  const statusColor = STATUS_COLORS[item.status] || 'secondary';
-
-  return (
-    <div
-      onClick={onClick}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.75rem',
-        padding: '0.7rem 0.85rem',
-        cursor: 'pointer',
-        borderBottom: '1px solid var(--color-border)',
-        background: isSelected ? 'var(--surface-contrast)' : 'transparent',
-        transition: 'background 0.15s',
-      }}
-    >
-      <div style={{
-        width: '2rem',
-        height: '2rem',
-        borderRadius: '6px',
-        background: `${iconColor}18`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexShrink: 0,
-      }}>
-        <IconComp size={12} color={iconColor} />
-      </div>
-
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{
-          fontSize: '0.82rem',
-          fontWeight: 500,
-          color: 'var(--color-foreground)',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-        }}>
-          {item.objective || item.type || 'Workflow'}
-        </div>
-        <div style={{ fontSize: '0.72rem', color: 'var(--color-muted)', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-          {item.workflow_id && <span title={item.workflow_id}>{truncateId(item.workflow_id)}</span>}
-          {item.task_id && <span title={item.task_id}>{truncateId(item.task_id)}</span>}
-          <span>{timeAgo(item.start_time)}</span>
-        </div>
-      </div>
-
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
-        {(item.tokens_used > 0) && (
-          <span style={{ fontSize: '0.7rem', color: 'var(--color-muted)' }}>
-            {item.tokens_used?.toLocaleString()} tok
-          </span>
-        )}
-        {(item.cost > 0) && (
-          <span style={{ fontSize: '0.7rem', color: 'var(--color-muted)' }}>
-            ${item.cost?.toFixed(4)}
-          </span>
-        )}
-        <Badge bg={statusColor} style={{ fontSize: '0.68rem', fontWeight: 500, textTransform: 'capitalize', minWidth: '60px', textAlign: 'center' }}>
-          {formatStatus(item.status)}
-        </Badge>
-        <span style={{ fontSize: '0.7rem', color: 'var(--color-muted)', minWidth: '48px', textAlign: 'right' }}>
-          {formatDuration(item.start_time, item.close_time)}
-        </span>
-      </div>
-    </div>
-  );
-};
-
-// ---------------------------------------------------------------------------
-// Metadata Grid
+// Metadata Grid (for modal)
 // ---------------------------------------------------------------------------
 const MetadataGrid = ({ item }) => {
   const cells = [
@@ -306,6 +228,197 @@ const MetadataGrid = ({ item }) => {
 };
 
 // ---------------------------------------------------------------------------
+// Workflow Detail Modal
+// ---------------------------------------------------------------------------
+const WorkflowDetailModal = ({
+  show,
+  onHide,
+  item,
+  combinedTraces,
+  showRawOutput,
+  setShowRawOutput,
+  onApprove,
+  onReject,
+}) => {
+  if (!item) return null;
+
+  const IconComp = getTypeIcon(item.type);
+  const iconColor = TYPE_COLORS[item.type] || TYPE_COLORS.agent_task;
+
+  return (
+    <Modal
+      show={show}
+      onHide={onHide}
+      size="lg"
+      centered
+      scrollable
+      contentClassName="workflow-detail-modal"
+    >
+      <Modal.Header
+        closeButton
+        style={{
+          background: 'var(--surface-contrast)',
+          borderBottom: '1px solid var(--color-border)',
+          padding: '1rem 1.25rem',
+        }}
+      >
+        <Modal.Title style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--color-foreground)', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <div style={{
+            width: '2rem',
+            height: '2rem',
+            borderRadius: '6px',
+            background: `${iconColor}18`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            <IconComp size={12} color={iconColor} />
+          </div>
+          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {item.objective || item.type || 'Workflow Detail'}
+          </span>
+        </Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body style={{ background: 'var(--surface-elevated)', padding: '1.25rem' }}>
+        {/* Status & IDs row */}
+        <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', alignItems: 'center', marginBottom: '1rem' }}>
+          <Badge bg={STATUS_COLORS[item.status] || 'secondary'} style={{ fontSize: '0.75rem', fontWeight: 500, textTransform: 'capitalize', padding: '0.3rem 0.6rem' }}>
+            {formatStatus(item.status)}
+          </Badge>
+          <Badge bg="dark" style={{ fontSize: '0.72rem', fontWeight: 400, padding: '0.25rem 0.5rem' }}>
+            {item.type || 'agent_task'}
+          </Badge>
+          {item.workflow_id && (
+            <Badge
+              bg="dark"
+              style={{ fontSize: '0.7rem', fontWeight: 400, padding: '0.25rem 0.5rem', cursor: 'pointer' }}
+              onClick={() => copyToClipboard(item.workflow_id)}
+              title="Click to copy workflow ID"
+            >
+              <FaCopy size={9} style={{ marginRight: '0.25rem' }} />
+              {truncateId(item.workflow_id)}
+            </Badge>
+          )}
+          {item.task_id && (
+            <Badge
+              bg="dark"
+              style={{ fontSize: '0.7rem', fontWeight: 400, padding: '0.25rem 0.5rem', cursor: 'pointer' }}
+              onClick={() => copyToClipboard(item.task_id)}
+              title="Click to copy task ID"
+            >
+              <FaCopy size={9} style={{ marginRight: '0.25rem' }} />
+              Task: {truncateId(item.task_id)}
+            </Badge>
+          )}
+          {item.status === 'waiting_input' && item.task_id && (
+            <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.3rem' }}>
+              <Button variant="outline-success" size="sm" onClick={(e) => onApprove(item.task_id, e)} style={{ padding: '0.15rem 0.5rem', fontSize: '0.72rem' }}>
+                <FaCheck size={10} style={{ marginRight: '0.2rem' }} /> Approve
+              </Button>
+              <Button variant="outline-danger" size="sm" onClick={(e) => onReject(item.task_id, e)} style={{ padding: '0.15rem 0.5rem', fontSize: '0.72rem' }}>
+                <FaTimes size={10} style={{ marginRight: '0.2rem' }} /> Reject
+              </Button>
+            </div>
+          )}
+        </div>
+
+        {/* Metadata Grid */}
+        <MetadataGrid item={item} />
+
+        {/* Pipeline Run info */}
+        {item.pipeline_run && (
+          <div style={{
+            background: 'var(--surface-contrast)',
+            borderRadius: '6px',
+            padding: '0.6rem 0.75rem',
+            marginBottom: '1rem',
+            border: '1px solid var(--color-border)',
+          }}>
+            <div style={{ fontSize: '0.72rem', color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600, marginBottom: '0.3rem' }}>
+              <FaDatabase size={10} style={{ marginRight: '0.3rem' }} />
+              Pipeline Run
+            </div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--color-foreground)' }}>
+              Status: <Badge bg={STATUS_COLORS[item.pipeline_run.status] || 'secondary'} style={{ fontSize: '0.68rem' }}>{item.pipeline_run.status}</Badge>
+              {item.pipeline_run.error && (
+                <span style={{ color: '#f87171', marginLeft: '0.5rem', fontSize: '0.78rem' }}>{item.pipeline_run.error}</span>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Execution Timeline */}
+        <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '1rem' }}>
+          <h6 style={{
+            color: 'var(--color-muted)',
+            fontSize: '0.8rem',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+            marginBottom: '1rem',
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+          }}>
+            <FaClock size={12} />
+            Execution Trace
+            {combinedTraces.length > 0 && (
+              <Badge bg="info" style={{ fontSize: '0.68rem', fontWeight: 500 }}>
+                {combinedTraces.length} steps
+              </Badge>
+            )}
+          </h6>
+          <TaskTimeline traces={combinedTraces} />
+        </div>
+
+        {/* Raw Output (collapsible) */}
+        {(item.source === 'agent_task') && (
+          <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '0.75rem', marginTop: '0.75rem' }}>
+            <div
+              onClick={() => setShowRawOutput(!showRawOutput)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                cursor: 'pointer',
+                color: 'var(--color-muted)',
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
+              }}
+            >
+              {showRawOutput ? <FaChevronDown size={10} /> : <FaChevronRight size={10} />}
+              Raw Data
+            </div>
+            {showRawOutput && (
+              <pre style={{
+                background: 'var(--surface-contrast)',
+                borderRadius: '6px',
+                padding: '0.75rem',
+                marginTop: '0.5rem',
+                fontSize: '0.72rem',
+                color: 'var(--color-soft)',
+                fontFamily: '"SF Mono", "Fira Code", monospace',
+                maxHeight: '300px',
+                overflowY: 'auto',
+                border: '1px solid var(--color-border)',
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+              }}>
+                {JSON.stringify(item, null, 2)}
+              </pre>
+            )}
+          </div>
+        )}
+      </Modal.Body>
+    </Modal>
+  );
+};
+
+// ---------------------------------------------------------------------------
 // Main Page Component
 // ---------------------------------------------------------------------------
 const TaskConsolePage = () => {
@@ -314,8 +427,9 @@ const TaskConsolePage = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Selection & detail
+  // Modal & detail
   const [selectedItem, setSelectedItem] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const [traces, setTraces] = useState([]);
   const [workflowHistory, setWorkflowHistory] = useState([]);
   const [showRawOutput, setShowRawOutput] = useState(false);
@@ -374,6 +488,7 @@ const TaskConsolePage = () => {
 
   const selectItem = useCallback((item) => {
     setSelectedItem(item);
+    setShowModal(true);
     setShowRawOutput(false);
     if (item?.task_id) {
       fetchTrace(item.task_id);
@@ -386,6 +501,10 @@ const TaskConsolePage = () => {
       setWorkflowHistory([]);
     }
   }, [fetchTrace, fetchWorkflowHistory]);
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
 
   const handleApprove = async (taskId, e) => {
     e.stopPropagation();
@@ -463,7 +582,6 @@ const TaskConsolePage = () => {
   // Combine traces and workflow history for the timeline
   const combinedTraces = useMemo(() => {
     if (traces.length > 0) return traces;
-    // Convert workflow history events to trace-like objects for TaskTimeline
     return workflowHistory.map((evt) => ({
       step_type: evt.activity_name || evt.event_type,
       details: evt.details,
@@ -477,6 +595,20 @@ const TaskConsolePage = () => {
   // ---------------------------------------------------------------------------
   return (
     <Layout>
+      <style>{`
+        .workflow-detail-modal {
+          background: var(--surface-elevated) !important;
+          border: 1px solid var(--color-border) !important;
+          border-radius: 12px !important;
+        }
+        .workflow-detail-modal .btn-close {
+          filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        .workflow-table-row:hover {
+          background: var(--surface-contrast) !important;
+        }
+      `}</style>
+
       <div style={{ padding: '1.5rem' }}>
         {/* Header */}
         <div style={{
@@ -537,322 +669,250 @@ const TaskConsolePage = () => {
           <StatCard icon={FaDollarSign} label="Total Cost" value={stats?.total_cost != null ? `$${stats.total_cost.toFixed(2)}` : '-'} color="#f472b6" />
         </div>
 
-        <Row>
-          {/* Left column: Workflow list */}
-          <Col md={5}>
-            <Card style={{
-              background: 'var(--surface-elevated)',
-              border: '1px solid var(--color-border)',
-              borderRadius: '10px',
-            }}>
-              {/* Tabs */}
-              <div style={{
-                borderBottom: '1px solid var(--color-border)',
-                padding: '0 0.5rem',
+        {/* Full-width Workflow Table */}
+        <Card style={{
+          background: 'var(--surface-elevated)',
+          border: '1px solid var(--color-border)',
+          borderRadius: '10px',
+        }}>
+          {/* Tabs */}
+          <div style={{
+            borderBottom: '1px solid var(--color-border)',
+            padding: '0 0.75rem',
+            background: 'var(--surface-contrast)',
+            borderRadius: '10px 10px 0 0',
+          }}>
+            <Nav variant="tabs" style={{ borderBottom: 'none' }}>
+              {TABS.map((tab) => (
+                <Nav.Item key={tab.key}>
+                  <Nav.Link
+                    active={activeTab === tab.key}
+                    onClick={() => setActiveTab(tab.key)}
+                    style={{
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      color: activeTab === tab.key ? 'var(--color-foreground)' : 'var(--color-muted)',
+                      background: 'transparent',
+                      border: 'none',
+                      borderBottom: activeTab === tab.key ? '2px solid #60a5fa' : '2px solid transparent',
+                      padding: '0.6rem 0.7rem',
+                      borderRadius: 0,
+                    }}
+                  >
+                    {tab.label}
+                  </Nav.Link>
+                </Nav.Item>
+              ))}
+            </Nav>
+          </div>
+
+          {/* Filters */}
+          <div style={{
+            display: 'flex',
+            gap: '0.4rem',
+            padding: '0.5rem 0.75rem',
+            borderBottom: '1px solid var(--color-border)',
+          }}>
+            <Form.Control
+              size="sm"
+              placeholder="Search by objective, workflow ID, or type..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{
+                flex: 1,
                 background: 'var(--surface-contrast)',
-                borderRadius: '10px 10px 0 0',
-              }}>
-                <Nav variant="tabs" style={{ borderBottom: 'none' }}>
-                  {TABS.map((tab) => (
-                    <Nav.Item key={tab.key}>
-                      <Nav.Link
-                        active={activeTab === tab.key}
-                        onClick={() => setActiveTab(tab.key)}
-                        style={{
-                          fontSize: '0.75rem',
-                          fontWeight: 600,
-                          color: activeTab === tab.key ? 'var(--color-foreground)' : 'var(--color-muted)',
-                          background: 'transparent',
-                          border: 'none',
-                          borderBottom: activeTab === tab.key ? '2px solid #60a5fa' : '2px solid transparent',
-                          padding: '0.6rem 0.7rem',
-                          borderRadius: 0,
-                        }}
-                      >
-                        {tab.label}
-                      </Nav.Link>
-                    </Nav.Item>
-                  ))}
-                </Nav>
-              </div>
-
-              {/* Filters */}
-              <div style={{
-                display: 'flex',
-                gap: '0.4rem',
-                padding: '0.5rem 0.65rem',
-                borderBottom: '1px solid var(--color-border)',
-              }}>
-                <Form.Control
-                  size="sm"
-                  placeholder="Search..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  style={{
-                    flex: 1,
-                    background: 'var(--surface-contrast)',
-                    color: 'var(--color-soft)',
-                    border: '1px solid var(--color-border)',
-                    fontSize: '0.75rem',
-                  }}
-                />
-                <Form.Select
-                  size="sm"
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                  style={{
-                    width: '110px',
-                    background: 'var(--surface-contrast)',
-                    color: 'var(--color-soft)',
-                    border: '1px solid var(--color-border)',
-                    fontSize: '0.75rem',
-                  }}
-                >
-                  <option value="">All Status</option>
-                  <option value="queued">Queued</option>
-                  <option value="executing">Running</option>
-                  <option value="completed">Completed</option>
-                  <option value="failed">Failed</option>
-                </Form.Select>
-                <Form.Select
-                  size="sm"
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  style={{
-                    width: '100px',
-                    background: 'var(--surface-contrast)',
-                    color: 'var(--color-soft)',
-                    border: '1px solid var(--color-border)',
-                    fontSize: '0.75rem',
-                  }}
-                >
-                  <option value="newest">Newest</option>
-                  <option value="oldest">Oldest</option>
-                  <option value="duration">Duration</option>
-                  <option value="cost">Cost</option>
-                </Form.Select>
-              </div>
-
-              {/* Workflow list */}
-              <div style={{ maxHeight: 'calc(100vh - 420px)', overflowY: 'auto' }}>
-                {loading && workflows.length === 0 ? (
-                  <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--color-muted)' }}>
-                    <Spinner animation="border" size="sm" style={{ marginRight: '0.5rem' }} />
-                    Loading workflows...
-                  </div>
-                ) : filteredWorkflows.length === 0 ? (
-                  <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--color-muted)' }}>
-                    No workflows found
-                  </div>
-                ) : (
-                  filteredWorkflows.map((item, idx) => (
-                    <WorkflowRow
-                      key={item.workflow_id || item.task_id || idx}
-                      item={item}
-                      isSelected={
-                        (selectedItem?.workflow_id && selectedItem.workflow_id === item.workflow_id) ||
-                        (selectedItem?.task_id && selectedItem.task_id === item.task_id)
-                      }
-                      onClick={() => selectItem(item)}
-                    />
-                  ))
-                )}
-              </div>
-
-              {/* Footer count */}
-              <div style={{
-                padding: '0.4rem 0.75rem',
-                borderTop: '1px solid var(--color-border)',
-                fontSize: '0.72rem',
-                color: 'var(--color-muted)',
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}>
-                <span>{filteredWorkflows.length} of {workflows.length} workflows</span>
-                {stats?.temporal_available === false && (
-                  <span style={{ color: '#fbbf24' }}>
-                    <FaExclamationTriangle size={10} style={{ marginRight: '0.2rem' }} />
-                    Temporal offline — showing DB data only
-                  </span>
-                )}
-              </div>
-            </Card>
-          </Col>
-
-          {/* Right column: Detail panel */}
-          <Col md={7}>
-            <Card style={{
-              background: 'var(--surface-elevated)',
-              border: '1px solid var(--color-border)',
-              borderRadius: '10px',
-            }}>
-              <Card.Header style={{
+                color: 'var(--color-soft)',
+                border: '1px solid var(--color-border)',
+                fontSize: '0.75rem',
+              }}
+            />
+            <Form.Select
+              size="sm"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              style={{
+                width: '120px',
                 background: 'var(--surface-contrast)',
-                borderBottom: '1px solid var(--color-border)',
-                color: 'var(--color-foreground)',
-                fontWeight: 600,
-                fontSize: '0.9rem',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
-                <span>Workflow Detail</span>
-                {selectedItem?.status === 'waiting_input' && selectedItem?.task_id && (
-                  <div style={{ display: 'flex', gap: '0.3rem' }}>
-                    <Button variant="outline-success" size="sm" onClick={(e) => handleApprove(selectedItem.task_id, e)} style={{ padding: '0.15rem 0.5rem', fontSize: '0.72rem' }}>
-                      <FaCheck size={10} style={{ marginRight: '0.2rem' }} /> Approve
-                    </Button>
-                    <Button variant="outline-danger" size="sm" onClick={(e) => handleReject(selectedItem.task_id, e)} style={{ padding: '0.15rem 0.5rem', fontSize: '0.72rem' }}>
-                      <FaTimes size={10} style={{ marginRight: '0.2rem' }} /> Reject
-                    </Button>
-                  </div>
-                )}
-              </Card.Header>
-              <Card.Body style={{ padding: '1.25rem', maxHeight: 'calc(100vh - 420px)', overflowY: 'auto' }}>
-                {!selectedItem ? (
-                  <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--color-muted)' }}>
-                    <FaClipboardList size={28} style={{ marginBottom: '0.75rem', opacity: 0.4 }} />
-                    <div>Select a workflow to view details and execution trace</div>
-                  </div>
-                ) : (
-                  <>
-                    {/* Header */}
-                    <div style={{ marginBottom: '1rem' }}>
-                      <h5 style={{
-                        color: 'var(--color-foreground)',
-                        fontWeight: 600,
-                        fontSize: '1rem',
-                        marginBottom: '0.5rem',
-                      }}>
-                        {selectedItem.objective || selectedItem.type || 'Untitled Workflow'}
-                      </h5>
-                      <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                        <Badge bg={STATUS_COLORS[selectedItem.status] || 'secondary'} style={{ fontSize: '0.75rem', fontWeight: 500, textTransform: 'capitalize', padding: '0.3rem 0.6rem' }}>
-                          {formatStatus(selectedItem.status)}
-                        </Badge>
-                        <Badge bg="dark" style={{ fontSize: '0.72rem', fontWeight: 400, padding: '0.25rem 0.5rem' }}>
-                          {selectedItem.type || 'agent_task'}
-                        </Badge>
-                        {selectedItem.workflow_id && (
-                          <Badge
-                            bg="dark"
-                            style={{ fontSize: '0.7rem', fontWeight: 400, padding: '0.25rem 0.5rem', cursor: 'pointer' }}
-                            onClick={() => copyToClipboard(selectedItem.workflow_id)}
-                            title="Click to copy workflow ID"
-                          >
-                            <FaCopy size={9} style={{ marginRight: '0.25rem' }} />
-                            {truncateId(selectedItem.workflow_id)}
-                          </Badge>
-                        )}
-                        {selectedItem.task_id && (
-                          <Badge
-                            bg="dark"
-                            style={{ fontSize: '0.7rem', fontWeight: 400, padding: '0.25rem 0.5rem', cursor: 'pointer' }}
-                            onClick={() => copyToClipboard(selectedItem.task_id)}
-                            title="Click to copy task ID"
-                          >
-                            <FaCopy size={9} style={{ marginRight: '0.25rem' }} />
-                            Task: {truncateId(selectedItem.task_id)}
-                          </Badge>
-                        )}
-                      </div>
+                color: 'var(--color-soft)',
+                border: '1px solid var(--color-border)',
+                fontSize: '0.75rem',
+              }}
+            >
+              <option value="">All Status</option>
+              <option value="queued">Queued</option>
+              <option value="executing">Running</option>
+              <option value="completed">Completed</option>
+              <option value="failed">Failed</option>
+            </Form.Select>
+            <Form.Select
+              size="sm"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              style={{
+                width: '110px',
+                background: 'var(--surface-contrast)',
+                color: 'var(--color-soft)',
+                border: '1px solid var(--color-border)',
+                fontSize: '0.75rem',
+              }}
+            >
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+              <option value="duration">Duration</option>
+              <option value="cost">Cost</option>
+            </Form.Select>
+          </div>
+
+          {/* Table Header */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '2.5rem 1fr 140px 100px 80px 80px 90px',
+            gap: '0.5rem',
+            padding: '0.5rem 0.85rem',
+            borderBottom: '1px solid var(--color-border)',
+            background: 'var(--surface-contrast)',
+            fontSize: '0.7rem',
+            fontWeight: 600,
+            color: 'var(--color-muted)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.04em',
+          }}>
+            <span></span>
+            <span>Workflow</span>
+            <span>Type</span>
+            <span>Status</span>
+            <span style={{ textAlign: 'right' }}>Tokens</span>
+            <span style={{ textAlign: 'right' }}>Cost</span>
+            <span style={{ textAlign: 'right' }}>Duration</span>
+          </div>
+
+          {/* Workflow rows */}
+          <div style={{ maxHeight: 'calc(100vh - 460px)', overflowY: 'auto' }}>
+            {loading && workflows.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--color-muted)' }}>
+                <Spinner animation="border" size="sm" style={{ marginRight: '0.5rem' }} />
+                Loading workflows...
+              </div>
+            ) : filteredWorkflows.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--color-muted)' }}>
+                No workflows found
+              </div>
+            ) : (
+              filteredWorkflows.map((item, idx) => {
+                const IconComp = getTypeIcon(item.type);
+                const iconColor = TYPE_COLORS[item.type] || TYPE_COLORS.agent_task;
+                const statusColor = STATUS_COLORS[item.status] || 'secondary';
+
+                return (
+                  <div
+                    key={item.workflow_id || item.task_id || idx}
+                    className="workflow-table-row"
+                    onClick={() => selectItem(item)}
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '2.5rem 1fr 140px 100px 80px 80px 90px',
+                      gap: '0.5rem',
+                      padding: '0.65rem 0.85rem',
+                      cursor: 'pointer',
+                      borderBottom: '1px solid var(--color-border)',
+                      alignItems: 'center',
+                      transition: 'background 0.15s',
+                    }}
+                  >
+                    {/* Icon */}
+                    <div style={{
+                      width: '2rem',
+                      height: '2rem',
+                      borderRadius: '6px',
+                      background: `${iconColor}18`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                      <IconComp size={12} color={iconColor} />
                     </div>
 
-                    {/* Metadata Grid */}
-                    <MetadataGrid item={selectedItem} />
-
-                    {/* Pipeline Run info */}
-                    {selectedItem.pipeline_run && (
+                    {/* Objective + ID */}
+                    <div style={{ minWidth: 0 }}>
                       <div style={{
-                        background: 'var(--surface-contrast)',
-                        borderRadius: '6px',
-                        padding: '0.6rem 0.75rem',
-                        marginBottom: '1rem',
-                        border: '1px solid var(--color-border)',
+                        fontSize: '0.82rem',
+                        fontWeight: 500,
+                        color: 'var(--color-foreground)',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
                       }}>
-                        <div style={{ fontSize: '0.72rem', color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600, marginBottom: '0.3rem' }}>
-                          <FaDatabase size={10} style={{ marginRight: '0.3rem' }} />
-                          Pipeline Run
-                        </div>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--color-foreground)' }}>
-                          Status: <Badge bg={STATUS_COLORS[selectedItem.pipeline_run.status] || 'secondary'} style={{ fontSize: '0.68rem' }}>{selectedItem.pipeline_run.status}</Badge>
-                          {selectedItem.pipeline_run.error && (
-                            <span style={{ color: '#f87171', marginLeft: '0.5rem', fontSize: '0.78rem' }}>{selectedItem.pipeline_run.error}</span>
-                          )}
-                        </div>
+                        {item.objective || item.type || 'Workflow'}
                       </div>
-                    )}
-
-                    {/* Execution Timeline */}
-                    <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '1rem' }}>
-                      <h6 style={{
-                        color: 'var(--color-muted)',
-                        fontSize: '0.8rem',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em',
-                        marginBottom: '1rem',
-                        fontWeight: 600,
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.4rem',
-                      }}>
-                        <FaClock size={12} />
-                        Execution Trace
-                        {combinedTraces.length > 0 && (
-                          <Badge bg="info" style={{ fontSize: '0.68rem', fontWeight: 500 }}>
-                            {combinedTraces.length} steps
-                          </Badge>
-                        )}
-                      </h6>
-                      <TaskTimeline traces={combinedTraces} />
+                      <div style={{ fontSize: '0.7rem', color: 'var(--color-muted)', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                        {item.workflow_id && <span title={item.workflow_id}>{truncateId(item.workflow_id)}</span>}
+                        {item.task_id && <span title={item.task_id}>{truncateId(item.task_id)}</span>}
+                        <span>{timeAgo(item.start_time)}</span>
+                      </div>
                     </div>
 
-                    {/* Raw Output (collapsible) */}
-                    {(selectedItem.source === 'agent_task') && (
-                      <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '0.75rem', marginTop: '0.75rem' }}>
-                        <div
-                          onClick={() => setShowRawOutput(!showRawOutput)}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.4rem',
-                            cursor: 'pointer',
-                            color: 'var(--color-muted)',
-                            fontSize: '0.78rem',
-                            fontWeight: 600,
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.04em',
-                          }}
-                        >
-                          {showRawOutput ? <FaChevronDown size={10} /> : <FaChevronRight size={10} />}
-                          Raw Data
-                        </div>
-                        {showRawOutput && (
-                          <pre style={{
-                            background: 'var(--surface-contrast)',
-                            borderRadius: '6px',
-                            padding: '0.75rem',
-                            marginTop: '0.5rem',
-                            fontSize: '0.72rem',
-                            color: 'var(--color-soft)',
-                            fontFamily: '"SF Mono", "Fira Code", monospace',
-                            maxHeight: '300px',
-                            overflowY: 'auto',
-                            border: '1px solid var(--color-border)',
-                            whiteSpace: 'pre-wrap',
-                            wordBreak: 'break-word',
-                          }}>
-                            {JSON.stringify(selectedItem, null, 2)}
-                          </pre>
-                        )}
-                      </div>
-                    )}
-                  </>
-                )}
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+                    {/* Type */}
+                    <div style={{ fontSize: '0.72rem', color: 'var(--color-soft)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {item.type || 'agent_task'}
+                    </div>
+
+                    {/* Status */}
+                    <div>
+                      <Badge bg={statusColor} style={{ fontSize: '0.68rem', fontWeight: 500, textTransform: 'capitalize' }}>
+                        {formatStatus(item.status)}
+                      </Badge>
+                    </div>
+
+                    {/* Tokens */}
+                    <div style={{ fontSize: '0.72rem', color: 'var(--color-muted)', textAlign: 'right' }}>
+                      {item.tokens_used > 0 ? item.tokens_used.toLocaleString() : '-'}
+                    </div>
+
+                    {/* Cost */}
+                    <div style={{ fontSize: '0.72rem', color: 'var(--color-muted)', textAlign: 'right' }}>
+                      {item.cost > 0 ? `$${item.cost.toFixed(4)}` : '-'}
+                    </div>
+
+                    {/* Duration */}
+                    <div style={{ fontSize: '0.72rem', color: 'var(--color-muted)', textAlign: 'right' }}>
+                      {formatDuration(item.start_time, item.close_time)}
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+
+          {/* Footer count */}
+          <div style={{
+            padding: '0.4rem 0.75rem',
+            borderTop: '1px solid var(--color-border)',
+            fontSize: '0.72rem',
+            color: 'var(--color-muted)',
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}>
+            <span>{filteredWorkflows.length} of {workflows.length} workflows</span>
+            {stats?.temporal_available === false && (
+              <span style={{ color: '#fbbf24' }}>
+                <FaExclamationTriangle size={10} style={{ marginRight: '0.2rem' }} />
+                Temporal offline — showing DB data only
+              </span>
+            )}
+          </div>
+        </Card>
+
+        {/* Detail Modal */}
+        <WorkflowDetailModal
+          show={showModal}
+          onHide={handleCloseModal}
+          item={selectedItem}
+          combinedTraces={combinedTraces}
+          showRawOutput={showRawOutput}
+          setShowRawOutput={setShowRawOutput}
+          onApprove={handleApprove}
+          onReject={handleReject}
+        />
       </div>
     </Layout>
   );
